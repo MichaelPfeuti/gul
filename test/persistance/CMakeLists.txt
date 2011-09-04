@@ -1,7 +1,10 @@
-add_library(persistance SHARED 
-		SettingsManager.cpp
-		XMLLoader.cpp
-		XMLSaver.cpp
+add_executable(testPersistance
+		TestMain.cpp
+		TestSettingsManager.cpp
+		TestXMLLoader.cpp
+		TestXMLSaver.cpp
 		)
 		
-target_link_libraries(persistance nvwa)
+add_test(TestSettingsManager testPersistance TestSettingsManager)
+add_test(TestXMLLoader testPersistance TestXMLLoader)
+add_test(TestXMLSaver testPersistance TestXMLSaver)

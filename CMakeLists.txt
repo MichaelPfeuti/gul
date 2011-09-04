@@ -19,3 +19,4 @@ set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
 include_directories("${INCLUDE}")
 
 add_subdirectory(src)
+add_subdirectory(test)
