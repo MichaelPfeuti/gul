@@ -26,28 +26,27 @@
 **
 ***************************************************************************/
 
-#include "String.h"
+#include "memleak.h"
 
-namespace gul
-{
-
-String::String()
-{
-
-}
-
-String::String(const char*)
-{
-
-}
-
-String::~String()
+template<typename T>
+XMLGameSaver::XMLGameSaver(const T& rInstance)
+  : rInstance(rInstance)
 {
 }
 
-gul::String& String::operator+=(const gul::String& rString)
+bool XMLGameSaver::Save(const gul::String& rPath)
 {
-  return *this;
+    pugi::xml_document doc;
+    gul::String saveFile = rPath + ".xml";
+
+    this->rInstance.ResetSaveStatus();
+    pugi::xml_node rootNode;
+    rootNode.set_name("TESTE");
+
+    //pugi::xml_node rootNode = this->game->Save();
+    doc.append_copy(rootNode);
+
+    return doc.save_file(saveFile.mb_str());
 }
 
-}
+#include "memleak_template_end.h"

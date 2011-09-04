@@ -1,5 +1,5 @@
-#ifndef XMLGAMELOADER_H_INCLUDED
-#define XMLGAMELOADER_H_INCLUDED
+#ifndef _GUL_PERSISTANCE_XML_LOADER_H_
+#define _GUL_PERSISTANCE_XML_LOADER_H_
 
 /***************************************************************************
 **
@@ -31,16 +31,17 @@
 
 #include "pugixml.hpp"
 
-class Game;
 
-class XMLGameLoader
+template <typename T>
+class XMLLoader
 {
 public:
-    XMLGameLoader();
-    ~XMLGameLoader();
+    XMLLoader();
+    ~XMLLoader();
 
-    Game* LoadGame(const pugi::xml_document&);
+    T* LoadGame(const pugi::xml_document&);
 };
 
+#include "XMLLoader.hpp"
 
 #endif // XMLGAMELOADER_H_INCLUDED

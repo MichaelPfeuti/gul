@@ -1,5 +1,5 @@
-#ifndef _XMLGAMESAVER_H__
-#define _XMLGAMESAVER_H__
+#ifndef _GUL_PERSISTANCE_XML_SAVER_H_
+#define _GUL_PERSISTANCE_XML_SAVER_H_
 
 /***************************************************************************
 **
@@ -29,23 +29,22 @@
 **
 ***************************************************************************/
 
-#include <wx/wx.h>
-#include <common/Misc.h>
-#include <common/ClassFactory.h>
+class gul::String;
 
-class Game;
-
-class XMLGameSaver
+template<typename T>
+class XMLSaver
 {
 public:
-    XMLGameSaver(Game* game);
-    ~XMLGameSaver();
+    XMLSaver(const T& rInstance);
+    ~XMLSaver();
 
-    bool Save();
-    bool Export();
+    bool Save(const gul::String& rPath);
 
 private:
-    Game* game;
+    const T& m_rInstance;
+
 };
+
+#include "XMLSaver.hpp"
 
 #endif

@@ -1,3 +1,5 @@
+#ifndef _GUL_BASE_STRING_H_
+#define _GUL_BASE_STRING_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,36 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+
+namespace gul
+{
+
+/**
+  *
+  */
+class String
+{
+public:
+  String();
+  String(const char*);
+  ~String();
+
+  gul::String& operator+=(const gul::String& rString);
+};
+
+}
+
+/**
+  * Concatenates two Strings
+  *
+  * For explanation of the implementations see More Effective C++ Item 22
+  * by Scott Meyers.
+  */
+gul::String operator+(const gul::String& rLeft, const gul::String& rRight)
+{
+  return gul::String(rLeft) += rRight;
+}
+
+
+#endif

@@ -11,19 +11,11 @@ if(BUILD_TESTING)
   mark_as_advanced(BUILDNAME)
 endif(BUILD_TESTING)
 
-# tool paths
-set (MEMLEAK_PATH "tools/nvwa-0.8.2/nvwa")
-set (XMLLIB_PATH "tools/pugixml-1.0/src")
-
 # build settings
 set(CMAKE_CXX_FLAGS "-Wall -g -pg")
 
-include_directories("include")
-include_directories("${MEMLEAK_PATH}")
-include_directories("${XMLLIB_PATH}")
+# include files
+set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
+include_directories("${INCLUDE}")
 
 add_subdirectory(src)
-
-add_library(gul SHARED src/setup.h
-	               ${MEMLEAK_PATH}/debug_new.cpp
-         	       ${XMLLIB_PATH}/pugixml.cpp)

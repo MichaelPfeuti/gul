@@ -26,28 +26,30 @@
 **
 ***************************************************************************/
 
-#include "String.h"
+#include "Assert.h"
+#include "memleak.h"
 
-namespace gul
+template<typename T>
+XMLLoader::XMLLoader()
+{}
+
+template<typename T>
+XMLLoader::~XMLLoader()
+{}
+
+template<typename T>
+T* XMLLoader::LoadGame(const pugi::xml_document& rXmlDocument)
 {
+    pugi::xml_node rootNode = rXmlDocument.document_element();
 
-String::String()
-{
+    T loaderInstance;
+    loaderInstance.ResetLoadStatusFor(rootNode);
 
+    T* pLoadedInstance = dynamic_cast<T*>(loaderInstance.Load(rootNode));
+
+    ASSERT(pLadedInstance != nullptr);
+
+    return pLoadedInstance;
 }
 
-String::String(const char*)
-{
-
-}
-
-String::~String()
-{
-}
-
-gul::String& String::operator+=(const gul::String& rString)
-{
-  return *this;
-}
-
-}
+#include "memleak_template_end.h"

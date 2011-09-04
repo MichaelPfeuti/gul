@@ -25,29 +25,3 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
-
-#include "String.h"
-
-namespace gul
-{
-
-String::String()
-{
-
-}
-
-String::String(const char*)
-{
-
-}
-
-String::~String()
-{
-}
-
-gul::String& String::operator+=(const gul::String& rString)
-{
-  return *this;
-}
-
-}

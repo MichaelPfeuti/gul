@@ -1,0 +1,20 @@
+Header Guards:
+	The header guards are structured as follows
+		
+		_GUL_MODULE_FILENAME_H_
+		
+	and FILENAME is split accoring to camelcase. 
+	
+	Example:
+		impl:   memory/SharedPtr.cpp
+		header: include/SharedPtr.h
+		Header Guard: _GUL_MEMORY_SHARED_PTR_H_
+
+Includes:
+	To include a a header we generally use "" only for 
+	includes of the standard library or other external
+	files we use <>
+
+Testing:
+
+		
