@@ -20,7 +20,7 @@ add_library(nvwa STATIC
 )
 
 
-add_library(memory SHARED 
+add_library(memory STATIC
 		ScopedPtr.cpp
 		SharedPtr.cpp
 		UniquePtr.cpp
@@ -34,3 +34,5 @@ add_library(memory SHARED
     ${INCLUDE}/memleak.h
     ${INCLUDE}/memleak_template_end.h
 		)
+
+target_link_libraries(memory nvwa)

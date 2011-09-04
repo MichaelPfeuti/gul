@@ -38,7 +38,6 @@
 #define FAIL(msg) { fprintf(stderr, "%s\n\t", msg); fflush(stderr); assert(false); }
 
 #else
-
 #define ASSERT(condition, msg)
 #define FAIL(msg)
 

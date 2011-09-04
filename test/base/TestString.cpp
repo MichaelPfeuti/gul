@@ -40,14 +40,49 @@ int testStringConcatenation(void)
   return EXIT_SUCCESS;
 }
 
+int testStringPlaceHolder(void)
+{
+  TEST_EQUAL(gul::String("Test%").Arg(1), gul::String("Test1"));
+  TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
+  TEST_EQUAL(gul::String("Test%").Arg(1.2345), gul::String("Test1.2345"));
 
+  return EXIT_SUCCESS;
+}
+
+int testStringReplaceRange(void)
+{
+  gul::String string("TestStringSearch");
+
+  TEST_EQUAL(string.Replace(gul::String("GONE"), 0, 3), gul::String("GONEStringSearch"));
+  TEST_EQUAL(string.Replace(gul::String("GONE"), 4, 9), gul::String("TestGONESearch"));
+  TEST_EQUAL(string.Replace(gul::String("GONE"), 10, string.Size()), gul::String("TestStringGONE"));
+
+  return EXIT_SUCCESS;
+}
+
+int testStringReplaceString(void)
+{
+  gul::String string1("TestSEARCHString");
+  gul::String string2("SEARCHTestString");
+  gul::String string3("TestStringSEARCH");
+
+  TEST_EQUAL(string1.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
+  TEST_EQUAL(string2.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
+  TEST_EQUAL(string3.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestStringGONE"));
+
+  return EXIT_SUCCESS;
+}
 
 int TestString(const std::string& rTestName)
 {
   if(rTestName == "Concatenation") return testStringConcatenation();
+  if(rTestName == "PlaceHolder") return testStringPlaceHolder();
+  if(rTestName == "ReplaceString") return testStringReplaceString();
+  if(rTestName == "ReplaceRange") return testStringReplaceRange();
 
   TEST_END();
 }
+
 
 
 

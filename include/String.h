@@ -45,6 +45,18 @@ class String
 
     int Size() const { return size; }
 
+    String Arg(float value) const;
+    String Arg(double value) const;
+    String Arg(int value) const;
+    String Arg(long value) const;
+    String Arg(const String& rString) const;
+
+    String Replace(const String& rNew, int start, int end) const;
+    String Replace(const String& rNew, const String& rSearch) const;
+
+    const char* GetData(void) { return pString; }
+
+
   private:
     // explicitly prohibit this operator (string is not mutable)
     String(void);

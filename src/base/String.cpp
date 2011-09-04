@@ -27,8 +27,11 @@
 ***************************************************************************/
 
 #include "String.h"
+#include "Assert.h"
 #include "Misc.h"
 #include <cstring>
+
+#include "memleak.h"
 
 namespace gul
 {
@@ -56,14 +59,65 @@ String::~String()
   GUL_DELETE_ARRAY(pString);
 }
 
+String String::Arg(float value) const
+{
+  return String("");
+}
+
+String String::Arg(double value) const
+{
+  return String("");
+}
+
+String String::Arg(int value) const
+{
+  return String("");
+}
+
+String String::Arg(long value) const
+{
+  return String("");
+}
+
+String String::Arg(const String& rString) const
+{
+  return String("");
+}
+
+String String::Replace(const String& rNew, int start, int end) const
+{
+  ASSERT(0 <= start, "Start must be larger that 0!");
+  ASSERT(start < end, "Start must be smaller than end!");
+  ASSERT(end <= this->Size(), "End must be smalles that the size of the string!");
+
+  char pNewString[start + rNew.Size() + this->Size() - end];
+  strncpy(pNewString                      , this->pString         , start);
+  strcpy(pNewString + start               , rNew.pString);
+  strncpy(pNewString + start + rNew.Size(), this->pString + end+1 , this->Size() - end);
+
+  return String(pNewString);
+}
+
+String String::Replace(const String& rNew, const String& rSearch) const
+{
+  const char* pSearchPos = strstr(this->pString, rSearch.pString);
+
+  ASSERT(pSearchPos != nullptr, "String to replace must occur!");
+
+  int idx = 0;
+  while(pSearchPos != this->pString + idx) ++idx;
+
+  //@todo: this generates an unnecessary copy
+  return this->Replace(rNew, idx, idx+rSearch.Size());
+}
 
 String operator+(const String& rLeft, const String& rRight)
 {
-  char* pString = new char[rLeft.Size() + rRight.Size()];
-  strcpy(pString, rLeft.pString);
-  strcat(pString, rRight.pString);
+  char pNewString[rLeft.Size() + rRight.Size()];
+  strcpy(pNewString, rLeft.pString);
+  strcat(pNewString, rRight.pString);
 
-  return String(pString);
+  return String(pNewString);
 }
 
 bool operator!=(const String& rLeft, const String& rRight)

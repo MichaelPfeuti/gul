@@ -1,4 +1,4 @@
-add_library(base SHARED 
+add_library(base STATIC
 		Assert.cpp
 		String.cpp
 
@@ -6,3 +6,6 @@ add_library(base SHARED
     ${INCLUDE}/String.h
     ${INCLUDE}/Misc.h
 		)
+
+
+target_link_libraries(base memory)
