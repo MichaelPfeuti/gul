@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_PERSISTANCE_XML_LOADER_H_
 #define _GUL_PERSISTANCE_XML_LOADER_H_
 

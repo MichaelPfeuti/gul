@@ -26,10 +26,11 @@
 **
 ***************************************************************************/
 
-#include "CTestMain.h"
 
-void RegisterTests(void)
-{
-  REGISTER_TEST(TestString);
-}
+#define GUL_DELETE(pointer) \
+    delete pointer; \
+    pointer = nullptr
 
+#define GUL_DELETE_ARRAY(array) \
+    delete[] array; \
+    array = nullptr

@@ -25,3 +25,29 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "String.h"
+#include "CTestAssert.h"
+
+int testStringConcatenation(void)
+{
+  gul::String string1("Test");
+  gul::String string2("String");
+
+  TEST_EQUAL(string1+string2, gul::String("TestString"));
+  TEST_NOT_EQUAL(string1+string2, gul::String("Test"));
+
+  return EXIT_SUCCESS;
+}
+
+
+
+int TestString(const std::string& rTestName)
+{
+  if(rTestName == "Concatenation") return testStringConcatenation();
+
+  TEST_END();
+}
+
+
+

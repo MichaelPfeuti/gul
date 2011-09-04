@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_PERSISTANCE_XML_SAVER_H_
 #define _GUL_PERSISTANCE_XML_SAVER_H_
 

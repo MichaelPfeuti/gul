@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project (gul)
+project(gul)
 
 # cdash settings
 enable_testing()
@@ -12,7 +12,7 @@ if(BUILD_TESTING)
 endif(BUILD_TESTING)
 
 # build settings
-set(CMAKE_CXX_FLAGS "-Wall -g -pg")
+set(CMAKE_CXX_FLAGS "-Wall -Werror -g -pg -std=c++0x")
 
 # include files
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")

@@ -27,27 +27,53 @@
 ***************************************************************************/
 
 #include "String.h"
+#include "Misc.h"
+#include <cstring>
 
 namespace gul
 {
 
-String::String()
+String::String(void)
+  : pString(nullptr),
+    size(0)
 {
-
 }
 
-String::String(const char*)
+String::String(const String& rString)
+  : pString(strcpy(new char[rString.Size()], rString.pString)),
+    size(rString.Size())
 {
+}
 
+String::String(const char* pCString)
+  : pString(strcpy(new char[strlen(pCString)], pCString)),
+    size(strlen(pCString))
+{
 }
 
 String::~String()
 {
+  GUL_DELETE_ARRAY(pString);
 }
 
-gul::String& String::operator+=(const gul::String& rString)
+
+String operator+(const String& rLeft, const String& rRight)
 {
-  return *this;
+  char* pString = new char[rLeft.Size() + rRight.Size()];
+  strcpy(pString, rLeft.pString);
+  strcat(pString, rRight.pString);
+
+  return String(pString);
+}
+
+bool operator!=(const String& rLeft, const String& rRight)
+{
+  return !operator==(rLeft, rRight);
+}
+
+bool operator==(const String& rLeft, const String& rRight)
+{
+  return strcmp(rLeft.pString, rRight.pString) == 0;
 }
 
 }

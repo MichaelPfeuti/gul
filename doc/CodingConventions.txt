@@ -9,6 +9,26 @@ Header Guards:
 		impl:   memory/SharedPtr.cpp
 		header: include/SharedPtr.h
 		Header Guard: _GUL_MEMORY_SHARED_PTR_H_
+		
+	In addition we use the #pragma once directive 
+	before the header guards. Furthermore, the guarding
+	is done before the license commentary.
+	
+	Example of SharedPtr.h:
+		#pragma once
+		#ifndef _GUL_MEMORY_SHARED_PTR_H_
+		#define _GUL_MEMORY_SHARED_PTR_H_
+		
+		/********************************************************
+		**
+		** This file is part of gul (Graphic Utility Library).
+		**
+
+				....
+		
+		#endif
+		
+		
 
 Includes:
 	To include a a header we generally use "" only for 

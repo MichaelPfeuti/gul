@@ -37,26 +37,33 @@ namespace gul
   */
 class String
 {
-public:
-  String();
-  String(const char*);
-  ~String();
+  public:
 
-  gul::String& operator+=(const gul::String& rString);
+    String(const String& rString);
+    explicit String(const char*);
+    ~String();
+
+    int Size() const { return size; }
+
+  private:
+    // explicitly prohibit this operator (string is not mutable)
+    String(void);
+    String& operator+=(const String& rString);
+
+  private:
+    const char* pString;
+    const int size;
+
+    friend String operator+(const String&, const String&);
+    friend bool operator!=(const String& rLeft, const String& rRight);
+    friend bool operator==(const String& rLeft, const String& rRight);
 };
 
-}
 
-/**
-  * Concatenates two Strings
-  *
-  * For explanation of the implementations see More Effective C++ Item 22
-  * by Scott Meyers.
-  */
-gul::String operator+(const gul::String& rLeft, const gul::String& rRight)
-{
-  return gul::String(rLeft) += rRight;
-}
+String operator+(const String& rLeft, const String& rRight);
+bool operator!=(const String& rLeft, const String& rRight);
+bool operator==(const String& rLeft, const String& rRight);
 
+}
 
 #endif

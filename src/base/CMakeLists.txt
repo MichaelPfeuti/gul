@@ -4,4 +4,5 @@ add_library(base SHARED
 
     ${INCLUDE}/Assert.h
     ${INCLUDE}/String.h
+    ${INCLUDE}/Misc.h
 		)

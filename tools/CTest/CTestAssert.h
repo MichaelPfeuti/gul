@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_TOOLS_CTEST_MAIN_H_
-#define _GUL_TOOLS_CTEST_MAIN_H_
+#ifndef _GUL_TOOLS_CTEST_ASSERT_H_
+#define _GUL_TOOLS_CTEST_ASSERT_H_
 
 /***************************************************************************
 **
@@ -30,39 +30,41 @@
 **
 ***************************************************************************/
 
-
-
-// This file is used to create TestDriver executables
-// These executables are able to register a function pointer to a string name
-// in a lookup table.   By including this file, it creates a main function
-// that calls RegisterTests() then looks up the function pointer for the test
-// specified on the command line.
-
-#include <map>
+#include <cstdlib>
+#include <cstdio>
 #include <string>
 
-// Function pointer to a testing function
-typedef int (*TestFunction)(void);
+#define TEST_EQUAL(test, groundTruth) \
+  if(test != groundTruth) \
+  { \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  }
 
-// global map that contains all registered testing functions
-// Note: here we rely on the STL map because we assume our map
-//       implementation might be erroneous.
-std::map<std::string, TestFunction> testFunctionMap;
 
-// Macro to register a testing function
-#define REGISTER_TEST(test) \
-    extern int test(int, char* [] ); \
-    testFunctionMap[#test] = test
+#define TEST_NOT_EQUAL(test, groundTruth) \
+  if(test == groundTruth) \
+  { \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  }
 
-// Main calls this function to allow testing functions to be registered.
-// This means in an implementation of this function there are usually 
-// only REGISTER_TEST statements
-int RegisterTests(void);
+#define TEST_TRUE(test) \
+  if(!test) \
+  { \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  }
 
-int main(void)
-{
-  RegisterTests();
-  return -1;
-}
+#define TEST_FALSE(test) \
+  if(test) \
+  { \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  }
+
+#define TEST_END() \
+  fprintf(stderr, "Test %s is not part of the TestCollection!\n", rTestName.c_str()); \
+  return EXIT_FAILURE;
 
 #endif
