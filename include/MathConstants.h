@@ -1,3 +1,5 @@
+#ifndef _GUL_MATH_MATH_H_
+#define _GUL_MATH_MATH_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,20 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+namespace gul
+{
+
+
+class MathConstants
+{
+public:
+    static const double c_fPi;
+    static const double c_f2Pi;
+    static const double c_fPi2;
+    static const double c_fPi4;
+};
+
+}
+
+#endif

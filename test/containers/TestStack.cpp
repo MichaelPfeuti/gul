@@ -25,3 +25,57 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "CTestAssert.h"
+
+namespace {
+
+int testSize(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testAdd(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testInsert(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testRemoveIndex(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testRemoveElement(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testClear(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testIndexOf(void)
+{
+    return EXIT_FAILURE;
+}
+
+}
+
+int TestStack(const std::string& rTestName)
+{
+    if(rTestName == "Size") return testSize();
+    if(rTestName == "Add") return testAdd();
+    if(rTestName == "Insert") return testInsert();
+    if(rTestName == "RemoveIndex") return testRemoveIndex();
+    if(rTestName == "RemoveElement") return testRemoveElement();
+    if(rTestName == "Clear") return testClear();
+    if(rTestName == "IndexOf") return testIndexOf();
+
+    TEST_END();
+}

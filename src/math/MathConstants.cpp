@@ -25,3 +25,10 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "MathConstants.h"
+
+const double gul::MathConstants::c_fPi  = 3.14f;
+const double gul::MathConstants::c_f2Pi = 2.f*3.14f;
+const double gul::MathConstants::c_fPi2 = 0.5f*3.14f;
+const double gul::MathConstants::c_fPi4 = 0.25f*3.14f;

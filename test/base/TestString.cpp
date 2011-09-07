@@ -29,7 +29,10 @@
 #include "String.h"
 #include "CTestAssert.h"
 
-int testStringConcatenation(void)
+namespace
+{
+
+int testConcatenation(void)
 {
   gul::String string1("Test");
   gul::String string2("String");
@@ -40,11 +43,12 @@ int testStringConcatenation(void)
   return EXIT_SUCCESS;
 }
 
+}
 
 
 int TestString(const std::string& rTestName)
 {
-  if(rTestName == "Concatenation") return testStringConcatenation();
+  if(rTestName == "Concatenation") return testConcatenation();
 
   TEST_END();
 }

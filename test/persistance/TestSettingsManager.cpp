@@ -25,3 +25,24 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "CTestAssert.h"
+
+int testReadWriteNumerics(void)
+{
+    return EXIT_FAILURE;
+}
+
+int testReadWriteStrings(void)
+{
+
+    return EXIT_FAILURE;
+}
+
+int TestSettingsManager(const std::string& rTestName)
+{
+  if(rTestName == "ReadWriteNumerics") return testReadWriteNumerics();
+  if(rTestName == "ReadWriteStrings") return testReadWriteStrings();
+
+  TEST_END();
+}

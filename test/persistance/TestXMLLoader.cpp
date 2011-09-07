@@ -25,3 +25,18 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "CTestAssert.h"
+
+int testLoadXML(void)
+{
+    return EXIT_FAILURE;
+}
+
+
+int TestXMLLoader(const std::string& rTestName)
+{
+  if(rTestName == "LoadXML") return testLoadXML();
+
+  TEST_END();
+}

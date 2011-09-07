@@ -30,4 +30,7 @@
 
 void RegisterTests(void)
 {
+    REGISTER_TEST(TestXMLLoader);
+    REGISTER_TEST(TestXMLSaver);
+    REGISTER_TEST(TestSettingsManager);
 }
