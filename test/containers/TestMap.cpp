@@ -27,12 +27,24 @@
 ***************************************************************************/
 
 #include "CTestAssert.h"
+#include "Map.h"
 
 namespace {
 
 int testSize(void)
 {
-    return EXIT_FAILURE;
+  gul::Map<int,int> map;
+  TEST_TRUE(map.IsEmpty());
+  TEST_EQUAL(map.Size(), 0);
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_FALSE(map.IsEmpty());
+    TEST_EQUAL(map.Size(), i+1);
+  }
+
+  return EXIT_SUCCESS;
 }
 
 int testAdd(void)
