@@ -1,6 +1,6 @@
-#ifndef ASSERTIONS_H
-#define ASSERTIONS_H
-
+#pragma once
+#ifndef _GUL_BASE_ASSERT_H_
+#define _GUL_BASE_ASSERT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -31,10 +31,16 @@
 
 
 #ifndef NDEBUG
-#include <cassert>
-#include <cstdio>
 
-#define ASSERT(condition, msg) { if(!(condition)) {fprintf(stderr, "%s\n\t", msg); fflush(stderr);} assert(condition); }
+namespace gul
+{
+class ExceptionAssertionViolated {};
+void AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+
+}
+
+#define ASSERT(condition, msg) gul::AssertTerminal(condition, msg, __LINE__, __FILE__);
 #define FAIL(msg) { fprintf(stderr, "%s\n\t", msg); fflush(stderr); assert(false); }
 
 #else
@@ -44,4 +50,4 @@
 
 #endif
 
-#endif // ASSERTIONS_H
+#endif

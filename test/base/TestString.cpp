@@ -26,8 +26,8 @@
 **
 ***************************************************************************/
 
-#include "String.h"
 #include "CTestAssert.h"
+#include "String.h"
 
 namespace
 {

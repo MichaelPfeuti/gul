@@ -25,3 +25,31 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include <cstdio>
+#include <cstdlib>
+
+namespace gul
+{
+
+void AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+
+  if(!(condition))
+  {
+    fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
+    fflush(stderr);
+#ifdef _GUL_TESTING_ENABLED_
+    throw ExceptionAssertionViolated();
+#else
+    exit(EXIT_FAILURE);
+#endif
+  }
+}
+
+void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+  //@todo
+}
+
+}

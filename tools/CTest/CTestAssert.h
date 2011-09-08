@@ -34,6 +34,14 @@
 #include <cstdio>
 #include <string>
 
+#define TEST_ASSERTION(test) \
+  try { \
+    test; \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  } \
+  catch(gul::ExceptionAssertionViolated& ex) {}
+
 #define TEST_EQUAL(test, groundTruth) \
   if(test != groundTruth) \
   { \
