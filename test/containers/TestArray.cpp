@@ -128,20 +128,20 @@ int testRemoveIndex(void)
 
   TEST_EQUAL(array.Size(), 5);
 
-  array.RemoveAt(0);
+  array.Remove(0);
   TEST_EQUAL(array.Size(), 4);
   TEST_EQUAL(array.Get(0), 1);
   TEST_EQUAL(array.Get(1), 2);
   TEST_EQUAL(array.Get(2), 3);
   TEST_EQUAL(array.Get(3), 4);
 
-  array.RemoveAt(2);
+  array.Remove(2);
   TEST_EQUAL(array.Size(), 3);
   TEST_EQUAL(array.Get(0), 1);
   TEST_EQUAL(array.Get(1), 2);
   TEST_EQUAL(array.Get(2), 4);
 
-  array.RemoveAt(2);
+  array.Remove(2);
   TEST_EQUAL(array.Size(), 2);
   TEST_EQUAL(array.Get(0), 1);
   TEST_EQUAL(array.Get(1), 2);
@@ -153,13 +153,13 @@ int testRemoveIndexAssertion(void)
 {
   gul::Array<int> array;
 
-  TEST_ASSERTION(array.RemoveAt(0));
+  TEST_ASSERTION(array.Remove(0));
 
-  array.add(0);
-  array.add(1);
+  array.Add(0);
+  array.Add(1);
 
-  TEST_ASSERTION(array.RemoveAt(2));
-  TEST_ASSERTION(array.RemoveAt(-1));
+  TEST_ASSERTION(array.Remove(2));
+  TEST_ASSERTION(array.Remove(-1));
 
   return EXIT_SUCCESS;
 }
@@ -196,10 +196,10 @@ int testRemoveElementAssertion(void)
 {
   gul::Array<int> array;
 
-  TEST_ASSERTION(array.RemoveElemet(0));
+  TEST_ASSERTION(array.RemoveElement(0));
 
-  array.add(0);
-  array.add(1);
+  array.Add(0);
+  array.Add(1);
 
   TEST_ASSERTION(array.RemoveElement(2));
   TEST_ASSERTION(array.RemoveElement(-1));
@@ -232,8 +232,8 @@ int testIndexOf(void)
     TEST_EQUAL(array.IndexOf(i+1), i);
   }
 
-  TEST_EQUAL(array.IndexOf(5), gul::NotFound);
-  TEST_EQUAL(array.IndexOf(-1), gul::NotFound);
+  TEST_EQUAL(array.IndexOf(5), gul::NOT_FOUND);
+  TEST_EQUAL(array.IndexOf(-1), gul::NOT_FOUND);
 
   return EXIT_SUCCESS;
 }

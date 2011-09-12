@@ -128,20 +128,20 @@ int testRemoveIndex(void)
 
   TEST_EQUAL(list.Size(), 5);
 
-  list.RemoveAt(0);
+  list.Remove(0);
   TEST_EQUAL(list.Size(), 4);
   TEST_EQUAL(list.Get(0), 1);
   TEST_EQUAL(list.Get(1), 2);
   TEST_EQUAL(list.Get(2), 3);
   TEST_EQUAL(list.Get(3), 4);
 
-  list.RemoveAt(2);
+  list.Remove(2);
   TEST_EQUAL(list.Size(), 3);
   TEST_EQUAL(list.Get(0), 1);
   TEST_EQUAL(list.Get(1), 2);
   TEST_EQUAL(list.Get(2), 4);
 
-  list.RemoveAt(2);
+  list.Remove(2);
   TEST_EQUAL(list.Size(), 2);
   TEST_EQUAL(list.Get(0), 1);
   TEST_EQUAL(list.Get(1), 2);
@@ -153,13 +153,13 @@ int testRemoveIndexAssertion(void)
 {
   gul::List<int> list;
 
-  TEST_ASSERTION(list.RemoveAt(0));
+  TEST_ASSERTION(list.Remove(0));
 
-  list.add(0);
-  list.add(1);
+  list.Add(0);
+  list.Add(1);
 
-  TEST_ASSERTION(list.RemoveAt(2));
-  TEST_ASSERTION(list.RemoveAt(-1));
+  TEST_ASSERTION(list.Remove(2));
+  TEST_ASSERTION(list.Remove(-1));
 
   return EXIT_SUCCESS;
 }
@@ -196,10 +196,10 @@ int testRemoveElementAssertion(void)
 {
   gul::List<int> list;
 
-  TEST_ASSERTION(list.RemoveElemet(0));
+  TEST_ASSERTION(list.RemoveElement(0));
 
-  list.add(0);
-  list.add(1);
+  list.Add(0);
+  list.Add(1);
 
   TEST_ASSERTION(list.RemoveElement(2));
   TEST_ASSERTION(list.RemoveElement(-1));
@@ -232,8 +232,8 @@ int testIndexOf(void)
     TEST_EQUAL(list.IndexOf(i+1), i);
   }
 
-  TEST_EQUAL(list.IndexOf(5), gul::NotFound);
-  TEST_EQUAL(list.IndexOf(-1), gul::NotFound);
+  TEST_EQUAL(list.IndexOf(5), gul::NOT_FOUND);
+  TEST_EQUAL(list.IndexOf(-1), gul::NOT_FOUND);
 
   return EXIT_SUCCESS;
 }

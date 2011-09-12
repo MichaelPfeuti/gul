@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_CONTAINER_H_
+#define _GUL_CONTAINERS_CONTAINER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,16 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+namespace gul
+{
+
+template<typename T>
+class Container
+{
+
+};
+
+}
+
+#endif

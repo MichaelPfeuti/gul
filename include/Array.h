@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_ARRAY_H_
+#define _GUL_CONTAINERS_ARRAY_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,50 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Container.h"
+
+namespace gul
+{
+
+template<typename T>
+class Array : public Container<T>
+{
+public:
+    Array(void);
+    explicit Array(int initSize);
+
+    template<typename U>
+    explicit Array(const Container<U>& rContainer);
+
+    virtual ~Array(void);
+
+    int Size(void) const;
+    bool IsEmpty(void) const;
+
+    void Add(const T& element);
+    void Add(const T& element, int index);
+
+    T& Get(int index);
+    const T& Get(int index) const;
+
+    bool Contains(const T& element) const;
+    int IndexOf(const T& element) const;
+
+    void Remove(int index);
+    void RemoveElement(const T& element);
+
+    void Clear(void);
+
+private:
+    T* pData;
+    int size;
+    int reservedMemoryBlocks;
+
+};
+
+}
+
+#include "../src/containers/Array.hpp"
+
+#endif

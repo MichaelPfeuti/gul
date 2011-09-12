@@ -6,6 +6,8 @@ add_executable(testContainers
 		TestSet.cpp
 		TestStack.cpp
 		)
+
+target_link_libraries(testContainers containers nvwa)
 		
 add_test(TestArray::SizeAndIsEmpty          testContainers TestArray SizeAndIsEmpty)
 add_test(TestArray::Add                     testContainers TestArray Add)

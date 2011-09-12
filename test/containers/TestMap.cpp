@@ -33,7 +33,7 @@ namespace {
 
 int testSize(void)
 {
-  gul::Map<int,int> map;
+  /*gul::Map<int,int> map;
   TEST_TRUE(map.IsEmpty());
   TEST_EQUAL(map.Size(), 0);
 
@@ -45,6 +45,8 @@ int testSize(void)
   }
 
   return EXIT_SUCCESS;
+  */
+  return EXIT_FAILURE;
 }
 
 int testAdd(void)

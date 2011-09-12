@@ -26,8 +26,10 @@
 **
 ***************************************************************************/
 
+#include "Assert.h"
 #include <cstdio>
 #include <cstdlib>
+
 
 namespace gul
 {
