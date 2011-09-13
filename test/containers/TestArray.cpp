@@ -102,7 +102,7 @@ int testAddIndex(void)
   TEST_EQUAL(array.Get(2), 1);
   TEST_EQUAL(array.Get(3), 2);
 
-  array.Add(4,1);
+  array.Add(4,0);
   TEST_EQUAL(array.Size(), 5);
   TEST_EQUAL(array.Get(0), 4);
   TEST_EQUAL(array.Get(1), 0);
@@ -167,27 +167,27 @@ int testRemoveIndexAssertion(void)
 int testRemoveElement(void)
 {
   gul::Array<int> array;
-  for(int i = 0; i < 5; ++i) array.Add(i+1);
+  for(int i = 0; i < 5; ++i) array.Add(i+10);
 
   TEST_EQUAL(array.Size(), 5);
 
-  array.RemoveElement(0);
+  array.RemoveElement(10);
   TEST_EQUAL(array.Size(), 4);
-  TEST_EQUAL(array.Get(0), 1);
-  TEST_EQUAL(array.Get(1), 2);
-  TEST_EQUAL(array.Get(2), 3);
-  TEST_EQUAL(array.Get(3), 4);
+  TEST_EQUAL(array.Get(0), 11);
+  TEST_EQUAL(array.Get(1), 12);
+  TEST_EQUAL(array.Get(2), 13);
+  TEST_EQUAL(array.Get(3), 14);
 
-  array.RemoveElement(2);
+  array.RemoveElement(12);
   TEST_EQUAL(array.Size(), 3);
-  TEST_EQUAL(array.Get(0), 1);
-  TEST_EQUAL(array.Get(1), 3);
-  TEST_EQUAL(array.Get(2), 4);
+  TEST_EQUAL(array.Get(0), 11);
+  TEST_EQUAL(array.Get(1), 13);
+  TEST_EQUAL(array.Get(2), 14);
 
   array.Remove(4);
   TEST_EQUAL(array.Size(), 2);
-  TEST_EQUAL(array.Get(0), 1);
-  TEST_EQUAL(array.Get(1), 2);
+  TEST_EQUAL(array.Get(0), 11);
+  TEST_EQUAL(array.Get(1), 12);
 
   return EXIT_SUCCESS;
 }

@@ -29,6 +29,8 @@
 #include "Assert.h"
 #include "ContainerConstants.h"
 #include "Misc.h"
+#include "Math.h"
+#include <cstring>
 #include "memleak.h"
 
 template<typename T>
@@ -75,27 +77,53 @@ bool gul::Array<T>::IsEmpty(void) const
 template<typename T>
 void gul::Array<T>::Add(const T& rElement)
 {
-
+  this->Add(rElement, this->size);
 }
 
 template<typename T>
 void gul::Array<T>::Add(const T& rElement, int index)
 {
-  ASSERT(index > 0);
+  ASSERT(index >= 0);
+  int insertIndex = gul::min(index, this->size);
 
+  // do we need to allocate more memory?
+  if(this->size + 1 >= this->reservedMemoryBlocks)
+  {
+    int oldBlockCount = this->reservedMemoryBlocks;
+    this->reservedMemoryBlocks <<= 1;
+
+    T* newMemory = new T[this->reservedMemoryBlocks];
+    memcpy(newMemory, this->pData, oldBlockCount*sizeof(T));
+
+    GUL_DELETE_ARRAY(this->pData);
+    this->pData = newMemory;
+  }
+
+  // when the new item is not appended we need to move the memory content
+  if(insertIndex < this->size -1)
+  {
+    memmove(this->pData + insertIndex + 1, this->pData + insertIndex, sizeof(T)*(this->size - insertIndex));
+  }
+
+  // copy element into array
+  this->pData[insertIndex] = T(rElement);
+  ++(this->size);
 }
 
 template<typename T>
 T& gul::Array<T>::Get(int index)
 {
-  FAIL("NOT IMPLEMENTED");
-  return *pData;
+  // TODO: remove duplicated code (see const version)
+  ASSERT(index >= 0);
+  ASSERT(index < this->size);
+
+  return this->pData[index];
 }
 
 template<typename T>
 const T& gul::Array<T>::Get(int index) const
 {
-  ASSERT(index > 0);
+  ASSERT(index >= 0);
   ASSERT(index < this->size);
 
   return this->pData[index];
@@ -123,19 +151,28 @@ int gul::Array<T>::IndexOf(const T& rElement) const
 template<typename T>
 void gul::Array<T>::Remove(int index)
 {
+  ASSERT(index >= 0);
+  ASSERT(index < this->size);
 
+  // when the new item is not appended we need to move the memory content
+  if(index < this->size -1)
+  {
+    memmove(this->pData + index, this->pData + index + 1, sizeof(T)*(this->size - index - 1));
+  }
+  --(this->size);
 }
 
 template<typename T>
 void gul::Array<T>::RemoveElement(const T& rElement)
 {
-
+  int idx = this->IndexOf(rElement);
+  this->Remove(idx);
 }
 
 template<typename T>
 void gul::Array<T>::Clear(void)
 {
-
+  this->size = 0;
 }
 
 #include "memleak_template_end.h"
