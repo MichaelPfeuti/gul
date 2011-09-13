@@ -31,10 +31,7 @@
 #include <cstdlib>
 
 
-namespace gul
-{
-
-void AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+void gul::AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 
   if(!(condition))
@@ -49,9 +46,7 @@ void AssertTerminal(bool condition, const char* pMessage, int lineNumber, const 
   }
 }
 
-void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
   //@todo
-}
-
 }

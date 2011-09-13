@@ -42,7 +42,7 @@ void AssertGui(bool condition, const char* pMessage, int lineNumber, const char*
 
 }
 
-#define ASSERT(condition) assert(condition);
+#define ASSERT(condition) gul::AssertTerminal(condition, "", __LINE__, __FILE__);
 #define ASSERT_MSG(condition, msg) gul::AssertTerminal(condition, msg, __LINE__, __FILE__);
 #define FAIL(msg) { fprintf(stderr, "%s\n\t", msg); fflush(stderr); assert(false); }
 
