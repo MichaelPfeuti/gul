@@ -66,7 +66,6 @@ private:
     T* pData;
     int size;
     int reservedMemoryBlocks;
-
 };
 
 }
