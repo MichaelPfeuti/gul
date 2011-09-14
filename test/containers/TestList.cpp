@@ -124,27 +124,27 @@ int testAddIndexAssertion(void)
 int testRemoveIndex(void)
 {
   gul::List<int> list;
-  for(int i = 0; i < 5; ++i) list.Add(i+1);
+  for(int i = 0; i < 5; ++i) list.Add(i+10);
 
   TEST_EQUAL(list.Size(), 5);
 
   list.Remove(0);
   TEST_EQUAL(list.Size(), 4);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 2);
-  TEST_EQUAL(list.Get(2), 3);
-  TEST_EQUAL(list.Get(3), 4);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 12);
+  TEST_EQUAL(list.Get(2), 13);
+  TEST_EQUAL(list.Get(3), 14);
 
-  list.Remove(2);
+  list.Remove(3);
   TEST_EQUAL(list.Size(), 3);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 2);
-  TEST_EQUAL(list.Get(2), 4);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 12);
+  TEST_EQUAL(list.Get(2), 14);
 
   list.Remove(2);
   TEST_EQUAL(list.Size(), 2);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 2);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 12);
 
   return EXIT_SUCCESS;
 }
@@ -167,27 +167,27 @@ int testRemoveIndexAssertion(void)
 int testRemoveElement(void)
 {
   gul::List<int> list;
-  for(int i = 0; i < 5; ++i) list.Add(i+1);
+  for(int i = 0; i < 5; ++i) list.Add(i+10);
 
   TEST_EQUAL(list.Size(), 5);
 
-  list.RemoveElement(0);
+  list.RemoveElement(10);
   TEST_EQUAL(list.Size(), 4);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 2);
-  TEST_EQUAL(list.Get(2), 3);
-  TEST_EQUAL(list.Get(3), 4);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 12);
+  TEST_EQUAL(list.Get(2), 13);
+  TEST_EQUAL(list.Get(3), 14);
 
-  list.RemoveElement(2);
+  list.RemoveElement(12);
   TEST_EQUAL(list.Size(), 3);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 3);
-  TEST_EQUAL(list.Get(2), 4);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 13);
+  TEST_EQUAL(list.Get(2), 14);
 
-  list.Remove(4);
+  list.Remove(14);
   TEST_EQUAL(list.Size(), 2);
-  TEST_EQUAL(list.Get(0), 1);
-  TEST_EQUAL(list.Get(1), 2);
+  TEST_EQUAL(list.Get(0), 11);
+  TEST_EQUAL(list.Get(1), 12);
 
   return EXIT_SUCCESS;
 }
@@ -232,7 +232,7 @@ int testIndexOf(void)
     TEST_EQUAL(list.IndexOf(i+1), i);
   }
 
-  TEST_EQUAL(list.IndexOf(5), gul::NOT_FOUND);
+  TEST_EQUAL(list.IndexOf(6), gul::NOT_FOUND);
   TEST_EQUAL(list.IndexOf(-1), gul::NOT_FOUND);
 
   return EXIT_SUCCESS;
@@ -248,7 +248,7 @@ int testContains(void)
     TEST_TRUE(list.Contains(i+1));
   }
 
-  TEST_FALSE(list.Contains(5));
+  TEST_FALSE(list.Contains(6));
   TEST_FALSE(list.Contains(-1));
 
   return EXIT_SUCCESS;

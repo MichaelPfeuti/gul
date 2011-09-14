@@ -65,9 +65,12 @@ private:
     template<typename U>
     struct ListElement
     {
+      ListElement(U data, ListElement* pPrev, ListElement* pNext)
+        : data(data), pPrev(pPrev), pNext(pNext) {}
+
       U data;
-      ListElement* pNext;
       ListElement* pPrev;
+      ListElement* pNext;
     };
 
     ListElement<T>* pHead;
