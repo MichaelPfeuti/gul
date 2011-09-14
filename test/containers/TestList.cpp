@@ -102,7 +102,7 @@ int testAddIndex(void)
   TEST_EQUAL(list.Get(2), 1);
   TEST_EQUAL(list.Get(3), 2);
 
-  list.Add(4,1);
+  list.Add(4,0);
   TEST_EQUAL(list.Size(), 5);
   TEST_EQUAL(list.Get(0), 4);
   TEST_EQUAL(list.Get(1), 0);
@@ -135,7 +135,7 @@ int testRemoveIndex(void)
   TEST_EQUAL(list.Get(2), 13);
   TEST_EQUAL(list.Get(3), 14);
 
-  list.Remove(3);
+  list.Remove(2);
   TEST_EQUAL(list.Size(), 3);
   TEST_EQUAL(list.Get(0), 11);
   TEST_EQUAL(list.Get(1), 12);
@@ -184,10 +184,10 @@ int testRemoveElement(void)
   TEST_EQUAL(list.Get(1), 13);
   TEST_EQUAL(list.Get(2), 14);
 
-  list.Remove(14);
+  list.RemoveElement(14);
   TEST_EQUAL(list.Size(), 2);
   TEST_EQUAL(list.Get(0), 11);
-  TEST_EQUAL(list.Get(1), 12);
+  TEST_EQUAL(list.Get(1), 13);
 
   return EXIT_SUCCESS;
 }
@@ -203,6 +203,7 @@ int testRemoveElementAssertion(void)
 
   TEST_ASSERTION(list.RemoveElement(2));
   TEST_ASSERTION(list.RemoveElement(-1));
+
 
   return EXIT_SUCCESS;
 }

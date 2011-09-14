@@ -77,28 +77,41 @@ void gul::List<T>::Add(const T& rElement, int index)
   ASSERT(index >= 0);
 
   int insertIndex = gul::min(index, this->size);
+  ListElement<T>* pNew = new ListElement<T>(rElement);
 
-  ListElement<T>* pMove = this->pHead;
-  for(int i = 0;i < insertIndex; ++i)
+  if(this->size == 0)
   {
-    pMove = pMove->pNext;
+    this->pHead = pNew;
+    this->pTail = pNew;
+  }
+  else if(insertIndex == this->size)
+  {
+    this->pTail->pNext = pNew;
+    pNew->pPrev = this->pTail;
+    this->pTail = pNew;
+  }
+  else if(insertIndex == 0)
+  {
+    this->pHead->pPrev = pNew;
+    pNew->pNext = this->pHead;
+    this->pHead = pNew;
+  }
+  else
+  {
+    // find element to move
+    ListElement<T>* pMove = this->pHead;
+    for(int i = 0;i < insertIndex; ++i)
+    {
+      pMove = pMove->pNext;
+    }
+
+    pNew->pPrev = pMove->pPrev;
+    pNew->pNext = pMove;
+
+    pNew->pPrev->pNext = pNew;
+    pNew->pNext->pPrev = pNew;
   }
 
-
-  ListElement<T>* pMovePrev = nullptr;
-  if(pMove != nullptr)
-     pMovePrev = pMove->pPrev;
-  ListElement<T>* pNew = new ListElement<T>(rElement, pMovePrev, pMove);
-
-  if(pNew->pPrev != nullptr)
-    pNew->pPrev->pNext = pNew;
-  if(pNew->pNext != nullptr)
-    pNew->pNext->pPrev = pNew;
-
-  if(index == 0)
-     this->pHead = pNew;
-  if(index == this->size)
-     this->pTail = pNew;
   ++this->size;
 }
 
@@ -143,17 +156,16 @@ template<typename T>
 int gul::List<T>::IndexOf(const T& rElement) const
 {
   ListElement<T>* pCur = this->pHead;
-  int i = 0;
-  do
+
+  for(int i = 0; i < this->size; ++i)
   {
     if(rElement == pCur->data)
     {
       return i;
     }
-
     pCur = pCur->pNext;
+  }
 
-  } while(pCur!=pTail);
   return gul::NOT_FOUND;
 }
 
@@ -163,45 +175,44 @@ void gul::List<T>::Remove(int index)
   ASSERT(index >= 0);
   ASSERT(index < this->size);
 
-  ListElement<T>* pCur = this->pHead;
-  for(int i = 0; i < this->size; ++i)
+  if(this->size == 1)
   {
-    if(i == index)
-    {
-      if(pCur->pPrev != nullptr)
-        pCur->pPrev->pNext = pCur->pNext;
-      if(pCur->pNext != nullptr)
-        pCur->pNext->pPrev = pCur->pPrev;
-      delete pCur;
-      --this->size;
-      return;
-    }
-    pCur = pCur->pNext;
+    GUL_DELETE(this->pHead);
+    this->pHead = nullptr;
+    this->pTail = nullptr;
   }
+  else if(index == 0)
+  {
+    this->pHead = this->pHead->pNext;
+    GUL_DELETE(this->pHead->pPrev);
+  }
+  else if(index == this->size -1)
+  {
+    this->pTail = this->pTail->pPrev;
+    GUL_DELETE(this->pTail->pNext);
+  }
+  else
+  {
+    ListElement<T>* pCur = this->pHead;
+    for(int i = 0; i < index; ++i)
+    {
+      pCur = pCur->pNext;
+    }
+
+    pCur->pPrev->pNext = pCur->pNext;
+    pCur->pNext->pPrev = pCur->pPrev;
+    GUL_DELETE(pCur);
+  }
+
+  --this->size;
 }
 
 template<typename T>
 void gul::List<T>::RemoveElement(const T& rElement)
 {
-  ListElement<T>* pCur = this->pHead;
-  do
-  {
-    if(rElement == pCur->data)
-    {
-      if(pCur->pPrev != nullptr)
-        pCur->pPrev->pNext = pCur->pNext;
-      if(pCur->pNext != nullptr)
-        pCur->pNext->pPrev = pCur->pPrev;
-      delete pCur;
-      --this->size;
-      return;
-    }
-
-    pCur = pCur->pNext;
-
-  } while(pCur!=pTail);
-
-  FAIL("The element to be remove could not be found!");
+  int index = this->IndexOf(rElement);
+  ASSERT(index != gul::NOT_FOUND);
+  this->Remove(index);
 }
 
 template<typename T>
@@ -212,7 +223,7 @@ void gul::List<T>::Clear(void)
   for(int i = 0; i < this->size; ++i)
   {
     pNext = pCur->pNext;
-    delete pCur;
+    GUL_DELETE(pCur);
     pCur = pNext;
   }
   this->size = 0;

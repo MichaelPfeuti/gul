@@ -34,7 +34,7 @@
 void gul::AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 
-  if(!(condition))
+  if(!condition)
   {
     fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
     fflush(stderr);
