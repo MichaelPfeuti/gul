@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_SET_H_
+#define _GUL_CONTAINERS_SET_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,32 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Container.h"
+
+namespace gul
+{
+
+template<typename T>
+class Set : public Container<T>
+{
+  public:
+    Set(void);
+    virtual ~Set(void);
+
+    int Size(void) const;
+    bool IsEmpty(void) const ;
+    bool Contains(const T& rElement) const;
+    void Add(const T& rElement);
+    void Remove(const T& rElement);
+    void Clear(void);
+
+  private:
+    int size;
+};
+
+}
+
+#include "../src/containers/Set.hpp"
+
+#endif

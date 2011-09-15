@@ -25,3 +25,58 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Assert.h"
+#include "memleak.h"
+
+template<typename T>
+gul::Set<T>::Set(void)
+
+{
+
+}
+
+template<typename T>
+gul::Set<T>::~Set(void)
+{
+
+}
+
+template<typename T>
+int gul::Set<T>::Size(void) const
+{
+  return this->size;
+}
+
+template<typename T>
+bool gul::Set<T>::IsEmpty(void) const
+{
+  return this->size == 0;
+}
+
+template<typename T>
+bool gul::Set<T>::Contains(const T& rElement) const
+{
+  return false;
+}
+
+template<typename T>
+void gul::Set<T>::Add(const T& rElement)
+{
+
+}
+
+template<typename T>
+void gul::Set<T>::Remove(const T& rElement)
+{
+
+}
+
+template<typename T>
+void gul::Set<T>::Clear(void)
+{
+
+}
+
+
+#include "memleak_template_end.h"
