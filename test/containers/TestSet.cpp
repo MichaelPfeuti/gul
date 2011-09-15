@@ -69,13 +69,13 @@ int testAdd(void)
 {
   gul::Set<int> set;
   set.Add(0);
-  TEST_EQUAL(set.Size(), 3);
+  TEST_EQUAL(set.Size(), 1);
   TEST_TRUE(set.Contains(0));
   TEST_FALSE(set.Contains(1));
   TEST_FALSE(set.Contains(2));
 
   set.Add(1);
-  TEST_EQUAL(set.Size(), 3);
+  TEST_EQUAL(set.Size(), 2);
   TEST_TRUE(set.Contains(0));
   TEST_TRUE(set.Contains(1));
   TEST_FALSE(set.Contains(2));
@@ -105,7 +105,7 @@ int testAdd(void)
   TEST_TRUE(set.Contains(2));
   TEST_TRUE(set.Contains(-1));
 
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int testRemove(void)
@@ -202,9 +202,9 @@ int TestSet(const std::string& rTestName)
 {
     if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
     if(rTestName == "Add") return testAdd();
-    if(rTestName == "Insert") return testRemove();
-    if(rTestName == "RemoveIndex") return testRemoveAssertion();
-    if(rTestName == "RemoveElement") return testContains();
+    if(rTestName == "Remove") return testRemove();
+    if(rTestName == "RemoveAssertion") return testRemoveAssertion();
+    if(rTestName == "Contains") return testContains();
     if(rTestName == "Clear") return testClear();
 
     TEST_END();

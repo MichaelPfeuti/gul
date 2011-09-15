@@ -29,6 +29,7 @@
 ***************************************************************************/
 
 #include "Container.h"
+#include "List.h"
 
 namespace gul
 {
@@ -48,7 +49,7 @@ class Set : public Container<T>
     void Clear(void);
 
   private:
-    int size;
+    List<T> list;
 };
 
 }
