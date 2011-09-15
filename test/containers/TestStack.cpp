@@ -76,7 +76,7 @@ int testPush(void)
   TEST_EQUAL(stack.Size(), 2);
   TEST_EQUAL(stack.Top(), 1);
   stack.Push(2);
-  TEST_EQUAL(stack.Size(), 2);
+  TEST_EQUAL(stack.Size(), 3);
   TEST_EQUAL(stack.Top(), 2);
 
   stack.Pop();
@@ -90,15 +90,15 @@ int testPush(void)
 int testTopAssertion(void)
 {
   gul::Stack<int> stack;
-  //TEST_ASSERTION(stack.Top());
+  TEST_ASSERTION(stack.Top());
 
   stack.Push(0);
   stack.Top();
   stack.Pop();
 
- // TEST_ASSERTION(stack.Top());
+  TEST_ASSERTION(stack.Top());
 
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int testTop(void)
@@ -142,20 +142,20 @@ int testPop(void)
   TEST_EQUAL(stack.Pop(), 0);
   TEST_EQUAL(stack.Size(), 0);
 
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int testPopAssertion(void)
 {
   gul::Stack<int> stack;
-  //TEST_ASSERTION(stack.Pop());
+  TEST_ASSERTION(stack.Pop());
 
   stack.Push(0);
   stack.Pop();
 
-  //TEST_ASSERTION(stack.Pop());
+  TEST_ASSERTION(stack.Pop());
 
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int testClear(void)

@@ -52,11 +52,13 @@ private:
     template<typename U>
     struct StackElement
     {
+        StackElement(const U& rElement, StackElement* pNext) : data(rElement), pNext(pNext) {}
         U data;
         StackElement* pNext;
     };
 
-    StackElement<T> pTop;
+    StackElement<T>* pTop;
+    int size;
 };
 }
 

@@ -26,60 +26,85 @@
 **
 ***************************************************************************/
 
+#include "Assert.h"
+#include "Misc.h"
 #include "memleak.h"
 
 template<typename T>
 gul::Stack<T>::Stack(void)
+  : pTop(nullptr),
+    size(0)
 {
-
 }
 
 template<typename T>
 gul::Stack<T>::~Stack(void)
 {
-
+  this->Clear();
 }
 
 template<typename T>
 void gul::Stack<T>::Push(const T& rElement)
 {
-
+  StackElement<T>* pNew = new StackElement<T>(rElement, this->pTop);
+  this->pTop = pNew;
+  ++this->size;
 }
 
 template<typename T>
 const T& gul::Stack<T>::Top(void) const
 {
-  return T();
+  ASSERT(this->pTop != nullptr);
+  ASSERT(this->size > 0)
+  return this->pTop->data;
 }
 
 template<typename T>
 T& gul::Stack<T>::Top(void)
 {
-  return *(new T());
+  ASSERT(this->pTop != nullptr);
+  ASSERT(this->size > 0)
+  return this->pTop->data;
 }
 
 template<typename T>
 T gul::Stack<T>::Pop(void)
 {
-  return T();
+  ASSERT(this->pTop != nullptr);
+  ASSERT(this->size > 0)
+
+  T removed = this->pTop->data;
+  StackElement<T>* pRemove = this->pTop;
+  this->pTop = this->pTop->pNext;
+  GUL_DELETE(pRemove);
+
+  --this->size;
+  return removed;
 }
 
 template<typename T>
 void gul::Stack<T>::Clear(void)
 {
-
+  StackElement<T>* pCur = this->pTop;
+  while(pCur != nullptr)
+  {
+    this->pTop = this->pTop->pNext;
+    GUL_DELETE(pCur);
+    pCur = this->pTop;
+  }
+  this->size = 0;
 }
 
 template<typename T>
 int gul::Stack<T>::Size(void)
 {
-  return 0;
+  return this->size;
 }
 
 template<typename T>
 bool gul::Stack<T>::IsEmpty(void)
 {
-  return false;
+  return this->size == 0;
 }
 
 #include "memleak_template_end.h"
