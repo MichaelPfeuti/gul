@@ -37,18 +37,25 @@
 namespace gul
 {
 class ExceptionAssertionViolated {};
-void AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
 void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
 
 }
+#  ifdef _GUL_TESTING_ENABLED_
+#define ASSERT(condition) gul::AssertException(condition, "", __LINE__, __FILE__);
+#define ASSERT_MSG(condition, msg) gul::AssertException(condition, msg, __LINE__, __FILE__);
+#define FAIL(msg) gul::AssertException(false, msg, __LINE__, __FILE__);
 
-#define ASSERT(condition) gul::AssertTerminal(condition, "", __LINE__, __FILE__);
-#define ASSERT_MSG(condition, msg) gul::AssertTerminal(condition, msg, __LINE__, __FILE__);
-#define FAIL(msg) { fprintf(stderr, "%s\n\t", msg); fflush(stderr); assert(false); }
+#  else
+#define ASSERT(condition) gul::AssertExit(condition, "", __LINE__, __FILE__);
+#define ASSERT_MSG(condition, msg) gul::AssertExit(condition, msg, __LINE__, __FILE__);
+#define FAIL(msg) gul::AssertExit(false, msg, __LINE__, __FILE__);
 
+#  endif
 #else
-
-#define ASSERT(condition, msg)
+#define ASSERT(condition)
+#define ASSERT_MSG(condition, msg)
 #define FAIL(msg)
 
 #endif

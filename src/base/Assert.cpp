@@ -30,19 +30,25 @@
 #include <cstdio>
 #include <cstdlib>
 
-
-void gul::AssertTerminal(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+void gul::AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 
   if(!condition)
   {
     fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
     fflush(stderr);
-#ifdef _GUL_TESTING_ENABLED_
     throw ExceptionAssertionViolated();
-#else
+  }
+}
+
+void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+
+  if(!condition)
+  {
+    fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
+    fflush(stderr);
     exit(EXIT_FAILURE);
-#endif
   }
 }
 

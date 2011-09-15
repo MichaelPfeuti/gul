@@ -25,3 +25,61 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "memleak.h"
+
+template<typename T>
+gul::Stack<T>::Stack(void)
+{
+
+}
+
+template<typename T>
+gul::Stack<T>::~Stack(void)
+{
+
+}
+
+template<typename T>
+void gul::Stack<T>::Push(const T& rElement)
+{
+
+}
+
+template<typename T>
+const T& gul::Stack<T>::Top(void) const
+{
+  return T();
+}
+
+template<typename T>
+T& gul::Stack<T>::Top(void)
+{
+  return *(new T());
+}
+
+template<typename T>
+T gul::Stack<T>::Pop(void)
+{
+  return T();
+}
+
+template<typename T>
+void gul::Stack<T>::Clear(void)
+{
+
+}
+
+template<typename T>
+int gul::Stack<T>::Size(void)
+{
+  return 0;
+}
+
+template<typename T>
+bool gul::Stack<T>::IsEmpty(void)
+{
+  return false;
+}
+
+#include "memleak_template_end.h"

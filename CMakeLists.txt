@@ -13,7 +13,6 @@ endif(BUILD_TESTING)
 
 # build settings
 set(CMAKE_CXX_FLAGS "-Wall -Werror -g -pg -std=c++0x")
-add_definitions(-D _GUL_TESTING_ENABLED_)
 
 # include files
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")

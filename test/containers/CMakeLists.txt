@@ -35,4 +35,12 @@ add_test(TestList::Contains                testContainers TestList Contains)
 
 add_test(TestMap testContainers TestMap)
 add_test(TestSet testContainers TestSet)
-add_test(TestStack testContainers TestStack)
+
+add_test(TestStack::SizeAndIsEmpty testContainers TestStack SizeAndIsEmpty)
+add_test(TestStack::Top testContainers TestStack Top)
+add_test(TestStack::TopAssertion testContainers TestStack TopAssertion)
+add_test(TestStack::Pop testContainers TestStack Pop)
+add_test(TestStack::PopAssertion testContainers TestStack PopAssertion)
+add_test(TestStack::Push testContainers TestStack Push)
+add_test(TestStack::Clear testContainers TestStack Clear)
+
