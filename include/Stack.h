@@ -45,8 +45,8 @@ public:
     T& Top(void);
     T Pop(void);
     void Clear(void);
-    int Size(void);
-    bool IsEmpty(void);
+    int Size(void) const;
+    bool IsEmpty(void) const;
 
 private:
     template<typename U>

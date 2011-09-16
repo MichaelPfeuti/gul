@@ -34,7 +34,8 @@ namespace gul
 template<typename T>
 class Container
 {
-
+public:
+    virtual int Size(void) const = 0;
 };
 
 }

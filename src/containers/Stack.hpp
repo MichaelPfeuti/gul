@@ -96,13 +96,13 @@ void gul::Stack<T>::Clear(void)
 }
 
 template<typename T>
-int gul::Stack<T>::Size(void)
+int gul::Stack<T>::Size(void) const
 {
   return this->size;
 }
 
 template<typename T>
-bool gul::Stack<T>::IsEmpty(void)
+bool gul::Stack<T>::IsEmpty(void) const
 {
   return this->size == 0;
 }

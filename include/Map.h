@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_MAP_H_
+#define _GUL_CONTAINERS_MAP_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,39 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Container.h"
+
+namespace gul
+{
+
+template<typename K, typename V>
+class Map
+{
+  public:
+    Map(void);
+    virtual ~Map(void);
+
+    int Size(void) const;
+    bool IsEmpty(void) const;
+
+    V& Get(const K& rKey);
+    const V& Get(const K &rKey) const;
+
+    void Add(const K& rKey, const V& rValue);
+    void Remove(const K& rKey);
+    void Clear(void);
+
+    bool Contains(const K& rKey) const;
+
+    Container<K>* GetKeys(void) const;
+    Container<V>* GetValues(void) const;
+
+  private:
+};
+
+}
+
+#include "../src/containers/Map.hpp"
+
+#endif
