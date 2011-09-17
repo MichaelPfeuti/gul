@@ -114,10 +114,10 @@ private:
  * @param __idx index of the array element to access
  */
 inline bool_array::_Element::_Element(BYTE* __ptr, unsigned long __idx)
+    : _M_byte_ptr(__ptr),
+      _M_byte_idx((size_t)(__idx / 8)),
+      _M_bit_idx((size_t)(__idx % 8))
 {
-    _M_byte_ptr = __ptr;
-    _M_byte_idx = (size_t)(__idx / 8);
-    _M_bit_idx  = (size_t)(__idx % 8);
 }
 
 /**

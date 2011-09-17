@@ -33,30 +33,33 @@
 
 #include "memleak.h"
 
-namespace gul
-{
-
-String::String(void)
+gul::String::String(void)
   : pString(nullptr),
     size(0)
 {
 }
 
-String::String(const String& rString)
+gul::String::String(const gul::String& rString)
   : pString(strcpy(new char[rString.Size()], rString.pString)),
     size(rString.Size())
 {
 }
 
-String::String(const char* pCString)
+gul::String::String(const char* pCString)
   : pString(strcpy(new char[strlen(pCString)], pCString)),
     size(strlen(pCString))
 {
 }
 
-String::~String()
+gul::String::~String()
 {
   GUL_DELETE_ARRAY(pString);
+}
+
+gul::String& gul::String::operator =(const gul::String& rString)
+{
+    GUL_UNUSED_VAR(rString);
+    return *this;
 }
 
 char gul::String::CharAt(int index) const
@@ -64,40 +67,45 @@ char gul::String::CharAt(int index) const
     return this->pString[index];
 }
 
-String String::Arg(float value) const
+gul::String gul::String::Arg(float value) const
 {
+    GUL_UNUSED_VAR(value);
   return String("");
 }
 
-String String::Arg(double value) const
+gul::String gul::String::Arg(double value) const
 {
+    GUL_UNUSED_VAR(value);
   return String("");
 }
 
-String String::Arg(int value) const
+gul::String gul::String::Arg(int value) const
 {
+    GUL_UNUSED_VAR(value);
   return String("");
 }
 
-String String::Arg(long value) const
+gul::String gul::String::Arg(long value) const
 {
+    GUL_UNUSED_VAR(value);
   return String("");
 }
 
-String String::Arg(const String& rString) const
+gul::String gul::String::Arg(const gul::String& rString) const
 {
+    GUL_UNUSED_VAR(rString);
   return String("");
 }
 
-String String::Replace(const String& rNew, int start, int end) const
+gul::String gul::String::Replace(const gul::String& rNew, int start, int end) const
 {
   ASSERT_MSG(0 <= start, "Start must be larger that 0!");
   ASSERT_MSG(start < end, "Start must be smaller than end!");
   ASSERT_MSG(end <= this->Size(), "End must be smalles that the size of the string!");
 
-  int size = start + rNew.Size() + this->Size() - end;
+  int newSize = start + rNew.Size() + this->Size() - end;
 
-  char pNewString[size];
+  char pNewString[newSize];
   strncpy(pNewString                      , this->pString         , start);
   strcpy(pNewString + start               , rNew.pString);
   strncpy(pNewString + start + rNew.Size(), this->pString + end+1 , this->Size() - end);
@@ -105,7 +113,7 @@ String String::Replace(const String& rNew, int start, int end) const
   return String(pNewString);
 }
 
-String String::Replace(const String& rNew, const String& rSearch) const
+gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSearch) const
 {
   const char* pSearchPos = strstr(this->pString, rSearch.pString);
 
@@ -118,24 +126,22 @@ String String::Replace(const String& rNew, const String& rSearch) const
   return this->Replace(rNew, idx, idx+rSearch.Size()-1);
 }
 
-String operator+(const String& rLeft, const String& rRight)
+gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
 {
   char pNewString[rLeft.Size() + rRight.Size()];
   strcpy(pNewString, rLeft.pString);
   strcat(pNewString, rRight.pString);
 
-  return String(pNewString);
+  return gul::String(pNewString);
 }
 
-bool operator!=(const String& rLeft, const String& rRight)
+bool gul::operator!=(const gul::String& rLeft, const gul::String& rRight)
 {
   return !operator==(rLeft, rRight);
 }
 
-bool operator==(const String& rLeft, const String& rRight)
+bool gul::operator==(const gul::String& rLeft, const gul::String& rRight)
 {
   return rLeft.Size() == rRight.Size() &&
          strcmp(rLeft.pString, rRight.pString) == 0;
-}
-
 }

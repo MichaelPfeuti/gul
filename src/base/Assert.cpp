@@ -29,6 +29,7 @@
 #include "Assert.h"
 #include <cstdio>
 #include <cstdlib>
+#include "Misc.h"
 
 void gul::AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
@@ -54,5 +55,9 @@ void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const
 
 void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
+    GUL_UNUSED_VAR(condition);
+    GUL_UNUSED_VAR(pMessage);
+    GUL_UNUSED_VAR(lineNumber);
+    GUL_UNUSED_VAR(pFileName);
   //@todo
 }

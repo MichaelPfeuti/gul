@@ -35,5 +35,6 @@
     delete[] array; \
     array = nullptr
 
-
+#define GUL_UNUSED_VAR(var) \
+    (void) var
 

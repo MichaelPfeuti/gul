@@ -29,163 +29,200 @@
 #include "CTestAssert.h"
 #include "Stack.h"
 
-namespace {
-
-int testSizeAndIsEmpty(void)
+namespace
 {
-  gul::Stack<int> stack;
 
-  TEST_EQUAL(stack.Size(), 0);
-  TEST_TRUE(stack.IsEmpty());
-  stack.Push(0);
-  TEST_EQUAL(stack.Size(), 1);
-  TEST_FALSE(stack.IsEmpty());
-  stack.Push(1);
-  TEST_EQUAL(stack.Size(), 2);
-  TEST_FALSE(stack.IsEmpty());
-  stack.Push(2);
-  TEST_EQUAL(stack.Size(), 3);
-  TEST_FALSE(stack.IsEmpty());
+  int testSizeAndIsEmpty(void)
+  {
+    gul::Stack<int> stack;
 
-  stack.Top();
-  TEST_EQUAL(stack.Size(), 3);
-  TEST_FALSE(stack.IsEmpty());
+    TEST_EQUAL(stack.Size(), 0);
+    TEST_TRUE(stack.IsEmpty());
+    stack.Push(0);
+    TEST_EQUAL(stack.Size(), 1);
+    TEST_FALSE(stack.IsEmpty());
+    stack.Push(1);
+    TEST_EQUAL(stack.Size(), 2);
+    TEST_FALSE(stack.IsEmpty());
+    stack.Push(2);
+    TEST_EQUAL(stack.Size(), 3);
+    TEST_FALSE(stack.IsEmpty());
 
-  stack.Pop();
-  TEST_EQUAL(stack.Size(), 2);
-  TEST_FALSE(stack.IsEmpty());
-  stack.Pop();
-  TEST_EQUAL(stack.Size(), 1);
-  TEST_FALSE(stack.IsEmpty());
-  stack.Pop();
-  TEST_EQUAL(stack.Size(), 0);
-  TEST_TRUE(stack.IsEmpty());
+    stack.Top();
+    TEST_EQUAL(stack.Size(), 3);
+    TEST_FALSE(stack.IsEmpty());
+
+    stack.Pop();
+    TEST_EQUAL(stack.Size(), 2);
+    TEST_FALSE(stack.IsEmpty());
+    stack.Pop();
+    TEST_EQUAL(stack.Size(), 1);
+    TEST_FALSE(stack.IsEmpty());
+    stack.Pop();
+    TEST_EQUAL(stack.Size(), 0);
+    TEST_TRUE(stack.IsEmpty());
 
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testPush(void)
-{
-  gul::Stack<int> stack;
+  int testPush(void)
+  {
+    gul::Stack<int> stack;
 
-  stack.Push(0);
-  TEST_EQUAL(stack.Size(), 1);
-  TEST_EQUAL(stack.Top(), 0)
-  stack.Push(1);
-  TEST_EQUAL(stack.Size(), 2);
-  TEST_EQUAL(stack.Top(), 1);
-  stack.Push(2);
-  TEST_EQUAL(stack.Size(), 3);
-  TEST_EQUAL(stack.Top(), 2);
+    stack.Push(0);
+    TEST_EQUAL(stack.Size(), 1);
+    TEST_EQUAL(stack.Top(), 0)
+    stack.Push(1);
+    TEST_EQUAL(stack.Size(), 2);
+    TEST_EQUAL(stack.Top(), 1);
+    stack.Push(2);
+    TEST_EQUAL(stack.Size(), 3);
+    TEST_EQUAL(stack.Top(), 2);
 
-  stack.Pop();
-  TEST_EQUAL(stack.Top(), 1);
-  stack.Pop();
-  TEST_EQUAL(stack.Top(), 0);
+    stack.Pop();
+    TEST_EQUAL(stack.Top(), 1);
+    stack.Pop();
+    TEST_EQUAL(stack.Top(), 0);
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testTopAssertion(void)
-{
-  gul::Stack<int> stack;
-  TEST_ASSERTION(stack.Top());
+  int testTopAssertion(void)
+  {
+    gul::Stack<int> stack;
+    TEST_ASSERTION(stack.Top());
 
-  stack.Push(0);
-  stack.Top();
-  stack.Pop();
+    stack.Push(0);
+    stack.Top();
+    stack.Pop();
 
-  TEST_ASSERTION(stack.Top());
+    TEST_ASSERTION(stack.Top());
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testTop(void)
-{
-  gul::Stack<int> stack;
+  int testTop(void)
+  {
+    gul::Stack<int> stack;
 
-  stack.Push(0);
-  TEST_EQUAL(stack.Top(), 0);
-  stack.Push(1);
-  TEST_EQUAL(stack.Top(), 1);
-  stack.Push(2);
-  TEST_EQUAL(stack.Top(), 2);
-  stack.Push(3);
-  TEST_EQUAL(stack.Top(), 3);
+    stack.Push(0);
+    TEST_EQUAL(stack.Top(), 0);
+    stack.Push(1);
+    TEST_EQUAL(stack.Top(), 1);
+    stack.Push(2);
+    TEST_EQUAL(stack.Top(), 2);
+    stack.Push(3);
+    TEST_EQUAL(stack.Top(), 3);
 
-  stack.Pop();
-  TEST_EQUAL(stack.Top(), 2);
-  stack.Pop();
-  TEST_EQUAL(stack.Top(), 1);
-  stack.Pop();
-  TEST_EQUAL(stack.Top(), 0);
+    stack.Pop();
+    TEST_EQUAL(stack.Top(), 2);
+    stack.Pop();
+    TEST_EQUAL(stack.Top(), 1);
+    stack.Pop();
+    TEST_EQUAL(stack.Top(), 0);
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testPop(void)
-{
-  gul::Stack<int> stack;
+  int testPop(void)
+  {
+    gul::Stack<int> stack;
 
-  stack.Push(0);
-  stack.Push(1);
-  stack.Push(2);
-  stack.Push(3);
+    stack.Push(0);
+    stack.Push(1);
+    stack.Push(2);
+    stack.Push(3);
 
-  TEST_EQUAL(stack.Pop(), 3);
-  TEST_EQUAL(stack.Size(), 3);
-  TEST_EQUAL(stack.Pop(), 2);
-  TEST_EQUAL(stack.Size(), 2);
-  TEST_EQUAL(stack.Pop(), 1);
-  TEST_EQUAL(stack.Size(), 1);
-  TEST_EQUAL(stack.Pop(), 0);
-  TEST_EQUAL(stack.Size(), 0);
+    TEST_EQUAL(stack.Pop(), 3);
+    TEST_EQUAL(stack.Size(), 3);
+    TEST_EQUAL(stack.Pop(), 2);
+    TEST_EQUAL(stack.Size(), 2);
+    TEST_EQUAL(stack.Pop(), 1);
+    TEST_EQUAL(stack.Size(), 1);
+    TEST_EQUAL(stack.Pop(), 0);
+    TEST_EQUAL(stack.Size(), 0);
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testPopAssertion(void)
-{
-  gul::Stack<int> stack;
-  TEST_ASSERTION(stack.Pop());
+  int testPopAssertion(void)
+  {
+    gul::Stack<int> stack;
+    TEST_ASSERTION(stack.Pop());
 
-  stack.Push(0);
-  stack.Pop();
+    stack.Push(0);
+    stack.Pop();
 
-  TEST_ASSERTION(stack.Pop());
+    TEST_ASSERTION(stack.Pop());
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int testClear(void)
-{
-  gul::Stack<int> stack;
-  stack.Push(0);
-  stack.Push(1);
-  stack.Push(2);
+  int testClear(void)
+  {
+    gul::Stack<int> stack;
+    stack.Push(0);
+    stack.Push(1);
+    stack.Push(2);
 
-  TEST_EQUAL(stack.Size(), 3);
-  TEST_FALSE(stack.IsEmpty());
-  stack.Clear();
-  TEST_EQUAL(stack.Size(), 0);
-  TEST_TRUE(stack.IsEmpty());
+    TEST_EQUAL(stack.Size(), 3);
+    TEST_FALSE(stack.IsEmpty());
+    stack.Clear();
+    TEST_EQUAL(stack.Size(), 0);
+    TEST_TRUE(stack.IsEmpty());
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
+  int testAssignment(void)
+  {
+    gul::Stack<int> stack;
+    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
+
+    gul::Stack<int> copy;
+    for(int i = 0; i < 50; ++i) copy.Push(i + 50);
+
+    TEST_EQUAL(copy.Size(), 50);
+
+    copy = stack;
+    TEST_EQUAL(copy.Size(), 5);
+    for(int i = 0; i < 5; ++i)
+    {
+        TEST_EQUAL(copy.Pop(), i+1);
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int testCopyConstructor(void)
+  {
+    gul::Stack<int> stack;
+    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
+
+    gul::Stack<int> copy(stack);
+    TEST_EQUAL(copy.Size(), 5);
+    for(int i = 0; i < 5; ++i)
+    {
+        TEST_EQUAL(copy.Pop(), i+1);
+    }
+
+    return EXIT_SUCCESS;
+  }
 
 }
 
 int TestStack(const std::string& rTestName)
 {
-    if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-    if(rTestName == "Push") return testPush();
-    if(rTestName == "Pop") return testPop();
-    if(rTestName == "PopAssertion") return testPopAssertion();
-    if(rTestName == "Top") return testTop();
-    if(rTestName == "TopAssertion") return testTopAssertion();
-    if(rTestName == "Clear") return testClear();
+  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
+  if(rTestName == "Push") return testPush();
+  if(rTestName == "Pop") return testPop();
+  if(rTestName == "PopAssertion") return testPopAssertion();
+  if(rTestName == "Top") return testTop();
+  if(rTestName == "TopAssertion") return testTopAssertion();
+  if(rTestName == "Clear") return testClear();
+  if(rTestName == "CopyConstructor") return testCopyConstructor();
+  if(rTestName == "Assignment") return testAssignment();
 
-    TEST_END();
+  TEST_END();
 }

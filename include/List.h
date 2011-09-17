@@ -44,6 +44,9 @@ public:
 
     virtual ~List(void);
 
+    List(const List& rList);
+    List& operator=(const List& rList);
+
     int Size(void) const;
     bool IsEmpty(void) const;
 
@@ -62,13 +65,16 @@ public:
     void Clear(void);
 
 private:
+    void copyAllData(const List& rList);
+
+private:
     template<typename U>
     struct ListElement
     {
-      ListElement(U data)
-          : data(data), pPrev(nullptr), pNext(nullptr) {}
-      ListElement(U data, ListElement* pPrev, ListElement* pNext)
-        : data(data), pPrev(pPrev), pNext(pNext) {}
+      ListElement(U d)
+          : data(d), pPrev(nullptr), pNext(nullptr) {}
+      ListElement(U d, ListElement* pP, ListElement* pN)
+        : data(d), pPrev(pP), pNext(pN) {}
 
       U data;
       ListElement* pPrev;

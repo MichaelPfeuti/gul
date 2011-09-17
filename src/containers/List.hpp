@@ -48,9 +48,28 @@ gul::List<T>::List(const gul::Container<U>& rContainer)
 }
 
 template<typename T>
+gul::List<T>::List(const gul::List<T>& rList)
+    : pHead(nullptr),
+      pTail(nullptr),
+      size(0)
+{
+    this->copyAllData(rList);
+}
+
+template<typename T>
 gul::List<T>::~List(void)
 {
   this->Clear();
+}
+
+template<typename T>
+gul::List<T>& gul::List<T>::operator=(const gul::List<T>& rList)
+{
+  if(this != &rList)
+  {
+    this->copyAllData(rList);
+  }
+  return *this;
 }
 
 template<typename T>
@@ -227,6 +246,18 @@ void gul::List<T>::Clear(void)
     pCur = pNext;
   }
   this->size = 0;
+}
+
+template<typename T>
+void gul::List<T>::copyAllData(const List& rList)
+{
+    this->Clear();
+    ListElement<T>* pCur = rList.pHead;
+    for(int i = 0; i < rList.size; ++i)
+    {
+      this->Add(pCur->data);
+      pCur = pCur->pNext;
+    }
 }
 
 #include "memleak_template_end.h"

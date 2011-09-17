@@ -1,5 +1,10 @@
 set(NVWA ${CMAKE_HOME_DIRECTORY}/libs/nvwa-0.8.2/nvwa)
 
+
+string(REPLACE "-Weffc++" " " NVWA_FLAGS "${CMAKE_CXX_FLAGS}")
+set(LOCAL_CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "")
+
 add_library(nvwa STATIC
     ${NVWA}/bool_array.cpp
     ${NVWA}/bool_array.h
@@ -18,6 +23,7 @@ add_library(nvwa STATIC
     ${NVWA}/static_mem_pool.cpp
     ${NVWA}/static_mem_pool.h
 )
+set_target_properties(nvwa PROPERTIES COMPILE_FLAGS "${NVWA_FLAGS}")
 
 
 add_library(memory STATIC
@@ -33,6 +39,8 @@ add_library(memory STATIC
 
     ${INCLUDE}/memleak.h
     ${INCLUDE}/memleak_template_end.h
-		)
+)
+set_target_properties(memory PROPERTIES COMPILE_FLAGS "${LOCAL_CMAKE_CXX_FLAGS}")
+
 
 target_link_libraries(memory nvwa)

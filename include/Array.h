@@ -45,6 +45,9 @@ public:
 
     virtual ~Array(void);
 
+    Array(const Array& rArray);
+    Array& operator=(const Array& rArray);
+
     int Size(void) const;
     bool IsEmpty(void) const;
 

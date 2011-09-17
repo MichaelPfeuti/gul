@@ -43,6 +43,8 @@ class String
     explicit String(const char*);
     ~String();
 
+    String& operator =(const String& rString);
+
     int Size() const { return size; }
     char CharAt(int index) const;
 

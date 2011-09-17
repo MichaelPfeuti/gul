@@ -35,6 +35,7 @@ template<typename T>
 class Container
 {
 public:
+    virtual ~Container(void) {}
     virtual int Size(void) const = 0;
 };
 

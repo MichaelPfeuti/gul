@@ -29,183 +29,221 @@
 #include "CTestAssert.h"
 #include "Set.h"
 
-namespace {
-
-int testSizeAndIsEmpty(void)
+namespace
 {
-  gul::Set<int> set;
-  TEST_EQUAL(set.Size(), 0);
-  TEST_TRUE(set.IsEmpty());
 
-  for(int i = 0; i < 10; ++i)
+  int testSizeAndIsEmpty(void)
   {
-    set.Add(i);
-    TEST_EQUAL(set.Size(), i+1);
+    gul::Set<int> set;
+    TEST_EQUAL(set.Size(), 0);
+    TEST_TRUE(set.IsEmpty());
+
+    for(int i = 0; i < 10; ++i)
+    {
+      set.Add(i);
+      TEST_EQUAL(set.Size(), i + 1);
+      TEST_FALSE(set.IsEmpty());
+    }
+
+    set.Add(0);
+    set.Add(0);
+    set.Add(5);
+    TEST_EQUAL(set.Size(), 10);
     TEST_FALSE(set.IsEmpty());
+
+    for(int i = 0; i < 9; ++i)
+    {
+      set.Remove(i);
+    }
+
+    TEST_EQUAL(set.Size(), 1);
+    TEST_FALSE(set.IsEmpty());
+
+    set.Remove(9);
+    TEST_EQUAL(set.Size(), 0);
+    TEST_TRUE(set.IsEmpty());
+
+    return EXIT_SUCCESS;
   }
 
-  set.Add(0);
-  set.Add(0);
-  set.Add(5);
-  TEST_EQUAL(set.Size(), 10);
-  TEST_FALSE(set.IsEmpty());
-
-  for(int i = 0; i < 9; ++i)
+  int testAdd(void)
   {
-    set.Remove(i);
+    gul::Set<int> set;
+    set.Add(0);
+    TEST_EQUAL(set.Size(), 1);
+    TEST_TRUE(set.Contains(0));
+    TEST_FALSE(set.Contains(1));
+    TEST_FALSE(set.Contains(2));
+
+    set.Add(1);
+    TEST_EQUAL(set.Size(), 2);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_FALSE(set.Contains(2));
+
+    set.Add(2);
+    TEST_EQUAL(set.Size(), 3);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+
+    set.Add(0);
+    TEST_EQUAL(set.Size(), 3);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+
+    set.Add(2);
+    TEST_EQUAL(set.Size(), 3);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+
+    set.Add(-1);
+    TEST_EQUAL(set.Size(), 4);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+    TEST_TRUE(set.Contains(-1));
+
+    return EXIT_SUCCESS;
   }
 
-  TEST_EQUAL(set.Size(), 1);
-  TEST_FALSE(set.IsEmpty());
-
-  set.Remove(9);
-  TEST_EQUAL(set.Size(), 0);
-  TEST_TRUE(set.IsEmpty());
-
-  return EXIT_SUCCESS;
-}
-
-int testAdd(void)
-{
-  gul::Set<int> set;
-  set.Add(0);
-  TEST_EQUAL(set.Size(), 1);
-  TEST_TRUE(set.Contains(0));
-  TEST_FALSE(set.Contains(1));
-  TEST_FALSE(set.Contains(2));
-
-  set.Add(1);
-  TEST_EQUAL(set.Size(), 2);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_FALSE(set.Contains(2));
-
-  set.Add(2);
-  TEST_EQUAL(set.Size(), 3);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-
-  set.Add(0);
-  TEST_EQUAL(set.Size(), 3);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-
-  set.Add(2);
-  TEST_EQUAL(set.Size(), 3);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-
-  set.Add(-1);
-  TEST_EQUAL(set.Size(), 4);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-  TEST_TRUE(set.Contains(-1));
-
-  return EXIT_SUCCESS;
-}
-
-int testRemove(void)
-{
-  gul::Set<int> set;
-  set.Add(0);
-  TEST_EQUAL(set.Size(), 1);
-  TEST_TRUE(set.Contains(0));
-
-  set.Remove(0);
-  TEST_EQUAL(set.Size(), 0);
-  TEST_FALSE(set.Contains(0));
-
-  set.Add(0);
-  TEST_EQUAL(set.Size(), 1);
-  TEST_TRUE(set.Contains(0));
-
-  set.Add(1);
-  set.Add(2);
-  TEST_EQUAL(set.Size(), 3);
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-  TEST_FALSE(set.Contains(3));
-
-  set.Remove(0);
-  TEST_EQUAL(set.Size(), 2);
-  TEST_FALSE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_TRUE(set.Contains(2));
-
-  set.Remove(2);
-  TEST_EQUAL(set.Size(), 1);
-  TEST_FALSE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_FALSE(set.Contains(2));
-
-  set.Remove(1);
-  TEST_EQUAL(set.Size(), 0);
-  TEST_FALSE(set.Contains(0));
-  TEST_FALSE(set.Contains(1));
-  TEST_FALSE(set.Contains(2));
-
-  return EXIT_SUCCESS;
-}
-
-int testRemoveAssertion(void)
-{
-  gul::Set<int> set;
-  TEST_ASSERTION(set.Remove(0));
-  set.Add(0);
-  set.Remove(0);
-  TEST_ASSERTION(set.Remove(0));
-
-  return EXIT_SUCCESS;
-}
-
-int testClear(void)
-{
-  gul::Set<int> set;
-  for(int i = 0; i < 10; ++i)
+  int testRemove(void)
   {
-    set.Add(i);
+    gul::Set<int> set;
+    set.Add(0);
+    TEST_EQUAL(set.Size(), 1);
+    TEST_TRUE(set.Contains(0));
+
+    set.Remove(0);
+    TEST_EQUAL(set.Size(), 0);
+    TEST_FALSE(set.Contains(0));
+
+    set.Add(0);
+    TEST_EQUAL(set.Size(), 1);
+    TEST_TRUE(set.Contains(0));
+
+    set.Add(1);
+    set.Add(2);
+    TEST_EQUAL(set.Size(), 3);
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+    TEST_FALSE(set.Contains(3));
+
+    set.Remove(0);
+    TEST_EQUAL(set.Size(), 2);
+    TEST_FALSE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_TRUE(set.Contains(2));
+
+    set.Remove(2);
+    TEST_EQUAL(set.Size(), 1);
+    TEST_FALSE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_FALSE(set.Contains(2));
+
+    set.Remove(1);
+    TEST_EQUAL(set.Size(), 0);
+    TEST_FALSE(set.Contains(0));
+    TEST_FALSE(set.Contains(1));
+    TEST_FALSE(set.Contains(2));
+
+    return EXIT_SUCCESS;
   }
 
-  TEST_EQUAL(set.Size(), 10);
-  set.Clear();
-  TEST_EQUAL(set.Size(), 0);
+  int testRemoveAssertion(void)
+  {
+    gul::Set<int> set;
+    TEST_ASSERTION(set.Remove(0));
+    set.Add(0);
+    set.Remove(0);
+    TEST_ASSERTION(set.Remove(0));
 
-  set.Add(0);
-  TEST_EQUAL(set.Size(), 1);
+    return EXIT_SUCCESS;
+  }
 
-  return EXIT_SUCCESS;
-}
+  int testClear(void)
+  {
+    gul::Set<int> set;
+    for(int i = 0; i < 10; ++i)
+    {
+      set.Add(i);
+    }
 
-int testContains(void)
-{
-  gul::Set<int> set;
-  TEST_FALSE(set.Contains(0));
+    TEST_EQUAL(set.Size(), 10);
+    set.Clear();
+    TEST_EQUAL(set.Size(), 0);
 
-  set.Add(0);
-  set.Add(1);
+    set.Add(0);
+    TEST_EQUAL(set.Size(), 1);
 
-  TEST_TRUE(set.Contains(0));
-  TEST_TRUE(set.Contains(1));
-  TEST_FALSE(set.Contains(2));
+    return EXIT_SUCCESS;
+  }
 
-  return EXIT_SUCCESS;
-}
+  int testContains(void)
+  {
+    gul::Set<int> set;
+    TEST_FALSE(set.Contains(0));
+
+    set.Add(0);
+    set.Add(1);
+
+    TEST_TRUE(set.Contains(0));
+    TEST_TRUE(set.Contains(1));
+    TEST_FALSE(set.Contains(2));
+
+    return EXIT_SUCCESS;
+  }
+
+  int testAssignment(void)
+  {
+    gul::Set<int> set;
+    for(int i = 0; i < 5; ++i) set.Add(i + 1);
+
+    gul::Set<int> copy;
+    for(int i = 0; i < 50; ++i) copy.Add(i + 50);
+
+    TEST_EQUAL(copy.Size(), 50);
+
+    copy = set;
+    TEST_EQUAL(copy.Size(), 5);
+    for(int i = 0; i < 5; ++i)
+    {
+        TEST_TRUE(copy.Contains(i+1));
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int testCopyConstructor(void)
+  {
+    gul::Set<int> set;
+    for(int i = 0; i < 5; ++i) set.Add(i + 1);
+
+    gul::Set<int> copy(set);
+    TEST_EQUAL(copy.Size(), 5);
+    for(int i = 0; i < 5; ++i)
+    {
+        TEST_TRUE(copy.Contains(i+1));
+    }
+
+    return EXIT_SUCCESS;
+  }
 
 }
 
 int TestSet(const std::string& rTestName)
 {
-    if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-    if(rTestName == "Add") return testAdd();
-    if(rTestName == "Remove") return testRemove();
-    if(rTestName == "RemoveAssertion") return testRemoveAssertion();
-    if(rTestName == "Contains") return testContains();
-    if(rTestName == "Clear") return testClear();
+  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
+  if(rTestName == "Add") return testAdd();
+  if(rTestName == "Remove") return testRemove();
+  if(rTestName == "RemoveAssertion") return testRemoveAssertion();
+  if(rTestName == "Contains") return testContains();
+  if(rTestName == "Clear") return testClear();
+  if(rTestName == "CopyConstructor") return testCopyConstructor();
+  if(rTestName == "Assignment") return testAssignment();
 
-    TEST_END();
+  TEST_END();
 }

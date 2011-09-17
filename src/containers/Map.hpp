@@ -27,6 +27,7 @@
 ***************************************************************************/
 
 #include "Assert.h"
+#include "Misc.h"
 
 template<typename K, typename V>
 gul::Map<K,V>::Map(void)
@@ -55,6 +56,7 @@ bool gul::Map<K,V>::IsEmpty(void) const
 template<typename K, typename V>
 V& gul::Map<K,V>::Get(const K& rKey)
 {
+    GUL_UNUSED_VAR(rKey);
   return *new V();
 }
 
@@ -67,13 +69,15 @@ const V& gul::Map<K,V>::Get(const K &rKey) const
 template<typename K, typename V>
 void gul::Map<K,V>::Add(const K& rKey, const V& rValue)
 {
+    GUL_UNUSED_VAR(rKey);
+    GUL_UNUSED_VAR(rValue);
 
 }
 
 template<typename K, typename V>
 void gul::Map<K,V>::Remove(const K& rKey)
 {
-
+    GUL_UNUSED_VAR(rKey);
 }
 
 template<typename K, typename V>
@@ -85,6 +89,7 @@ void gul::Map<K,V>::Clear(void)
 template<typename K, typename V>
 bool gul::Map<K,V>::Contains(const K& rKey) const
 {
+    GUL_UNUSED_VAR(rKey);
   return false;
 }
 

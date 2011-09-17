@@ -38,9 +38,27 @@ gul::Stack<T>::Stack(void)
 }
 
 template<typename T>
+gul::Stack<T>::Stack(const gul::Stack<T>& rStack)
+  : pTop(nullptr),
+    size(0)
+{
+  this->copyAllData(rStack);
+}
+
+template<typename T>
 gul::Stack<T>::~Stack(void)
 {
   this->Clear();
+}
+
+template<typename T>
+gul::Stack<T>& gul::Stack<T>::operator=(const gul::Stack<T>& rStack)
+{
+  if(&rStack != this)
+  {
+    this->copyAllData(rStack);
+  }
+  return *this;
 }
 
 template<typename T>
@@ -106,5 +124,13 @@ bool gul::Stack<T>::IsEmpty(void) const
 {
   return this->size == 0;
 }
+
+template<typename T>
+void gul::Stack<T>::copyAllData(const gul::Stack<T>& rStack)
+{
+    this->Clear();
+    GUL_UNUSED_VAR(rStack);
+}
+
 
 #include "memleak_template_end.h"

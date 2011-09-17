@@ -50,6 +50,15 @@ gul::Array<T>::Array(int initSize)
 }
 
 template<typename T>
+gul::Array<T>::Array(const gul::Array<T>& rArray)
+  : pData(new T[rArray.Size()]),
+    size(rArray.Size()),
+    reservedMemoryBlocks(rArray.Size())
+{
+    memcpy(this->pData, rArray.pData, rArray.Size()*sizeof(T));
+}
+
+template<typename T>
 template<typename U>
 gul::Array<T>::Array(const gul::Container<U>& rContainer)
 {
@@ -60,6 +69,20 @@ template<typename T>
 gul::Array<T>::~Array(void)
 {
   GUL_DELETE_ARRAY(this->pData);
+}
+
+template<typename T>
+gul::Array<T>& gul::Array<T>::operator=(const gul::Array<T>& rArray)
+{
+  if(this != &rArray)
+  {
+    GUL_DELETE_ARRAY(this->pData);
+    this->pData = new T[rArray.Size()];
+    memcpy(this->pData, rArray.pData, rArray.Size()*sizeof(T));
+    this->size = rArray.Size();
+    this->reservedMemoryBlocks = this->size;
+  }
+  return *this;
 }
 
 template<typename T>

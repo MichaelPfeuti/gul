@@ -38,7 +38,10 @@ class Stack : public Container<T>
 {
 public:
     Stack(void);
+    Stack(const Stack& rStack);
     virtual ~Stack(void);
+
+    Stack& operator=(const Stack& rStack);
 
     void Push(const T& rElement);
     const T& Top(void) const;
@@ -49,10 +52,13 @@ public:
     bool IsEmpty(void) const;
 
 private:
+    void copyAllData(const Stack& rStack);
+
+private:
     template<typename U>
     struct StackElement
     {
-        StackElement(const U& rElement, StackElement* pNext) : data(rElement), pNext(pNext) {}
+        StackElement(const U& rElement, StackElement* pN) : data(rElement), pNext(pN) {}
         U data;
         StackElement* pNext;
     };
