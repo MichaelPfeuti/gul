@@ -43,7 +43,7 @@ int testConcatenation(void)
   return EXIT_SUCCESS;
 }
 
-int testStringPlaceHolder(void)
+int testPlaceHolder(void)
 {
   TEST_EQUAL(gul::String("Test%").Arg(1), gul::String("Test1"));
   TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
@@ -52,7 +52,7 @@ int testStringPlaceHolder(void)
   return EXIT_SUCCESS;
 }
 
-int testStringReplaceRange(void)
+int testReplaceRange(void)
 {
   gul::String string("TestStringSearch");
 
@@ -63,25 +63,47 @@ int testStringReplaceRange(void)
   return EXIT_SUCCESS;
 }
 
-int testStringReplaceString(void)
+int testReplaceString(void)
 {
-  gul::String string1("TestSEARCHString");
-  gul::String string2("SEARCHTestString");
+  gul::String string1("SEARCHTestString");
+  gul::String string2("TestSEARCHString");
   gul::String string3("TestStringSEARCH");
 
-  TEST_EQUAL(string1.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
-  TEST_EQUAL(string2.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
+  TEST_EQUAL(string1.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
+  TEST_EQUAL(string2.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
   TEST_EQUAL(string3.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestStringGONE"));
 
   return EXIT_SUCCESS;
 }
 
+int testChatAt(void)
+{
+  gul::String string("TestString");
+
+  TEST_EQUAL(string.CharAt(0), 'T');
+  TEST_EQUAL(string.CharAt(1), 'e');
+  TEST_EQUAL(string.CharAt(2), 's');
+  TEST_EQUAL(string.CharAt(3), 't');
+  TEST_EQUAL(string.CharAt(4), 'S');
+  TEST_EQUAL(string.CharAt(5), 't');
+  TEST_EQUAL(string.CharAt(6), 'r');
+  TEST_EQUAL(string.CharAt(7), 'i');
+  TEST_EQUAL(string.CharAt(8), 'n');
+  TEST_EQUAL(string.CharAt(9), 'g');
+
+  return EXIT_SUCCESS;
+}
+
+}
+
 int TestString(const std::string& rTestName)
 {
-  if(rTestName == "Concatenation") return testStringConcatenation();
-  if(rTestName == "PlaceHolder") return testStringPlaceHolder();
-  if(rTestName == "ReplaceString") return testStringReplaceString();
-  if(rTestName == "ReplaceRange") return testStringReplaceRange();
+  if(rTestName == "Concatenation") return testConcatenation();
+  if(rTestName == "PlaceHolder") return testPlaceHolder();
+  if(rTestName == "ReplaceRange") return testReplaceRange();
+  if(rTestName == "ReplaceString") return testReplaceString();
+  if(rTestName == "CharAt") return testChatAt();
+
 
   TEST_END();
 }

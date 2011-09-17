@@ -59,6 +59,11 @@ String::~String()
   GUL_DELETE_ARRAY(pString);
 }
 
+char gul::String::CharAt(int index) const
+{
+    return this->pString[index];
+}
+
 String String::Arg(float value) const
 {
   return String("");
@@ -86,11 +91,13 @@ String String::Arg(const String& rString) const
 
 String String::Replace(const String& rNew, int start, int end) const
 {
-  ASSERT(0 <= start, "Start must be larger that 0!");
-  ASSERT(start < end, "Start must be smaller than end!");
-  ASSERT(end <= this->Size(), "End must be smalles that the size of the string!");
+  ASSERT_MSG(0 <= start, "Start must be larger that 0!");
+  ASSERT_MSG(start < end, "Start must be smaller than end!");
+  ASSERT_MSG(end <= this->Size(), "End must be smalles that the size of the string!");
 
-  char pNewString[start + rNew.Size() + this->Size() - end];
+  int size = start + rNew.Size() + this->Size() - end;
+
+  char pNewString[size];
   strncpy(pNewString                      , this->pString         , start);
   strcpy(pNewString + start               , rNew.pString);
   strncpy(pNewString + start + rNew.Size(), this->pString + end+1 , this->Size() - end);
@@ -102,13 +109,13 @@ String String::Replace(const String& rNew, const String& rSearch) const
 {
   const char* pSearchPos = strstr(this->pString, rSearch.pString);
 
-  ASSERT(pSearchPos != nullptr, "String to replace must occur!");
+  ASSERT_MSG(pSearchPos != nullptr, "String to replace must occur!");
 
   int idx = 0;
   while(pSearchPos != this->pString + idx) ++idx;
 
   //@todo: this generates an unnecessary copy
-  return this->Replace(rNew, idx, idx+rSearch.Size());
+  return this->Replace(rNew, idx, idx+rSearch.Size()-1);
 }
 
 String operator+(const String& rLeft, const String& rRight)
@@ -127,7 +134,8 @@ bool operator!=(const String& rLeft, const String& rRight)
 
 bool operator==(const String& rLeft, const String& rRight)
 {
-  return strcmp(rLeft.pString, rRight.pString) == 0;
+  return rLeft.Size() == rRight.Size() &&
+         strcmp(rLeft.pString, rRight.pString) == 0;
 }
 
 }

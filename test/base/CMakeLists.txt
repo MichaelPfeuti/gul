@@ -12,4 +12,5 @@ add_test(TestString testBase TestString Concatenation)
 add_test(TestString testBase TestString PlaceHolder)
 add_test(TestString testBase TestString ReplaceString)
 add_test(TestString testBase TestString ReplaceRange)
+add_test(TestString testBase TestString CharAt)
 

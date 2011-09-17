@@ -44,6 +44,7 @@ class String
     ~String();
 
     int Size() const { return size; }
+    char CharAt(int index) const;
 
     String Arg(float value) const;
     String Arg(double value) const;
