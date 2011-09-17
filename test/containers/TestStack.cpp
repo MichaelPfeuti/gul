@@ -187,9 +187,9 @@ namespace
 
     copy = stack;
     TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
+    for(int i = 5; i > 0; --i)
     {
-        TEST_EQUAL(copy.Pop(), i+1);
+        TEST_EQUAL(copy.Pop(), i);
     }
 
     return EXIT_SUCCESS;
@@ -202,9 +202,9 @@ namespace
 
     gul::Stack<int> copy(stack);
     TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
+    for(int i = 5; i > 0; --i)
     {
-        TEST_EQUAL(copy.Pop(), i+1);
+        TEST_EQUAL(copy.Pop(), i);
     }
 
     return EXIT_SUCCESS;

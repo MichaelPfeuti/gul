@@ -32,104 +32,61 @@
 
 template<typename T>
 gul::Stack<T>::Stack(void)
-  : pTop(nullptr),
-    size(0)
+  : list()
 {
-}
-
-template<typename T>
-gul::Stack<T>::Stack(const gul::Stack<T>& rStack)
-  : pTop(nullptr),
-    size(0)
-{
-  this->copyAllData(rStack);
 }
 
 template<typename T>
 gul::Stack<T>::~Stack(void)
 {
-  this->Clear();
 }
 
-template<typename T>
-gul::Stack<T>& gul::Stack<T>::operator=(const gul::Stack<T>& rStack)
-{
-  if(&rStack != this)
-  {
-    this->copyAllData(rStack);
-  }
-  return *this;
-}
 
 template<typename T>
 void gul::Stack<T>::Push(const T& rElement)
 {
-  StackElement<T>* pNew = new StackElement<T>(rElement, this->pTop);
-  this->pTop = pNew;
-  ++this->size;
+    this->list.Add(rElement);
 }
 
 template<typename T>
 const T& gul::Stack<T>::Top(void) const
 {
-  ASSERT(this->pTop != nullptr);
-  ASSERT(this->size > 0)
-  return this->pTop->data;
+ASSERT(this->list.Size() > 0)
+return this->list.Get(this->list.Size()-1);
 }
 
 template<typename T>
 T& gul::Stack<T>::Top(void)
 {
-  ASSERT(this->pTop != nullptr);
-  ASSERT(this->size > 0)
-  return this->pTop->data;
+    ASSERT(this->list.Size() > 0)
+    return this->list.Get(this->list.Size()-1);
 }
 
 template<typename T>
 T gul::Stack<T>::Pop(void)
 {
-  ASSERT(this->pTop != nullptr);
-  ASSERT(this->size > 0)
-
-  T removed = this->pTop->data;
-  StackElement<T>* pRemove = this->pTop;
-  this->pTop = this->pTop->pNext;
-  GUL_DELETE(pRemove);
-
-  --this->size;
+  ASSERT(this->list.Size() > 0)
+  T removed = this->list.Get(this->list.Size()-1);
+  this->list.Remove(this->list.Size()-1);
   return removed;
 }
 
 template<typename T>
 void gul::Stack<T>::Clear(void)
 {
-  StackElement<T>* pCur = this->pTop;
-  while(pCur != nullptr)
-  {
-    this->pTop = this->pTop->pNext;
-    GUL_DELETE(pCur);
-    pCur = this->pTop;
-  }
-  this->size = 0;
+    this->list.Clear();
 }
 
 template<typename T>
 int gul::Stack<T>::Size(void) const
 {
-  return this->size;
+    return this->list.Size();
 }
 
 template<typename T>
 bool gul::Stack<T>::IsEmpty(void) const
 {
-  return this->size == 0;
-}
-
-template<typename T>
-void gul::Stack<T>::copyAllData(const gul::Stack<T>& rStack)
-{
-    this->Clear();
-    GUL_UNUSED_VAR(rStack);
+  return this->list.IsEmpty();
 }
 
 
