@@ -25,3 +25,21 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "memleak.h"
+
+
+template<typename T>
+T gul::max(const T& rFirst, const T& rSecond)
+{
+  return rFirst < rSecond ? rSecond : rFirst;
+}
+
+template<typename T>
+T gul::min(const T& rFirst, const T& rSecond)
+{
+  return rFirst > rSecond ? rSecond : rFirst;
+}
+
+
+#include "memleak_template_end.h"

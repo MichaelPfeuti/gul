@@ -1,5 +1,3 @@
-#ifndef _GUL_CONTAINERS_MAP_H_
-#define _GUL_CONTAINERS_MAP_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -28,38 +26,76 @@
 **
 ***************************************************************************/
 
-#include "Container.h"
-
-namespace gul
-{
+#include "Assert.h"
 
 template<typename K, typename V>
-class Map
+gul::Map<K,V>::Map(void)
 {
-  public:
-    Map(void);
-    virtual ~Map(void);
-
-    int Size(void) const;
-    bool IsEmpty(void) const;
-
-    V& Get(const K& rKey);
-    const V& Get(const K &rKey) const;
-
-    void Add(const K& rKey, const V& rValue);
-    void Remove(const K& rKey);
-    void Clear(void);
-
-    bool Contains(const K& rKey) const;
-
-    Container<K>* GetKeys(void) const;
-    Container<V>* GetValues(void) const;
-
-  private:
-};
 
 }
 
-#include "../src/containers/Map.hpp"
+template<typename K, typename V>
+gul::Map<K,V>::~Map(void)
+{
 
-#endif
+}
+
+template<typename K, typename V>
+int gul::Map<K,V>::Size(void) const
+{
+  return 0;
+}
+
+template<typename K, typename V>
+bool gul::Map<K,V>::IsEmpty(void) const
+{
+  return false;
+}
+
+template<typename K, typename V>
+V& gul::Map<K,V>::Get(const K& rKey)
+{
+  return *new V();
+}
+
+template<typename K, typename V>
+const V& gul::Map<K,V>::Get(const K &rKey) const
+{
+  return V();
+}
+
+template<typename K, typename V>
+void gul::Map<K,V>::Add(const K& rKey, const V& rValue)
+{
+
+}
+
+template<typename K, typename V>
+void gul::Map<K,V>::Remove(const K& rKey)
+{
+
+}
+
+template<typename K, typename V>
+void gul::Map<K,V>::Clear(void)
+{
+
+}
+
+template<typename K, typename V>
+bool gul::Map<K,V>::Contains(const K& rKey) const
+{
+  return false;
+}
+
+template<typename K, typename V>
+gul::Container<K>* gul::Map<K,V>::GetKeys(void) const
+{
+  return nullptr;
+}
+
+template<typename K, typename V>
+gul::Container<V>* gul::Map<K,V>::GetValues(void) const
+{
+  return nullptr;
+}

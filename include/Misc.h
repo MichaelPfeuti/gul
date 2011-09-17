@@ -34,3 +34,6 @@
 #define GUL_DELETE_ARRAY(array) \
     delete[] array; \
     array = nullptr
+
+
+

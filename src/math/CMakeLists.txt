@@ -1,5 +1,7 @@
 add_library(math SHARED 
-		Math.cpp
+    MathConstants.cpp
+    Math.hpp
 
     ${INCLUDE}/Math.h
-		)
+    ${INCLUDE}/MathConstants.h
+    )

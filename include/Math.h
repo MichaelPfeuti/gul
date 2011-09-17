@@ -1,3 +1,5 @@
+#ifndef _GUL_MATH_MATH_H_
+#define _GUL_MATH_MATH_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,18 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+namespace gul
+{
+
+template<typename T>
+T max(const T& rFirst, const T& rSecond);
+
+template<typename T>
+T min(const T& rFirst, const T& rSecond);
+
+}
+
+#include "../src/math/Math.hpp"
+
+#endif

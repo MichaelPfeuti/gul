@@ -25,3 +25,220 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "CTestAssert.h"
+#include "Map.h"
+
+namespace {
+
+int testSizeAndIsEmpty(void)
+{
+  gul::Map<int,int> map;
+  TEST_TRUE(map.IsEmpty());
+  TEST_EQUAL(map.Size(), 0);
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_FALSE(map.IsEmpty());
+    TEST_EQUAL(map.Size(), i+1);
+  }
+
+  for(int i = 0; i<4; ++i)
+  {
+    map.Remove(i);
+    TEST_FALSE(map.IsEmpty());
+    TEST_EQUAL(map.Size(), 4-i);
+  }
+
+  map.Remove(4);
+  TEST_TRUE(map.IsEmpty());
+  TEST_EQUAL(map.Size(), 0);
+
+  return EXIT_SUCCESS;
+}
+
+int testAdd(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+    TEST_TRUE(map.Contains(i));
+  }
+
+  map.Remove(4);
+  TEST_TRUE(map.Contains(4));
+  map.Add(4, 40);
+  TEST_EQUAL(map.Get(4), 40);
+  TEST_TRUE(map.Contains(4));
+
+  return EXIT_SUCCESS;
+}
+
+int testRemove(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+
+  TEST_EQUAL(map.Size(), 5);
+  for(int i = 0; i <5; ++i)
+  {
+    map.Remove(i);
+    TEST_FALSE(map.Contains(i));
+    TEST_EQUAL(map.Size(), 4-i);
+  }
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+  TEST_EQUAL(map.Size(), 5);
+
+  return EXIT_SUCCESS;
+}
+
+int testRemoveAssertion(void)
+{
+  gul::Map<int,int> map;
+
+  TEST_ASSERTION(map.Remove(0));
+  map.Add(0,10);
+  map.Remove(0);
+  TEST_ASSERTION(map.Remove(0));
+
+  return EXIT_SUCCESS;
+}
+
+int testClear(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+
+  TEST_EQUAL(map.Size(), 5);
+  map.Clear();
+  TEST_EQUAL(map.Size(), 0);
+
+  for(int i = 0; i<5; ++i)
+  {
+    TEST_FALSE(map.Contains(i));
+  }
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+  TEST_EQUAL(map.Size(), 5);
+
+  return EXIT_SUCCESS;
+}
+
+int testContains(void)
+{
+  gul::Map<int,int> map;
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_TRUE(map.Contains(i));
+  }
+
+  TEST_FALSE(map.Contains(10));
+  map.Add(10, 20);
+  TEST_TRUE(map.Contains(10));
+  map.Add(10, 20);
+  TEST_TRUE(map.Contains(10));
+  map.Remove(10);
+  TEST_FALSE(map.Contains(10));
+
+  return EXIT_SUCCESS;
+}
+
+int testGet(void)
+{
+  gul::Map<int,int> map;
+
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+
+  map.Remove(0);
+  map.Add(0,50);
+  TEST_EQUAL(map.Get(0), 50);
+
+  return EXIT_SUCCESS;
+}
+
+int testGetAssertion(void)
+{
+  gul::Map<int,int> map;
+
+  TEST_ASSERTION(map.Get(0));
+  map.Add(0,10);
+  map.Get(0);
+  map.Remove(0);
+  TEST_ASSERTION(map.Get(0));
+
+  return EXIT_SUCCESS;
+}
+
+int testGetKeys(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+
+  gul::Container<int>* keys = map.GetKeys();
+  TEST_EQUAL(keys->Size(), 5);
+
+  return EXIT_FAILURE;
+}
+
+int testGetValues(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+    TEST_EQUAL(map.Get(i), i+10);
+  }
+
+  gul::Container<int>* values = map.GetValues();
+  TEST_EQUAL(values->Size(), 5);
+
+  return EXIT_FAILURE;
+}
+
+}
+
+int TestMap(const std::string& rTestName)
+{
+    if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
+    if(rTestName == "Add") return testAdd();
+    if(rTestName == "Get") return testGet();
+    if(rTestName == "GetAssertion") return testGetAssertion();
+    if(rTestName == "Remove") return testRemove();
+    if(rTestName == "RemoveAssertion") return testRemoveAssertion();
+    if(rTestName == "Clear") return testClear();
+    if(rTestName == "Contains") return testContains();
+    if(rTestName == "GetKeys") return testGetKeys();
+    if(rTestName == "GetValues") return testGetValues();
+
+    TEST_END();
+}

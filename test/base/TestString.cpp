@@ -26,10 +26,13 @@
 **
 ***************************************************************************/
 
-#include "String.h"
 #include "CTestAssert.h"
+#include "String.h"
 
-int testStringConcatenation(void)
+namespace
+{
+
+int testConcatenation(void)
 {
   gul::String string1("Test");
   gul::String string2("String");

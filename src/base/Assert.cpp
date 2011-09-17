@@ -25,3 +25,34 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Assert.h"
+#include <cstdio>
+#include <cstdlib>
+
+void gul::AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+
+  if(!condition)
+  {
+    fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
+    fflush(stderr);
+    throw ExceptionAssertionViolated();
+  }
+}
+
+void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+
+  if(!condition)
+  {
+    fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
+    fflush(stderr);
+    exit(EXIT_FAILURE);
+  }
+}
+
+void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+  //@todo
+}

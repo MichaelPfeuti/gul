@@ -25,3 +25,17 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "CTestAssert.h"
+
+int testSaveXML(void)
+{
+    return EXIT_FAILURE;
+}
+
+int TestXMLSaver(const std::string& rTestName)
+{
+  if(rTestName == "SaveXML") return testSaveXML();
+
+  TEST_END();
+}

@@ -1,6 +1,6 @@
-#ifndef ASSERTIONS_H
-#define ASSERTIONS_H
-
+#pragma once
+#ifndef _GUL_BASE_ASSERT_H_
+#define _GUL_BASE_ASSERT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -31,16 +31,33 @@
 
 
 #ifndef NDEBUG
+
 #include <cassert>
-#include <cstdio>
 
-#define ASSERT(condition, msg) { if(!(condition)) {fprintf(stderr, "%s\n\t", msg); fflush(stderr);} assert(condition); }
-#define FAIL(msg) { fprintf(stderr, "%s\n\t", msg); fflush(stderr); assert(false); }
+namespace gul
+{
+class ExceptionAssertionViolated {};
+void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
 
+}
+#  ifdef _GUL_TESTING_ENABLED_
+#define ASSERT(condition) gul::AssertException(condition, "", __LINE__, __FILE__);
+#define ASSERT_MSG(condition, msg) gul::AssertException(condition, msg, __LINE__, __FILE__);
+#define FAIL(msg) gul::AssertException(false, msg, __LINE__, __FILE__);
+
+#  else
+#define ASSERT(condition) gul::AssertExit(condition, "", __LINE__, __FILE__);
+#define ASSERT_MSG(condition, msg) gul::AssertExit(condition, msg, __LINE__, __FILE__);
+#define FAIL(msg) gul::AssertExit(false, msg, __LINE__, __FILE__);
+
+#  endif
 #else
-#define ASSERT(condition, msg)
+#define ASSERT(condition)
+#define ASSERT_MSG(condition, msg)
 #define FAIL(msg)
 
 #endif
 
-#endif // ASSERTIONS_H
+#endif

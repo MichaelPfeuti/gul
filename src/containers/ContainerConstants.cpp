@@ -25,3 +25,6 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "ContainerConstants.h"
+

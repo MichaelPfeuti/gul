@@ -25,3 +25,58 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Assert.h"
+#include "memleak.h"
+
+template<typename T>
+gul::Set<T>::Set(void)
+  : list()
+{
+}
+
+template<typename T>
+gul::Set<T>::~Set(void)
+{
+}
+
+template<typename T>
+int gul::Set<T>::Size(void) const
+{
+  return this->list.Size();
+}
+
+template<typename T>
+bool gul::Set<T>::IsEmpty(void) const
+{
+  return this->list.IsEmpty();
+}
+
+template<typename T>
+bool gul::Set<T>::Contains(const T& rElement) const
+{
+  return this->list.Contains(rElement);
+}
+
+template<typename T>
+void gul::Set<T>::Add(const T& rElement)
+{
+  if(!this->list.Contains(rElement))
+    this->list.Add(rElement);
+}
+
+template<typename T>
+void gul::Set<T>::Remove(const T& rElement)
+{
+  ASSERT(this->list.Contains(rElement));
+  this->list.RemoveElement(rElement);
+}
+
+template<typename T>
+void gul::Set<T>::Clear(void)
+{
+  this->list.Clear();
+}
+
+
+#include "memleak_template_end.h"

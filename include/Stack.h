@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_STACK_H_
+#define _GUL_CONTAINERS_STACK_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,41 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Container.h"
+
+namespace gul
+{
+
+template<typename T>
+class Stack : public Container<T>
+{
+public:
+    Stack(void);
+    virtual ~Stack(void);
+
+    void Push(const T& rElement);
+    const T& Top(void) const;
+    T& Top(void);
+    T Pop(void);
+    void Clear(void);
+    int Size(void) const;
+    bool IsEmpty(void) const;
+
+private:
+    template<typename U>
+    struct StackElement
+    {
+        StackElement(const U& rElement, StackElement* pNext) : data(rElement), pNext(pNext) {}
+        U data;
+        StackElement* pNext;
+    };
+
+    StackElement<T>* pTop;
+    int size;
+};
+}
+
+#include "../src/containers/Stack.hpp"
+
+#endif

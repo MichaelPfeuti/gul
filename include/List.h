@@ -1,3 +1,5 @@
+#ifndef _GUL_CONTAINERS_LIST_H_
+#define _GUL_CONTAINERS_LIST_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +27,61 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Container.h"
+namespace gul
+{
+
+template<typename T>
+class List : public Container<T>
+{
+public:
+    List(void);
+    explicit List(int initSize);
+
+    template<typename U>
+    explicit List(const Container<U>& rContainer);
+
+    virtual ~List(void);
+
+    int Size(void) const;
+    bool IsEmpty(void) const;
+
+    void Add(const T& element);
+    void Add(const T& element, int index);
+
+    T& Get(int index);
+    const T& Get(int index) const;
+
+    bool Contains(const T& element) const;
+    int IndexOf(const T& element) const;
+
+    void Remove(int index);
+    void RemoveElement(const T& element);
+
+    void Clear(void);
+
+private:
+    template<typename U>
+    struct ListElement
+    {
+      ListElement(U data)
+          : data(data), pPrev(nullptr), pNext(nullptr) {}
+      ListElement(U data, ListElement* pPrev, ListElement* pNext)
+        : data(data), pPrev(pPrev), pNext(pNext) {}
+
+      U data;
+      ListElement* pPrev;
+      ListElement* pNext;
+    };
+
+    ListElement<T>* pHead;
+    ListElement<T>* pTail;
+    int size;
+};
+
+}
+
+#include "../src/containers/List.hpp"
+
+#endif
