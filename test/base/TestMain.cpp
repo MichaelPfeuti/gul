@@ -30,6 +30,7 @@
 
 void RegisterTests(void)
 {
+  REGISTER_TEST(TestAssert);
   REGISTER_TEST(TestString);
 }
 

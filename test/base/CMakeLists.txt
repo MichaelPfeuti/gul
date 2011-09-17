@@ -6,7 +6,7 @@ add_executable(testBase
 
 target_link_libraries(testBase base memory)
 		
-add_test(TestAssert testBase TestAssert)
+add_test(TestAssert testBase TestAssert Assertion)
 
 add_test(TestString testBase TestString Concatenation)
 add_test(TestString testBase TestString PlaceHolder)

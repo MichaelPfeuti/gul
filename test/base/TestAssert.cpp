@@ -25,3 +25,24 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "Assert.h"
+#include "CTestAssert.h"
+
+namespace
+{
+  int testAssertion(void)
+  {
+    ASSERT(true);
+    TEST_ASSERTION(ASSERT(false));
+    return EXIT_SUCCESS;
+  }
+}
+
+int TestAssert(const std::string& rTestName)
+{
+  if(rTestName == "Assertion") return testAssertion();
+
+
+  TEST_END();
+}
