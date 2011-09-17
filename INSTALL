@@ -1,8 +1,14 @@
 To build the source code run cmake from within the build directory:
 
+  mkdir build
 	cd build
 	cmake ..
 	make
+
+  or
+
+  cmake .
+  make
 	
 To build the documentation run the Doxyfile from the doc folder
 

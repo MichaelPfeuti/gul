@@ -43,6 +43,5 @@ int TestAssert(const std::string& rTestName)
 {
   if(rTestName == "Assertion") return testAssertion();
 
-
   TEST_END();
 }
