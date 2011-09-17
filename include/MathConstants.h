@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_MATH_MATH_H_
 #define _GUL_MATH_MATH_H_
 /***************************************************************************

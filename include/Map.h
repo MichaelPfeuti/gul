@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_CONTAINERS_MAP_H_
 #define _GUL_CONTAINERS_MAP_H_
 /***************************************************************************

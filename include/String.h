@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_BASE_STRING_H_
 #define _GUL_BASE_STRING_H_
 /***************************************************************************

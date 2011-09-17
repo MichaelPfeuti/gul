@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GUL_CONTAINERS_CONTAINER_CONSTANTS_H_
 #define _GUL_CONTAINERS_CONTAINER_CONSTANTS_H_
 /***************************************************************************

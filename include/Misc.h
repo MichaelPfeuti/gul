@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_BASE_MISC_H_
+#define _GUL_BASE_MISC_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -38,3 +41,4 @@
 #define GUL_UNUSED_VAR(var) \
     (void) var
 
+#endif
