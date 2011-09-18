@@ -29,10 +29,10 @@
 #include "CTestAssert.h"
 #include "Set.h"
 
-namespace
+namespace TestSet
 {
 
-  int testSizeAndIsEmpty(void)
+  int SizeAndIsEmpty(void)
   {
     gul::Set<int> set;
     TEST_EQUAL(set.Size(), 0);
@@ -66,7 +66,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAdd(void)
+  int Add(void)
   {
     gul::Set<int> set;
     set.Add(0);
@@ -109,7 +109,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemove(void)
+  int Remove(void)
   {
     gul::Set<int> set;
     set.Add(0);
@@ -153,7 +153,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveAssertion(void)
+  int RemoveAssertion(void)
   {
     gul::Set<int> set;
     TEST_ASSERTION(set.Remove(0));
@@ -164,7 +164,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testClear(void)
+  int Clear(void)
   {
     gul::Set<int> set;
     for(int i = 0; i < 10; ++i)
@@ -182,7 +182,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testContains(void)
+  int Contains(void)
   {
     gul::Set<int> set;
     TEST_FALSE(set.Contains(0));
@@ -197,7 +197,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAssignment(void)
+  int Assignment(void)
   {
     gul::Set<int> set;
     for(int i = 0; i < 5; ++i) set.Add(i + 1);
@@ -217,7 +217,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testCopyConstructor(void)
+  int CopyConstructor(void)
   {
     gul::Set<int> set;
     for(int i = 0; i < 5; ++i) set.Add(i + 1);
@@ -232,18 +232,4 @@ namespace
     return EXIT_SUCCESS;
   }
 
-}
-
-int TestSet(const std::string& rTestName)
-{
-  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-  if(rTestName == "Add") return testAdd();
-  if(rTestName == "Remove") return testRemove();
-  if(rTestName == "RemoveAssertion") return testRemoveAssertion();
-  if(rTestName == "Contains") return testContains();
-  if(rTestName == "Clear") return testClear();
-  if(rTestName == "CopyConstructor") return testCopyConstructor();
-  if(rTestName == "Assignment") return testAssignment();
-
-  TEST_END();
 }

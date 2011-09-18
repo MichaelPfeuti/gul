@@ -1,4 +1,5 @@
 include_directories("${CMAKE_HOME_DIRECTORY}/tools/CTest")
+include("${CMAKE_HOME_DIRECTORY}/tools/CTest/CTestMacros.cmake")
 add_definitions(-D _GUL_TESTING_ENABLED_)
 
 add_subdirectory(base)

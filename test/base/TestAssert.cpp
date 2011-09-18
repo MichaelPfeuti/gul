@@ -29,19 +29,12 @@
 #include "Assert.h"
 #include "CTestAssert.h"
 
-namespace
+namespace TestAssert
 {
-  int testAssertion(void)
+  int Assertion(void)
   {
     ASSERT(true);
     TEST_ASSERTION(ASSERT(false));
     return EXIT_SUCCESS;
   }
-}
-
-int TestAssert(const std::string& rTestName)
-{
-  if(rTestName == "Assertion") return testAssertion();
-
-  TEST_END();
 }

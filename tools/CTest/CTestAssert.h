@@ -71,8 +71,5 @@
     return EXIT_FAILURE; \
   }
 
-#define TEST_END() \
-  fprintf(stderr, "Test %s is not part of the TestCollection!\n", rTestName.c_str()); \
-  return EXIT_FAILURE;
 
 #endif

@@ -29,10 +29,10 @@
 #include "CTestAssert.h"
 #include "Array.h"
 
-namespace
+namespace TestArray
 {
 
-  int testSizeAndIsEmpty(void)
+  int SizeAndIsEmpty(void)
   {
     gul::Array<int> array;
     TEST_EQUAL(array.Size(), 0);
@@ -57,7 +57,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAdd(void)
+  int Add(void)
   {
     gul::Array<int> array;
     TEST_EQUAL(array.Size(), 0);
@@ -75,7 +75,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAddIndex(void)
+  int AddIndex(void)
   {
     gul::Array<int> array;
     TEST_EQUAL(array.Size(), 0);
@@ -114,7 +114,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAddIndexAssertion(void)
+  int AddIndexAssertion(void)
   {
     gul::Array<int> array;
     TEST_ASSERTION(array.Add(5, -1));
@@ -122,7 +122,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveIndex(void)
+  int RemoveIndex(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 10);
@@ -150,7 +150,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveIndexAssertion(void)
+  int RemoveIndexAssertion(void)
   {
     gul::Array<int> array;
 
@@ -165,7 +165,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveElement(void)
+  int RemoveElement(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 10);
@@ -193,7 +193,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveElementAssertion(void)
+  int RemoveElementAssertion(void)
   {
     gul::Array<int> array;
 
@@ -208,7 +208,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testClear(void)
+  int Clear(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i);
@@ -223,7 +223,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testIndexOf(void)
+  int IndexOf(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 1);
@@ -239,7 +239,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testContains(void)
+  int Contains(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 1);
@@ -255,7 +255,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAssignment(void)
+  int Assignment(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 1);
@@ -275,7 +275,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testCopyConstructor(void)
+  int CopyConstructor(void)
   {
     gul::Array<int> array;
     for(int i = 0; i < 5; ++i) array.Add(i + 1);
@@ -290,23 +290,4 @@ namespace
     return EXIT_SUCCESS;
   }
 
-}
-
-int TestArray(const std::string& rTestName)
-{
-  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-  if(rTestName == "Add") return testAdd();
-  if(rTestName == "AddIndex") return testAddIndex();
-  if(rTestName == "AddIndexAssertion") return testAddIndexAssertion();
-  if(rTestName == "RemoveIndex") return testRemoveIndex();
-  if(rTestName == "RemoveIndexAssertion") return testRemoveIndexAssertion();
-  if(rTestName == "RemoveElement") return testRemoveElement();
-  if(rTestName == "RemoveElementAssertion") return testRemoveElementAssertion();
-  if(rTestName == "Clear") return testClear();
-  if(rTestName == "IndexOf") return testIndexOf();
-  if(rTestName == "Contains") return testContains();
-  if(rTestName == "CopyConstructor") return testCopyConstructor();
-  if(rTestName == "Assignment") return testAssignment();
-
-  TEST_END();
 }

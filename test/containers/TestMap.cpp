@@ -29,9 +29,10 @@
 #include "CTestAssert.h"
 #include "Map.h"
 
-namespace {
+namespace TestMap
+{
 
-int testSizeAndIsEmpty(void)
+int SizeAndIsEmpty(void)
 {
   gul::Map<int,int> map;
   TEST_TRUE(map.IsEmpty());
@@ -58,7 +59,7 @@ int testSizeAndIsEmpty(void)
   return EXIT_SUCCESS;
 }
 
-int testAdd(void)
+int Add(void)
 {
   gul::Map<int,int> map;
   for(int i = 0; i<5; ++i)
@@ -77,7 +78,7 @@ int testAdd(void)
   return EXIT_SUCCESS;
 }
 
-int testRemove(void)
+int Remove(void)
 {
   gul::Map<int,int> map;
   for(int i = 0; i<5; ++i)
@@ -104,7 +105,7 @@ int testRemove(void)
   return EXIT_SUCCESS;
 }
 
-int testRemoveAssertion(void)
+int RemoveAssertion(void)
 {
   gul::Map<int,int> map;
 
@@ -116,7 +117,7 @@ int testRemoveAssertion(void)
   return EXIT_SUCCESS;
 }
 
-int testClear(void)
+int Clear(void)
 {
   gul::Map<int,int> map;
   for(int i = 0; i<5; ++i)
@@ -144,7 +145,7 @@ int testClear(void)
   return EXIT_SUCCESS;
 }
 
-int testContains(void)
+int Contains(void)
 {
   gul::Map<int,int> map;
 
@@ -165,7 +166,7 @@ int testContains(void)
   return EXIT_SUCCESS;
 }
 
-int testGet(void)
+int Get(void)
 {
   gul::Map<int,int> map;
 
@@ -182,7 +183,7 @@ int testGet(void)
   return EXIT_SUCCESS;
 }
 
-int testGetAssertion(void)
+int GetAssertion(void)
 {
   gul::Map<int,int> map;
 
@@ -195,7 +196,7 @@ int testGetAssertion(void)
   return EXIT_SUCCESS;
 }
 
-int testGetKeys(void)
+int GetKeys(void)
 {
   gul::Map<int,int> map;
   for(int i = 0; i<5; ++i)
@@ -210,7 +211,7 @@ int testGetKeys(void)
   return EXIT_FAILURE;
 }
 
-int testGetValues(void)
+int GetValues(void)
 {
   gul::Map<int,int> map;
   for(int i = 0; i<5; ++i)
@@ -225,20 +226,4 @@ int testGetValues(void)
   return EXIT_FAILURE;
 }
 
-}
-
-int TestMap(const std::string& rTestName)
-{
-    if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-    if(rTestName == "Add") return testAdd();
-    if(rTestName == "Get") return testGet();
-    if(rTestName == "GetAssertion") return testGetAssertion();
-    if(rTestName == "Remove") return testRemove();
-    if(rTestName == "RemoveAssertion") return testRemoveAssertion();
-    if(rTestName == "Clear") return testClear();
-    if(rTestName == "Contains") return testContains();
-    if(rTestName == "GetKeys") return testGetKeys();
-    if(rTestName == "GetValues") return testGetValues();
-
-    TEST_END();
 }

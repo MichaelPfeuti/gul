@@ -29,10 +29,10 @@
 #include "CTestAssert.h"
 #include "String.h"
 
-namespace
+namespace TestString
 {
 
-int testConcatenation(void)
+int Concatenation(void)
 {
   gul::String string1("Test");
   gul::String string2("String");
@@ -43,7 +43,7 @@ int testConcatenation(void)
   return EXIT_SUCCESS;
 }
 
-int testPlaceHolder(void)
+int PlaceHolder(void)
 {
   TEST_EQUAL(gul::String("Test%").Arg(1), gul::String("Test1"));
   TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
@@ -52,7 +52,7 @@ int testPlaceHolder(void)
   return EXIT_SUCCESS;
 }
 
-int testReplaceRange(void)
+int ReplaceRange(void)
 {
   gul::String string("TestStringSearch");
 
@@ -63,7 +63,7 @@ int testReplaceRange(void)
   return EXIT_SUCCESS;
 }
 
-int testReplaceString(void)
+int ReplaceString(void)
 {
   gul::String string1("SEARCHTestString");
   gul::String string2("TestSEARCHString");
@@ -76,7 +76,7 @@ int testReplaceString(void)
   return EXIT_SUCCESS;
 }
 
-int testChatAt(void)
+int CharAt(void)
 {
   gul::String string("TestString");
 
@@ -95,19 +95,3 @@ int testChatAt(void)
 }
 
 }
-
-int TestString(const std::string& rTestName)
-{
-  if(rTestName == "Concatenation") return testConcatenation();
-  if(rTestName == "PlaceHolder") return testPlaceHolder();
-  if(rTestName == "ReplaceRange") return testReplaceRange();
-  if(rTestName == "ReplaceString") return testReplaceString();
-  if(rTestName == "CharAt") return testChatAt();
-
-
-  TEST_END();
-}
-
-
-
-

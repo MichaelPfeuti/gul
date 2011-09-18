@@ -1,12 +1,8 @@
-add_executable(testPersistance
-		TestMain.cpp
-		TestSettingsManager.cpp
-		TestXMLLoader.cpp
-		TestXMLSaver.cpp
-		)
-		
-add_test(TestSettingsManager testPersistance TestSettingsManager ReadWriteNumerics)
-add_test(TestSettingsManager testPersistance TestSettingsManager ReadWriteStrings)
+gul_add_test(Persistance SettingsManager ReadWriteNumerics)
+gul_add_test(Persistance SettingsManager ReadWriteStrings)
 
-add_test(TestXMLLoader testPersistance TestXMLLoader)
-add_test(TestXMLSaver testPersistance TestXMLSaver)
+gul_add_test(Persistance XMLLoader LoadXML)
+
+gul_add_test(Persistance XMLSaver SaveXML)
+
+gul_create_test()

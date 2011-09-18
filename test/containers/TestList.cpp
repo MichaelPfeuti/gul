@@ -29,10 +29,10 @@
 #include "CTestAssert.h"
 #include "List.h"
 
-namespace
+namespace TestList
 {
 
-  int testSizeAndIsEmpty(void)
+  int SizeAndIsEmpty(void)
   {
     gul::List<int> list;
     TEST_EQUAL(list.Size(), 0);
@@ -57,7 +57,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAdd(void)
+  int Add(void)
   {
     gul::List<int> list;
     TEST_EQUAL(list.Size(), 0);
@@ -75,7 +75,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAddIndex(void)
+  int AddIndex(void)
   {
     gul::List<int> list;
     TEST_EQUAL(list.Size(), 0);
@@ -114,7 +114,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAddIndexAssertion(void)
+  int AddIndexAssertion(void)
   {
     gul::List<int> list;
     TEST_ASSERTION(list.Add(5, -1));
@@ -122,7 +122,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveIndex(void)
+  int RemoveIndex(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 10);
@@ -150,7 +150,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveIndexAssertion(void)
+  int RemoveIndexAssertion(void)
   {
     gul::List<int> list;
 
@@ -165,7 +165,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveElement(void)
+  int RemoveElement(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 10);
@@ -193,7 +193,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testRemoveElementAssertion(void)
+  int RemoveElementAssertion(void)
   {
     gul::List<int> list;
 
@@ -209,7 +209,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testClear(void)
+  int Clear(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i);
@@ -224,7 +224,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testIndexOf(void)
+  int IndexOf(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 1);
@@ -240,7 +240,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testContains(void)
+  int Contains(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 1);
@@ -256,7 +256,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAssignment(void)
+  int Assignment(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 1);
@@ -276,7 +276,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testCopyConstructor(void)
+  int CopyConstructor(void)
   {
     gul::List<int> list;
     for(int i = 0; i < 5; ++i) list.Add(i + 1);
@@ -291,23 +291,4 @@ namespace
     return EXIT_SUCCESS;
   }
 
-}
-
-int TestList(const std::string& rTestName)
-{
-  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-  if(rTestName == "Add") return testAdd();
-  if(rTestName == "AddIndex") return testAddIndex();
-  if(rTestName == "AddIndexAssertion") return testAddIndexAssertion();
-  if(rTestName == "RemoveIndex") return testRemoveIndex();
-  if(rTestName == "RemoveIndexAssertion") return testRemoveIndexAssertion();
-  if(rTestName == "RemoveElement") return testRemoveElement();
-  if(rTestName == "RemoveElementAssertion") return testRemoveElementAssertion();
-  if(rTestName == "Clear") return testClear();
-  if(rTestName == "IndexOf") return testIndexOf();
-  if(rTestName == "Contains") return testContains();
-  if(rTestName == "CopyConstructor") return testCopyConstructor();
-  if(rTestName == "Assignment") return testAssignment();
-
-  TEST_END();
 }

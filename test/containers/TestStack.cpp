@@ -29,10 +29,10 @@
 #include "CTestAssert.h"
 #include "Stack.h"
 
-namespace
+namespace TestStack
 {
 
-  int testSizeAndIsEmpty(void)
+  int SizeAndIsEmpty(void)
   {
     gul::Stack<int> stack;
 
@@ -66,7 +66,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testPush(void)
+  int Push(void)
   {
     gul::Stack<int> stack;
 
@@ -88,7 +88,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testTopAssertion(void)
+  int TopAssertion(void)
   {
     gul::Stack<int> stack;
     TEST_ASSERTION(stack.Top());
@@ -102,7 +102,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testTop(void)
+  int Top(void)
   {
     gul::Stack<int> stack;
 
@@ -125,7 +125,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testPop(void)
+  int Pop(void)
   {
     gul::Stack<int> stack;
 
@@ -146,7 +146,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testPopAssertion(void)
+  int PopAssertion(void)
   {
     gul::Stack<int> stack;
     TEST_ASSERTION(stack.Pop());
@@ -159,7 +159,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testClear(void)
+  int Clear(void)
   {
     gul::Stack<int> stack;
     stack.Push(0);
@@ -175,7 +175,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testAssignment(void)
+  int Assignment(void)
   {
     gul::Stack<int> stack;
     for(int i = 0; i < 5; ++i) stack.Push(i + 1);
@@ -195,7 +195,7 @@ namespace
     return EXIT_SUCCESS;
   }
 
-  int testCopyConstructor(void)
+  int CopyConstructor(void)
   {
     gul::Stack<int> stack;
     for(int i = 0; i < 5; ++i) stack.Push(i + 1);
@@ -210,19 +210,4 @@ namespace
     return EXIT_SUCCESS;
   }
 
-}
-
-int TestStack(const std::string& rTestName)
-{
-  if(rTestName == "SizeAndIsEmpty") return testSizeAndIsEmpty();
-  if(rTestName == "Push") return testPush();
-  if(rTestName == "Pop") return testPop();
-  if(rTestName == "PopAssertion") return testPopAssertion();
-  if(rTestName == "Top") return testTop();
-  if(rTestName == "TopAssertion") return testTopAssertion();
-  if(rTestName == "Clear") return testClear();
-  if(rTestName == "CopyConstructor") return testCopyConstructor();
-  if(rTestName == "Assignment") return testAssignment();
-
-  TEST_END();
 }

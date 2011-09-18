@@ -1,16 +1,11 @@
-add_executable(testBase
-		TestMain.cpp
-    TestAssert.cpp
-    TestString.cpp
-		)
+gul_add_test(Base Assert Assertion)
+gul_add_test(Base String Concatenation)
+gul_add_test(Base String PlaceHolder)
+gul_add_test(Base String ReplaceString)
+gul_add_test(Base String ReplaceRange)
+gul_add_test(Base String CharAt)
+gul_create_test()
+target_link_libraries(TestBase base memory)
 
-target_link_libraries(testBase base memory)
-		
-add_test(TestAssert testBase TestAssert Assertion)
 
-add_test(TestString testBase TestString Concatenation)
-add_test(TestString testBase TestString PlaceHolder)
-add_test(TestString testBase TestString ReplaceString)
-add_test(TestString testBase TestString ReplaceRange)
-add_test(TestString testBase TestString CharAt)
 

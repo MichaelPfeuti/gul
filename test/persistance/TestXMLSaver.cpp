@@ -28,14 +28,10 @@
 
 #include "CTestAssert.h"
 
-int testSaveXML(void)
+namespace TestXMLSaver
+{
+int SaveXML(void)
 {
     return EXIT_FAILURE;
 }
-
-int TestXMLSaver(const std::string& rTestName)
-{
-  if(rTestName == "SaveXML") return testSaveXML();
-
-  TEST_END();
 }

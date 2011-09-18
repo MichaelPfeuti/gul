@@ -37,7 +37,7 @@
 
 // Function pointer to a testing function
 // the argument selects the tests to execute
-typedef int (*TestFunction)(const std::string&);
+typedef int (*TestFunction)(void);
 
 // global map that contains all registered testing functions
 // Note: here we rely on the STL map because we assume our map
@@ -46,9 +46,14 @@ typedef std::map<std::string, TestFunction> FunctionNameMap;
 FunctionNameMap g_testFunctionMap;
 
 // Macro to register a testing function
+#define DECLARE_TEST(suite, test) \
+  namespace suite { \
+    int test(void); \
+  }
+
+// Macro to register a testing function
 #define REGISTER_TEST(test) \
-    extern int test(const std::string&); \
-    g_testFunctionMap[#test] = test
+    g_testFunctionMap[#test] = test;
 
 // Main calls this function to allow testing functions to be registered.
 // This means in an implementation of this function there are usually 
@@ -74,14 +79,12 @@ int main(int argc, char *argv[])
     if(argc > 1 && entry.first == argv[1])
     {
       TestFunction f = entry.second;
-      if(argc == 3)
-        return f(argv[2]);
-      else // there are no specific test cases
-        return f("");
+      return f();
     }
     ++i;
   }
-
+  
+  fprintf(stderr, "Test %s is not part of the TestCollection!\n", argv[1]); \
   return EXIT_FAILURE;
 }
 
