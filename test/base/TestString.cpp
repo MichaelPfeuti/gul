@@ -49,6 +49,21 @@ int PlaceHolder(void)
   TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
   TEST_EQUAL(gul::String("Test%").Arg(1.2345), gul::String("Test1.2345"));
 
+  TEST_EQUAL(gul::String("Test%Test").Arg(1), gul::String("Test1Test"));
+  TEST_EQUAL(gul::String("Test%Test").Arg(99), gul::String("Test99Test"));
+  TEST_EQUAL(gul::String("Test%Test").Arg(1.2345), gul::String("Test1.2345Test"));
+
+  TEST_EQUAL(gul::String("%Test").Arg(1), gul::String("1Test"));
+  TEST_EQUAL(gul::String("%Test").Arg(99), gul::String("99Test"));
+  TEST_EQUAL(gul::String("%Test").Arg(1.2345), gul::String("1.2345Test"));
+
+  TEST_EQUAL(gul::String("Test%Test%").Arg(99).Arg(1.2345), gul::String("Test99Test1.2345"));
+  TEST_EQUAL(gul::String("%Test%Test").Arg(99).Arg(1.2345), gul::String("99Test1.2345Test"));
+
+  TEST_EQUAL(gul::String("Test%%Test").Arg(1).Arg(1.2345), gul::String("Test11.2345Test"));
+  TEST_EQUAL(gul::String("%%TestTest").Arg(1.2345).Arg(1), gul::String("1.23451TestTest"));
+  TEST_EQUAL(gul::String("TestTest%%").Arg(99).Arg(1.2345), gul::String("TestTest991.2345"));
+
   return EXIT_SUCCESS;
 }
 
@@ -90,6 +105,19 @@ int CharAt(void)
   TEST_EQUAL(string.CharAt(7), 'i');
   TEST_EQUAL(string.CharAt(8), 'n');
   TEST_EQUAL(string.CharAt(9), 'g');
+
+  return EXIT_SUCCESS;
+}
+
+int Find(void)
+{
+  gul::String string1("SEARCHTestString");
+  gul::String string2("TestSEARCHString");
+  gul::String string3("TestStringSEARCH");
+
+  TEST_EQUAL(string1.Find(gul::String("SEARCH")), 0);
+  TEST_EQUAL(string2.Find(gul::String("SEARCH")), 4);
+  TEST_EQUAL(string3.Find(gul::String("SEARCH")), 10);
 
   return EXIT_SUCCESS;
 }

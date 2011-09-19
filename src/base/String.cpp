@@ -56,12 +56,6 @@ gul::String::~String()
   GUL_DELETE_ARRAY(pString);
 }
 
-gul::String& gul::String::operator =(const gul::String& rString)
-{
-    GUL_UNUSED_VAR(rString);
-    return *this;
-}
-
 char gul::String::CharAt(int index) const
 {
     return this->pString[index];
@@ -69,7 +63,13 @@ char gul::String::CharAt(int index) const
 
 gul::String gul::String::Arg(float value) const
 {
-    GUL_UNUSED_VAR(value);
+  int idx = this->Find(String("%"));
+  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  for(int i = 0; i < this->size; ++i)
+  {
+
+  }
+      GUL_UNUSED_VAR(value);
   return String("");
 }
 
@@ -124,6 +124,18 @@ gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSe
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx+rSearch.Size()-1);
+}
+
+int gul::String::Find(const gul::String &rString) const
+{
+  const char* pSearchPos = strstr(this->pString, rString.pString);
+  for(int i = 0; i < this->size; ++i)
+  {
+    if(this->pString + i == pSearchPos)
+      return i;
+  }
+  // TODO: use constant here;
+  return -1;
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
