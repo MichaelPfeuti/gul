@@ -44,17 +44,13 @@ class String
     explicit String(const char*);
     ~String();
 
-  private:
-    String& operator =(const String& rString);
-
   public:
     int Size() const { return size; }
     char CharAt(int index) const;
 
-    String Arg(float value) const;
     String Arg(double value) const;
-    String Arg(int value) const;
     String Arg(long value) const;
+    String Arg(int value) const;
     String Arg(const String& rString) const;
 
     int Find(const String& rString) const;
@@ -67,6 +63,7 @@ class String
 
   private:
     // explicitly prohibit this operator (string is not mutable)
+    String& operator =(const String& rString);
     String(void);
     String& operator+=(const String& rString);
 

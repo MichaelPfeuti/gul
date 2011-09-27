@@ -30,6 +30,7 @@
 #include "Assert.h"
 #include "Misc.h"
 #include <cstring>
+#include <cstdio>
 
 #include "memleak.h"
 
@@ -40,13 +41,13 @@ gul::String::String(void)
 }
 
 gul::String::String(const gul::String& rString)
-  : pString(strcpy(new char[rString.Size()], rString.pString)),
+  : pString(strcpy(new char[rString.Size()+1], rString.pString)),
     size(rString.Size())
 {
 }
 
 gul::String::String(const char* pCString)
-  : pString(strcpy(new char[strlen(pCString)], pCString)),
+  : pString(strcpy(new char[strlen(pCString)+1], pCString)),
     size(strlen(pCString))
 {
 }
@@ -61,40 +62,54 @@ char gul::String::CharAt(int index) const
     return this->pString[index];
 }
 
-gul::String gul::String::Arg(float value) const
+gul::String gul::String::Arg(double value) const
 {
   int idx = this->Find(String("%"));
   ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
-  for(int i = 0; i < this->size; ++i)
-  {
 
-  }
-      GUL_UNUSED_VAR(value);
-  return String("");
-}
+  const int valueLength = 256;
+  char pNewString[this->Size() + valueLength];
 
-gul::String gul::String::Arg(double value) const
-{
-    GUL_UNUSED_VAR(value);
-  return String("");
+  sprintf(pNewString, "%.*s%g%s", idx, this->pString, value, this->pString + idx + 1);
+  return String(pNewString);
 }
 
 gul::String gul::String::Arg(int value) const
 {
-    GUL_UNUSED_VAR(value);
-  return String("");
+  int idx = this->Find(String("%"));
+  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+
+  const int valueLength = 256;
+  char pNewString[this->Size() + valueLength];
+
+  sprintf(pNewString, "%.*s%d%s",idx, this->pString, value, this->pString + idx + 1);
+  return String(pNewString);
 }
 
 gul::String gul::String::Arg(long value) const
 {
-    GUL_UNUSED_VAR(value);
-  return String("");
+  int idx = this->Find(String("%"));
+  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+
+  const int valueLength = 255;
+  char pNewString[this->Size() + valueLength];
+
+  sprintf(pNewString, "%.*s%ld%s", idx, this->pString, value, this->pString + idx + 1);
+  return String(pNewString);
 }
 
 gul::String gul::String::Arg(const gul::String& rString) const
 {
-    GUL_UNUSED_VAR(rString);
-  return String("");
+  int idx = this->Find(String("%"));
+  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+
+  char pNewString[this->Size() + rString.Size()];
+  char pFirst[idx];
+  char pEnd[this->Size() - idx -1];
+  strncpy(pFirst, this->pString,            idx);
+  strncpy(pEnd,  this->pString + idx+1,    this->Size() - idx - 1);
+  sprintf(pNewString, "%s%s%s", pFirst, "test", pEnd);
+  return String(pNewString);
 }
 
 gul::String gul::String::Replace(const gul::String& rNew, int start, int end) const
@@ -103,12 +118,13 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
   ASSERT_MSG(start < end, "Start must be smaller than end!");
   ASSERT_MSG(end <= this->Size(), "End must be smalles that the size of the string!");
 
+  // this includes the null byte
   int newSize = start + rNew.Size() + this->Size() - end;
 
   char pNewString[newSize];
   strncpy(pNewString                      , this->pString         , start);
   strcpy(pNewString + start               , rNew.pString);
-  strncpy(pNewString + start + rNew.Size(), this->pString + end+1 , this->Size() - end);
+  strcpy(pNewString + start + rNew.Size(), this->pString + end+1);
 
   return String(pNewString);
 }
@@ -140,7 +156,7 @@ int gul::String::Find(const gul::String &rString) const
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
 {
-  char pNewString[rLeft.Size() + rRight.Size()];
+  char pNewString[rLeft.Size() + rRight.Size() + 1];
   strcpy(pNewString, rLeft.pString);
   strcat(pNewString, rRight.pString);
 

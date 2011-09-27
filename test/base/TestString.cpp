@@ -28,16 +28,47 @@
 
 #include "CTestAssert.h"
 #include "String.h"
+#include <cstring>
 
 namespace TestString
 {
 
-int Concatenation(void)
+int Construction(void)
 {
+  gul::String string("");
   gul::String string1("Test");
   gul::String string2("String");
 
+  TEST_TRUE(strcmp(string.GetData(), "") == 0);
+  TEST_TRUE(strcmp(string1.GetData(), "Test") == 0);
+  TEST_TRUE(strcmp(string2.GetData(), "String") == 0);
+
+  TEST_EQUAL(string, gul::String(""));
+  TEST_EQUAL(string1, gul::String("Test"));
+  TEST_EQUAL(string2, gul::String("String"));
+
+  return EXIT_SUCCESS;
+}
+
+int Concatenation(void)
+{
+  gul::String string("");
+  gul::String string1("Test");
+  gul::String string2("String");
+
+  TEST_EQUAL(string+string1, gul::String("Test"));
+  TEST_EQUAL(string1+string, gul::String("Test"));
+
+  TEST_EQUAL(string+string, gul::String(""));
+  TEST_EQUAL(string1+string1, gul::String("TestTest"));
+  TEST_EQUAL(string2+string2, gul::String("StringString"));
+
   TEST_EQUAL(string1+string2, gul::String("TestString"));
+  TEST_EQUAL(string2+string1, gul::String("StringTest"));
+
+  TEST_EQUAL(string+string2, gul::String("String"));
+  TEST_EQUAL(string2+string, gul::String("String"));
+
   TEST_NOT_EQUAL(string1+string2, gul::String("Test"));
 
   return EXIT_SUCCESS;
