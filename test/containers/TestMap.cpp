@@ -32,6 +32,58 @@
 namespace TestMap
 {
 
+int CopyConstructor(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+  }
+
+  gul::Map<int,int> mapCopy(map);
+  for(int i = 0; i<5; ++i)
+  {
+    TEST_EQUAL(mapCopy.Get(i), i+10);
+    TEST_TRUE(mapCopy.Contains(i));
+  }
+  TEST_EQUAL(mapCopy.Size(), map.Size());
+
+  return EXIT_SUCCESS;
+}
+
+int Assignment(void)
+{
+  gul::Map<int,int> map;
+  for(int i = 0; i<5; ++i)
+  {
+    map.Add(i, i+10);
+  }
+
+  gul::Map<int,int> mapWithElements;
+  for(int i = 10; i<15; ++i)
+  {
+    map.Add(i, i+10);
+  }
+
+  gul::Map<int,int> mapEmpty;
+
+  mapWithElements = map;
+  mapEmpty = map;
+
+  for(int i = 0; i<5; ++i)
+  {
+    TEST_EQUAL(mapWithElements.Get(i), i+10);
+    TEST_TRUE(mapWithElements.Contains(i));
+
+    TEST_EQUAL(mapEmpty.Get(i), i+10);
+    TEST_TRUE(mapEmpty.Contains(i));
+  }
+  TEST_EQUAL(mapWithElements.Size(), map.Size());
+  TEST_EQUAL(mapEmpty.Size(), map.Size());
+
+  return EXIT_SUCCESS;
+}
+
 int SizeAndIsEmpty(void)
 {
   gul::Map<int,int> map;
