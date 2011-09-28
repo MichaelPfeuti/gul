@@ -31,76 +31,95 @@
 
 template<typename K, typename V>
 gul::Map<K,V>::Map(void)
+  : keys(),
+    values()
 {
-
 }
 
 template<typename K, typename V>
 gul::Map<K,V>::~Map(void)
 {
-
 }
 
 template<typename K, typename V>
 int gul::Map<K,V>::Size(void) const
 {
-  return 0;
+  ASSERT(this->keys.Size() == this->values.Size());
+  return this->keys.Size();
 }
 
 template<typename K, typename V>
 bool gul::Map<K,V>::IsEmpty(void) const
 {
-  return false;
+  return this->Size() == 0;
 }
 
 template<typename K, typename V>
 V& gul::Map<K,V>::Get(const K& rKey)
 {
-    GUL_UNUSED_VAR(rKey);
-  return *new V();
+  ASSERT(this->keys.Contains(rKey));
+
+  int idx = this->keys.IndexOf(rKey);
+  return this->values.Get(idx);
 }
 
 template<typename K, typename V>
 const V& gul::Map<K,V>::Get(const K &rKey) const
 {
-  return V();
+  ASSERT(this->keys.Contains(rKey));
+
+  // TODO: duplication
+  int idx = this->keys.IndexOf(rKey);
+  return this->values.Get(idx);
 }
 
 template<typename K, typename V>
 void gul::Map<K,V>::Add(const K& rKey, const V& rValue)
 {
-    GUL_UNUSED_VAR(rKey);
-    GUL_UNUSED_VAR(rValue);
-
+  if(this->keys.Contains(rKey))
+  {
+    int idx = this->keys.IndexOf(rKey);
+    this->values.Remove(idx);
+    this->values.Add(rValue, idx);
+  }
+  else
+  {
+    this->keys.Add(rKey);
+    this->values.Add(rValue);
+  }
 }
 
 template<typename K, typename V>
 void gul::Map<K,V>::Remove(const K& rKey)
 {
-    GUL_UNUSED_VAR(rKey);
+  ASSERT(this->keys.Contains(rKey));
+
+  int idx = this->keys.IndexOf(rKey);
+  this->keys.Remove(idx);
+  this->values.Remove(idx);
 }
 
 template<typename K, typename V>
 void gul::Map<K,V>::Clear(void)
 {
-
+  this->keys.Clear();
+  this->values.Clear();
 }
 
 template<typename K, typename V>
 bool gul::Map<K,V>::Contains(const K& rKey) const
 {
-    GUL_UNUSED_VAR(rKey);
-  return false;
+  return this->keys.Contains(rKey);
 }
 
 template<typename K, typename V>
-gul::Container<K>* gul::Map<K,V>::GetKeys(void) const
+const gul::Container<K>& gul::Map<K,V>::GetKeys(void) const
 {
-  return nullptr;
+  return this->keys;
 }
 
 template<typename K, typename V>
-gul::Container<V>* gul::Map<K,V>::GetValues(void) const
+const gul::Container<V>& gul::Map<K,V>::GetValues(void) const
 {
-  return nullptr;
+  return this->values;
 }

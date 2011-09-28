@@ -57,6 +57,7 @@ gul_add_test(Containers Stack Push)
 gul_add_test(Containers Stack Clear)
 gul_add_test(Containers Stack CopyConstructor)
 gul_add_test(Containers Stack Assignment)
+gul_add_test(Containers Stack Contains)
 
 gul_create_test()
 

@@ -30,6 +30,7 @@
 ***************************************************************************/
 
 #include "Container.h"
+#include "List.h"
 
 namespace gul
 {
@@ -53,10 +54,12 @@ class Map
 
     bool Contains(const K& rKey) const;
 
-    Container<K>* GetKeys(void) const;
-    Container<V>* GetValues(void) const;
+    const Container<K>& GetKeys(void) const;
+    const Container<V>& GetValues(void) const;
 
   private:
+    List<K> keys;
+    List<V> values;
 };
 
 }

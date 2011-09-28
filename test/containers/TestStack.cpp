@@ -210,4 +210,22 @@ namespace TestStack
     return EXIT_SUCCESS;
   }
 
+  int Contains(void)
+  {
+    gul::Stack<int> stack;
+    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
+    for(int i = 0; i < 5; ++i) TEST_TRUE(stack.Contains(i + 1));
+
+    stack.Pop();
+    for(int i = 0; i < 4; ++i) TEST_TRUE(stack.Contains(i + 1));
+    TEST_FALSE(stack.Contains(5));
+
+    stack.Push(5);
+    TEST_TRUE(stack.Contains(5));
+
+    for(int i = 0; i < 5; ++i) stack.Pop();
+    for(int i = 0; i < 5; ++i) TEST_FALSE(stack.Contains(i + 1));
+
+    return EXIT_SUCCESS;
+  }
 }

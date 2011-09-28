@@ -38,6 +38,7 @@ class Container
 public:
     virtual ~Container(void) {}
     virtual int Size(void) const = 0;
+    virtual bool Contains(const T&) const  = 0;
 };
 
 }

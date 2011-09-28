@@ -70,9 +70,14 @@ int Add(void)
   }
 
   map.Remove(4);
-  TEST_TRUE(map.Contains(4));
+  TEST_FALSE(map.Contains(4));
+
   map.Add(4, 40);
   TEST_EQUAL(map.Get(4), 40);
+  TEST_TRUE(map.Contains(4));
+
+  map.Add(4, 41);
+  TEST_EQUAL(map.Get(4), 41);
   TEST_TRUE(map.Contains(4));
 
   return EXIT_SUCCESS;
@@ -205,10 +210,15 @@ int GetKeys(void)
     TEST_EQUAL(map.Get(i), i+10);
   }
 
-  gul::Container<int>* keys = map.GetKeys();
-  TEST_EQUAL(keys->Size(), 5);
+  const gul::Container<int>& rKeys = map.GetKeys();
+  TEST_EQUAL(rKeys.Size(), 5);
 
-  return EXIT_FAILURE;
+  for(int i = 0; i<5; ++i)
+  {
+    TEST_TRUE(rKeys.Contains(i));
+  }
+
+  return EXIT_SUCCESS;
 }
 
 int GetValues(void)
@@ -220,10 +230,15 @@ int GetValues(void)
     TEST_EQUAL(map.Get(i), i+10);
   }
 
-  gul::Container<int>* values = map.GetValues();
-  TEST_EQUAL(values->Size(), 5);
+  const gul::Container<int>& rValues = map.GetValues();
+  TEST_EQUAL(rValues.Size(), 5);
 
-  return EXIT_FAILURE;
+  for(int i = 0; i<5; ++i)
+  {
+    TEST_TRUE(rValues.Contains(i+10));
+  }
+
+  return EXIT_SUCCESS;
 }
 
 }

@@ -49,6 +49,7 @@ public:
     void Clear(void);
     int Size(void) const;
     bool IsEmpty(void) const;
+    bool Contains(const T &) const;
 
 private:
     List<T> list;

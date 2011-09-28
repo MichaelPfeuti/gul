@@ -89,5 +89,10 @@ bool gul::Stack<T>::IsEmpty(void) const
   return this->list.IsEmpty();
 }
 
+template<typename T>
+bool gul::Stack<T>::Contains(const T& rElement) const
+{
+  return this->list.Contains(rElement);
+}
 
 #include "memleak_template_end.h"
