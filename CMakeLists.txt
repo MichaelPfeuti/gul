@@ -39,6 +39,7 @@ set(CFLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
 set(LDFLAGS "-fprofile-arcs -ftest-coverage")
 
 # include files
+set(INCLUDE_TPL "${CMAKE_HOME_DIRECTORY}/include/impl")
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
 include_directories("${INCLUDE}")
 

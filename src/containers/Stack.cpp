@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_CONTAINERS_STACK_H_
-#define _GUL_CONTAINERS_STACK_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -28,34 +25,3 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
-
-#include "Container.h"
-#include "List.h"
-
-namespace gul
-{
-
-template<typename T>
-class Stack : public Container<T>
-{
-public:
-    Stack(void);
-    virtual ~Stack(void);
-
-    void Push(const T& rElement);
-    const T& Top(void) const;
-    T& Top(void);
-    T Pop(void);
-    void Clear(void);
-    int Size(void) const;
-    bool IsEmpty(void) const;
-    bool Contains(const T &) const;
-
-private:
-    List<T> list;
-};
-}
-
-#include "impl/containers/Stack.hpp"
-
-#endif
