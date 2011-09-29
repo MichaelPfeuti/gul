@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_PERSISTANCE_SETTINGS_MANAGER_H_
-#define _GUL_PERSISTANCE_SETTINGS_MANAGER_H_
+#ifndef _GUL_BASE_NON_COPYABLE_H_
+#define _GUL_BASE_NON_COPYABLE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,36 +29,18 @@
 **
 ***************************************************************************/
 
-#include "NonCopyable.h"
-#include "String.h"
-#include <cstdio>
-
 namespace gul
 {
 
-class SettingsManager : public NonCopyable
+class NonCopyable
 {
-
   public:
-    SettingsManager(void);
-    explicit SettingsManager(const String& rPath);
-    virtual ~SettingsManager(void);
-
-    void Write(const String& rKey, const String& rValue);
-    void Write(const String& rKey, double rValue);
-    void Write(const String& rKey, int rValue);
-    void Write(const String& rKey, long rValue);
-
-    int ReadInt(const String& rKey);
-    double ReadDouble(const String& rKey);
-    String ReadString(const String& rKey);
-
-    bool Contains(const String& rKey);
-    void Clear(void);
-    bool IsEmpty(void);
+    NonCopyable(void) {}
+    virtual ~NonCopyable(void) {}
 
   private:
-    FILE* pFile;
+    NonCopyable(const NonCopyable&);
+    NonCopyable& operator=(const NonCopyable&);
 };
 
 }

@@ -45,7 +45,8 @@ class String
     ~String();
 
   public:
-    int Size() const { return size; }
+    bool IsEmpty(void) const { return Size() == 0; }
+    int Size(void) const { return size; }
     char CharAt(int index) const;
 
     String Arg(double value) const;
@@ -58,7 +59,7 @@ class String
     String Replace(const String& rNew, int start, int end) const;
     String Replace(const String& rNew, const String& rSearch) const;
 
-    const char* GetData(void) { return pString; }
+    const char* GetData(void) const { return pString; }
 
 
   private:

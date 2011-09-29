@@ -17,7 +17,6 @@ macro(add_flags var)
 endmacro(add_flags)
 
 # build settings
-#set(CMAKE_CXX_FLAGS "-Wall  -g -pg -std=c++0x")
 add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Werror
                                                     -Wall
                                                     -Wextra
@@ -31,10 +30,11 @@ add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Werror
                                                     -Wno-system-headers
                                                     -Wno-deprecated
                                                     -Woverloaded-virtual
-                                                    -Wwrite-strings
-                                                    -Weffc++
+                                                    -Wwrite-strings                                           
                                                     -fprofile-arcs
                                                     -ftest-coverage")
+    #-Weffc++
+set(CMAKE_CXX_FLAGS "-Wall  -g -pg -std=c++0x")
 set(CFLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
 set(LDFLAGS "-fprofile-arcs -ftest-coverage")
 

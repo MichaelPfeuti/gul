@@ -5,6 +5,7 @@ add_library(base STATIC
     ${INCLUDE}/Assert.h
     ${INCLUDE}/String.h
     ${INCLUDE}/Misc.h
+    ${INCLUDE}/NonCopyable.h
 		)
 
 

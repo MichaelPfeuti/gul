@@ -25,3 +25,90 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "SettingsManager.h"
+#include "Misc.h"
+#include "Assert.h"
+
+#include "memleak.h"
+
+gul::SettingsManager::SettingsManager(void)
+  : pFile(nullptr)
+{
+  //TODO: some default path
+
+}
+
+gul::SettingsManager::SettingsManager(const String &rPath)
+  : pFile(nullptr)
+{
+  ASSERT_MSG(!rPath.IsEmpty(), "The path to the file cannot be empty")
+  pFile = fopen(rPath.GetData(), "w+");
+
+  ASSERT_MSG(pFile != nullptr, "Could not create/open settings file");
+}
+
+gul::SettingsManager::~SettingsManager(void)
+{
+  fclose(pFile);
+}
+
+void gul::SettingsManager::Write(const String &rKey, const String &rValue)
+{
+  GUL_UNUSED_VAR(rKey);
+  GUL_UNUSED_VAR(rValue);
+}
+
+void gul::SettingsManager::Write(const String &rKey, double rValue)
+{
+  GUL_UNUSED_VAR(rKey);
+  GUL_UNUSED_VAR(rValue);
+}
+
+void gul::SettingsManager::Write(const String &rKey, int rValue)
+{
+  GUL_UNUSED_VAR(rKey);
+  GUL_UNUSED_VAR(rValue);
+}
+
+void gul::SettingsManager::Write(const String &rKey, long rValue)
+{
+  GUL_UNUSED_VAR(rKey);
+  GUL_UNUSED_VAR(rValue);
+}
+
+int gul::SettingsManager::ReadInt(const String &rKey)
+{
+  GUL_UNUSED_VAR(rKey);
+  return 0;
+}
+
+double gul::SettingsManager::ReadDouble(const String &rKey)
+{
+  GUL_UNUSED_VAR(rKey);
+  return 0.0;
+}
+
+gul::String gul::SettingsManager::ReadString(const String &rKey)
+{
+  GUL_UNUSED_VAR(rKey);
+  return gul::String("");
+}
+
+bool gul::SettingsManager::Contains(const String &rKey)
+{
+  GUL_UNUSED_VAR(rKey);
+  return false;
+}
+
+
+void gul::SettingsManager::Clear(void)
+{
+
+}
+
+bool gul::SettingsManager::IsEmpty(void)
+{
+  return true;
+}
+
