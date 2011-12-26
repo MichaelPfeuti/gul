@@ -34,7 +34,7 @@ add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Werror
                                                     -fprofile-arcs
                                                     -ftest-coverage")
     #-Weffc++
-set(CMAKE_CXX_FLAGS "-Wall  -g -pg -std=c++0x")
+set(CMAKE_CXX_FLAGS "-Wall  -g -pg -std=c++0x -fPIC")
 set(CFLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
 set(LDFLAGS "-fprofile-arcs -ftest-coverage")
 

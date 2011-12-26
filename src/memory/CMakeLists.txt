@@ -1,5 +1,7 @@
+######################
+#### NVWA Memdump ####
+######################
 set(NVWA ${CMAKE_HOME_DIRECTORY}/libs/nvwa-0.8.2/nvwa)
-
 
 string(REPLACE "-Weffc++" " " NVWA_FLAGS "${CMAKE_CXX_FLAGS}")
 set(LOCAL_CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -26,6 +28,9 @@ add_library(nvwa STATIC
 set_target_properties(nvwa PROPERTIES COMPILE_FLAGS "${NVWA_FLAGS}")
 
 
+####################
+#### Memory Lib ####
+####################
 add_library(memory STATIC
 		ScopedPtr.cpp
 		SharedPtr.cpp
@@ -41,6 +46,4 @@ add_library(memory STATIC
     ${INCLUDE}/memleak_template_end.h
 )
 set_target_properties(memory PROPERTIES COMPILE_FLAGS "${LOCAL_CMAKE_CXX_FLAGS}")
-
-
 target_link_libraries(memory nvwa)
