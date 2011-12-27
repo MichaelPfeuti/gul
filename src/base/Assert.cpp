@@ -31,6 +31,24 @@
 #include <cstdlib>
 #include "Misc.h"
 
+gul::AssertionMode gul::AssertionModeInUse = gul::ABORT;
+
+void gul::Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+  switch(AssertionModeInUse)
+  {
+  case ABORT:
+    AssertExit(condition, pMessage, lineNumber, pFileName);
+    break;
+  case EXCEPTION:
+    AssertException(condition, pMessage, lineNumber, pFileName);
+    break;
+  case GUI:
+    AssertGui(condition, pMessage, lineNumber, pFileName);
+    break;
+  }
+}
+
 void gul::AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 

@@ -47,8 +47,8 @@ namespace TestClassFactory
 
   int CreateAssertion(void)
   {
-
-    return EXIT_FAILURE;
+    TEST_ASSERTION(gul::ClassFactory::CreateInstance(gul::String("DummyClassNotPresent")));
+    return EXIT_SUCCESS;
   }
 }
 
