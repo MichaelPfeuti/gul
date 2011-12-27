@@ -26,30 +26,30 @@
 **
 ***************************************************************************/
 
-#include "Assert.h"
-#include "memleak.h"
+#include "ClassFactory.h"
+#include "CTestAssert.h"
 
-template<typename T>
-XMLLoader::XMLLoader()
-{}
+class DummyClass {};
+REGISTER_CLASS_FACTORY(DummyClass)
 
-template<typename T>
-XMLLoader::~XMLLoader()
-{}
-
-template<typename T>
-T* XMLLoader::LoadGame(const pugi::xml_document& rXmlDocument)
+namespace TestClassFactory
 {
-    pugi::xml_node rootNode = rXmlDocument.document_element();
+  class DummyClass {};
 
-    T loaderInstance;
-    loaderInstance.ResetLoadStatusFor(rootNode);
 
-    T* pLoadedInstance = dynamic_cast<T*>(loaderInstance.Load(rootNode));
+  int CreateClass(void)
+  {
+    TEST_NOT_NULL(gul::ClassFactory::CreateInstance(gul::String("DummyClass")));
+    TEST_NOT_NULL(gul::ClassFactory::CreateInstance(gul::String("TestClassFactory::DummyClass")));
 
-    ASSERT(pLadedInstance != nullptr);
+    return EXIT_SUCCESS;
+  }
 
-    return pLoadedInstance;
+  int CreateAssertion(void)
+  {
+
+    return EXIT_FAILURE;
+  }
 }
 
-#include "memleak_template_end.h"
+REGISTER_NAMESPACE_CLASS_FACTORY(TestClassFactory, DummyClass)

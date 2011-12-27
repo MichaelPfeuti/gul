@@ -32,6 +32,9 @@
 
 class gul::String;
 
+namespace gul
+{
+
 template<typename T>
 class XMLSaver
 {
@@ -45,6 +48,8 @@ private:
     const T& m_rInstance;
 
 };
+
+}
 
 #include "XMLSaver.hpp"
 

@@ -8,6 +8,9 @@ gul_add_test(Base String ReplaceRange)
 gul_add_test(Base String CharAt)
 gul_add_test(Base String Find)
 
+gul_add_test(Base ClassFactory CreateClass)
+gul_add_test(Base ClassFactory CreateAssertion)
+
 gul_create_test()
 target_link_libraries(TestBase base)
 

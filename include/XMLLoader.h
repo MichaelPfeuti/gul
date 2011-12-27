@@ -31,7 +31,10 @@
 ***************************************************************************/
 
 #include "pugixml.hpp"
+class gul::String;
 
+namespace gul
+{
 
 template <typename T>
 class XMLLoader
@@ -40,8 +43,10 @@ public:
     XMLLoader();
     ~XMLLoader();
 
-    T* LoadGame(const pugi::xml_document&);
+    T* LoadGame(const gul::String&);
 };
+
+}
 
 #include "XMLLoader.hpp"
 

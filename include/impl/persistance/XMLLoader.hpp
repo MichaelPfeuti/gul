@@ -26,27 +26,32 @@
 **
 ***************************************************************************/
 
+#include "Assert.h"
 #include "memleak.h"
 
 template<typename T>
-XMLGameSaver::XMLGameSaver(const T& rInstance)
-  : rInstance(rInstance)
-{
-}
+gul::XMLLoader::XMLLoader()
+{}
 
-bool XMLGameSaver::Save(const gul::String& rPath)
+template<typename T>
+gul::XMLLoader::~XMLLoader()
+{}
+
+template<typename T>
+T* gul::XMLLoader::Load(const gul::String& rFile)
 {
     pugi::xml_document doc;
-    gul::String saveFile = rPath + ".xml";
+    doc.load_file(rFile);
+    pugi::xml_node rootNode = doc.document_element();
 
-    this->rInstance.ResetSaveStatus();
-    pugi::xml_node rootNode;
-    rootNode.set_name("TESTE");
+    T loaderInstance;
+    loaderInstance.ResetLoadStatusFor(rootNode);
 
-    //pugi::xml_node rootNode = this->game->Save();
-    doc.append_copy(rootNode);
+    T* pLoadedInstance = dynamic_cast<T*>(loaderInstance.Load(rootNode));
 
-    return doc.save_file(saveFile.mb_str());
+    ASSERT(pLadedInstance != nullptr);
+
+    return pLoadedInstance;
 }
 
 #include "memleak_template_end.h"

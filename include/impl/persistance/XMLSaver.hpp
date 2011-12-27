@@ -26,40 +26,28 @@
 **
 ***************************************************************************/
 
-#include "CTestAssert.h"
+#include "memleak.h"
 
-#include "XMLSerializer.h"
-#include "XMLSaver.h"
-
-namespace TestXMLSaver
+template<typename T>
+gul::XMLGameSaver<T>::XMLGameSaver(const T& rInstance)
+  : rInstance(rInstance)
 {
-
-class TestClass : public gul::XMLSerializer
-{
-  public:
-    TestClass(void)
-      : i(-1), c('a'), f(1.2345f), d(1.2345), b(false)
-    {}
-
-
-
-  private:
-    int i;
-    char c;
-    float f;
-    double d;
-    bool b;
-
-  //DECLARE_SERIALIZABLE()
-};
-
-//BEGIN_SAVE(TestXMLSaver::TestClass)
-
-//END_SAVE(TestXMLSaver::TestClass)
-
-
-int SaveXML(void)
-{
-    return EXIT_FAILURE;
 }
+
+template<typename T>
+bool gul::XMLGameSaver<T>::Save(const gul::String& rPath)
+{
+    pugi::xml_document doc;
+    gul::String saveFile = rPath + ".xml";
+
+    this->rInstance.ResetSaveStatus();
+    pugi::xml_node rootNode;
+    rootNode.set_name("TESTE");
+
+    //pugi::xml_node rootNode = this->game->Save();
+    doc.append_copy(rootNode);
+
+    return doc.save_file(saveFile.mb_str());
 }
+
+#include "memleak_template_end.h"
