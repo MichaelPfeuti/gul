@@ -26,28 +26,34 @@
 **
 ***************************************************************************/
 
+#include "String.h"
+
 #include "memleak.h"
 
 template<typename T>
-gul::XMLGameSaver<T>::XMLGameSaver(const T& rInstance)
+gul::XMLSaver<T>::XMLSaver(const T& rInstance)
   : rInstance(rInstance)
 {
 }
 
 template<typename T>
-bool gul::XMLGameSaver<T>::Save(const gul::String& rPath)
+void gul::XMLSaver<T>::ResetSaveStatus(void) const
+{
+  pugi::xml_node dummyNode;
+  this->rInstance.Save(dummyNode, true);
+}
+
+template<typename T>
+bool gul::XMLSaver<T>::Save(const gul::String& rPath)
 {
     pugi::xml_document doc;
-    gul::String saveFile = rPath + ".xml";
 
-    this->rInstance.ResetSaveStatus();
-    pugi::xml_node rootNode;
-    rootNode.set_name("TESTE");
+    this->ResetSaveStatus();
+    pugi::xml_node rootNode = doc.append_child("elemet");
 
-    //pugi::xml_node rootNode = this->game->Save();
-    doc.append_copy(rootNode);
+    this->rInstance.Save(rootNode);
 
-    return doc.save_file(saveFile.mb_str());
+    return doc.save_file(rPath.GetData());
 }
 
 #include "memleak_template_end.h"

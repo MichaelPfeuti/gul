@@ -28,38 +28,109 @@
 
 #include "CTestAssert.h"
 
-#include "XMLSerializer.h"
+#include "ClassFactory.h"
+#include "XMLSerializable.h"
+#include "XMLMacros.h"
 #include "XMLSaver.h"
+#include "XMLLoader.h"
 
 namespace TestXMLSaver
 {
 
-class TestClass : public gul::XMLSerializer
+class TestClassString : private gul::XMLSerializable
+{
+public:
+  TestClassString(void)
+    : string(new gul::String("TEST String")) {}
+private:
+  gul::String *string;
+
+  DECLARE_SERIALIZABLE()
+};
+REGISTER_CLASS_FACTORY(TestClassString)
+
+BEGIN_SAVE(TestClassString)
+  SAVE_POINTER(string)
+END_SAVE(TestClassString)
+
+BEGIN_LOAD(TestClassString)
+  LOAD_POINTER(string, gul::String)
+END_LOAD(TestClassString)
+
+class TestNestedClass : private gul::XMLSerializable
+{
+public:
+  TestNestedClass(void)
+    : integer(20) {}
+private:
+  int integer;
+  TestClassString stringClass;
+  DECLARE_SERIALIZABLE()
+
+};
+REGISTER_CLASS_FACTORY(TestNestedClass)
+
+BEGIN_SAVE(TestNestedClass)
+  SAVE_PRIMITIVE(integer)
+  SAVE_VARIABLE(stringClass)
+END_SAVE(TestNestedClass)
+
+BEGIN_LOAD(TestNestedClass)
+  LOAD_PRIMITIVE(integer)
+  LOAD_VARIABLE(stringClass, TestClassString)
+END_LOAD(TestNestedClass)
+
+
+class TestClassPrimitives : private gul::XMLSerializable
 {
   public:
-    TestClass(void)
-      : i(-1), c('a'), f(1.2345f), d(1.2345), b(false)
+    TestClassPrimitives(void)
+      : integer(-1), character('a'), floatingPoint(1.2345f), doublePrecision(1.2345), boolean(true)
     {}
 
-
-
   private:
-    int i;
-    char c;
-    float f;
-    double d;
-    bool b;
+    int integer;
+    char character;
+    float floatingPoint;
+    double doublePrecision;
+    bool boolean;
 
-  //DECLARE_SERIALIZABLE()
+  DECLARE_SERIALIZABLE()
 };
+REGISTER_CLASS_FACTORY(TestClassPrimitives)
 
-//BEGIN_SAVE(TestXMLSaver::TestClass)
+BEGIN_SAVE(TestXMLSaver::TestClassPrimitives)
+  SAVE_PRIMITIVE(integer)
+  SAVE_PRIMITIVE(character)
+  SAVE_PRIMITIVE(floatingPoint)
+  SAVE_PRIMITIVE(doublePrecision)
+  SAVE_PRIMITIVE(boolean)
+END_SAVE(TestXMLSaver::TestClassPrimitives)
 
-//END_SAVE(TestXMLSaver::TestClass)
+BEGIN_LOAD(TestXMLSaver::TestClassPrimitives)
+  LOAD_PRIMITIVE(integer)
+  LOAD_PRIMITIVE(character)
+  LOAD_PRIMITIVE(floatingPoint)
+  LOAD_PRIMITIVE(doublePrecision)
+  LOAD_PRIMITIVE(boolean)
+END_LOAD(TestXMLSaver::TestClassPrimitives)
+
+
+
+
+
 
 
 int SaveXML(void)
 {
-    return EXIT_FAILURE;
+  TestNestedClass a;
+  gul::XMLSaver<TestNestedClass> saver(a);
+  saver.Save(gul::String("test.xml"));
+
+  gul::XMLLoader<TestNestedClass> loader;
+  TestNestedClass* ab = loader.Load(gul::String("test.xml"));
+  a = *ab;
+
+  return EXIT_FAILURE;
 }
 }

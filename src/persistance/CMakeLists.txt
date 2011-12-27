@@ -20,7 +20,7 @@ set_source_files_properties(${XMLLIB_PATH}/pugixml.cpp PROPERTIES COMPILE_FLAGS 
 ###########################
 ##### Persistance Lib #####
 ###########################
-add_library(persistance SHARED
+add_library(persistance STATIC
     SettingsManager.cpp
 
     ${INCLUDE_TPL}/persistance/XMLLoader.hpp
@@ -28,11 +28,13 @@ add_library(persistance SHARED
 
 
     ${INCLUDE}/SettingsManager.h
-    ${INCLUDE}/XMLSerializer.h
+    ${INCLUDE}/XMLSerializable.h
     ${INCLUDE}/XMLLoader.h
     ${INCLUDE}/XMLSaver.h
+    ${INCLUDE}/XMLMacros.h
 )
 
 set_target_properties(persistance PROPERTIES COMPILE_FLAGS "${LOCAL_CMAKE_CXX_FLAGS}")
+target_link_libraries(persistance pugixml)
 target_link_libraries(persistance base)
 

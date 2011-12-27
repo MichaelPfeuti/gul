@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "NonCopyable.h"
+#include "XMLSerializable.h"
 
 namespace gul
 {
@@ -36,10 +38,10 @@ namespace gul
 /**
   *
   */
-class String
+class String : private NonCopyable, private XMLSerializable
 {
   public:
-
+    String(void);
     String(const String& rString);
     explicit String(const char*);
     ~String();
@@ -61,12 +63,8 @@ class String
 
     const char* GetData(void) const { return pString; }
 
-
-  private:
-    // explicitly prohibit this operator (string is not mutable)
-    String& operator =(const String& rString);
-    String(void);
-    String& operator+=(const String& rString);
+    virtual void Save(pugi::xml_node& node, bool resetMode = false) const;
+    virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const;
 
   private:
     const char* pString;

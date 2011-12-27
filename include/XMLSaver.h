@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _GUL_PERSISTANCE_XML_SAVER_H_
 #define _GUL_PERSISTANCE_XML_SAVER_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -30,8 +29,6 @@
 **
 ***************************************************************************/
 
-class gul::String;
-
 namespace gul
 {
 
@@ -40,17 +37,19 @@ class XMLSaver
 {
 public:
     XMLSaver(const T& rInstance);
-    ~XMLSaver();
 
     bool Save(const gul::String& rPath);
 
 private:
-    const T& m_rInstance;
+    void ResetSaveStatus(void) const;
+
+private:
+    const T& rInstance;
 
 };
 
 }
 
-#include "XMLSaver.hpp"
+#include "impl/persistance/XMLSaver.hpp"
 
 #endif

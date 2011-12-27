@@ -10,4 +10,4 @@ add_library(base STATIC
     ${INCLUDE}/NonCopyable.h
 		)
 
-target_link_libraries(base memory)
+target_link_libraries(base memory persistance)

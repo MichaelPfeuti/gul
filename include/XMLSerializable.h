@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_BASE_MISC_H_
-#define _GUL_BASE_MISC_H_
+#ifndef _GUL_PERSISTANCE_XML_SERIALIZABLE_H_
+#define _GUL_PERSISTANCE_XML_SERIALIZABLE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,18 +29,22 @@
 **
 ***************************************************************************/
 
+#include <3rdParty/pugi/pugixml.hpp>
 
-#define GUL_DELETE(pointer) \
-    delete pointer; \
-    pointer = nullptr
+namespace gul
+{
 
-#define GUL_DELETE_ARRAY(array) \
-    delete[] array; \
-    array = nullptr
+/** this enforces that saved is initially false */
+class XMLSerializable
+{
+protected:
+    XMLSerializable(void) : __saved (false) {}
+    mutable bool __saved;
+public:
+    virtual void Save(pugi::xml_node& node, bool resetMode = false) const = 0;
+    virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const = 0;
+};
 
-#define GUL_UNUSED_VAR(var) \
-    (void) var
-
-#define UNUSED_VARIABLE(var) (void) var;
+}
 
 #endif

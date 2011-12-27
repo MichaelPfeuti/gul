@@ -39,8 +39,8 @@ class NonCopyable
     virtual ~NonCopyable(void) {}
 
   private:
-    NonCopyable(const NonCopyable&);
-    NonCopyable& operator=(const NonCopyable&);
+    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 }

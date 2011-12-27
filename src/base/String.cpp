@@ -28,11 +28,14 @@
 
 #include "String.h"
 #include "Assert.h"
+#include "ClassFactory.h"
 #include "Misc.h"
 #include <cstring>
 #include <cstdio>
 
 #include "memleak.h"
+
+REGISTER_NAMESPACE_CLASS_FACTORY(gul, String)
 
 gul::String::String(void)
   : pString(nullptr),
@@ -161,6 +164,17 @@ gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
   strcat(pNewString, rRight.pString);
 
   return gul::String(pNewString);
+}
+
+void gul::String::Save(pugi::xml_node& node, bool resetMode) const
+{
+  node.set_name("gul::String");
+  node.append_attribute("value").set_value(this->GetData());
+}
+
+void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new String(node.attribute("value").value());
 }
 
 bool gul::operator!=(const gul::String& rLeft, const gul::String& rRight)

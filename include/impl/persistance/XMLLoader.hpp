@@ -26,30 +26,25 @@
 **
 ***************************************************************************/
 
+#include <3rdParty/pugi/pugixml.hpp>
+
 #include "Assert.h"
+
 #include "memleak.h"
 
 template<typename T>
-gul::XMLLoader::XMLLoader()
-{}
-
-template<typename T>
-gul::XMLLoader::~XMLLoader()
-{}
-
-template<typename T>
-T* gul::XMLLoader::Load(const gul::String& rFile)
+T* gul::XMLLoader<T>::Load(const gul::String& rFile)
 {
     pugi::xml_document doc;
-    doc.load_file(rFile);
-    pugi::xml_node rootNode = doc.document_element();
+    doc.load_file(rFile.GetData());
+    pugi::xml_node rootNode = doc.first_child();
 
     T loaderInstance;
-    loaderInstance.ResetLoadStatusFor(rootNode);
+    loaderInstance.Load(rootNode, true);
 
-    T* pLoadedInstance = dynamic_cast<T*>(loaderInstance.Load(rootNode));
+    T* pLoadedInstance = (T*)(loaderInstance.Load(rootNode));
 
-    ASSERT(pLadedInstance != nullptr);
+    ASSERT(pLoadedInstance != nullptr);
 
     return pLoadedInstance;
 }

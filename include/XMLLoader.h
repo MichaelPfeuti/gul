@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _GUL_PERSISTANCE_XML_LOADER_H_
 #define _GUL_PERSISTANCE_XML_LOADER_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -30,9 +29,6 @@
 **
 ***************************************************************************/
 
-#include "pugixml.hpp"
-class gul::String;
-
 namespace gul
 {
 
@@ -40,14 +36,12 @@ template <typename T>
 class XMLLoader
 {
 public:
-    XMLLoader();
-    ~XMLLoader();
 
-    T* LoadGame(const gul::String&);
+    T* Load(const gul::String&);
 };
 
 }
 
-#include "XMLLoader.hpp"
+#include "impl/persistance/XMLLoader.hpp"
 
 #endif // XMLGAMELOADER_H_INCLUDED
