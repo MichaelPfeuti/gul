@@ -40,6 +40,8 @@ namespace gul
   */
 class String : private NonCopyable, private XMLSerializable
 {
+
+
   public:
     String(void);
     String(const String& rString);
@@ -63,8 +65,10 @@ class String : private NonCopyable, private XMLSerializable
 
     const char* GetData(void) const { return pString; }
 
-    virtual void Save(pugi::xml_node& node, bool resetMode = false) const;
-    virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const;
+  private:
+    virtual void Save(pugi::xml_node& node, bool resetMode) const;
+    virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+    friend class XMLSerializable;
 
   private:
     const char* pString;

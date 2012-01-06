@@ -23,14 +23,12 @@ set_source_files_properties(${XMLLIB_PATH}/pugixml.cpp PROPERTIES COMPILE_FLAGS 
 add_library(persistance STATIC
     SettingsManager.cpp
 
-    ${INCLUDE_TPL}/persistance/XMLLoader.hpp
-    ${INCLUDE_TPL}/persistance/XMLSaver.hpp
+    ${INCLUDE_TPL}/persistance/XMLManager.hpp
 
 
     ${INCLUDE}/SettingsManager.h
     ${INCLUDE}/XMLSerializable.h
-    ${INCLUDE}/XMLLoader.h
-    ${INCLUDE}/XMLSaver.h
+    ${INCLUDE}/XMLManager.h
     ${INCLUDE}/XMLMacros.h
 )
 

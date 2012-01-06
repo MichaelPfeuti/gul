@@ -123,3 +123,15 @@ const gul::Container<V>& gul::Map<K,V>::GetValues(void) const
 {
   return this->values;
 }
+
+template<typename K, typename V>
+void gul::Map<K,V>::Save(pugi::xml_node& node, bool resetMode) const
+{
+  node.set_name("gul::Map<K,V>");
+}
+
+template<typename K, typename V>
+void* gul::Map<K,V>::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new Map<K,V>();
+}

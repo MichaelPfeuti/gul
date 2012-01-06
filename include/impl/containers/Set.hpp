@@ -78,5 +78,17 @@ void gul::Set<T>::Clear(void)
   this->list.Clear();
 }
 
+template<typename T>
+void gul::Set<T>::Save(pugi::xml_node& node, bool resetMode) const
+{
+  node.set_name("gul::Set<T>");
+}
+
+template<typename T>
+void* gul::Set<T>::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new Set<T>();
+}
+
 
 #include "memleak_template_end.h"

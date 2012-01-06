@@ -30,62 +30,69 @@
 ***************************************************************************/
 
 #include "Container.h"
+#include "XMLSerializable.h"
+
 namespace gul
 {
 
-template<typename T>
-class List : public Container<T>
-{
-public:
-    List(void);
-    explicit List(int initSize);
+  template<typename T>
+  class List : public Container<T>, private XMLSerializable
+  {
+    public:
+      List(void);
+      explicit List(int initSize);
 
-    template<typename U>
-    explicit List(const Container<U>& rContainer);
+      template<typename U>
+      explicit List(const Container<U>& rContainer);
 
-    virtual ~List(void);
+      virtual ~List(void);
 
-    List(const List& rList);
-    List& operator=(const List& rList);
+      List(const List& rList);
+      List& operator=(const List& rList);
 
-    int Size(void) const;
-    bool IsEmpty(void) const;
+      int Size(void) const;
+      bool IsEmpty(void) const;
 
-    void Add(const T& element);
-    void Add(const T& element, int index);
+      void Add(const T& element);
+      void Add(const T& element, int index);
 
-    T& Get(int index);
-    const T& Get(int index) const;
+      T& Get(int index);
+      const T& Get(int index) const;
 
-    bool Contains(const T& element) const;
-    int IndexOf(const T& element) const;
+      bool Contains(const T& element) const;
+      int IndexOf(const T& element) const;
 
-    void Remove(int index);
-    void RemoveElement(const T& element);
+      void Remove(int index);
+      void RemoveElement(const T& element);
 
-    void Clear(void);
+      void Clear(void);
 
-private:
-    void copyAllData(const List& rList);
+    private:
+      virtual void Save(pugi::xml_node& node, bool resetMode) const;
+      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      friend class XMLSerializable;
 
-private:
-    template<typename U>
-    struct ListElement
-    {
-      ListElement(U d)
+    private:
+      void copyAllData(const List& rList);
+
+    private:
+      template<typename U>
+      struct ListElement
+      {
+        ListElement(U d)
           : data(d), pPrev(nullptr), pNext(nullptr) {}
-      ListElement(U d, ListElement* pP, ListElement* pN)
-        : data(d), pPrev(pP), pNext(pN) {}
+        ListElement(U d, ListElement* pP, ListElement* pN)
+          : data(d), pPrev(pP), pNext(pN) {}
 
-      U data;
-      ListElement* pPrev;
-      ListElement* pNext;
-    };
+        U data;
+        ListElement* pPrev;
+        ListElement* pNext;
+      };
 
-    ListElement<T>* pHead;
-    ListElement<T>* pTail;
-    int size;
-};
+      ListElement<T>* pHead;
+      ListElement<T>* pTail;
+      int size;
+  };
 
 }
 

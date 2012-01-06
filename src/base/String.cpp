@@ -32,10 +32,9 @@
 #include "Misc.h"
 #include <cstring>
 #include <cstdio>
+#include <typeinfo>
 
 #include "memleak.h"
-
-REGISTER_NAMESPACE_CLASS_FACTORY(gul, String)
 
 gul::String::String(void)
   : pString(nullptr),
@@ -157,6 +156,18 @@ int gul::String::Find(const gul::String &rString) const
   return -1;
 }
 
+void gul::String::Save(pugi::xml_node& node, bool resetMode) const
+{
+  //node.set_name("gul::String");
+  node.set_name(typeid(*this).name());
+  node.append_attribute("value").set_value(this->GetData());
+}
+
+void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new String(node.attribute("value").value());
+}
+
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
 {
   char pNewString[rLeft.Size() + rRight.Size() + 1];
@@ -164,17 +175,6 @@ gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)
   strcat(pNewString, rRight.pString);
 
   return gul::String(pNewString);
-}
-
-void gul::String::Save(pugi::xml_node& node, bool resetMode) const
-{
-  node.set_name("gul::String");
-  node.append_attribute("value").set_value(this->GetData());
-}
-
-void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
-{
-  return new String(node.attribute("value").value());
 }
 
 bool gul::operator!=(const gul::String& rLeft, const gul::String& rRight)

@@ -32,11 +32,11 @@
 namespace gul
 {
 
-template<typename T>
-T max(const T& rFirst, const T& rSecond);
+  template<typename T>
+  T max(const T& rFirst, const T& rSecond);
 
-template<typename T>
-T min(const T& rFirst, const T& rSecond);
+  template<typename T>
+  T min(const T& rFirst, const T& rSecond);
 
 }
 

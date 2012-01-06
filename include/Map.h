@@ -31,36 +31,42 @@
 
 #include "Container.h"
 #include "List.h"
+#include "XMLSerializable.h"
 
 namespace gul
 {
 
-template<typename K, typename V>
-class Map
-{
-  public:
-    Map(void);
-    virtual ~Map(void);
+  template<typename K, typename V>
+  class Map : private XMLSerializable
+  {
+    public:
+      Map(void);
+      virtual ~Map(void);
 
-    int Size(void) const;
-    bool IsEmpty(void) const;
+      int Size(void) const;
+      bool IsEmpty(void) const;
 
-    V& Get(const K& rKey);
-    const V& Get(const K &rKey) const;
+      V& Get(const K& rKey);
+      const V& Get(const K& rKey) const;
 
-    void Add(const K& rKey, const V& rValue);
-    void Remove(const K& rKey);
-    void Clear(void);
+      void Add(const K& rKey, const V& rValue);
+      void Remove(const K& rKey);
+      void Clear(void);
 
-    bool Contains(const K& rKey) const;
+      bool Contains(const K& rKey) const;
 
-    const Container<K>& GetKeys(void) const;
-    const Container<V>& GetValues(void) const;
+      const Container<K>& GetKeys(void) const;
+      const Container<V>& GetValues(void) const;
 
-  private:
-    List<K> keys;
-    List<V> values;
-};
+    private:
+      virtual void Save(pugi::xml_node& node, bool resetMode) const;
+      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      friend class XMLSerializable;
+
+    private:
+      List<K> keys;
+      List<V> values;
+  };
 
 }
 

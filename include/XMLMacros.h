@@ -45,9 +45,10 @@ typedef gul::Map<gul::String, void*> InstanceMap;
         mutable int __refIndex;   /* reference index*/ \
         static int __maxRef; /* highest reference index*/ \
         static InstanceMap __loadedInstances; /* reference index to instance map*/ \
-    public:\
+    private:\
         virtual void Save(pugi::xml_node& node, bool resetMode = false) const; \
         virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const; \
+    friend class gul::XMLSerializable; \
     private:
 
 
@@ -104,7 +105,7 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           if(attributeArg != nullptr) \
           { \
               pugi::xml_node childNode = node.append_child(); \
-              attributeArg->Save(childNode, resetMode); \
+              performSave(*attributeArg, childNode, resetMode); \
               childNode.append_attribute("attributeName").set_value(#attributeArg); \
           } \
           else \
@@ -116,7 +117,7 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           { \
             pugi::xml_node childNode = node.append_child(); \
             childNode.append_attribute("attributeName").set_value(#attributeArg); \
-            attributeArg.Save(childNode, resetMode); \
+            performSave(attributeArg, childNode, resetMode); \
           }
 
 
@@ -239,7 +240,7 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           gul::String string(listNode.attribute("attributeName").value()); \
           if (string == gul::String(#attributeArg)) { \
               className* loaderObject = (className*) gul::ClassFactory::CreateInstance(gul::String(listNode.name()));   \
-              className* myObject = (className*) loaderObject->Load(listNode, resetMode); \
+              className* myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
                   instance->attributeArg = myObject; \
@@ -257,7 +258,7 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           gul::String string(listNode.attribute("attributeName").value()); \
           if (string == gul::String(#attributeArg)) { \
               className* loaderObject = (className*) gul::ClassFactory::CreateInstance(gul::String(listNode.name()));   \
-              className* myObject = (className*) loaderObject->Load(listNode, resetMode); \
+              className* myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
                   instance->attributeArg = *myObject; \

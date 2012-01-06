@@ -31,27 +31,33 @@
 
 #include "Container.h"
 #include "List.h"
+#include "XMLSerializable.h"
 
 namespace gul
 {
 
-template<typename T>
-class Set : public Container<T>
-{
-  public:
-    Set(void);
-    virtual ~Set(void);
+  template<typename T>
+  class Set : public Container<T>, private XMLSerializable
+  {
+    public:
+      Set(void);
+      virtual ~Set(void);
 
-    int Size(void) const;
-    bool IsEmpty(void) const ;
-    bool Contains(const T& rElement) const;
-    void Add(const T& rElement);
-    void Remove(const T& rElement);
-    void Clear(void);
+      int Size(void) const;
+      bool IsEmpty(void) const ;
+      bool Contains(const T& rElement) const;
+      void Add(const T& rElement);
+      void Remove(const T& rElement);
+      void Clear(void);
 
-  private:
-    List<T> list;
-};
+    private:
+      virtual void Save(pugi::xml_node& node, bool resetMode) const;
+      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      friend class XMLSerializable;
+
+    private:
+      List<T> list;
+  };
 
 }
 

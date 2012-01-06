@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_BASE_CLASSFACTORY_H_
-#define _GUL_BASE_CLASSFACTORY_H_
+#ifndef _GUL_BASE_CLASS_FACTORY_H_
+#define _GUL_BASE_CLASS_FACTORY_H_
 
 /***************************************************************************
 **
@@ -31,50 +31,50 @@
 ***************************************************************************/
 
 #include "String.h"
-#include "Map.h"
+#include "ClassFactoryBase.h"
 
-namespace gul {
-
-
-class ClassFactory
+namespace gul
 {
-    typedef void* (*creatorFunction)();
-    typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
-public:
-    ClassFactory(const gul::String& rClassName, creatorFunction);
-    ~ClassFactory();
-    static void  AddClassCreator(const gul::String& rClassName, creatorFunction);
-    static void* CreateInstance(const gul::String& rClassName);
 
-private:
-    // must be a pointer. this way we can control when the map is created.
-    // if this is on the stack we get a runtime error
-    static ClassNameToFactoryMap* pNameToFactoryMap;
-};
+  template<typename T>
+  class ClassFactory : public ClassFactoryBase
+  {
+    public:
+      ClassFactory(void);
+      ClassFactory(creatorFunction);
+      static T* CreateInstance(const gul::String& rClassName);
+    private:
+      static void* CreateConcreteClass(void);
+  };
 
 }
 
-#define REGISTER_CLASS_FACTORY(className) \
-\
-namespace { \
-static void* className##__Factory() \
-{ \
-return new className(); \
-} \
-\
-static gul::ClassFactory className##__dummy(gul::String(#className), &className## __Factory); \
-}
+
+#define DECALRE_CREATE(classname) \
+  private: \
+    template<typename T_ClassFactory> friend class gul::ClassFactory; \
+    static void* CreateInstance(void); \
+    static const gul::ClassFactory<classname> classFactory
+
+#define DEFINE_CREATE(classname) \
+  void* classname::CreateInstance(void) \
+  { \
+    return new classname(); \
+  } \
+  \
+  const gul::ClassFactory<classname> classname::classFactory = gul::ClassFactory<classname>(&classname::CreateInstance)
+
+#define DEFINE_TEMPLATE_CREATE(classname) \
+  template<typename T> \
+  void* classname<T>::CreateInstance(void) \
+  { \
+    return new classname<T>(); \
+  } \
+  \
+  template<typename T> \
+  const gul::ClassFactory<classname<T>> classname<T>::classFactory = gul::ClassFactory<classname<T>>(&classname<T>::CreateInstance) \
 
 
-#define REGISTER_NAMESPACE_CLASS_FACTORY(namespaceName, className) \
-\
-namespace { \
-void* namespaceName##__##className##__Factory() \
-{ \
-return new namespaceName::className(); \
-} \
-\
-gul::ClassFactory namespaceName##__##className##__dummy(gul::String(#namespaceName) + gul::String("::") + gul::String(#className), &namespaceName##__##className##__Factory);\
-}
+#include "impl/base/ClassFactory.hpp"
 
 #endif

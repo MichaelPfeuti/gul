@@ -95,4 +95,16 @@ bool gul::Stack<T>::Contains(const T& rElement) const
   return this->list.Contains(rElement);
 }
 
+template<typename T>
+void gul::Stack<T>::Save(pugi::xml_node& node, bool resetMode) const
+{
+  node.set_name("gul::Stack<T>");
+}
+
+template<typename T>
+void* gul::Stack<T>::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new Stack<T>();
+}
+
 #include "memleak_template_end.h"

@@ -29,9 +29,11 @@
 **
 ***************************************************************************/
 
+
 namespace gul
 {
 
+/** @todo consider if this is really necessary. qt doesn't do that either. */
 template<typename T>
 class Container
 {

@@ -31,18 +31,31 @@
 
 #include <3rdParty/pugi/pugixml.hpp>
 
+
 namespace gul
 {
 
-/** this enforces that saved is initially false */
 class XMLSerializable
 {
 protected:
     XMLSerializable(void) : __saved (false) {}
     mutable bool __saved;
-public:
-    virtual void Save(pugi::xml_node& node, bool resetMode = false) const = 0;
-    virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const = 0;
+
+    template<typename V> static void performSave(const V& v, pugi::xml_node& node, bool resetMode = false)
+    {
+      v.Save(node, resetMode);
+    }
+
+    template<typename V> static V* performLoad(const V& v, pugi::xml_node& node, bool resetMode = false)
+    {
+      return static_cast<V*>(v.Load(node, resetMode));
+    }
+
+private:
+    virtual void Save(pugi::xml_node& node, bool resetMode) const = 0;
+    virtual void* Load(const pugi::xml_node& node, bool resetMode) const = 0;
+
+    friend class XMLManager;
 };
 
 }

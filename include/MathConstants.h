@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_MATH_MATH_H_
-#define _GUL_MATH_MATH_H_
+#ifndef _GUL_MATH_MATH_CONSTANTS_H_
+#define _GUL_MATH_MATH_CONSTANTS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).

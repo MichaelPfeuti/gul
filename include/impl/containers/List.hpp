@@ -260,4 +260,16 @@ void gul::List<T>::copyAllData(const List& rList)
     }
 }
 
+template<typename T>
+void gul::List<T>::Save(pugi::xml_node& node, bool resetMode) const
+{
+  node.set_name("gul::List<T>");
+}
+
+template<typename T>
+void* gul::List<T>::Load(const pugi::xml_node& node, bool resetMode) const
+{
+  return new List<T>();
+}
+
 #include "memleak_template_end.h"
