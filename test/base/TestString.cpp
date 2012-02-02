@@ -79,14 +79,17 @@ int PlaceHolder(void)
   TEST_EQUAL(gul::String("Test%").Arg(1), gul::String("Test1"));
   TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
   TEST_EQUAL(gul::String("Test%").Arg(1.2345), gul::String("Test1.2345"));
+  TEST_EQUAL(gul::String("Test%").Arg(gul::String("Repl")), gul::String("TestRepl"));
 
   TEST_EQUAL(gul::String("Test%Test").Arg(1), gul::String("Test1Test"));
   TEST_EQUAL(gul::String("Test%Test").Arg(99), gul::String("Test99Test"));
   TEST_EQUAL(gul::String("Test%Test").Arg(1.2345), gul::String("Test1.2345Test"));
+  TEST_EQUAL(gul::String("Test%Test").Arg(gul::String("Repl")), gul::String("TestReplTest"));
 
   TEST_EQUAL(gul::String("%Test").Arg(1), gul::String("1Test"));
   TEST_EQUAL(gul::String("%Test").Arg(99), gul::String("99Test"));
   TEST_EQUAL(gul::String("%Test").Arg(1.2345), gul::String("1.2345Test"));
+  TEST_EQUAL(gul::String("%Test").Arg(gul::String("Repl")), gul::String("ReplTest"));
 
   TEST_EQUAL(gul::String("Test%Test%").Arg(99).Arg(1.2345), gul::String("Test99Test1.2345"));
   TEST_EQUAL(gul::String("%Test%Test").Arg(99).Arg(1.2345), gul::String("99Test1.2345Test"));

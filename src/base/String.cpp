@@ -102,23 +102,14 @@ gul::String gul::String::Arg(long value) const
 
 gul::String gul::String::Arg(const gul::String& rString) const
 {
-  int idx = this->Find(String("%"));
-  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
-
-  char pNewString[this->Size() + rString.Size()];
-  char pFirst[idx];
-  char pEnd[this->Size() - idx -1];
-  strncpy(pFirst, this->pString,            idx);
-  strncpy(pEnd,  this->pString + idx+1,    this->Size() - idx - 1);
-  sprintf(pNewString, "%s%s%s", pFirst, "test", pEnd);
-  return String(pNewString);
+  return this->Replace(rString, gul::String("%"));
 }
 
 gul::String gul::String::Replace(const gul::String& rNew, int start, int end) const
 {
   ASSERT_MSG(0 <= start, "Start must be larger that 0!");
-  ASSERT_MSG(start < end, "Start must be smaller than end!");
-  ASSERT_MSG(end <= this->Size(), "End must be smalles that the size of the string!");
+  ASSERT_MSG(start <= end, "Start must be smaller than end!");
+  ASSERT_MSG(end <= this->Size(), "End must be smaller that the size of the string!");
 
   // this includes the null byte
   int newSize = start + rNew.Size() + this->Size() - end;
@@ -158,7 +149,6 @@ int gul::String::Find(const gul::String &rString) const
 
 void gul::String::Save(pugi::xml_node& node, bool resetMode) const
 {
-  //node.set_name("gul::String");
   node.set_name(typeid(*this).name());
   node.append_attribute("value").set_value(this->GetData());
 }
