@@ -11,6 +11,7 @@ gul_add_test(Base String Find)
 gul_add_test(Base ClassFactory CreateClass)
 gul_add_test(Base ClassFactory CreateTemplateClass)
 gul_add_test(Base ClassFactory CreateAssertion)
+gul_add_test(Base ClassFactory CreateSuperClass)
 
 gul_create_test()
 target_link_libraries(TestBase base)

@@ -53,7 +53,7 @@ public:
     }; \
   }
 
-#define DEFINE_TEMPLATE_RTTI(classname) \
+#define DEFINE_TPL_RTTI(classname) \
   namespace gul { \
     template<typename T> \
     class RTTI<classname<T>> \

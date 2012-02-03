@@ -37,23 +37,13 @@
   */
 template<typename T>
 gul::ClassFactory<T>::ClassFactory(void)
-  : ClassFactory(&gul::ClassFactory<T>::CreateConcreteClass)
-{
-}
-
-/**
-  * The template argument must be a concrete class such that we can create
-  * an instance from it when requested.
-  */
-template<typename T>
-gul::ClassFactory<T>::ClassFactory(void* (*creatorFunction)())
 {
   // @todo: Caution with multithreading
   if(ClassFactoryBase::pNameToFactoryMap == nullptr)
   {
     ClassFactoryBase::pNameToFactoryMap = new ClassNameToFactoryMap();
   }
-  ClassFactoryBase::pNameToFactoryMap->Add(gul::RTTI<T>::GetName(), creatorFunction);
+  ClassFactoryBase::pNameToFactoryMap->Add(gul::RTTI<T>::GetName(), &gul::ClassFactory<T>::CreateConcreteClass);
 }
 
 template<typename T>
@@ -76,7 +66,7 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
   }
   else
   {
-    FAIL(gul::String("ClassFactory cannot create Instance of % asd").Arg(rClassName).GetData());
+    FAIL(gul::String("ClassFactory cannot create Instance of %").Arg(rClassName).GetData());
     return nullptr;
   }
 }

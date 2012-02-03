@@ -30,34 +30,36 @@
 #include "CTestAssert.h"
 
 #include <cstdio>
-class DummyClass
+
+class DummyClass : REGISTER_FACTORY(DummyClass)
 {
-  DECALRE_CREATE(DummyClass);
 };
-DEFINE_CREATE(DummyClass);
-DEFINE_RTTI(DummyClass)
 
 namespace TestClassFactory
 {
-  class NameSpaceDummyClass
+
+  class NameSpaceDummyClass : public DummyClass,
+                              REGISTER_FACTORY(NameSpaceDummyClass)
   {
-    DECALRE_CREATE(NameSpaceDummyClass);
   };
-  DEFINE_CREATE(NameSpaceDummyClass);
 
   template<typename T>
-  class TemplateDummyClass
+  class TemplateDummyClass : public DummyClass,
+                             REGISTER_FACTORY(TemplateDummyClass<T>)
   {
-  public:
-    void test() { printf("askcjn\n"); }
-    DECALRE_CREATE(TemplateDummyClass);
   };
-  DEFINE_TEMPLATE_CREATE(TemplateDummyClass);
+
+
+  static const DummyClass a;
+  static const NameSpaceDummyClass b;
+  static const TemplateDummyClass<int> c;
 
   int CreateClass(void)
   {
+
     TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("DummyClass")));
     TEST_NOT_NULL(gul::ClassFactory<TestClassFactory::NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
+    TEST_NOT_NULL(gul::ClassFactory<NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
     TEST_ASSERTION(gul::ClassFactory<NameSpaceDummyClass>::CreateInstance(gul::String("NameSpaceDummyClass")));
     TEST_ASSERTION(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::DummyClass")));
 
@@ -66,20 +68,24 @@ namespace TestClassFactory
 
   int CreateTemplateClass(void)
   {
-    TemplateDummyClass<int> i;
-    i.test();
     TEST_NOT_NULL(gul::ClassFactory<TestClassFactory::TemplateDummyClass<int>>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>")));
-    //TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::DummyClass")));
-
     return EXIT_SUCCESS;
   }
+
 
   int CreateAssertion(void)
   {
     TEST_ASSERTION(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("DummyClassNotPresent")));
     return EXIT_SUCCESS;
   }
-}
 
+  int CreateSuperClass(void)
+  {
+    TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
+    TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>")));
+    return EXIT_SUCCESS;
+  }
+}
+DEFINE_RTTI(DummyClass);
 DEFINE_RTTI(TestClassFactory::NameSpaceDummyClass)
-//DEFINE_TEMPLATE_RTTI(TestClassFactory::TemplateDummyClass)
+DEFINE_TPL_RTTI(TestClassFactory::TemplateDummyClass)

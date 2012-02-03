@@ -41,39 +41,28 @@ namespace gul
   {
     public:
       ClassFactory(void);
-      ClassFactory(creatorFunction);
       static T* CreateInstance(const gul::String& rClassName);
+      void dummy(void) const {}
     private:
       static void* CreateConcreteClass(void);
   };
 
+
+  template<typename T>
+  class TemplateClassRegistor
+  {
+    public:
+      TemplateClassRegistor(void) { classFactory.dummy(); }
+    private:
+      static const gul::ClassFactory<T> classFactory;
+  };
+
+  template<typename T>
+  const gul::ClassFactory<T> TemplateClassRegistor<T>::classFactory = gul::ClassFactory<T>();
 }
 
-
-#define DECALRE_CREATE(classname) \
-  private: \
-    template<typename T_ClassFactory> friend class gul::ClassFactory; \
-    static void* CreateInstance(void); \
-    static const gul::ClassFactory<classname> classFactory
-
-#define DEFINE_CREATE(classname) \
-  void* classname::CreateInstance(void) \
-  { \
-    return new classname(); \
-  } \
-  \
-  const gul::ClassFactory<classname> classname::classFactory = gul::ClassFactory<classname>(&classname::CreateInstance)
-
-#define DEFINE_TEMPLATE_CREATE(classname) \
-  template<typename T> \
-  void* classname<T>::CreateInstance(void) \
-  { \
-    return new classname<T>(); \
-  } \
-  \
-  template<typename T> \
-  const gul::ClassFactory<classname<T>> classname<T>::classFactory = gul::ClassFactory<classname<T>>(&classname<T>::CreateInstance) \
-
+#define REGISTER_FACTORY(classname) \
+  private gul::TemplateClassRegistor<classname>
 
 #include "impl/base/ClassFactory.hpp"
 
