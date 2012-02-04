@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 project(gul)
 
 # cdash settings
-enable_testing()
 include(CTest)
 
 if(BUILD_TESTING)
@@ -17,10 +16,10 @@ macro(add_flags var)
 endmacro(add_flags)
 
 # build settings
-add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Werror
-                                                    -Wall
+add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Wall
                                                     -Wextra
                                                     -W
+                                                    -Weffc++
                                                     -Wswitch-default
                                                     -Wshadow
                                                     -Wunused-variable
@@ -33,9 +32,7 @@ add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Werror
                                                     -Wwrite-strings                                           
                                                     -fprofile-arcs
                                                     -ftest-coverage")
-                                                    #-Weffc++
 
-set(CMAKE_CXX_FLAGS "-Wall  -g -pg -std=c++0x")
 set(CFLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
 set(LDFLAGS "-fprofile-arcs -ftest-coverage")
 
