@@ -16,42 +16,24 @@ macro(add_flags var)
 endmacro(add_flags)
 
 # Common Build Settings
-add_flags(CMAKE_CXX_FLAGS_COMMON "-std=c++0x -Wall
-                                             -Wextra
-                                             -W
-                                             -Wswitch-default
-                                             -Wshadow
-                                             -Wunused-variable
-                                             -Wunused-parameter
-                                             -Wunused-function
-                                             -Wunused
-                                             -Wno-system-headers
-                                             -Wno-deprecated
-                                             -Woverloaded-virtual
-                                             -Wwrite-strings 
-                                             -fprofile-arcs
-                                             -ftest-coverage")
-                                             #-Weffc++
-
-# Default Build Settings
-add_flags(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_CXX_FLAGS "-g -O0 -pg")
-add_flags(CMAKE_C_FLAGS ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_C_FLAGS "-g -O0 -pg")
+add_flags(CMAKE_CXX_FLAGS "-std=c++0x -Wall
+                                      -Wextra
+                                      -W
+                                      -Wswitch-default
+                                      -Wshadow
+                                      -Wunused-variable
+                                      -Wunused-parameter
+                                      -Wunused-function
+                                      -Wunused
+                                      -Wno-system-headers
+                                      -Wno-deprecated
+                                      -Woverloaded-virtual
+                                      -Wwrite-strings")
+                                     #-Weffc++
 
 # Debug Build Settings
-add_flags(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -pg")
-add_flags(CMAKE_C_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_C_FLAGS_DEBUG "-g -O0 -pg")
-
-# Release Build Settings
-add_flags(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_CXX_FLAGS "-O3")
-add_flags(CMAKE_C_FLAGS ${CMAKE_CXX_FLAGS_COMMON})
-add_flags(CMAKE_C_FLAGS "-O3")
-
-
+add_flags(CMAKE_CXX_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
+add_flags(CMAKE_C_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
 add_flags(LDFLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 
 # include files
