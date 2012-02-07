@@ -263,12 +263,16 @@ void gul::List<T>::copyAllData(const List& rList)
 template<typename T>
 void gul::List<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   node.set_name("gul::List<T>");
 }
 
 template<typename T>
 void* gul::List<T>::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   return new List<T>();
 }
 

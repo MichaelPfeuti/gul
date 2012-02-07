@@ -29,17 +29,24 @@
 **
 ***************************************************************************/
 
-#include <3rdParty/pugi/pugixml.hpp>
+#include "ClassFactory.h"
+namespace pugi { class xml_node; }
 
 
 namespace gul
 {
 
-class XMLSerializable
+/**
+  * Here we have performSave and performLoad because we want to keep
+  * Save and Load private. but in order to define the fiendship access to
+  * the private Save and Load we need an additional class. The reason for that
+  * is that the friendship relation is not inherited. Hence, we need to
+  * access the private Save and Load via the common superclass XMLSerializable
+  */
+template<typename T>
+class XMLSerializable : public gul::ClassRegisterer<T>
 {
-protected:
-    XMLSerializable(void) : __saved (false) {}
-    mutable bool __saved;
+public:
 
     template<typename V> static void performSave(const V& v, pugi::xml_node& node, bool resetMode = false)
     {

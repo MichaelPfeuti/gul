@@ -30,11 +30,13 @@
 **
 ***************************************************************************/
 
-#include "String.h"
 #include "Map.h"
-#include "NonCreatable.h"
 
-namespace gul {
+namespace gul { class String; }
+
+
+namespace gul
+{
 
 class ClassFactoryBase
 {

@@ -81,12 +81,16 @@ void gul::Set<T>::Clear(void)
 template<typename T>
 void gul::Set<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   node.set_name("gul::Set<T>");
 }
 
 template<typename T>
 void* gul::Set<T>::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   return new Set<T>();
 }
 

@@ -29,8 +29,8 @@
 **
 ***************************************************************************/
 
+#include <3rdParty/pugi/pugixml.hpp>
 #include "NonCopyable.h"
-#include "XMLSerializable.h"
 
 namespace gul
 {
@@ -38,7 +38,7 @@ namespace gul
 /**
   *
   */
-class String : private NonCopyable, private XMLSerializable
+class String : private NonCopyable
 {
 
 
@@ -68,7 +68,7 @@ class String : private NonCopyable, private XMLSerializable
   private:
     virtual void Save(pugi::xml_node& node, bool resetMode) const;
     virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-    friend class XMLSerializable;
+    template<typename> friend class XMLSerializable;
 
   private:
     const char* pString;

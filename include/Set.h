@@ -37,7 +37,7 @@ namespace gul
 {
 
   template<typename T>
-  class Set : public Container<T>, private XMLSerializable
+  class Set : public Container<T>, private XMLSerializable<Set<T>>
   {
     public:
       Set(void);
@@ -53,7 +53,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      friend class XMLSerializable;
+      template<typename> friend class XMLSerializable;
 
     private:
       List<T> list;

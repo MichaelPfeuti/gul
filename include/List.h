@@ -30,13 +30,14 @@
 ***************************************************************************/
 
 #include "Container.h"
-#include "XMLSerializable.h"
+#include "3rdParty/pugi/pugixml.hpp"
+
 
 namespace gul
 {
 
   template<typename T>
-  class List : public Container<T>, private XMLSerializable
+  class List : public Container<T>
   {
     public:
       List(void);
@@ -70,7 +71,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      friend class XMLSerializable;
+      template<typename> friend class XMLSerializable;
 
     private:
       void copyAllData(const List& rList);

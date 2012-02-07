@@ -19,7 +19,6 @@ endmacro(add_flags)
 add_flags(CMAKE_CXX_FLAGS "-std=c++0x -g -O0 -pg    -Wall
                                                     -Wextra
                                                     -W
-                                                    -Weffc++
                                                     -Wswitch-default
                                                     -Wshadow
                                                     -Wunused-variable

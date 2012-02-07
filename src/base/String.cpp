@@ -43,7 +43,8 @@ gul::String::String(void)
 }
 
 gul::String::String(const gul::String& rString)
-  : pString(strcpy(new char[rString.Size()+1], rString.pString)),
+  : gul::NonCopyable(),
+    pString(strcpy(new char[rString.Size()+1], rString.pString)),
     size(rString.Size())
 {
 }
@@ -147,14 +148,19 @@ int gul::String::Find(const gul::String &rString) const
   return -1;
 }
 
+
 void gul::String::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   node.set_name(typeid(*this).name());
   node.append_attribute("value").set_value(this->GetData());
 }
 
 void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   return new String(node.attribute("value").value());
 }
 

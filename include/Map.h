@@ -31,13 +31,12 @@
 
 #include "Container.h"
 #include "List.h"
-#include "XMLSerializable.h"
 
 namespace gul
 {
 
   template<typename K, typename V>
-  class Map : private XMLSerializable
+  class Map
   {
     public:
       Map(void);
@@ -61,7 +60,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      friend class XMLSerializable;
+      template<typename> friend class XMLSerializable;
 
     private:
       List<K> keys;

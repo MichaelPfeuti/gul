@@ -4,7 +4,9 @@ gul_add_test(Persistance SettingsManager Clear)
 gul_add_test(Persistance SettingsManager ReadWriteNumerics)
 gul_add_test(Persistance SettingsManager ReadWriteStrings)
 
-gul_add_test(Persistance XMLManager SaveAndLoadXML)
+gul_add_test(Persistance XMLManager SaveAndLoadStringClass)
+gul_add_test(Persistance XMLManager SaveAndLoadPrimitivesClass)
+gul_add_test(Persistance XMLManager SaveAndLoadNestedClass)
 
 gul_create_test()
 target_link_libraries(TestPersistance persistance)

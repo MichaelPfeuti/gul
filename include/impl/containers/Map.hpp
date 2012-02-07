@@ -127,11 +127,16 @@ const gul::Container<V>& gul::Map<K,V>::GetValues(void) const
 template<typename K, typename V>
 void gul::Map<K,V>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(resetMode);
+
   node.set_name("gul::Map<K,V>");
 }
 
 template<typename K, typename V>
 void* gul::Map<K,V>::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
+
   return new Map<K,V>();
 }

@@ -198,18 +198,22 @@ void gul::Array<T>::Clear(void)
   this->size = 0;
 }
 
+
 template<typename T>
 void gul::Array<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   node.set_name("gul::Array<T>");
 }
 
 template<typename T>
 void* gul::Array<T>::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   return new Array<T>();
 }
-
 
 
 #include "memleak_template_end.h"

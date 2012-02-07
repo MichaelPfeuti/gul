@@ -30,8 +30,11 @@
 **
 ***************************************************************************/
 
-#include "String.h"
 #include "ClassFactoryBase.h"
+namespace gul { class String; }
+
+
+
 
 namespace gul
 {
@@ -49,20 +52,20 @@ namespace gul
 
 
   template<typename T>
-  class TemplateClassRegistor
+  class ClassRegisterer
   {
     public:
-      TemplateClassRegistor(void) { classFactory.dummy(); }
+      ClassRegisterer(void) { classFactory.dummy(); }
     private:
       static const gul::ClassFactory<T> classFactory;
   };
 
   template<typename T>
-  const gul::ClassFactory<T> TemplateClassRegistor<T>::classFactory = gul::ClassFactory<T>();
+  const gul::ClassFactory<T> ClassRegisterer<T>::classFactory = gul::ClassFactory<T>();
 }
 
 #define REGISTER_FACTORY(classname) \
-  private gul::TemplateClassRegistor<classname>
+  private gul::ClassRegisterer<classname>
 
 #include "impl/base/ClassFactory.hpp"
 

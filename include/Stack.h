@@ -31,13 +31,12 @@
 
 #include "Container.h"
 #include "List.h"
-#include "XMLSerializable.h"
 
 namespace gul
 {
 
   template<typename T>
-  class Stack : public Container<T>, private XMLSerializable
+  class Stack : public Container<T>
   {
     public:
       Stack(void);
@@ -55,7 +54,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      friend class XMLSerializable;
+      template<typename> friend class XMLSerializable;
 
     private:
       List<T> list;

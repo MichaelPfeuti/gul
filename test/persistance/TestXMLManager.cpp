@@ -36,18 +36,18 @@
 namespace TestXMLManager
 {
 
-  class TestClassGUL : private gul::XMLSerializable
+  class TestClassString : private gul::XMLSerializationMacroHelper<TestClassString>
   {
     public:
-      TestClassGUL(void)
+      TestClassString(void)
         : string(new gul::String("TEST String")) {}
 
-      bool operator==(const TestClassGUL& o) const
+      bool operator==(const TestClassString& o) const
       {
         return  *string == *o.string;
       }
 
-      bool operator!=(const TestClassGUL& o) const
+      bool operator!=(const TestClassString& o) const
       {
         return !operator ==(o);
       }
@@ -57,17 +57,16 @@ namespace TestXMLManager
 
       DECLARE_SERIALIZABLE()
   };
-//  REGISTER_CLASS_FACTORY(TestClassGUL)
 
-  BEGIN_SAVE(TestClassGUL)
-//  SAVE_POINTER(string)
-  END_SAVE(TestClassGUL)
+  BEGIN_SAVE(TestClassString)
+    SAVE_POINTER(string)
+  END_SAVE(TestClassString)
 
-  BEGIN_LOAD(TestClassGUL)
-//  LOAD_POINTER(string, gul::String)
-  END_LOAD(TestClassGUL)
+  BEGIN_LOAD(TestClassString)
+   LOAD_POINTER(string, gul::String)
+  END_LOAD(TestClassString)
 
-  class TestClassPrimitives : private gul::XMLSerializable
+  class TestClassPrimitives : private gul::XMLSerializationMacroHelper<TestClassPrimitives>
   {
     public:
       TestClassPrimitives(void)
@@ -98,25 +97,24 @@ namespace TestXMLManager
 
       DECLARE_SERIALIZABLE()
   };
-//  REGISTER_CLASS_FACTORY(TestClassPrimitives)
 
   BEGIN_SAVE(TestClassPrimitives)
-//  SAVE_PRIMITIVE(integer)
-  SAVE_PRIMITIVE(character)
-  SAVE_PRIMITIVE(floatingPoint)
-  SAVE_PRIMITIVE(doublePrecision)
-  SAVE_PRIMITIVE(boolean)
+    SAVE_PRIMITIVE(integer)
+    SAVE_PRIMITIVE(character)
+    SAVE_PRIMITIVE(floatingPoint)
+    SAVE_PRIMITIVE(doublePrecision)
+    SAVE_PRIMITIVE(boolean)
   END_SAVE(TestClassPrimitives)
 
   BEGIN_LOAD(TestClassPrimitives)
-  LOAD_PRIMITIVE(integer)
-  LOAD_PRIMITIVE(character)
-  LOAD_PRIMITIVE(floatingPoint)
-  LOAD_PRIMITIVE(doublePrecision)
-  LOAD_PRIMITIVE(boolean)
+    LOAD_PRIMITIVE(integer)
+    LOAD_PRIMITIVE(character)
+    LOAD_PRIMITIVE(floatingPoint)
+    LOAD_PRIMITIVE(doublePrecision)
+    LOAD_PRIMITIVE(boolean)
   END_LOAD(TestClassPrimitives)
 
-  class TestNestedClass : private gul::XMLSerializable
+  class TestNestedClass : private gul::XMLSerializationMacroHelper<TestNestedClass>
   {
     public:
       TestNestedClass(void)
@@ -125,7 +123,7 @@ namespace TestXMLManager
       bool operator==(const TestNestedClass& o) const
       {
         return  integer == o.integer &&
-                gulClass == o.gulClass &&
+                stringClass == o.stringClass &&
                 primClass == o.primClass;
       }
 
@@ -136,37 +134,64 @@ namespace TestXMLManager
 
     private:
       int integer;
-      TestClassGUL gulClass;
+      TestClassString stringClass;
       TestClassPrimitives primClass;
       DECLARE_SERIALIZABLE()
 
   };
-//  REGISTER_CLASS_FACTORY(TestNestedClass)
 
   BEGIN_SAVE(TestNestedClass)
-//  SAVE_PRIMITIVE(integer)
-  SAVE_VARIABLE(gulClass)
-  SAVE_VARIABLE(primClass)
+    SAVE_PRIMITIVE(integer)
+    SAVE_VARIABLE(stringClass)
+    SAVE_VARIABLE(primClass)
   END_SAVE(TestNestedClass)
 
   BEGIN_LOAD(TestNestedClass)
-  LOAD_PRIMITIVE(integer)
-//  LOAD_VARIABLE(gulClass, TestClassGUL)
-//  LOAD_VARIABLE(primClass, TestClassPrimitives)
+    LOAD_PRIMITIVE(integer)
+    LOAD_VARIABLE(stringClass, TestClassString)
+    LOAD_VARIABLE(primClass, TestClassPrimitives)
   END_LOAD(TestNestedClass)
 
 
 
 
-
-  int SaveAndLoadXML(void)
+  int SaveAndLoadPrimitivesClass(void)
   {
-    TestNestedClass a;
-    gul::XMLManager::Save(gul::String("test.xml"), a);
-    TestNestedClass* ab = gul::XMLManager::Load<TestNestedClass>(gul::String("test.xml"));
+    TestClassPrimitives primitivesTruth;
+    gul::XMLManager::Save(gul::String("primitivesTest.xml"), primitivesTruth);
+    TestClassPrimitives* pPrimitivesLoaded = gul::XMLManager::Load<TestClassPrimitives>(gul::String("primitivesTest.xml"));
 
-    TEST_EQUAL(a, *ab);
+    TEST_EQUAL(*pPrimitivesLoaded, primitivesTruth);
+    TEST_FALSE(*pPrimitivesLoaded != primitivesTruth);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadNestedClass(void)
+  {
+    TestNestedClass nestedTruth;
+    gul::XMLManager::Save(gul::String("nestedTest.xml"), nestedTruth);
+    TestNestedClass* pNestedLoaded = gul::XMLManager::Load<TestNestedClass>(gul::String("nestedTest.xml"));
+
+    TEST_EQUAL(*pNestedLoaded, nestedTruth);
+    TEST_FALSE(*pNestedLoaded != nestedTruth);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadStringClass(void)
+  {
+    TestClassString stringTruth;
+    gul::XMLManager::Save(gul::String("stringTest.xml"), stringTruth);
+    TestClassString* pStringLoaded = gul::XMLManager::Load<TestClassString>(gul::String("stringTest.xml"));
+
+    TEST_EQUAL(*pStringLoaded, stringTruth);
+    TEST_FALSE(*pStringLoaded != stringTruth);
 
     return EXIT_SUCCESS;
   }
 }
+
+DEFINE_RTTI(TestXMLManager::TestClassString)
+DEFINE_RTTI(TestXMLManager::TestNestedClass)
+DEFINE_RTTI(TestXMLManager::TestClassPrimitives)

@@ -36,11 +36,31 @@
 #include "String.h"
 #include "ClassFactory.h"
 #include "Misc.h"
+#include "XMLSerializable.h"
 
 typedef gul::Map<gul::String, void*> InstanceMap;
 
+namespace gul
+{
+
+/**
+  *this class is extraced because we don't need the
+  * __saved attribute in all cases (exp String)
+  * To save memory this is a seperate class that needs to be derived from
+  * when the macros want to be used.
+  */
+template<typename T>
+class XMLSerializationMacroHelper : public gul::XMLSerializable<T>
+{
+protected:
+    XMLSerializationMacroHelper(void) : __saved (false) {}
+    mutable bool __saved;
+};
+
+}
+
 // @todo: chose better name, because this doesn't imply the instance handling!!!
-#define DECLARE_SERIALIZABLE() \
+#define DECLARE_SERIALIZABLE(className) \
     private: \
         mutable int __refIndex;   /* reference index*/ \
         static int __maxRef; /* highest reference index*/ \
@@ -48,7 +68,7 @@ typedef gul::Map<gul::String, void*> InstanceMap;
     private:\
         virtual void Save(pugi::xml_node& node, bool resetMode = false) const; \
         virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const; \
-    friend class gul::XMLSerializable; \
+        template<typename> friend class gul::XMLSerializable; \
     private:
 
 
@@ -163,8 +183,8 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           UNUSED_VARIABLE(c); \
           if (!resetMode && !node.attribute("__ref").empty()) \
           { \
-              gul::String string(node.attribute("__ref").value()); \
-              void* ptr = className::__loadedInstances.Get(string); \
+              gul::String __RefString(node.attribute("__ref").value()); \
+              void* ptr = className::__loadedInstances.Get(__RefString); \
               return ptr; \
           } \
           className* instance; \
@@ -175,8 +195,8 @@ typedef gul::Map<gul::String, void*> InstanceMap;
           LOAD_PRIMITIVE(__refIndex); \
           if(!resetMode) \
           { \
-              gul::String indexString = gul::String("%").Arg(instance->__refIndex); \
-              className::__loadedInstances.Add(indexString, instance); \
+              gul::String __indexString = gul::String("%").Arg(instance->__refIndex); \
+              className::__loadedInstances.Add(__indexString, instance); \
           }
 
 
@@ -237,9 +257,9 @@ typedef gul::Map<gul::String, void*> InstanceMap;
     { \
       pugi::xml_node listNode = node.first_child(); \
       while (!listNode.empty()) { \
-          gul::String string(listNode.attribute("attributeName").value()); \
-          if (string == gul::String(#attributeArg)) { \
-              className* loaderObject = (className*) gul::ClassFactory::CreateInstance(gul::String(listNode.name()));   \
+          gul::String __string(listNode.attribute("attributeName").value()); \
+          if (__string == gul::String(#attributeArg)) { \
+              className* loaderObject = gul::ClassFactory<className>::CreateInstance(gul::String(listNode.name()));   \
               className* myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
@@ -255,9 +275,9 @@ typedef gul::Map<gul::String, void*> InstanceMap;
     { \
       pugi::xml_node listNode = node.first_child(); \
       while (!listNode.empty()) { \
-          gul::String string(listNode.attribute("attributeName").value()); \
-          if (string == gul::String(#attributeArg)) { \
-              className* loaderObject = (className*) gul::ClassFactory::CreateInstance(gul::String(listNode.name()));   \
+          gul::String __string(listNode.attribute("attributeName").value()); \
+          if (__string == gul::String(#attributeArg)) { \
+              className* loaderObject = gul::ClassFactory<className>::CreateInstance(gul::String(listNode.name()));   \
               className* myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
