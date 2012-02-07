@@ -61,6 +61,8 @@ namespace gul
 
 }
 
+DEFINE_TPL_RTTI(Set);
+
 #include "impl/containers/Set.hpp"
 
 #endif

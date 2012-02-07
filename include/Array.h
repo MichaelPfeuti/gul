@@ -80,6 +80,8 @@ namespace gul
 
 }
 
+DEFINE_TPL_RTTI(Array);
+
 #include "impl/containers/Array.hpp"
 
 #endif

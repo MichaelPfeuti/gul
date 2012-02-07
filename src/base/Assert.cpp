@@ -37,14 +37,15 @@ void gul::Assert(bool condition, const char* pMessage, int lineNumber, const cha
 {
   switch(AssertionModeInUse)
   {
-  case ABORT:
-    AssertExit(condition, pMessage, lineNumber, pFileName);
-    break;
   case EXCEPTION:
     AssertException(condition, pMessage, lineNumber, pFileName);
     break;
   case GUI:
     AssertGui(condition, pMessage, lineNumber, pFileName);
+    break;
+  case ABORT:
+  default:
+    AssertExit(condition, pMessage, lineNumber, pFileName);
     break;
   }
 }
