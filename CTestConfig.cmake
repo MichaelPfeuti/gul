@@ -11,3 +11,15 @@ set(CTEST_DROP_METHOD "http")
 set(CTEST_DROP_SITE "build.ganymede.ch")
 set(CTEST_DROP_LOCATION "/submit.php?project=gul")
 set(CTEST_DROP_SITE_CDASH TRUE)
+
+
+set(CTEST_CUSTOM_EXCLUDE 3rdParty
+                         libs)
+#			pugixml.hpp 
+#                         pugixml.cpp
+#                         debug_new.cpp) 
+
+file(WRITE ${CMAKE_BINARY_DIR}/CTestCustom.cmake 
+           "set(CTEST_CUSTOM_COVERAGE_EXCLUDE ${CTEST_CUSTOM_EXCLUDE})")
+
+unset(CTEST_CUSTOM_EXCLUDE)
