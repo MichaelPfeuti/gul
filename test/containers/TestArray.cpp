@@ -326,4 +326,12 @@ namespace TestArray
     return EXIT_SUCCESS;
   }
 
+  int RTTI(void)
+  {
+    gul::Array<gul::String> stringArray;
+    TEST_EQUAL(stringArray.RTTI.GetName(), gul::String("gul::Array<gul::String>"));
+
+    return EXIT_SUCCESS;
+  }
+
 }

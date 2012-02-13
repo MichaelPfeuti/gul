@@ -48,6 +48,14 @@ namespace gul
       static void* CreateConcreteClass(void);
   };
 
+  template<typename T>
+  class ClassFactory<T*> : public ClassFactoryBase
+  {
+    public:
+      static T* CreateInstance(const gul::String& rClassName)
+          { return ClassFactory<T>::CreateInstance(rClassName); }
+  };
+
 
   /**
     * The ClassRegisterer is needed to enusre that templates are

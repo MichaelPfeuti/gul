@@ -239,15 +239,14 @@ protected:
         }\
     }
 
-//@todo: use templates to rid className
-#define LOAD_POINTER(attributeArg, className) \
+#define LOAD_POINTER(attributeArg) \
     { \
       pugi::xml_node listNode = node.first_child(); \
       while (!listNode.empty()) { \
           gul::String __string(listNode.attribute("attributeName").value()); \
           if (__string == gul::String(#attributeArg)) { \
-              className* loaderObject = gul::ClassFactory<className>::CreateInstance(gul::String(listNode.name()));   \
-              className* myObject = performLoad(*loaderObject, listNode, resetMode); \
+              decltype(attributeArg) loaderObject = gul::ClassFactory<decltype(attributeArg)>::CreateInstance(gul::String(listNode.name()));   \
+              decltype(attributeArg) myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
                   instance->attributeArg = myObject; \
@@ -257,15 +256,14 @@ protected:
       } \
     }
 
-//@todo: use templates to rid className
-#define LOAD_VARIABLE(attributeArg, className) \
+#define LOAD_VARIABLE(attributeArg) \
     { \
       pugi::xml_node listNode = node.first_child(); \
       while (!listNode.empty()) { \
           gul::String __string(listNode.attribute("attributeName").value()); \
           if (__string == gul::String(#attributeArg)) { \
-              className* loaderObject = gul::ClassFactory<className>::CreateInstance(gul::String(listNode.name()));   \
-              className* myObject = performLoad(*loaderObject, listNode, resetMode); \
+              decltype(attributeArg)* loaderObject = gul::ClassFactory<decltype(attributeArg)>::CreateInstance(gul::String(listNode.name()));   \
+              decltype(attributeArg)* myObject = performLoad(*loaderObject, listNode, resetMode); \
               delete loaderObject; \
               if(!resetMode) { \
                   instance->attributeArg = *myObject; \

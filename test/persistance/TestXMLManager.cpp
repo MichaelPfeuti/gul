@@ -76,7 +76,7 @@ namespace TestXMLManager
   END_SAVE(TestClassString)
 
   BEGIN_LOAD(TestClassString)
-   LOAD_POINTER(string, gul::String)
+   LOAD_POINTER(string)
   END_LOAD(TestClassString)
 
   class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
@@ -165,8 +165,8 @@ namespace TestXMLManager
 
   BEGIN_LOAD(TestNestedClass)
     LOAD_PRIMITIVE(integer)
-    LOAD_VARIABLE(stringClass, TestClassString)
-    LOAD_VARIABLE(primClass, TestClassPrimitives)
+    LOAD_VARIABLE(stringClass)
+    LOAD_VARIABLE(primClass)
   END_LOAD(TestNestedClass)
 
 

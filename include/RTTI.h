@@ -57,6 +57,11 @@ public:
 
 }
 
+#define DECLARE_RTTI(classname) \
+  public: \
+    static const gul::RTTI<classname> RTTI; \
+  private:
+
 #define DEFINE_RTTI(classname) \
   namespace gul { \
     template<> \

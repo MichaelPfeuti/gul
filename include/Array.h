@@ -40,6 +40,9 @@ namespace gul
   template<typename T>
   class Array : public Container<T>, REGISTER_FACTORY(Array<T>), public XMLSerializable
   {
+
+    DECLARE_RTTI(Array)
+
     public:
       Array(void);
       explicit Array(int initSize);

@@ -203,10 +203,13 @@ void gul::Array<T>::Clear(void)
 template<typename T>
 void gul::Array<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(resetMode);
+
   node.set_name(gul::RTTI<Array<T>>::GetName().GetData());
   for(int i = 0; i < this->Size(); ++i)
   {
     pugi::xml_node childNode = node.append_child();
+    GUL_UNUSED_VAR(childNode);
     //gul::XMLSerializable::performSave(this->Get(i), childNode, resetMode);
   }
 }
