@@ -50,7 +50,7 @@ namespace gul
   * when the macros want to be used.
   */
 template<typename T>
-class XMLSerializationMacroHelper : public gul::XMLSerializable<T>
+class XMLSerializationMacroHelper : public gul::XMLSerializable, REGISTER_FACTORY(T)
 {
 protected:
     XMLSerializationMacroHelper(void) : __saved (false) {}
@@ -68,7 +68,7 @@ protected:
     private:\
         virtual void Save(pugi::xml_node& node, bool resetMode = false) const; \
         virtual void* Load(const pugi::xml_node& node, bool resetMode = false) const; \
-        template<typename> friend class gul::XMLSerializable; \
+        friend class gul::XMLSerializable; \
     private:
 
 
@@ -91,7 +91,7 @@ protected:
                 __maxRef = 0; \
                 __refIndex = -1; \
             } \
-            node.set_name(#className); \
+            node.set_name(gul::RTTI<className>::GetName().GetData()); \
             if (__saved && !resetMode) /* in this case we save this node already.*/ \
             { \
                 node.append_attribute("__ref").set_value(__refIndex); \
@@ -118,19 +118,6 @@ protected:
           if(!resetMode) \
           { \
               node.append_attribute(#attributeArg).set_value(attributeArg); \
-          }
-
-
-#define SAVE_POINTER(attributeArg) \
-          if(attributeArg != nullptr) \
-          { \
-              pugi::xml_node childNode = node.append_child(); \
-              performSave(*attributeArg, childNode, resetMode); \
-              childNode.append_attribute("attributeName").set_value(#attributeArg); \
-          } \
-          else \
-          { \
-              FAIL("Could not save pointer because it was null"); \
           }
 
 #define SAVE_VARIABLE(attributeArg) \

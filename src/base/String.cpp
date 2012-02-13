@@ -28,8 +28,8 @@
 
 #include "String.h"
 #include "Assert.h"
-#include "ClassFactory.h"
 #include "Misc.h"
+#include "RTTI.h"
 #include <cstring>
 #include <cstdio>
 #include <typeinfo>
@@ -153,7 +153,7 @@ void gul::String::Save(pugi::xml_node& node, bool resetMode) const
 {
   GUL_UNUSED_VAR(node);
   GUL_UNUSED_VAR(resetMode);
-  node.set_name(typeid(*this).name());
+  node.set_name(gul::RTTI<String>::GetName().GetData());
   node.append_attribute("value").set_value(this->GetData());
 }
 

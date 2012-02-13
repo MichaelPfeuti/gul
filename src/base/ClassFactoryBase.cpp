@@ -26,7 +26,9 @@
 **
 ***************************************************************************/
 
-#include "ClassFactory.h"
+#include "ClassFactoryBase.h"
+#include "String.h"
+#include "Map.h"
 #include "Misc.h"
 
 #include "memleak.h"

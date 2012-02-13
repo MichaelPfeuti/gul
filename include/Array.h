@@ -29,14 +29,16 @@
 **
 ***************************************************************************/
 
+#include "ClassFactory.h"
 #include "Container.h"
 #include "XMLSerializable.h"
+#include "RTTI.h"
 
 namespace gul
 {
 
   template<typename T>
-  class Array : public Container<T>, private XMLSerializable<Array<T>>
+  class Array : public Container<T>, REGISTER_FACTORY(Array<T>), public XMLSerializable
   {
     public:
       Array(void);
@@ -70,7 +72,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      template<typename> friend class XMLSerializable;
+      friend class XMLSerializable;
 
     private:
       T* pData;
@@ -80,7 +82,7 @@ namespace gul
 
 }
 
-DEFINE_TPL_RTTI(Array);
+DEFINE_TPL_RTTI(gul::Array)
 
 #include "impl/containers/Array.hpp"
 

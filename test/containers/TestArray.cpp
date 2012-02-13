@@ -28,6 +28,7 @@
 
 #include "CTestAssert.h"
 #include "Array.h"
+#include "XMLManager.h"
 
 namespace TestArray
 {
@@ -286,6 +287,41 @@ namespace TestArray
     {
         TEST_EQUAL(copy.Get(i), i+1);
     }
+
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadXML(void)
+  {
+//    gul::Array<int> intArray;
+//    intArray.Add(-5);
+//    intArray.Add(0);
+//    intArray.Add(5);
+//    gul::XMLManager::Save<gul::Array<int> >(gul::String("test.xml"), intArray);
+//    gul::Array<int>* pLoadedIntArray = gul::XMLManager::Load<gul::Array<int> >(gul::String("test.xml"));
+
+
+//    TEST_EQUAL(pLoadedIntArray->Size(), 3);
+//    TEST_EQUAL(pLoadedIntArray->Get(0), 3);
+//    TEST_EQUAL(pLoadedIntArray->Get(1), 3);
+//    TEST_EQUAL(pLoadedIntArray->Get(2), 3);
+
+    //GUL_DELETE(pLoadedIntArray);
+
+    gul::Array<gul::String*> stringArray;
+    stringArray.Add(new gul::String("-5"));
+    stringArray.Add(new gul::String("0"));
+    stringArray.Add(new gul::String("5"));
+    gul::XMLManager::Save<gul::Array<gul::String*> >(gul::String("stringTest.xml"), stringArray);
+    gul::Array<gul::String*>* pLoadedStringArray = gul::XMLManager::Load<gul::Array<gul::String*> >(gul::String("stringTest.xml"));
+
+
+    TEST_EQUAL(pLoadedStringArray->Size(), 3);
+    TEST_EQUAL(*pLoadedStringArray->Get(0), gul::String("-5"));
+    TEST_EQUAL(*pLoadedStringArray->Get(1), gul::String("0"));
+    TEST_EQUAL(*pLoadedStringArray->Get(2), gul::String("5"));
+
+    GUL_DELETE(pLoadedStringArray);
 
     return EXIT_SUCCESS;
   }

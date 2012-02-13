@@ -30,7 +30,7 @@
 ***************************************************************************/
 
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) || defined(BUILD_TESTING)
 
 #include <cassert>
 

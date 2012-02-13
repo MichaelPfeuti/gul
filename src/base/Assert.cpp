@@ -31,6 +31,8 @@
 #include <cstdlib>
 #include "Misc.h"
 
+#ifndef NDEBUG
+
 gul::AssertionMode gul::AssertionModeInUse = gul::ABORT;
 
 void gul::Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
@@ -80,3 +82,5 @@ void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const 
     GUL_UNUSED_VAR(pFileName);
   //@todo
 }
+
+#endif

@@ -34,8 +34,6 @@
 namespace gul { class String; }
 
 
-
-
 namespace gul
 {
 
@@ -51,6 +49,13 @@ namespace gul
   };
 
 
+  /**
+    * The ClassRegisterer is needed to enusre that templates are
+    * correctly registered. Because template instantiate code lazily we need
+    * to call dummy to guarantee that classFactory creation code is instantiated.
+    * This is only the case for tempaltes regular classes would not need that.
+    * but for consistency every class should be registered through the ClassRegisterer
+    */
   template<typename T>
   class ClassRegisterer
   {
@@ -66,6 +71,8 @@ namespace gul
 
 #define REGISTER_FACTORY(classname) \
   private gul::ClassRegisterer<classname>
+
+namespace { class gul::ClassFactory<gul::String> a; }
 
 #include "impl/base/ClassFactory.hpp"
 

@@ -30,6 +30,8 @@
 #include "ContainerConstants.h"
 #include "Misc.h"
 #include "Math.h"
+#include "String.h"
+#include "3rdParty/pugi/pugixml.hpp"
 #include <cstring>
 #include "memleak.h"
 
@@ -198,13 +200,15 @@ void gul::Array<T>::Clear(void)
   this->size = 0;
 }
 
-
 template<typename T>
 void gul::Array<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  node.set_name("gul::Array<T>");
+  node.set_name(gul::RTTI<Array<T>>::GetName().GetData());
+  for(int i = 0; i < this->Size(); ++i)
+  {
+    pugi::xml_node childNode = node.append_child();
+    //gul::XMLSerializable::performSave(this->Get(i), childNode, resetMode);
+  }
 }
 
 template<typename T>

@@ -98,12 +98,16 @@ bool gul::Stack<T>::Contains(const T& rElement) const
 template<typename T>
 void gul::Stack<T>::Save(pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   node.set_name("gul::Stack<T>");
 }
 
 template<typename T>
 void* gul::Stack<T>::Load(const pugi::xml_node& node, bool resetMode) const
 {
+  GUL_UNUSED_VAR(node);
+  GUL_UNUSED_VAR(resetMode);
   return new Stack<T>();
 }
 

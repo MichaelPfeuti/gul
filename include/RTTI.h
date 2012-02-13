@@ -35,10 +35,24 @@
 namespace gul {
 
 template<typename T>
-class RTTI
+class RTTIBase
+{
+  public:
+    typedef T Type;
+};
+
+template<typename T>
+class RTTI : public RTTIBase<T>
 {
 public:
   static String GetName();
+};
+
+template<typename T>
+class RTTI<T*> : public RTTIBase<T*>
+{
+public:
+  static String GetName() { return RTTI<T>::GetName(); }
 };
 
 }
@@ -46,7 +60,7 @@ public:
 #define DEFINE_RTTI(classname) \
   namespace gul { \
     template<> \
-    class RTTI<classname> \
+    class RTTI<classname> : public RTTIBase<classname> \
     { \
     public: \
       static  gul::String GetName() { return gul::String(#classname); } \
@@ -56,7 +70,7 @@ public:
 #define DEFINE_TPL_RTTI(classname) \
   namespace gul { \
     template<typename T> \
-    class RTTI<classname<T>> \
+    class RTTI<classname<T>> : public RTTIBase<classname<T>> \
     { \
     public: \
       static  String GetName() { return (String(#classname) + String("<%>").Arg(RTTI<T>::GetName())); } \
@@ -73,5 +87,7 @@ DEFINE_RTTI(long)
 DEFINE_RTTI(long long)
 DEFINE_RTTI(char)
 DEFINE_RTTI(bool)
+DEFINE_RTTI(gul::String)
+
 
 #endif

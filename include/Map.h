@@ -60,7 +60,7 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      template<typename> friend class XMLSerializable;
+      friend class XMLSerializable;
 
     private:
       List<K> keys;

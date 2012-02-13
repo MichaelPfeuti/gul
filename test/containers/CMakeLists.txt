@@ -11,6 +11,7 @@ gul_add_test(Containers Array IndexOf)
 gul_add_test(Containers Array Contains)
 gul_add_test(Containers Array CopyConstructor)
 gul_add_test(Containers Array Assignment)
+gul_add_test(Containers Array SaveAndLoadXML)
 
 gul_add_test(Containers List SizeAndIsEmpty)
 gul_add_test(Containers List Add)

@@ -27,6 +27,8 @@
 ***************************************************************************/
 
 #include "ClassFactory.h"
+#include "String.h"
+#include "RTTI.h"
 #include "CTestAssert.h"
 
 #include <cstdio>

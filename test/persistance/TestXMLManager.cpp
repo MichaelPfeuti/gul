@@ -35,16 +35,29 @@
 
 namespace TestXMLManager
 {
+class TestClassString;
+class TestNestedClass;
+class TestClassPrimitives;
+}
+DEFINE_RTTI(TestXMLManager::TestClassString)
+DEFINE_RTTI(TestXMLManager::TestNestedClass)
+DEFINE_RTTI(TestXMLManager::TestClassPrimitives)
 
-  class TestClassString : private gul::XMLSerializationMacroHelper<TestClassString>
+namespace TestXMLManager
+{
+
+  class TestClassString : public gul::XMLSerializationMacroHelper<TestClassString>
   {
     public:
       TestClassString(void)
-        : string(new gul::String("TEST String")) {}
+        : string(nullptr) {}
+
+      void fillData(void) { string = new gul::String("TEST String"); }
 
       bool operator==(const TestClassString& o) const
       {
-        return  *string == *o.string;
+        return (string == nullptr && o.string == nullptr) ||
+               (string != nullptr && o.string != nullptr && *string == *o.string);
       }
 
       bool operator!=(const TestClassString& o) const
@@ -59,19 +72,21 @@ namespace TestXMLManager
   };
 
   BEGIN_SAVE(TestClassString)
-    SAVE_POINTER(string)
+    SAVE_VARIABLE(string)
   END_SAVE(TestClassString)
 
   BEGIN_LOAD(TestClassString)
    LOAD_POINTER(string, gul::String)
   END_LOAD(TestClassString)
 
-  class TestClassPrimitives : private gul::XMLSerializationMacroHelper<TestClassPrimitives>
+  class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
   {
     public:
       TestClassPrimitives(void)
-        : integer(-1), character('a'), floatingPoint(1.2345f), doublePrecision(1.2345), boolean(true)
+        : integer(0), character(' '), floatingPoint(0.f), doublePrecision(0.), boolean(false)
       {}
+
+      void fillData(void) { integer = -1; character = 'a'; floatingPoint = 1.2345f; doublePrecision = 1.2345; boolean = true;}
 
       bool operator==(const TestClassPrimitives& o) const
       {
@@ -114,11 +129,13 @@ namespace TestXMLManager
     LOAD_PRIMITIVE(boolean)
   END_LOAD(TestClassPrimitives)
 
-  class TestNestedClass : private gul::XMLSerializationMacroHelper<TestNestedClass>
+  class TestNestedClass : public gul::XMLSerializationMacroHelper<TestNestedClass>
   {
     public:
       TestNestedClass(void)
-        : integer(20) {}
+        : integer(0) {}
+
+      void fillData(void) { integer = 20; stringClass.fillData(); primClass.fillData(); }
 
       bool operator==(const TestNestedClass& o) const
       {
@@ -157,10 +174,13 @@ namespace TestXMLManager
 
   int SaveAndLoadPrimitivesClass(void)
   {
+    TestClassPrimitives primitivesFalseReference;
     TestClassPrimitives primitivesTruth;
+    primitivesTruth.fillData();
     gul::XMLManager::Save(gul::String("primitivesTest.xml"), primitivesTruth);
     TestClassPrimitives* pPrimitivesLoaded = gul::XMLManager::Load<TestClassPrimitives>(gul::String("primitivesTest.xml"));
 
+    TEST_NOT_EQUAL(*pPrimitivesLoaded, primitivesFalseReference);
     TEST_EQUAL(*pPrimitivesLoaded, primitivesTruth);
     TEST_FALSE(*pPrimitivesLoaded != primitivesTruth);
 
@@ -169,10 +189,13 @@ namespace TestXMLManager
 
   int SaveAndLoadNestedClass(void)
   {
+    TestNestedClass nestedFalseReference;
     TestNestedClass nestedTruth;
+    nestedTruth.fillData();
     gul::XMLManager::Save(gul::String("nestedTest.xml"), nestedTruth);
     TestNestedClass* pNestedLoaded = gul::XMLManager::Load<TestNestedClass>(gul::String("nestedTest.xml"));
 
+    TEST_NOT_EQUAL(*pNestedLoaded, nestedFalseReference);
     TEST_EQUAL(*pNestedLoaded, nestedTruth);
     TEST_FALSE(*pNestedLoaded != nestedTruth);
 
@@ -181,10 +204,13 @@ namespace TestXMLManager
 
   int SaveAndLoadStringClass(void)
   {
+    TestClassString stringFalseReference;
     TestClassString stringTruth;
+    stringTruth.fillData();
     gul::XMLManager::Save(gul::String("stringTest.xml"), stringTruth);
     TestClassString* pStringLoaded = gul::XMLManager::Load<TestClassString>(gul::String("stringTest.xml"));
 
+    TEST_NOT_EQUAL(*pStringLoaded, stringFalseReference);
     TEST_EQUAL(*pStringLoaded, stringTruth);
     TEST_FALSE(*pStringLoaded != stringTruth);
 
@@ -192,6 +218,3 @@ namespace TestXMLManager
   }
 }
 
-DEFINE_RTTI(TestXMLManager::TestClassString)
-DEFINE_RTTI(TestXMLManager::TestNestedClass)
-DEFINE_RTTI(TestXMLManager::TestClassPrimitives)

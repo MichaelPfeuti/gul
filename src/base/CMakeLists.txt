@@ -2,8 +2,9 @@ add_library(base STATIC
 		Assert.cpp
     ClassFactoryBase.cpp
 		String.cpp
+    RTTI.cpp
 
-  ${INCLUDE_TPL}/base/ClassFactory.hpp
+    ${INCLUDE_TPL}/base/ClassFactory.hpp
 
     ${INCLUDE}/Assert.h
     ${INCLUDE}/ClassFactory.h

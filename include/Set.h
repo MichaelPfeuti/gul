@@ -29,15 +29,15 @@
 **
 ***************************************************************************/
 
+#include "RTTI.h"
 #include "Container.h"
 #include "List.h"
-#include "XMLSerializable.h"
 
 namespace gul
 {
 
   template<typename T>
-  class Set : public Container<T>, private XMLSerializable<Set<T>>
+  class Set : public Container<T>
   {
     public:
       Set(void);
@@ -53,15 +53,13 @@ namespace gul
     private:
       virtual void Save(pugi::xml_node& node, bool resetMode) const;
       virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-      template<typename> friend class XMLSerializable;
+      friend class XMLSerializable;
 
     private:
       List<T> list;
   };
 
 }
-
-DEFINE_TPL_RTTI(Set);
 
 #include "impl/containers/Set.hpp"
 

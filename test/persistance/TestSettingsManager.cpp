@@ -28,6 +28,7 @@
 
 #include "CTestAssert.h"
 #include "SettingsManager.h"
+#include "String.h"
 
 namespace TestSettingsManager
 {

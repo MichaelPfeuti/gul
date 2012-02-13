@@ -40,9 +40,9 @@ T* gul::XMLManager::Load(const gul::String& rFile)
     pugi::xml_node rootNode = doc.first_child();
 
     T loaderInstance;
-    gul::XMLSerializable<T>::performLoad(loaderInstance, rootNode, true);
+    gul::XMLSerializable::performLoad(loaderInstance, rootNode, true);
 
-    T* pLoadedInstance = gul::XMLSerializable<T>::performLoad(loaderInstance, rootNode);
+    T* pLoadedInstance = gul::XMLSerializable::performLoad(loaderInstance, rootNode);
 
     ASSERT(pLoadedInstance != nullptr);
 
@@ -53,7 +53,7 @@ template<typename T>
 void gul::XMLManager::ResetSaveStatus(const T& rInstance)
 {
   pugi::xml_node dummyNode;
-  gul::XMLSerializable<T>::performSave(rInstance, dummyNode, true);
+  gul::XMLSerializable::performSave(rInstance, dummyNode, true);
 }
 
 template<typename T>
@@ -64,7 +64,7 @@ bool gul::XMLManager::Save(const gul::String& rPath, const T& rInstance)
     gul::XMLManager::ResetSaveStatus(rInstance);
     pugi::xml_node rootNode = doc.append_child("elemet");
 
-    gul::XMLSerializable<T>::performSave(rInstance, rootNode);
+    gul::XMLSerializable::performSave(rInstance, rootNode);
 
     return doc.save_file(rPath.GetData());
 }

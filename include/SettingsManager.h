@@ -30,8 +30,9 @@
 ***************************************************************************/
 
 #include "NonCopyable.h"
-#include "String.h"
 #include <cstdio>
+
+namespace gul { class String; }
 
 namespace gul
 {

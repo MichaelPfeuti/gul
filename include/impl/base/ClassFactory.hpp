@@ -27,6 +27,8 @@
 ***************************************************************************/
 
 #include "RTTI.h"
+#include "String.h"
+#include "Map.h"
 
 #include "memleak.h"
 

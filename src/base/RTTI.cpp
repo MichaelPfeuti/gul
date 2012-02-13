@@ -1,7 +1,3 @@
-#pragma once
-#ifndef _GUL_BASE_CLASS_FACTORY_BASE_H_
-#define _GUL_BASE_CLASS_FACTORY_BASE_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -30,28 +26,7 @@
 **
 ***************************************************************************/
 
-namespace gul { template<typename, typename> class Map; }
-namespace gul { class String; }
+#include "RTTI.h"
 
+#include "memleak.h"
 
-namespace gul
-{
-
-class ClassFactoryBase
-{
-
-
-public:
-    virtual ~ClassFactoryBase();
-
-protected:
-    typedef void* (*creatorFunction)();
-    typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
-
-    // must be a pointer. this way we can control when the map is created.
-    // if this is on the stack we get a runtime error
-    static ClassNameToFactoryMap* pNameToFactoryMap;
-};
-
-}
-#endif

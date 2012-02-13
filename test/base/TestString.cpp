@@ -28,6 +28,7 @@
 
 #include "CTestAssert.h"
 #include "String.h"
+#include "RTTI.h"
 #include <cstring>
 
 namespace TestString
@@ -152,6 +153,13 @@ int Find(void)
   TEST_EQUAL(string1.Find(gul::String("SEARCH")), 0);
   TEST_EQUAL(string2.Find(gul::String("SEARCH")), 4);
   TEST_EQUAL(string3.Find(gul::String("SEARCH")), 10);
+
+  return EXIT_SUCCESS;
+}
+
+int RTTI(void)
+{
+  TEST_EQUAL(gul::RTTI<gul::String>::GetName(), gul::String("gul::String"));
 
   return EXIT_SUCCESS;
 }

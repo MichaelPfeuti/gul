@@ -5,11 +5,6 @@ project(gul)
 # cdash settings
 include(CTest)
 
-if(BUILD_TESTING)
-  set(BUILDNAME "${BUILDNAME}" CACHE STRING "gul")
-  mark_as_advanced(BUILDNAME)
-endif(BUILD_TESTING)
-
 macro(add_flags var)
   string(REPLACE "\n" " " _flags "${ARGN}")
   set(${var} "${${var}} ${_flags}")
@@ -40,5 +35,10 @@ set(INCLUDE_TPL "${CMAKE_HOME_DIRECTORY}/include/impl")
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
 include_directories("${INCLUDE}")
 
+
+if(BUILD_TESTING)
+  add_flags(CMAKE_CXX_FLAGS "-DBUILD_TESTING")
+  add_subdirectory(test)
+endif(BUILD_TESTING)
+
 add_subdirectory(src)
-add_subdirectory(test)

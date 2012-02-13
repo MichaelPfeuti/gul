@@ -29,6 +29,7 @@
 #include "SettingsManager.h"
 #include "Misc.h"
 #include "Assert.h"
+#include "String.h"
 
 #include "memleak.h"
 
