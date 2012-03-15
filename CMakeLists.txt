@@ -35,6 +35,17 @@ add_flags(CMAKE_CXX_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
 add_flags(CMAKE_C_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
 add_flags(LDFLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 
+# Doxygen
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+  add_custom_target(doxygen 
+    COMMAND ${DOXYGEN_EXECUTABLE}
+    COMMENT "Doxygen"
+    WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/doc"
+    )
+endif(DOXYGEN_FOUND)
+
 # include files
 set(INCLUDE_TPL "${CMAKE_HOME_DIRECTORY}/include/impl")
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
