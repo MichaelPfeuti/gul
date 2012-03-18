@@ -62,7 +62,7 @@ gul::String::~String()
 
 char gul::String::CharAt(int index) const
 {
-    return this->pString[index];
+  return this->pString[index];
 }
 
 gul::String gul::String::Arg(double value) const
@@ -161,7 +161,10 @@ void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
 {
   GUL_UNUSED_VAR(node);
   GUL_UNUSED_VAR(resetMode);
-  return new String(node.attribute("value").value());
+  if(resetMode) return nullptr;
+
+  String* s =  new String(node.attribute("value").value());
+  return s;
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)

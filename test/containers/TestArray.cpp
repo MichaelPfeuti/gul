@@ -293,20 +293,20 @@ namespace TestArray
 
   int SaveAndLoadXML(void)
   {
-//    gul::Array<int> intArray;
-//    intArray.Add(-5);
-//    intArray.Add(0);
-//    intArray.Add(5);
-//    gul::XMLManager::Save<gul::Array<int> >(gul::String("test.xml"), intArray);
-//    gul::Array<int>* pLoadedIntArray = gul::XMLManager::Load<gul::Array<int> >(gul::String("test.xml"));
+    gul::Array<int> intArray;
+    intArray.Add(-5);
+    intArray.Add(0);
+    intArray.Add(5);
+    gul::XMLManager::Save<gul::Array<int> >(gul::String("test.xml"), intArray);
+    gul::Array<int>* pLoadedIntArray = gul::XMLManager::Load<gul::Array<int> >(gul::String("test.xml"));
 
 
-//    TEST_EQUAL(pLoadedIntArray->Size(), 3);
-//    TEST_EQUAL(pLoadedIntArray->Get(0), 3);
-//    TEST_EQUAL(pLoadedIntArray->Get(1), 3);
-//    TEST_EQUAL(pLoadedIntArray->Get(2), 3);
+    TEST_EQUAL(pLoadedIntArray->Size(), 3);
+    TEST_EQUAL(pLoadedIntArray->Get(0), 3);
+    TEST_EQUAL(pLoadedIntArray->Get(1), 3);
+    TEST_EQUAL(pLoadedIntArray->Get(2), 3);
 
-    //GUL_DELETE(pLoadedIntArray);
+    GUL_DELETE(pLoadedIntArray);
 
     gul::Array<gul::String*> stringArray;
     stringArray.Add(new gul::String("-5"));

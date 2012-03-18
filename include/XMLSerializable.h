@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "Misc.h"
+
 namespace pugi { class xml_node; }
 
 
@@ -68,10 +70,27 @@ public:
     }
 
 
-    template<typename V> static V* performLoad(const V& v, pugi::xml_node& node, bool resetMode = false)
+    template<typename T> static T* performLoad(T const& v, pugi::xml_node& node, bool resetMode = false)
     {
-      return static_cast<V*>(v.Load(node, resetMode));
+      return static_cast<T*>(v.Load(node, resetMode));
     }
+
+    template<typename T> static T** performLoad(T* const& v, pugi::xml_node& node, bool resetMode = false)
+    {
+      return new T*(performLoad(*v, node, resetMode));
+    }
+
+    template<typename T> static void deleteLoaderObject(T*& v)
+    {
+      GUL_DELETE(v);
+    }
+
+    template<typename T> static void deleteLoaderObject(T**& v)
+    {
+      GUL_DELETE(*v);
+      GUL_DELETE(v);
+    }
+
 
 private:
     virtual void Save(pugi::xml_node& node, bool resetMode) const = 0;

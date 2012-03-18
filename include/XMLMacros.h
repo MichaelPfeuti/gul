@@ -92,7 +92,7 @@ protected:
                 __refIndex = -1; \
             } \
             node.set_name(gul::RTTI<className>::GetName().GetData()); \
-            if (__saved && !resetMode) /* in this case we save this node already.*/ \
+            if (__saved && !resetMode) /* in this case we saved this node already.*/ \
             { \
                 node.append_attribute("__ref").set_value(__refIndex); \
                 return; \
@@ -158,23 +158,24 @@ protected:
           double d;\
           bool b; \
           char c; \
-          UNUSED_VARIABLE(i); \
-          UNUSED_VARIABLE(ui); \
-          UNUSED_VARIABLE(s); \
-          UNUSED_VARIABLE(us); \
-          UNUSED_VARIABLE(l); \
-          UNUSED_VARIABLE(ul); \
-          UNUSED_VARIABLE(f); \
-          UNUSED_VARIABLE(d); \
-          UNUSED_VARIABLE(b); \
-          UNUSED_VARIABLE(c); \
+          GUL_UNUSED_VAR(i); \
+          GUL_UNUSED_VAR(ui); \
+          GUL_UNUSED_VAR(s); \
+          GUL_UNUSED_VAR(us); \
+          GUL_UNUSED_VAR(l); \
+          GUL_UNUSED_VAR(ul); \
+          GUL_UNUSED_VAR(f); \
+          GUL_UNUSED_VAR(d); \
+          GUL_UNUSED_VAR(b); \
+          GUL_UNUSED_VAR(c); \
+          /* This instance is already loaded, use the map for a lookup */ \
           if (!resetMode && !node.attribute("__ref").empty()) \
           { \
               gul::String __RefString(node.attribute("__ref").value()); \
               void* ptr = className::__loadedInstances.Get(__RefString); \
               return ptr; \
           } \
-          className* instance; \
+          className* instance = nullptr; \
           if(!resetMode) \
           { \
               instance = new className(); \
@@ -195,16 +196,16 @@ protected:
         float f; \
         double d;\
         bool b; \
-        UNUSED_VARIABLE(i); \
-        UNUSED_VARIABLE(ui); \
-        UNUSED_VARIABLE(s); \
-        UNUSED_VARIABLE(us); \
-        UNUSED_VARIABLE(l); \
-        UNUSED_VARIABLE(ul); \
-        UNUSED_VARIABLE(f); \
-        UNUSED_VARIABLE(d); \
-        UNUSED_VARIABLE(b); \
-        UNUSED_VARIABLE(listNode); \
+        GUL_UNUSED_VAR(i); \
+        GUL_UNUSED_VAR(ui); \
+        GUL_UNUSED_VAR(s); \
+        GUL_UNUSED_VAR(us); \
+        GUL_UNUSED_VAR(l); \
+        GUL_UNUSED_VAR(ul); \
+        GUL_UNUSED_VAR(f); \
+        GUL_UNUSED_VAR(d); \
+        GUL_UNUSED_VAR(b); \
+        GUL_UNUSED_VAR(listNode); \
         className* instance; \
         if(!resetMode) \
             instance = (className*) instanceVoid;
@@ -239,23 +240,6 @@ protected:
         }\
     }
 
-#define LOAD_POINTER(attributeArg) \
-    { \
-      pugi::xml_node listNode = node.first_child(); \
-      while (!listNode.empty()) { \
-          gul::String __string(listNode.attribute("attributeName").value()); \
-          if (__string == gul::String(#attributeArg)) { \
-              decltype(attributeArg) loaderObject = gul::ClassFactory<decltype(attributeArg)>::CreateInstance(gul::String(listNode.name()));   \
-              decltype(attributeArg) myObject = performLoad(*loaderObject, listNode, resetMode); \
-              delete loaderObject; \
-              if(!resetMode) { \
-                  instance->attributeArg = myObject; \
-              } \
-          } \
-          listNode = listNode.next_sibling();  \
-      } \
-    }
-
 #define LOAD_VARIABLE(attributeArg) \
     { \
       pugi::xml_node listNode = node.first_child(); \
@@ -264,11 +248,11 @@ protected:
           if (__string == gul::String(#attributeArg)) { \
               decltype(attributeArg)* loaderObject = gul::ClassFactory<decltype(attributeArg)>::CreateInstance(gul::String(listNode.name()));   \
               decltype(attributeArg)* myObject = performLoad(*loaderObject, listNode, resetMode); \
-              delete loaderObject; \
+              deleteLoaderObject(loaderObject); \
               if(!resetMode) { \
                   instance->attributeArg = *myObject; \
-                  GUL_DELETE(myObject); \
               } \
+              GUL_DELETE(myObject); \
           } \
           listNode = listNode.next_sibling();  \
       } \

@@ -52,6 +52,18 @@ namespace TestXMLManager
       TestClassString(void)
         : string(nullptr) {}
 
+      virtual ~TestClassString(void) { GUL_DELETE(string); }
+
+      TestClassString& operator= (const TestClassString& other)
+      {
+         if (this != &other) // protect against invalid self-assignment
+         {
+           this->string = new gul::String(*other.string);
+         }
+         // by convention, always return *this
+         return *this;
+      }
+
       void fillData(void) { string = new gul::String("TEST String"); }
 
       bool operator==(const TestClassString& o) const
@@ -76,7 +88,7 @@ namespace TestXMLManager
   END_SAVE(TestClassString)
 
   BEGIN_LOAD(TestClassString)
-   LOAD_POINTER(string)
+      LOAD_VARIABLE(string)
   END_LOAD(TestClassString)
 
   class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
@@ -169,9 +181,6 @@ namespace TestXMLManager
     LOAD_VARIABLE(primClass)
   END_LOAD(TestNestedClass)
 
-
-
-
   int SaveAndLoadPrimitivesClass(void)
   {
     TestClassPrimitives primitivesFalseReference;
@@ -183,6 +192,8 @@ namespace TestXMLManager
     TEST_NOT_EQUAL(*pPrimitivesLoaded, primitivesFalseReference);
     TEST_EQUAL(*pPrimitivesLoaded, primitivesTruth);
     TEST_FALSE(*pPrimitivesLoaded != primitivesTruth);
+
+    GUL_DELETE(pPrimitivesLoaded);
 
     return EXIT_SUCCESS;
   }
@@ -199,6 +210,8 @@ namespace TestXMLManager
     TEST_EQUAL(*pNestedLoaded, nestedTruth);
     TEST_FALSE(*pNestedLoaded != nestedTruth);
 
+    GUL_DELETE(pNestedLoaded);
+
     return EXIT_SUCCESS;
   }
 
@@ -213,6 +226,8 @@ namespace TestXMLManager
     TEST_NOT_EQUAL(*pStringLoaded, stringFalseReference);
     TEST_EQUAL(*pStringLoaded, stringTruth);
     TEST_FALSE(*pStringLoaded != stringTruth);
+
+    GUL_DELETE(pStringLoaded);
 
     return EXIT_SUCCESS;
   }

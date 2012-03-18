@@ -52,8 +52,8 @@ namespace gul
   class ClassFactory<T*> : public ClassFactoryBase
   {
     public:
-      static T* CreateInstance(const gul::String& rClassName)
-          { return ClassFactory<T>::CreateInstance(rClassName); }
+      static T** CreateInstance(const gul::String& rClassName)
+          { return new T*(ClassFactory<T>::CreateInstance(rClassName)); }
   };
 
 

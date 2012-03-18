@@ -41,6 +41,4 @@
 #define GUL_UNUSED_VAR(var) \
     (void) var
 
-#define UNUSED_VARIABLE(var) (void) var;
-
 #endif
