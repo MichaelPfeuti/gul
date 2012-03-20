@@ -29,7 +29,7 @@ add_flags(CMAKE_CXX_FLAGS "-std=c++0x -Wall
 # Debug Build Settings
 add_flags(CMAKE_CXX_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
 add_flags(CMAKE_C_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
-add_flags(LDFLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
+add_flags(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 
 # Doxygen
 find_package(Doxygen)
@@ -41,6 +41,16 @@ if(DOXYGEN_FOUND)
     WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/doc"
     )
 endif(DOXYGEN_FOUND)
+
+# AStyle
+include("${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyleMacros.cmake")
+if(ASTYLE_FOUND)
+  add_custom_target(CodingConventions 
+    COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE} -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
+    COMMENT "AStyle"
+    WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
+    )
+endif(ASTYLE_FOUND)
 
 # include files
 set(INCLUDE_TPL "${CMAKE_HOME_DIRECTORY}/include/impl")
@@ -54,4 +64,6 @@ if(BUILD_TESTING)
 endif(BUILD_TESTING)
 
 add_subdirectory(src)
+
+configure_file("cmake/Doxygen.ctest.in" Doxygen.ctest)
 

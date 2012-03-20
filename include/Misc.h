@@ -31,14 +31,14 @@
 
 
 #define GUL_DELETE(pointer) \
-    delete pointer; \
-    pointer = nullptr
+  delete pointer; \
+  pointer = nullptr
 
 #define GUL_DELETE_ARRAY(array) \
-    delete[] array; \
-    array = nullptr
+  delete[] array; \
+  array = nullptr
 
 #define GUL_UNUSED_VAR(var) \
-    (void) var
+  (void) var
 
 #endif

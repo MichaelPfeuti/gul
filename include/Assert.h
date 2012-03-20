@@ -1,4 +1,4 @@
-#pragma once
+O#pragma once
 #ifndef _GUL_BASE_ASSERT_H_
 #define _GUL_BASE_ASSERT_H_
 /***************************************************************************
@@ -36,14 +36,14 @@
 
 namespace gul
 {
-enum AssertionMode { ABORT, EXCEPTION, GUI };
-class ExceptionAssertionViolated {};
-void Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  enum AssertionMode { ABORT, EXCEPTION, GUI };
+  class ExceptionAssertionViolated {};
+  void Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
 
-extern AssertionMode AssertionModeInUse;
+  extern AssertionMode AssertionModeInUse;
 }
 
 #define ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__);

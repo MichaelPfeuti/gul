@@ -39,16 +39,16 @@ void gul::Assert(bool condition, const char* pMessage, int lineNumber, const cha
 {
   switch(AssertionModeInUse)
   {
-  case EXCEPTION:
-    AssertException(condition, pMessage, lineNumber, pFileName);
-    break;
-  case GUI:
-    AssertGui(condition, pMessage, lineNumber, pFileName);
-    break;
-  case ABORT:
-  default:
-    AssertExit(condition, pMessage, lineNumber, pFileName);
-    break;
+    case EXCEPTION:
+      AssertException(condition, pMessage, lineNumber, pFileName);
+      break;
+    case GUI:
+      AssertGui(condition, pMessage, lineNumber, pFileName);
+      break;
+    case ABORT:
+    default:
+      AssertExit(condition, pMessage, lineNumber, pFileName);
+      break;
   }
 }
 
@@ -76,10 +76,10 @@ void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const
 
 void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
-    GUL_UNUSED_VAR(condition);
-    GUL_UNUSED_VAR(pMessage);
-    GUL_UNUSED_VAR(lineNumber);
-    GUL_UNUSED_VAR(pFileName);
+  GUL_UNUSED_VAR(condition);
+  GUL_UNUSED_VAR(pMessage);
+  GUL_UNUSED_VAR(lineNumber);
+  GUL_UNUSED_VAR(pFileName);
   //@todo
 }
 

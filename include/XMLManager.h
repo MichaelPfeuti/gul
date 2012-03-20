@@ -32,17 +32,17 @@
 namespace gul
 {
 
-class XMLManager
-{
-public:
+  class XMLManager
+  {
+    public:
 
-    template<typename T> static T* Load(const gul::String&);
-    template<typename T> static bool Save(const gul::String& rPath, const T& rInstance);
+template<typename T> static T* Load(const gul::String&);
+      template<typename T> static bool Save(const gul::String& rPath, const T& rInstance);
 
-private:
-    template<typename T> static void ResetSaveStatus(const T& rInstance);
+    private:
+      template<typename T> static void ResetSaveStatus(const T& rInstance);
 
-};
+  };
 
 }
 

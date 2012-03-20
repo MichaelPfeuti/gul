@@ -270,7 +270,7 @@ namespace TestList
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 0; i < 5; ++i)
     {
-        TEST_EQUAL(copy.Get(i), i+1);
+      TEST_EQUAL(copy.Get(i), i + 1);
     }
 
     return EXIT_SUCCESS;
@@ -285,7 +285,7 @@ namespace TestList
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 0; i < 5; ++i)
     {
-        TEST_EQUAL(copy.Get(i), i+1);
+      TEST_EQUAL(copy.Get(i), i + 1);
     }
 
     return EXIT_SUCCESS;

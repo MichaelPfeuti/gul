@@ -19,7 +19,7 @@ set(CTEST_CUSTOM_EXCLUDE 3rdParty
 #                         pugixml.cpp
 #                         debug_new.cpp) 
 
-file(WRITE ${CMAKE_BINARY_DIR}/CTestCustom.cmake 
-           "set(CTEST_CUSTOM_COVERAGE_EXCLUDE ${CTEST_CUSTOM_EXCLUDE})")
+#file(WRITE ${CTEST_BINARY_DIR}/CTestCustom.cmake 
+#           "set(CTEST_CUSTOM_COVERAGE_EXCLUDE ${CTEST_CUSTOM_EXCLUDE})")
 
 unset(CTEST_CUSTOM_EXCLUDE)
