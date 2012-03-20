@@ -43,7 +43,7 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 # AStyle
-include("${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyleMacros.cmake")
+include("${CMAKE_HOME_DIRECTORY}/tools/CTest/FindAStyle.cmake")
 if(ASTYLE_FOUND)
   add_custom_target(CodingConventions 
     COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE} -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
