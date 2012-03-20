@@ -1,4 +1,4 @@
-O#pragma once
+#pragma once
 #ifndef _GUL_BASE_ASSERT_H_
 #define _GUL_BASE_ASSERT_H_
 /***************************************************************************
