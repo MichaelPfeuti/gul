@@ -31,7 +31,7 @@
 #include <cstdlib>
 #include "Misc.h"
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) || defined(BUILD_TESTING)
 
 gul::AssertionMode gul::AssertionModeInUse = gul::ABORT;
 
