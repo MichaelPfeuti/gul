@@ -37,7 +37,7 @@ add_flags(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
-  add_custom_target(doxygen 
+  add_custom_target(Doxygen 
     COMMAND ${DOXYGEN_EXECUTABLE}
     COMMENT "Doxygen"
     WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/doc"
