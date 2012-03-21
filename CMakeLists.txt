@@ -4,6 +4,8 @@ project(gul)
 
 # cdash settings
 include(CTest)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
+                      ${CMAKE_HOME_DIRECTORY}/tools/CTest)
 
 macro(add_flags var)
   string(REPLACE "\n" " " _flags "${ARGN}")
@@ -43,7 +45,7 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 # AStyle
-include("${CMAKE_HOME_DIRECTORY}/tools/CTest/FindAStyle.cmake")
+find_package(AStyle)
 if(ASTYLE_FOUND)
   add_custom_target(CodingConventions 
     COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE} -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
@@ -65,5 +67,5 @@ endif(BUILD_TESTING)
 
 add_subdirectory(src)
 
-configure_file("cmake/Doxygen.ctest.in" Doxygen.ctest)
-
+configure_file("tools/CTest/CDash/Doxygen.ctest.in" CDash/Doxygen.ctest)
+configure_file("tools/CTest/CDash/AStyle.ctest.in" CDash/AStyle.ctest)

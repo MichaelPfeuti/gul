@@ -27,51 +27,18 @@
 ############################################################################
 
 # find AStyle application
-find_program(ASTYLE_EXECUTABLE astyle)
-if(NOT ASTYLE_EXECUTABLE)
-  message(STATUS "ASTYLE_EXECUTABLE was not found. Please set manually for format testing.")
-else(NOT ASTYLE_EXECUTABLE)
-  set(ASTYLE_FOUND 1)
-endif(NOT ASTYLE_EXECUTABLE)
+find_program(ASTYLE_EXECUTABLE astyle
+             DOC "AStyle A Free, Fast and Small Automatic Formatter (http://astyle.sourceforge.net/)"
+             )
 
-# macro that searches for all c++ files recursively and test if the meet the coding convention
-function(astyle_check)
-  
-  if(ASTYLE_EXECUTABLE)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(AStyle DEFAULT_MSG ASTYLE_EXECUTABLE)
 
-    # Scan for files to check
-    file(GLOB_RECURSE FILES_FOUND_TO_CHECK "*.h")
-    set(FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
+if(ASTYLE_EXECUTABLE)
+  set(ASTYLE_FOUND "YES")
+else(ASTYLE_EXECUTABLE)
+  set(ASTYLE_FOUND "NO")
+endif(ASTYLE_EXECUTABLE)
 
-    file(GLOB_RECURSE FILES_FOUND_TO_CHECK "*.hpp")
-    list(APPEND FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
-
-    file(GLOB_RECURSE FILES_FOUND_TO_CHECK "*.cpp")
-    list(APPEND FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
-    
-    # loop over all found file and check them
-    set(ASTYLE_ARG "--options=../tools/astyle.conf")
-    foreach(CHECK_FILE IN LISTS FILES_TO_SYTLE_CHECK)
-      execute_process(COMMAND ${ASTYLE_EXECUTABLE} ${ASTYLE_ARG}
-                      INPUT_FILE ${CHECK_FILE}
-                      OUTPUT_VARIABLE FORMATED_CODE
-                      RESULT_VARIABLE RETVAL)
-                    
-      if(${RETVAL})
-      	message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=tools/astyle.conf < ${CHECK_FILE}")
-      endif(${RETVAL})
-
-      file(READ ${CHECK_FILE} CHECK_FILE_CONTENT)
-      
-      if(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
-      	message("Warning: ${CHECK_FILE} does not meet the Coding Conventions")
-      endif(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
-    
-    endforeach(CHECK_FILE IN LISTS FILES_TO_SYTLE_CHECK)
-    
-  else(ASTYLE_EXECUTABLE)
-  
-    message(FATAL_ERROR "ASTYLE_EXECUTABLE was not found. Please specify for format testing.")
-  
-  endif(ASTYLE_EXECUTABLE)
-endfunction(astyle_check)
+MARK_AS_ADVANCED(
+  ASTYLE_EXECUTABLE
+  )
