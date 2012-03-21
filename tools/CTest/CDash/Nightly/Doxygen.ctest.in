@@ -1,0 +1,8 @@
+include(@CMAKE_BINARY_DIR@/CDash/Common.ctest)
+
+set_property(GLOBAL PROPERTY SubProject "Doxygen")
+set(CTEST_BUILD_TARGET "Doxygen")
+
+ctest_start(Nightly)
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_submit()

@@ -67,5 +67,4 @@ endif(BUILD_TESTING)
 
 add_subdirectory(src)
 
-configure_file("tools/CTest/CDash/Doxygen.ctest.in" CDash/Doxygen.ctest)
-configure_file("tools/CTest/CDash/AStyle.ctest.in" CDash/AStyle.ctest)
+include(tools/CTest/CDash/ConfigCDash.cmake)

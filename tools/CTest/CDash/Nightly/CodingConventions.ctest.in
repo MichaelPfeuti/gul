@@ -1,0 +1,8 @@
+include(@CMAKE_BINARY_DIR@/CDash/Common.ctest)
+
+set_property(GLOBAL PROPERTY SubProject "CodingConventions")
+set(CTEST_BUILD_TARGET                  "CodingConventions")
+
+CTEST_START(Nightly)
+CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}")
+CTEST_SUBMIT()
