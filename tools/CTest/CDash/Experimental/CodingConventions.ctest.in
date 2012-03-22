@@ -5,4 +5,4 @@ set(CTEST_BUILD_TARGET                  "CodingConventions")
 
 ctest_start(Experimental)
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
-ctest_submit()
+ctest_submit(PARTS Build)
