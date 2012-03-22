@@ -32,34 +32,38 @@
 
 #include "String.h"
 
-namespace gul {
-
-template<typename T>
-class RTTIBase
+namespace gul
 {
-  public:
-    typedef T Type;
-};
 
-template<typename T>
-class RTTI : public RTTIBase<T>
-{
-public:
-  static String GetName();
-};
+  template<typename T>
+  class RTTIBase
+  {
+    public:
+      typedef T Type;
+  };
 
-template<typename T>
-class RTTI<T*> : public RTTIBase<T*>
-{
-public:
-  static String GetName() { return RTTI<T>::GetName(); }
-};
+  template<typename T>
+  class RTTI : public RTTIBase<T>
+  {
+    public:
+      static String GetName();
+  };
+
+  template<typename T>
+  class RTTI<T*> : public RTTIBase<T*>
+  {
+    public:
+      static String GetName()
+      {
+        return RTTI<T>::GetName();
+      }
+  };
 
 }
 
 #define DECLARE_RTTI(classname) \
   public: \
-    static const gul::RTTI<classname> RTTI; \
+  static const gul::RTTI<classname> RTTI; \
   private:
 
 #define DEFINE_RTTI(classname) \
@@ -67,8 +71,8 @@ public:
     template<> \
     class RTTI<classname> : public RTTIBase<classname> \
     { \
-    public: \
-      static  gul::String GetName() { return gul::String(#classname); } \
+      public: \
+        static  gul::String GetName() { return gul::String(#classname); } \
     }; \
   }
 
@@ -77,8 +81,8 @@ public:
     template<typename T> \
     class RTTI<classname<T>> : public RTTIBase<classname<T>> \
     { \
-    public: \
-      static  String GetName() { return (String(#classname) + String("<%>").Arg(RTTI<T>::GetName())); } \
+      public: \
+        static  String GetName() { return (String(#classname) + String("<%>").Arg(RTTI<T>::GetName())); } \
     }; \
   }
 

@@ -32,85 +32,85 @@
 
 namespace TestSettingsManager
 {
-int Overwrite(void)
-{
-  gul::SettingsManager m(gul::String("test.config"));
-  m.Write(gul::String("int2"), 2);
-  m.Write(gul::String("float-100"), -100.0);
-  m.Write(gul::String("string"), gul::String("a String"));
-  TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
-  TEST_EQUAL(m.ReadDouble(gul::String("float-100")), -100.0);
-  TEST_EQUAL(m.ReadString(gul::String("string")), gul::String("a String"));
+  int Overwrite(void)
+  {
+    gul::SettingsManager m(gul::String("test.config"));
+    m.Write(gul::String("int2"), 2);
+    m.Write(gul::String("float-100"), -100.0);
+    m.Write(gul::String("string"), gul::String("a String"));
+    TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
+    TEST_EQUAL(m.ReadDouble(gul::String("float-100")), -100.0);
+    TEST_EQUAL(m.ReadString(gul::String("string")), gul::String("a String"));
 
-  m.Write(gul::String("int2"), -2);
-  m.Write(gul::String("float-100"), -1.0);
-  m.Write(gul::String("string"), gul::String("a new String"));
-  TEST_EQUAL(m.ReadInt(gul::String("int2")), -2);
-  TEST_EQUAL(m.ReadDouble(gul::String("float-100")), -1.0);
-  TEST_EQUAL(m.ReadString(gul::String("string")), gul::String("a new String"));
+    m.Write(gul::String("int2"), -2);
+    m.Write(gul::String("float-100"), -1.0);
+    m.Write(gul::String("string"), gul::String("a new String"));
+    TEST_EQUAL(m.ReadInt(gul::String("int2")), -2);
+    TEST_EQUAL(m.ReadDouble(gul::String("float-100")), -1.0);
+    TEST_EQUAL(m.ReadString(gul::String("string")), gul::String("a new String"));
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int Contains(void)
-{
-  gul::SettingsManager m(gul::String("test.config"));
-  TEST_FALSE(m.Contains(gul::String("int2")));
-  m.Write(gul::String("int2"), 2);
-  TEST_TRUE(m.Contains(gul::String("int2")));
-  TEST_FALSE(m.Contains(gul::String("anything")));
+  int Contains(void)
+  {
+    gul::SettingsManager m(gul::String("test.config"));
+    TEST_FALSE(m.Contains(gul::String("int2")));
+    m.Write(gul::String("int2"), 2);
+    TEST_TRUE(m.Contains(gul::String("int2")));
+    TEST_FALSE(m.Contains(gul::String("anything")));
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int Clear(void)
-{
-  gul::SettingsManager m(gul::String("test.config"));
-  m.Write(gul::String("int2"), 2);
-  TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
+  int Clear(void)
+  {
+    gul::SettingsManager m(gul::String("test.config"));
+    m.Write(gul::String("int2"), 2);
+    TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
 
-  m.Clear();
-  TEST_FALSE(m.Contains(gul::String("int2")));
+    m.Clear();
+    TEST_FALSE(m.Contains(gul::String("int2")));
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int ReadWriteNumerics(void)
-{
-  gul::SettingsManager m(gul::String("test.config"));
-  m.Write(gul::String("int2"), 2);
-  m.Write(gul::String("int-100"), -100);
-  m.Write(gul::String("int0"), 0);
+  int ReadWriteNumerics(void)
+  {
+    gul::SettingsManager m(gul::String("test.config"));
+    m.Write(gul::String("int2"), 2);
+    m.Write(gul::String("int-100"), -100);
+    m.Write(gul::String("int0"), 0);
 
-  m.Write(gul::String("float2"), 2.0);
-  m.Write(gul::String("float-100"), -100.0);
-  m.Write(gul::String("float0"), 0.0);
+    m.Write(gul::String("float2"), 2.0);
+    m.Write(gul::String("float-100"), -100.0);
+    m.Write(gul::String("float0"), 0.0);
 
-  TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
-  TEST_EQUAL(m.ReadInt(gul::String("int-100")), -100);
-  TEST_EQUAL(m.ReadInt(gul::String("int0")), 0);
+    TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
+    TEST_EQUAL(m.ReadInt(gul::String("int-100")), -100);
+    TEST_EQUAL(m.ReadInt(gul::String("int0")), 0);
 
-  TEST_EQUAL(m.ReadInt(gul::String("float2")), 2.0);
-  TEST_EQUAL(m.ReadInt(gul::String("float-100")), -100.0);
-  TEST_EQUAL(m.ReadInt(gul::String("float0")), 0.0);
+    TEST_EQUAL(m.ReadInt(gul::String("float2")), 2.0);
+    TEST_EQUAL(m.ReadInt(gul::String("float-100")), -100.0);
+    TEST_EQUAL(m.ReadInt(gul::String("float0")), 0.0);
 
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 
-int ReadWriteStrings(void)
-{
-  gul::SettingsManager m(gul::String("test.config"));
-  m.Write(gul::String("shortString"), gul::String("short"));
-  m.Write(gul::String("longString"), gul::String("this is a long long long long string"));
-  m.Write(gul::String("newlineString"), gul::String("this contains a\nnewline"));
-  m.Write(gul::String("tabString"), gul::String("this contains a\ttab"));
+  int ReadWriteStrings(void)
+  {
+    gul::SettingsManager m(gul::String("test.config"));
+    m.Write(gul::String("shortString"), gul::String("short"));
+    m.Write(gul::String("longString"), gul::String("this is a long long long long string"));
+    m.Write(gul::String("newlineString"), gul::String("this contains a\nnewline"));
+    m.Write(gul::String("tabString"), gul::String("this contains a\ttab"));
 
-  TEST_EQUAL(m.ReadString(gul::String("shortString")), gul::String("short"));
-  TEST_EQUAL(m.ReadString(gul::String("longString")), gul::String("this is a long long long long string"));
-  TEST_EQUAL(m.ReadString(gul::String("newlineString")), gul::String("this contains a\nnewline"));
-  TEST_EQUAL(m.ReadString(gul::String("tabString")), gul::String("this contains a\ttab"));
+    TEST_EQUAL(m.ReadString(gul::String("shortString")), gul::String("short"));
+    TEST_EQUAL(m.ReadString(gul::String("longString")), gul::String("this is a long long long long string"));
+    TEST_EQUAL(m.ReadString(gul::String("newlineString")), gul::String("this contains a\nnewline"));
+    TEST_EQUAL(m.ReadString(gul::String("tabString")), gul::String("this contains a\ttab"));
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
 }

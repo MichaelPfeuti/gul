@@ -32,16 +32,16 @@
 namespace gul
 {
 
-class NonCopyable
-{
-  public:
-    NonCopyable(void) {}
-    virtual ~NonCopyable(void) {}
+  class NonCopyable
+  {
+    public:
+      NonCopyable(void) {}
+      virtual ~NonCopyable(void) {}
 
-  private:
-    NonCopyable(const NonCopyable&) = delete;
-    NonCopyable& operator=(const NonCopyable&) = delete;
-};
+    private:
+      NonCopyable(const NonCopyable&) = delete;
+      NonCopyable& operator=(const NonCopyable&) = delete;
+  };
 
 }
 

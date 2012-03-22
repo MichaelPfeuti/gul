@@ -32,265 +32,265 @@
 namespace TestMap
 {
 
-int CopyConstructor(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
+  int CopyConstructor(void)
   {
-    map.Add(i, i+10);
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+    }
+
+    gul::Map<int, int> mapCopy(map);
+    for(int i = 0; i < 5; ++i)
+    {
+      TEST_EQUAL(mapCopy.Get(i), i + 10);
+      TEST_TRUE(mapCopy.Contains(i));
+    }
+    TEST_EQUAL(mapCopy.Size(), map.Size());
+
+    return EXIT_SUCCESS;
   }
 
-  gul::Map<int,int> mapCopy(map);
-  for(int i = 0; i<5; ++i)
+  int Assignment(void)
   {
-    TEST_EQUAL(mapCopy.Get(i), i+10);
-    TEST_TRUE(mapCopy.Contains(i));
-  }
-  TEST_EQUAL(mapCopy.Size(), map.Size());
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+    }
 
-  return EXIT_SUCCESS;
-}
+    gul::Map<int, int> mapWithElements;
+    for(int i = 10; i < 15; ++i)
+    {
+      map.Add(i, i + 10);
+    }
 
-int Assignment(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
-  {
-    map.Add(i, i+10);
-  }
+    gul::Map<int, int> mapEmpty;
 
-  gul::Map<int,int> mapWithElements;
-  for(int i = 10; i<15; ++i)
-  {
-    map.Add(i, i+10);
-  }
+    mapWithElements = map;
+    mapEmpty = map;
 
-  gul::Map<int,int> mapEmpty;
+    for(int i = 0; i < 5; ++i)
+    {
+      TEST_EQUAL(mapWithElements.Get(i), i + 10);
+      TEST_TRUE(mapWithElements.Contains(i));
 
-  mapWithElements = map;
-  mapEmpty = map;
+      TEST_EQUAL(mapEmpty.Get(i), i + 10);
+      TEST_TRUE(mapEmpty.Contains(i));
+    }
+    TEST_EQUAL(mapWithElements.Size(), map.Size());
+    TEST_EQUAL(mapEmpty.Size(), map.Size());
 
-  for(int i = 0; i<5; ++i)
-  {
-    TEST_EQUAL(mapWithElements.Get(i), i+10);
-    TEST_TRUE(mapWithElements.Contains(i));
-
-    TEST_EQUAL(mapEmpty.Get(i), i+10);
-    TEST_TRUE(mapEmpty.Contains(i));
-  }
-  TEST_EQUAL(mapWithElements.Size(), map.Size());
-  TEST_EQUAL(mapEmpty.Size(), map.Size());
-
-  return EXIT_SUCCESS;
-}
-
-int SizeAndIsEmpty(void)
-{
-  gul::Map<int,int> map;
-  TEST_TRUE(map.IsEmpty());
-  TEST_EQUAL(map.Size(), 0);
-
-  for(int i = 0; i<5; ++i)
-  {
-    map.Add(i, i+10);
-    TEST_FALSE(map.IsEmpty());
-    TEST_EQUAL(map.Size(), i+1);
+    return EXIT_SUCCESS;
   }
 
-  for(int i = 0; i<4; ++i)
+  int SizeAndIsEmpty(void)
   {
-    map.Remove(i);
-    TEST_FALSE(map.IsEmpty());
-    TEST_EQUAL(map.Size(), 4-i);
+    gul::Map<int, int> map;
+    TEST_TRUE(map.IsEmpty());
+    TEST_EQUAL(map.Size(), 0);
+
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_FALSE(map.IsEmpty());
+      TEST_EQUAL(map.Size(), i + 1);
+    }
+
+    for(int i = 0; i < 4; ++i)
+    {
+      map.Remove(i);
+      TEST_FALSE(map.IsEmpty());
+      TEST_EQUAL(map.Size(), 4 - i);
+    }
+
+    map.Remove(4);
+    TEST_TRUE(map.IsEmpty());
+    TEST_EQUAL(map.Size(), 0);
+
+    return EXIT_SUCCESS;
   }
 
-  map.Remove(4);
-  TEST_TRUE(map.IsEmpty());
-  TEST_EQUAL(map.Size(), 0);
-
-  return EXIT_SUCCESS;
-}
-
-int Add(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
+  int Add(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
-    TEST_TRUE(map.Contains(i));
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+      TEST_TRUE(map.Contains(i));
+    }
+
+    map.Remove(4);
+    TEST_FALSE(map.Contains(4));
+
+    map.Add(4, 40);
+    TEST_EQUAL(map.Get(4), 40);
+    TEST_TRUE(map.Contains(4));
+
+    map.Add(4, 41);
+    TEST_EQUAL(map.Get(4), 41);
+    TEST_TRUE(map.Contains(4));
+
+    return EXIT_SUCCESS;
   }
 
-  map.Remove(4);
-  TEST_FALSE(map.Contains(4));
-
-  map.Add(4, 40);
-  TEST_EQUAL(map.Get(4), 40);
-  TEST_TRUE(map.Contains(4));
-
-  map.Add(4, 41);
-  TEST_EQUAL(map.Get(4), 41);
-  TEST_TRUE(map.Contains(4));
-
-  return EXIT_SUCCESS;
-}
-
-int Remove(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
+  int Remove(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
+
+    TEST_EQUAL(map.Size(), 5);
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Remove(i);
+      TEST_FALSE(map.Contains(i));
+      TEST_EQUAL(map.Size(), 4 - i);
+    }
+
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
+    TEST_EQUAL(map.Size(), 5);
+
+    return EXIT_SUCCESS;
   }
 
-  TEST_EQUAL(map.Size(), 5);
-  for(int i = 0; i <5; ++i)
+  int RemoveAssertion(void)
   {
-    map.Remove(i);
-    TEST_FALSE(map.Contains(i));
-    TEST_EQUAL(map.Size(), 4-i);
+    gul::Map<int, int> map;
+
+    TEST_ASSERTION(map.Remove(0));
+    map.Add(0, 10);
+    map.Remove(0);
+    TEST_ASSERTION(map.Remove(0));
+
+    return EXIT_SUCCESS;
   }
 
-  for(int i = 0; i<5; ++i)
+  int Clear(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
-  }
-  TEST_EQUAL(map.Size(), 5);
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
 
-  return EXIT_SUCCESS;
-}
+    TEST_EQUAL(map.Size(), 5);
+    map.Clear();
+    TEST_EQUAL(map.Size(), 0);
 
-int RemoveAssertion(void)
-{
-  gul::Map<int,int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      TEST_FALSE(map.Contains(i));
+    }
 
-  TEST_ASSERTION(map.Remove(0));
-  map.Add(0,10);
-  map.Remove(0);
-  TEST_ASSERTION(map.Remove(0));
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
+    TEST_EQUAL(map.Size(), 5);
 
-  return EXIT_SUCCESS;
-}
-
-int Clear(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
-  {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
+    return EXIT_SUCCESS;
   }
 
-  TEST_EQUAL(map.Size(), 5);
-  map.Clear();
-  TEST_EQUAL(map.Size(), 0);
-
-  for(int i = 0; i<5; ++i)
+  int Contains(void)
   {
-    TEST_FALSE(map.Contains(i));
+    gul::Map<int, int> map;
+
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_TRUE(map.Contains(i));
+    }
+
+    TEST_FALSE(map.Contains(10));
+    map.Add(10, 20);
+    TEST_TRUE(map.Contains(10));
+    map.Add(10, 20);
+    TEST_TRUE(map.Contains(10));
+    map.Remove(10);
+    TEST_FALSE(map.Contains(10));
+
+    return EXIT_SUCCESS;
   }
 
-  for(int i = 0; i<5; ++i)
+  int Get(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
-  }
-  TEST_EQUAL(map.Size(), 5);
+    gul::Map<int, int> map;
 
-  return EXIT_SUCCESS;
-}
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
 
-int Contains(void)
-{
-  gul::Map<int,int> map;
+    map.Remove(0);
+    map.Add(0, 50);
+    TEST_EQUAL(map.Get(0), 50);
 
-  for(int i = 0; i<5; ++i)
-  {
-    map.Add(i, i+10);
-    TEST_TRUE(map.Contains(i));
+    return EXIT_SUCCESS;
   }
 
-  TEST_FALSE(map.Contains(10));
-  map.Add(10, 20);
-  TEST_TRUE(map.Contains(10));
-  map.Add(10, 20);
-  TEST_TRUE(map.Contains(10));
-  map.Remove(10);
-  TEST_FALSE(map.Contains(10));
-
-  return EXIT_SUCCESS;
-}
-
-int Get(void)
-{
-  gul::Map<int,int> map;
-
-  for(int i = 0; i<5; ++i)
+  int GetAssertion(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
+    gul::Map<int, int> map;
+
+    TEST_ASSERTION(map.Get(0));
+    map.Add(0, 10);
+    map.Get(0);
+    map.Remove(0);
+    TEST_ASSERTION(map.Get(0));
+
+    return EXIT_SUCCESS;
   }
 
-  map.Remove(0);
-  map.Add(0,50);
-  TEST_EQUAL(map.Get(0), 50);
-
-  return EXIT_SUCCESS;
-}
-
-int GetAssertion(void)
-{
-  gul::Map<int,int> map;
-
-  TEST_ASSERTION(map.Get(0));
-  map.Add(0,10);
-  map.Get(0);
-  map.Remove(0);
-  TEST_ASSERTION(map.Get(0));
-
-  return EXIT_SUCCESS;
-}
-
-int GetKeys(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
+  int GetKeys(void)
   {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
+
+    const gul::Container<int>& rKeys = map.GetKeys();
+    TEST_EQUAL(rKeys.Size(), 5);
+
+    for(int i = 0; i < 5; ++i)
+    {
+      TEST_TRUE(rKeys.Contains(i));
+    }
+
+    return EXIT_SUCCESS;
   }
 
-  const gul::Container<int>& rKeys = map.GetKeys();
-  TEST_EQUAL(rKeys.Size(), 5);
-
-  for(int i = 0; i<5; ++i)
+  int GetValues(void)
   {
-    TEST_TRUE(rKeys.Contains(i));
+    gul::Map<int, int> map;
+    for(int i = 0; i < 5; ++i)
+    {
+      map.Add(i, i + 10);
+      TEST_EQUAL(map.Get(i), i + 10);
+    }
+
+    const gul::Container<int>& rValues = map.GetValues();
+    TEST_EQUAL(rValues.Size(), 5);
+
+    for(int i = 0; i < 5; ++i)
+    {
+      TEST_TRUE(rValues.Contains(i + 10));
+    }
+
+    return EXIT_SUCCESS;
   }
-
-  return EXIT_SUCCESS;
-}
-
-int GetValues(void)
-{
-  gul::Map<int,int> map;
-  for(int i = 0; i<5; ++i)
-  {
-    map.Add(i, i+10);
-    TEST_EQUAL(map.Get(i), i+10);
-  }
-
-  const gul::Container<int>& rValues = map.GetValues();
-  TEST_EQUAL(rValues.Size(), 5);
-
-  for(int i = 0; i<5; ++i)
-  {
-    TEST_TRUE(rValues.Contains(i+10));
-  }
-
-  return EXIT_SUCCESS;
-}
 
 }

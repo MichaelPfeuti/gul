@@ -49,11 +49,11 @@ gul::List<T>::List(const gul::Container<U>& rContainer)
 
 template<typename T>
 gul::List<T>::List(const gul::List<T>& rList)
-    : pHead(nullptr),
-      pTail(nullptr),
-      size(0)
+  : pHead(nullptr),
+    pTail(nullptr),
+    size(0)
 {
-    this->copyAllData(rList);
+  this->copyAllData(rList);
 }
 
 template<typename T>
@@ -119,7 +119,7 @@ void gul::List<T>::Add(const T& rElement, int index)
   {
     // find element to move
     ListElement<T>* pMove = this->pHead;
-    for(int i = 0;i < insertIndex; ++i)
+    for(int i = 0; i < insertIndex; ++i)
     {
       pMove = pMove->pNext;
     }
@@ -205,7 +205,7 @@ void gul::List<T>::Remove(int index)
     this->pHead = this->pHead->pNext;
     GUL_DELETE(this->pHead->pPrev);
   }
-  else if(index == this->size -1)
+  else if(index == this->size - 1)
   {
     this->pTail = this->pTail->pPrev;
     GUL_DELETE(this->pTail->pNext);
@@ -251,13 +251,13 @@ void gul::List<T>::Clear(void)
 template<typename T>
 void gul::List<T>::copyAllData(const List& rList)
 {
-    this->Clear();
-    ListElement<T>* pCur = rList.pHead;
-    for(int i = 0; i < rList.size; ++i)
-    {
-      this->Add(pCur->data);
-      pCur = pCur->pNext;
-    }
+  this->Clear();
+  ListElement<T>* pCur = rList.pHead;
+  for(int i = 0; i < rList.size; ++i)
+  {
+    this->Add(pCur->data);
+    pCur = pCur->pNext;
+  }
 }
 
 template<typename T>

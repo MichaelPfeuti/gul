@@ -35,18 +35,18 @@
 template<typename T>
 T* gul::XMLManager::Load(const gul::String& rFile)
 {
-    pugi::xml_document doc;
-    doc.load_file(rFile.GetData());
-    pugi::xml_node rootNode = doc.first_child();
+  pugi::xml_document doc;
+  doc.load_file(rFile.GetData());
+  pugi::xml_node rootNode = doc.first_child();
 
-    T loaderInstance;
-    gul::XMLSerializable::performLoad(loaderInstance, rootNode, true);
+  T loaderInstance;
+  gul::XMLSerializable::performLoad(loaderInstance, rootNode, true);
 
-    T* pLoadedInstance = gul::XMLSerializable::performLoad(loaderInstance, rootNode);
+  T* pLoadedInstance = gul::XMLSerializable::performLoad(loaderInstance, rootNode);
 
-    ASSERT(pLoadedInstance != nullptr);
+  ASSERT(pLoadedInstance != nullptr);
 
-    return pLoadedInstance;
+  return pLoadedInstance;
 }
 
 template<typename T>
@@ -59,14 +59,14 @@ void gul::XMLManager::ResetSaveStatus(const T& rInstance)
 template<typename T>
 bool gul::XMLManager::Save(const gul::String& rPath, const T& rInstance)
 {
-    pugi::xml_document doc;
+  pugi::xml_document doc;
 
-    gul::XMLManager::ResetSaveStatus(rInstance);
-    pugi::xml_node rootNode = doc.append_child("elemet");
+  gul::XMLManager::ResetSaveStatus(rInstance);
+  pugi::xml_node rootNode = doc.append_child("elemet");
 
-    gul::XMLSerializable::performSave(rInstance, rootNode);
+  gul::XMLSerializable::performSave(rInstance, rootNode);
 
-    return doc.save_file(rPath.GetData());
+  return doc.save_file(rPath.GetData());
 }
 
 #include "memleak_template_end.h"

@@ -44,13 +44,13 @@ gul::String::String(void)
 
 gul::String::String(const gul::String& rString)
   : gul::NonCopyable(),
-    pString(strcpy(new char[rString.Size()+1], rString.pString)),
+    pString(strcpy(new char[rString.Size() + 1], rString.pString)),
     size(rString.Size())
 {
 }
 
 gul::String::String(const char* pCString)
-  : pString(strcpy(new char[strlen(pCString)+1], pCString)),
+  : pString(strcpy(new char[strlen(pCString) + 1], pCString)),
     size(strlen(pCString))
 {
 }
@@ -85,7 +85,7 @@ gul::String gul::String::Arg(int value) const
   const int valueLength = 256;
   char pNewString[this->Size() + valueLength];
 
-  sprintf(pNewString, "%.*s%d%s",idx, this->pString, value, this->pString + idx + 1);
+  sprintf(pNewString, "%.*s%d%s", idx, this->pString, value, this->pString + idx + 1);
   return String(pNewString);
 }
 
@@ -118,7 +118,7 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
   char pNewString[newSize];
   strncpy(pNewString                      , this->pString         , start);
   strcpy(pNewString + start               , rNew.pString);
-  strcpy(pNewString + start + rNew.Size(), this->pString + end+1);
+  strcpy(pNewString + start + rNew.Size(), this->pString + end + 1);
 
   return String(pNewString);
 }
@@ -133,10 +133,10 @@ gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSe
   while(pSearchPos != this->pString + idx) ++idx;
 
   //@todo: this generates an unnecessary copy
-  return this->Replace(rNew, idx, idx+rSearch.Size()-1);
+  return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
 }
 
-int gul::String::Find(const gul::String &rString) const
+int gul::String::Find(const gul::String& rString) const
 {
   const char* pSearchPos = strstr(this->pString, rString.pString);
   for(int i = 0; i < this->size; ++i)

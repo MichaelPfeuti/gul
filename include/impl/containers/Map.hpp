@@ -30,32 +30,32 @@
 #include "Misc.h"
 
 template<typename K, typename V>
-gul::Map<K,V>::Map(void)
+gul::Map<K, V>::Map(void)
   : keys(),
     values()
 {
 }
 
 template<typename K, typename V>
-gul::Map<K,V>::~Map(void)
+gul::Map<K, V>::~Map(void)
 {
 }
 
 template<typename K, typename V>
-int gul::Map<K,V>::Size(void) const
+int gul::Map<K, V>::Size(void) const
 {
   ASSERT(this->keys.Size() == this->values.Size());
   return this->keys.Size();
 }
 
 template<typename K, typename V>
-bool gul::Map<K,V>::IsEmpty(void) const
+bool gul::Map<K, V>::IsEmpty(void) const
 {
   return this->Size() == 0;
 }
 
 template<typename K, typename V>
-V& gul::Map<K,V>::Get(const K& rKey)
+V& gul::Map<K, V>::Get(const K& rKey)
 {
   ASSERT(this->keys.Contains(rKey));
 
@@ -64,7 +64,7 @@ V& gul::Map<K,V>::Get(const K& rKey)
 }
 
 template<typename K, typename V>
-const V& gul::Map<K,V>::Get(const K &rKey) const
+const V& gul::Map<K, V>::Get(const K& rKey) const
 {
   ASSERT(this->keys.Contains(rKey));
 
@@ -74,7 +74,7 @@ const V& gul::Map<K,V>::Get(const K &rKey) const
 }
 
 template<typename K, typename V>
-void gul::Map<K,V>::Add(const K& rKey, const V& rValue)
+void gul::Map<K, V>::Add(const K& rKey, const V& rValue)
 {
   if(this->keys.Contains(rKey))
   {
@@ -90,7 +90,7 @@ void gul::Map<K,V>::Add(const K& rKey, const V& rValue)
 }
 
 template<typename K, typename V>
-void gul::Map<K,V>::Remove(const K& rKey)
+void gul::Map<K, V>::Remove(const K& rKey)
 {
   ASSERT(this->keys.Contains(rKey));
 
@@ -100,32 +100,32 @@ void gul::Map<K,V>::Remove(const K& rKey)
 }
 
 template<typename K, typename V>
-void gul::Map<K,V>::Clear(void)
+void gul::Map<K, V>::Clear(void)
 {
   this->keys.Clear();
   this->values.Clear();
 }
 
 template<typename K, typename V>
-bool gul::Map<K,V>::Contains(const K& rKey) const
+bool gul::Map<K, V>::Contains(const K& rKey) const
 {
   return this->keys.Contains(rKey);
 }
 
 template<typename K, typename V>
-const gul::Container<K>& gul::Map<K,V>::GetKeys(void) const
+const gul::Container<K>& gul::Map<K, V>::GetKeys(void) const
 {
   return this->keys;
 }
 
 template<typename K, typename V>
-const gul::Container<V>& gul::Map<K,V>::GetValues(void) const
+const gul::Container<V>& gul::Map<K, V>::GetValues(void) const
 {
   return this->values;
 }
 
 template<typename K, typename V>
-void gul::Map<K,V>::Save(pugi::xml_node& node, bool resetMode) const
+void gul::Map<K, V>::Save(pugi::xml_node& node, bool resetMode) const
 {
   GUL_UNUSED_VAR(resetMode);
 
@@ -133,10 +133,10 @@ void gul::Map<K,V>::Save(pugi::xml_node& node, bool resetMode) const
 }
 
 template<typename K, typename V>
-void* gul::Map<K,V>::Load(const pugi::xml_node& node, bool resetMode) const
+void* gul::Map<K, V>::Load(const pugi::xml_node& node, bool resetMode) const
 {
   GUL_UNUSED_VAR(node);
   GUL_UNUSED_VAR(resetMode);
 
-  return new Map<K,V>();
+  return new Map<K, V>();
 }

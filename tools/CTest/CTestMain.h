@@ -56,16 +56,16 @@ FunctionNameMap g_testFunctionMap;
 
 // Macro to register a testing function
 #define REGISTER_TEST(test) \
-    g_testFunctionMap[#test] = test;
+  g_testFunctionMap[#test] = test;
 
 // Main calls this function to allow testing functions to be registered.
-// This means in an implementation of this function there are usually 
+// This means in an implementation of this function there are usually
 // only REGISTER_TEST statements
 void RegisterTests(void);
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  // We switch the assertion mode to exception to detect 
+  // We switch the assertion mode to exception to detect
   // assertion with an exception in the tests.
   gul::AssertionModeInUse = gul::EXCEPTION;
 
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     }
     ++i;
   }
-  
+
   fprintf(stderr, "Test %s is not part of the TestCollection!\n", argv[1]); \
   return EXIT_FAILURE;
 }

@@ -211,7 +211,7 @@ namespace TestSet
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 0; i < 5; ++i)
     {
-        TEST_TRUE(copy.Contains(i+1));
+      TEST_TRUE(copy.Contains(i + 1));
     }
 
     return EXIT_SUCCESS;
@@ -226,7 +226,7 @@ namespace TestSet
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 0; i < 5; ++i)
     {
-        TEST_TRUE(copy.Contains(i+1));
+      TEST_TRUE(copy.Contains(i + 1));
     }
 
     return EXIT_SUCCESS;

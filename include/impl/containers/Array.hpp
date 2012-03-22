@@ -57,7 +57,7 @@ gul::Array<T>::Array(const gul::Array<T>& rArray)
     size(rArray.Size()),
     reservedMemoryBlocks(rArray.Size())
 {
-    memcpy(this->pData, rArray.pData, rArray.Size()*sizeof(T));
+  memcpy(this->pData, rArray.pData, rArray.Size()*sizeof(T));
 }
 
 template<typename T>
@@ -118,16 +118,16 @@ void gul::Array<T>::Add(const T& rElement, int index)
     this->reservedMemoryBlocks <<= 1;
 
     T* newMemory = new T[this->reservedMemoryBlocks];
-    memcpy(newMemory, this->pData, oldBlockCount*sizeof(T));
+    memcpy(newMemory, this->pData, oldBlockCount * sizeof(T));
 
     GUL_DELETE_ARRAY(this->pData);
     this->pData = newMemory;
   }
 
   // when the new item is not appended we need to move the memory content
-  if(insertIndex < this->size -1)
+  if(insertIndex < this->size - 1)
   {
-    memmove(this->pData + insertIndex + 1, this->pData + insertIndex, sizeof(T)*(this->size - insertIndex));
+    memmove(this->pData + insertIndex + 1, this->pData + insertIndex, sizeof(T) * (this->size - insertIndex));
   }
 
   // copy element into array
@@ -180,9 +180,9 @@ void gul::Array<T>::Remove(int index)
   ASSERT(index < this->size);
 
   // when the new item is not appended we need to move the memory content
-  if(index < this->size -1)
+  if(index < this->size - 1)
   {
-    memmove(this->pData + index, this->pData + index + 1, sizeof(T)*(this->size - index - 1));
+    memmove(this->pData + index, this->pData + index + 1, sizeof(T) * (this->size - index - 1));
   }
   --(this->size);
 }

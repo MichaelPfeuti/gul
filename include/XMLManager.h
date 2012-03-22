@@ -36,7 +36,7 @@ namespace gul
   {
     public:
 
-template<typename T> static T* Load(const gul::String&);
+      template<typename T> static T* Load(const gul::String&);
       template<typename T> static bool Save(const gul::String& rPath, const T& rInstance);
 
     private:

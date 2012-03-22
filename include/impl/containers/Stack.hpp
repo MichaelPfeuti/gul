@@ -45,42 +45,42 @@ gul::Stack<T>::~Stack(void)
 template<typename T>
 void gul::Stack<T>::Push(const T& rElement)
 {
-    this->list.Add(rElement);
+  this->list.Add(rElement);
 }
 
 template<typename T>
 const T& gul::Stack<T>::Top(void) const
 {
-ASSERT(this->list.Size() > 0)
-return this->list.Get(this->list.Size()-1);
+  ASSERT(this->list.Size() > 0)
+  return this->list.Get(this->list.Size() - 1);
 }
 
 template<typename T>
 T& gul::Stack<T>::Top(void)
 {
-    ASSERT(this->list.Size() > 0)
-    return this->list.Get(this->list.Size()-1);
+  ASSERT(this->list.Size() > 0)
+  return this->list.Get(this->list.Size() - 1);
 }
 
 template<typename T>
 T gul::Stack<T>::Pop(void)
 {
   ASSERT(this->list.Size() > 0)
-  T removed = this->list.Get(this->list.Size()-1);
-  this->list.Remove(this->list.Size()-1);
+  T removed = this->list.Get(this->list.Size() - 1);
+  this->list.Remove(this->list.Size() - 1);
   return removed;
 }
 
 template<typename T>
 void gul::Stack<T>::Clear(void)
 {
-    this->list.Clear();
+  this->list.Clear();
 }
 
 template<typename T>
 int gul::Stack<T>::Size(void) const
 {
-    return this->list.Size();
+  return this->list.Size();
 }
 
 template<typename T>

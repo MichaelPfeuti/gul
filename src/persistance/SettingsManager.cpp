@@ -40,7 +40,7 @@ gul::SettingsManager::SettingsManager(void)
 
 }
 
-gul::SettingsManager::SettingsManager(const String &rPath)
+gul::SettingsManager::SettingsManager(const String& rPath)
   : pFile(nullptr)
 {
   ASSERT_MSG(!rPath.IsEmpty(), "The path to the file cannot be empty")
@@ -54,49 +54,49 @@ gul::SettingsManager::~SettingsManager(void)
   fclose(pFile);
 }
 
-void gul::SettingsManager::Write(const String &rKey, const String &rValue)
+void gul::SettingsManager::Write(const String& rKey, const String& rValue)
 {
   GUL_UNUSED_VAR(rKey);
   GUL_UNUSED_VAR(rValue);
 }
 
-void gul::SettingsManager::Write(const String &rKey, double rValue)
+void gul::SettingsManager::Write(const String& rKey, double rValue)
 {
   GUL_UNUSED_VAR(rKey);
   GUL_UNUSED_VAR(rValue);
 }
 
-void gul::SettingsManager::Write(const String &rKey, int rValue)
+void gul::SettingsManager::Write(const String& rKey, int rValue)
 {
   GUL_UNUSED_VAR(rKey);
   GUL_UNUSED_VAR(rValue);
 }
 
-void gul::SettingsManager::Write(const String &rKey, long rValue)
+void gul::SettingsManager::Write(const String& rKey, long rValue)
 {
   GUL_UNUSED_VAR(rKey);
   GUL_UNUSED_VAR(rValue);
 }
 
-int gul::SettingsManager::ReadInt(const String &rKey)
+int gul::SettingsManager::ReadInt(const String& rKey)
 {
   GUL_UNUSED_VAR(rKey);
   return 0;
 }
 
-double gul::SettingsManager::ReadDouble(const String &rKey)
+double gul::SettingsManager::ReadDouble(const String& rKey)
 {
   GUL_UNUSED_VAR(rKey);
   return 0.0;
 }
 
-gul::String gul::SettingsManager::ReadString(const String &rKey)
+gul::String gul::SettingsManager::ReadString(const String& rKey)
 {
   GUL_UNUSED_VAR(rKey);
   return gul::String("");
 }
 
-bool gul::SettingsManager::Contains(const String &rKey)
+bool gul::SettingsManager::Contains(const String& rKey)
 {
   GUL_UNUSED_VAR(rKey);
   return false;

@@ -189,7 +189,7 @@ namespace TestStack
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 5; i > 0; --i)
     {
-        TEST_EQUAL(copy.Pop(), i);
+      TEST_EQUAL(copy.Pop(), i);
     }
 
     return EXIT_SUCCESS;
@@ -204,7 +204,7 @@ namespace TestStack
     TEST_EQUAL(copy.Size(), 5);
     for(int i = 5; i > 0; --i)
     {
-        TEST_EQUAL(copy.Pop(), i);
+      TEST_EQUAL(copy.Pop(), i);
     }
 
     return EXIT_SUCCESS;

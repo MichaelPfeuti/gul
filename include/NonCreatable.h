@@ -32,14 +32,14 @@
 namespace gul
 {
 
-class NonCreatable
-{
-  private:
-    void ____MethodToBlockCreation(void);
-    NonCreatable(void) = delete;
-    NonCreatable(const NonCreatable&) = delete;
-    NonCreatable& operator=(const NonCreatable&) = delete;
-};
+  class NonCreatable
+  {
+    private:
+      void ____MethodToBlockCreation(void);
+      NonCreatable(void) = delete;
+      NonCreatable(const NonCreatable&) = delete;
+      NonCreatable& operator=(const NonCreatable&) = delete;
+  };
 
 }
 

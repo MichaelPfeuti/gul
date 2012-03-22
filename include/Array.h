@@ -41,7 +41,7 @@ namespace gul
   class Array : public Container<T>, REGISTER_FACTORY(Array<T>), public XMLSerializable
   {
 
-    DECLARE_RTTI(Array)
+      DECLARE_RTTI(Array)
 
     public:
       Array(void);

@@ -36,54 +36,63 @@
 namespace gul
 {
 
-/**
-  *
-  */
-class String : private NonCopyable, public XMLSerializable
-{
+  /**
+    *
+    */
+  class String : private NonCopyable, public XMLSerializable
+  {
 
 
-  public:
-    String(void);
-    String(const String& rString);
-    explicit String(const char*);
-    ~String();
+    public:
+      String(void);
+      String(const String& rString);
+      explicit String(const char*);
+      ~String();
 
-  public:
-    bool IsEmpty(void) const { return Size() == 0; }
-    int Size(void) const { return size; }
-    char CharAt(int index) const;
+    public:
+      bool IsEmpty(void) const
+      {
+        return Size() == 0;
+      }
+      int Size(void) const
+      {
+        return size;
+      }
+      char CharAt(int index) const;
 
-    String Arg(double value) const;
-    String Arg(long value) const;
-    String Arg(int value) const;
-    String Arg(const String& rString) const;
+      String Arg(double value) const;
+      String Arg(long value) const;
+      String Arg(int value) const;
+      String Arg(const String& rString) const;
 
-    int Find(const String& rString) const;
+      int Find(const String& rString) const;
 
-    String Replace(const String& rNew, int start, int end) const;
-    String Replace(const String& rNew, const String& rSearch) const;
+      String Replace(const String& rNew, int start, int end) const;
+      String Replace(const String& rNew, const String& rSearch) const;
 
-    const char* GetData(void) const { return pString; }
+      const char* GetData(void) const
+      {
+        return pString;
+      }
 
-  private:
-    virtual void Save(pugi::xml_node& node, bool resetMode) const;
-    virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
-    friend class XMLSerializable;
+    private:
+      virtual void Save(pugi::xml_node& node, bool resetMode) const;
+      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      friend class XMLSerializable;
 
-  private:
-    const char* pString;
-    const int size;
+    private:
+      const char* pString;
+      const int size;
 
-    friend String operator+(const String&, const String&);
-    friend bool operator!=(const String& rLeft, const String& rRight);
-    friend bool operator==(const String& rLeft, const String& rRight);
-};
+      friend String operator+(const String&, const String&);
+      friend bool operator!=(const String& rLeft, const String& rRight);
+      friend bool operator==(const String& rLeft, const String& rRight);
+  };
 
 
-String operator+(const String& rLeft, const String& rRight);
-bool operator!=(const String& rLeft, const String& rRight);
-bool operator==(const String& rLeft, const String& rRight);
+  String operator+(const String& rLeft, const String& rRight);
+  bool operator!=(const String& rLeft, const String& rRight);
+  bool operator==(const String& rLeft, const String& rRight);
 
 }
 

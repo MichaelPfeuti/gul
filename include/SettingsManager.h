@@ -32,35 +32,38 @@
 #include "NonCopyable.h"
 #include <cstdio>
 
-namespace gul { class String; }
+namespace gul
+{
+  class String;
+}
 
 namespace gul
 {
 
-class SettingsManager : public NonCopyable
-{
+  class SettingsManager : public NonCopyable
+  {
 
-  public:
-    SettingsManager(void);
-    explicit SettingsManager(const String& rPath);
-    virtual ~SettingsManager(void);
+    public:
+      SettingsManager(void);
+      explicit SettingsManager(const String& rPath);
+      virtual ~SettingsManager(void);
 
-    void Write(const String& rKey, const String& rValue);
-    void Write(const String& rKey, double rValue);
-    void Write(const String& rKey, int rValue);
-    void Write(const String& rKey, long rValue);
+      void Write(const String& rKey, const String& rValue);
+      void Write(const String& rKey, double rValue);
+      void Write(const String& rKey, int rValue);
+      void Write(const String& rKey, long rValue);
 
-    int ReadInt(const String& rKey);
-    double ReadDouble(const String& rKey);
-    String ReadString(const String& rKey);
+      int ReadInt(const String& rKey);
+      double ReadDouble(const String& rKey);
+      String ReadString(const String& rKey);
 
-    bool Contains(const String& rKey);
-    void Clear(void);
-    bool IsEmpty(void);
+      bool Contains(const String& rKey);
+      void Clear(void);
+      bool IsEmpty(void);
 
-  private:
-    FILE* pFile;
-};
+    private:
+      FILE* pFile;
+  };
 
 }
 

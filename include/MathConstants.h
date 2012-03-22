@@ -32,15 +32,14 @@
 namespace gul
 {
 
-
-class MathConstants
-{
-public:
-    static const double c_fPi;
-    static const double c_f2Pi;
-    static const double c_fPi2;
-    static const double c_fPi4;
-};
+  class MathConstants
+  {
+    public:
+      static const double c_fPi;
+      static const double c_f2Pi;
+      static const double c_fPi2;
+      static const double c_fPi4;
+  };
 
 }
 

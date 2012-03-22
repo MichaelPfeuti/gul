@@ -30,28 +30,31 @@
 **
 ***************************************************************************/
 
-namespace gul { template<typename, typename> class Map; }
-namespace gul { class String; }
+namespace gul
+{
+  template<typename, typename> class Map;
+  class String;
+}
 
 
 namespace gul
 {
 
-class ClassFactoryBase
-{
+  class ClassFactoryBase
+  {
 
 
-public:
-    virtual ~ClassFactoryBase();
+    public:
+      virtual ~ClassFactoryBase();
 
-protected:
-    typedef void* (*creatorFunction)();
-    typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
+    protected:
+      typedef void* (*creatorFunction)();
+      typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
 
-    // must be a pointer. this way we can control when the map is created.
-    // if this is on the stack we get a runtime error
-    static ClassNameToFactoryMap* pNameToFactoryMap;
-};
+      // must be a pointer. this way we can control when the map is created.
+      // if this is on the stack we get a runtime error
+      static ClassNameToFactoryMap* pNameToFactoryMap;
+  };
 
 }
 #endif

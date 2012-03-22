@@ -41,13 +41,13 @@ namespace TestClassFactory
 {
 
   class NameSpaceDummyClass : public DummyClass,
-                              REGISTER_FACTORY(NameSpaceDummyClass)
+    REGISTER_FACTORY(NameSpaceDummyClass)
   {
   };
 
   template<typename T>
   class TemplateDummyClass : public DummyClass,
-                             REGISTER_FACTORY(TemplateDummyClass<T>)
+    REGISTER_FACTORY(TemplateDummyClass<T>)
   {
   };
 

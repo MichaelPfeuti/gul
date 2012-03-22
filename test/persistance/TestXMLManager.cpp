@@ -35,9 +35,9 @@
 
 namespace TestXMLManager
 {
-class TestClassString;
-class TestNestedClass;
-class TestClassPrimitives;
+  class TestClassString;
+  class TestNestedClass;
+  class TestClassPrimitives;
 }
 DEFINE_RTTI(TestXMLManager::TestClassString)
 DEFINE_RTTI(TestXMLManager::TestNestedClass)
@@ -52,19 +52,25 @@ namespace TestXMLManager
       TestClassString(void)
         : string(nullptr) {}
 
-      virtual ~TestClassString(void) { GUL_DELETE(string); }
+      virtual ~TestClassString(void)
+      {
+        GUL_DELETE(string);
+      }
 
       TestClassString& operator= (const TestClassString& other)
       {
-         if (this != &other) // protect against invalid self-assignment
-         {
-           this->string = new gul::String(*other.string);
-         }
-         // by convention, always return *this
-         return *this;
+        if(this != &other)  // protect against invalid self-assignment
+        {
+          this->string = new gul::String(*other.string);
+        }
+        // by convention, always return *this
+        return *this;
       }
 
-      void fillData(void) { string = new gul::String("TEST String"); }
+      void fillData(void)
+      {
+        string = new gul::String("TEST String");
+      }
 
       bool operator==(const TestClassString& o) const
       {
@@ -84,11 +90,11 @@ namespace TestXMLManager
   };
 
   BEGIN_SAVE(TestClassString)
-    SAVE_VARIABLE(string)
+  SAVE_VARIABLE(string)
   END_SAVE(TestClassString)
 
   BEGIN_LOAD(TestClassString)
-      LOAD_VARIABLE(string)
+  LOAD_VARIABLE(string)
   END_LOAD(TestClassString)
 
   class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
@@ -98,7 +104,14 @@ namespace TestXMLManager
         : integer(0), character(' '), floatingPoint(0.f), doublePrecision(0.), boolean(false)
       {}
 
-      void fillData(void) { integer = -1; character = 'a'; floatingPoint = 1.2345f; doublePrecision = 1.2345; boolean = true;}
+      void fillData(void)
+      {
+        integer = -1;
+        character = 'a';
+        floatingPoint = 1.2345f;
+        doublePrecision = 1.2345;
+        boolean = true;
+      }
 
       bool operator==(const TestClassPrimitives& o) const
       {
@@ -126,19 +139,19 @@ namespace TestXMLManager
   };
 
   BEGIN_SAVE(TestClassPrimitives)
-    SAVE_PRIMITIVE(integer)
-    SAVE_PRIMITIVE(character)
-    SAVE_PRIMITIVE(floatingPoint)
-    SAVE_PRIMITIVE(doublePrecision)
-    SAVE_PRIMITIVE(boolean)
+  SAVE_PRIMITIVE(integer)
+  SAVE_PRIMITIVE(character)
+  SAVE_PRIMITIVE(floatingPoint)
+  SAVE_PRIMITIVE(doublePrecision)
+  SAVE_PRIMITIVE(boolean)
   END_SAVE(TestClassPrimitives)
 
   BEGIN_LOAD(TestClassPrimitives)
-    LOAD_PRIMITIVE(integer)
-    LOAD_PRIMITIVE(character)
-    LOAD_PRIMITIVE(floatingPoint)
-    LOAD_PRIMITIVE(doublePrecision)
-    LOAD_PRIMITIVE(boolean)
+  LOAD_PRIMITIVE(integer)
+  LOAD_PRIMITIVE(character)
+  LOAD_PRIMITIVE(floatingPoint)
+  LOAD_PRIMITIVE(doublePrecision)
+  LOAD_PRIMITIVE(boolean)
   END_LOAD(TestClassPrimitives)
 
   class TestNestedClass : public gul::XMLSerializationMacroHelper<TestNestedClass>
@@ -147,7 +160,12 @@ namespace TestXMLManager
       TestNestedClass(void)
         : integer(0) {}
 
-      void fillData(void) { integer = 20; stringClass.fillData(); primClass.fillData(); }
+      void fillData(void)
+      {
+        integer = 20;
+        stringClass.fillData();
+        primClass.fillData();
+      }
 
       bool operator==(const TestNestedClass& o) const
       {
@@ -170,15 +188,15 @@ namespace TestXMLManager
   };
 
   BEGIN_SAVE(TestNestedClass)
-    SAVE_PRIMITIVE(integer)
-    SAVE_VARIABLE(stringClass)
-    SAVE_VARIABLE(primClass)
+  SAVE_PRIMITIVE(integer)
+  SAVE_VARIABLE(stringClass)
+  SAVE_VARIABLE(primClass)
   END_SAVE(TestNestedClass)
 
   BEGIN_LOAD(TestNestedClass)
-    LOAD_PRIMITIVE(integer)
-    LOAD_VARIABLE(stringClass)
-    LOAD_VARIABLE(primClass)
+  LOAD_PRIMITIVE(integer)
+  LOAD_VARIABLE(stringClass)
+  LOAD_VARIABLE(primClass)
   END_LOAD(TestNestedClass)
 
   int SaveAndLoadPrimitivesClass(void)

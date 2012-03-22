@@ -33,15 +33,15 @@
 namespace gul
 {
 
-/** @todo consider if this is really necessary. qt doesn't do that either. */
-template<typename T>
-class Container
-{
-public:
-    virtual ~Container(void) {}
-    virtual int Size(void) const = 0;
-    virtual bool Contains(const T&) const  = 0;
-};
+  /** @todo consider if this is really necessary. qt doesn't do that either. */
+  template<typename T>
+  class Container
+  {
+    public:
+      virtual ~Container(void) {}
+      virtual int Size(void) const = 0;
+      virtual bool Contains(const T&) const  = 0;
+  };
 
 }
 

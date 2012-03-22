@@ -31,7 +31,10 @@
 ***************************************************************************/
 
 #include "ClassFactoryBase.h"
-namespace gul { class String; }
+namespace gul
+{
+  class String;
+}
 
 
 namespace gul
@@ -53,7 +56,9 @@ namespace gul
   {
     public:
       static T** CreateInstance(const gul::String& rClassName)
-          { return new T*(ClassFactory<T>::CreateInstance(rClassName)); }
+      {
+        return new T*(ClassFactory<T>::CreateInstance(rClassName));
+      }
   };
 
 
@@ -68,7 +73,10 @@ namespace gul
   class ClassRegisterer
   {
     public:
-      ClassRegisterer(void) { classFactory.dummy(); }
+      ClassRegisterer(void)
+      {
+        classFactory.dummy();
+      }
     private:
       static const gul::ClassFactory<T> classFactory;
   };
@@ -80,7 +88,10 @@ namespace gul
 #define REGISTER_FACTORY(classname) \
   private gul::ClassRegisterer<classname>
 
-namespace { class gul::ClassFactory<gul::String> a; }
+namespace
+{
+  class gul::ClassFactory<gul::String> a;
+}
 
 #include "impl/base/ClassFactory.hpp"
 
