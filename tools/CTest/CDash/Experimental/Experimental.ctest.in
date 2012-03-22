@@ -20,4 +20,3 @@ set_property(GLOBAL PROPERTY SubProject "CodingConventions")
 set(CTEST_BUILD_TARGET                  "CodingConventions")
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_submit(PARTS Build)
-
