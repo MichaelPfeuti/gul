@@ -1,21 +1,20 @@
 include(@CMAKE_BINARY_DIR@/CDash/Common.ctest)
 
-ctest_start(Continuous)
+ctest_start(Experimental)
 
 set_property(GLOBAL PROPERTY SubProject "Release")
 set(CTEST_CONFIGURATION_TYPE            "Release")
-ctest_update(SOURCE "${CTEST_SOURCE_DIRECTORY}")
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}")
-ctest_submit(PARTS Update Configure Build Test)
+ctest_submit(PARTS Configure Build Test)
 
 set_property(GLOBAL PROPERTY SubProject "Debug")
 set(CTEST_CONFIGURATION_TYPE            "Debug")
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}")
-ctest_submit(PARTS Update Configure Build Test)
+ctest_submit(PARTS Configure Build Test)
 
 set_property(GLOBAL PROPERTY SubProject "CodingConventions")
 set(CTEST_BUILD_TARGET                  "CodingConventions")

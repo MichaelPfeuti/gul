@@ -4,6 +4,7 @@ configure_file(tools/CTest/CDash/Experimental/Doxygen.ctest.in             CDash
 configure_file(tools/CTest/CDash/Experimental/CodingConventions.ctest.in   CDash/Experimental/CodingConventions.ctest  @ONLY)
 configure_file(tools/CTest/CDash/Experimental/Debug.ctest.in               CDash/Experimental/Debug.ctest              @ONLY)
 configure_file(tools/CTest/CDash/Experimental/Release.ctest.in             CDash/Experimental/Release.ctest            @ONLY)
+configure_file(tools/CTest/CDash/Experimental/Experimental.ctest.in             CDash/Experimental/Experimental.ctest            @ONLY)
 
 configure_file(tools/CTest/CDash/Continuous/CodingConventions.ctest.in   CDash/Continuous/CodingConventions.ctest  @ONLY)
 configure_file(tools/CTest/CDash/Continuous/Debug.ctest.in               CDash/Continuous/Debug.ctest              @ONLY)
