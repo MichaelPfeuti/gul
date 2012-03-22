@@ -1,13 +1,11 @@
 include(@CMAKE_BINARY_DIR@/CDash/Common.ctest)
 
-SET_PROPERTY(GLOBAL PROPERTY SubProject "Release")
-# TODO: I think this is a bug in ctest that we need to pass the option explicitly to configure
-SET(CTEST_BUILD_CONFIGURATION           "Release")
+set_property(GLOBAL PROPERTY SubProject "Release")
+set(CTEST_CONFIGURATION_TYPE            "Release")
 
-CTEST_START(Experimental)
-CTEST_CONFIGURE(BUILD "${CTEST_BINARY_DIRECTORY}"
-                OPTIONS "-DCMAKE_BUILD_TYPE=${CTEST_BUILD_CONFIGURATION}")
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}")
-CTEST_TEST(BUILD "${CTEST_BINARY_DIRECTORY}")
-CTEST_MEMCHECK(BUILD "${CTEST_BINARY_DIRECTORY}")
-CTEST_SUBMIT()
+ctest_start(Experimental)
+ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_memcheck(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_submit()

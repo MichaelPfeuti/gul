@@ -291,9 +291,10 @@ namespace TestArray
     return EXIT_SUCCESS;
   }
 
-  int SaveAndLoadXML(void)
+  int SaveAndLoadXMLPrimitives(void)
   {
     gul::Array<int> intArray;
+
     intArray.Add(-5);
     intArray.Add(0);
     intArray.Add(5);
@@ -308,6 +309,11 @@ namespace TestArray
 
     GUL_DELETE(pLoadedIntArray);
 
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadXML(void)
+  {
     gul::Array<gul::String*> stringArray;
     stringArray.Add(new gul::String("-5"));
     stringArray.Add(new gul::String("0"));
