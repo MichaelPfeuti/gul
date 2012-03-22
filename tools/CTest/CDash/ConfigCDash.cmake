@@ -8,4 +8,4 @@ configure_file(tools/CTest/CDash/Experimental/Experimental.ctest.in        CDash
 
 configure_file(tools/CTest/CDash/Continuous/Continuous.ctest.in CDash/Continuous/Continuous.ctest @ONLY)
 
-configure_file(tools/CTest/CDash/Nightly/Nightly.ctest.in CDash/Nightly/RNightlyelease.ctest @ONLY)
+configure_file(tools/CTest/CDash/Nightly/Nightly.ctest.in CDash/Nightly/Nightly.ctest @ONLY)
