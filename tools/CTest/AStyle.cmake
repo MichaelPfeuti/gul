@@ -29,6 +29,9 @@
 # macro that searches for all c++ files recursively and test if the meet the coding convention
 if(ASTYLE_EXECUTABLE)
 
+  # We load the custom file when it's  present
+  include("AStyleCustom.cmake" OPTIONAL)
+
   # Scan for files to check
   file(GLOB_RECURSE FILES_FOUND_TO_CHECK "*.h")
   set(FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
@@ -38,24 +41,39 @@ if(ASTYLE_EXECUTABLE)
 
   file(GLOB_RECURSE FILES_FOUND_TO_CHECK "*.cpp")
   list(APPEND FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
-    
+ 
   # loop over all found file and check them
   set(ASTYLE_ARG "--options=tools/astyle.conf")
   foreach(CHECK_FILE IN LISTS FILES_TO_SYTLE_CHECK)
-    execute_process(COMMAND ${ASTYLE_EXECUTABLE} ${ASTYLE_ARG}
-                    INPUT_FILE ${CHECK_FILE}
-                    OUTPUT_VARIABLE FORMATED_CODE
-                    RESULT_VARIABLE RETVAL)
-                  
-    if(${RETVAL})
-      message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=tools/astyle.conf < ${CHECK_FILE}")
-    endif(${RETVAL})
-
-    file(READ ${CHECK_FILE} CHECK_FILE_CONTENT)
     
-    if(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
-      message("Warning: ${CHECK_FILE} does not meet the Coding Conventions")
-    endif(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
+    # if a file matches any regex in the ASTYLE_EXCLUDE variable
+    # we skip it. This variable is intended to be set in the
+    # AStyleCustom.cmake
+    set(PERFORM_CHECK "YES")    
+    foreach(REGEX IN LISTS ASTYLE_EXCLUDE)
+      if(CHECK_FILE MATCHES "${REGEX}")
+        set(PERFORM_CHECK "NO")
+      endif(CHECK_FILE MATCHES "${REGEX}")
+    endforeach(REGEX IN LISTS ASTYLE_EXCLUDE)
+
+    
+    if(PERFORM_CHECK)
+      execute_process(COMMAND ${ASTYLE_EXECUTABLE} ${ASTYLE_ARG}
+                      INPUT_FILE ${CHECK_FILE}
+                      OUTPUT_VARIABLE FORMATED_CODE
+                      RESULT_VARIABLE RETVAL)
+                  
+      if(${RETVAL})
+        message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=tools/astyle.conf < ${CHECK_FILE}")
+      endif(${RETVAL})
+
+      file(READ ${CHECK_FILE} CHECK_FILE_CONTENT)
+    
+      if(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
+        message("Warning: ${CHECK_FILE} does not meet the Coding Conventions")
+      endif(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
+    endif(PERFORM_CHECK)
+
     
   endforeach(CHECK_FILE IN LISTS FILES_TO_SYTLE_CHECK)
     

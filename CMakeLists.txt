@@ -47,7 +47,8 @@ endif(DOXYGEN_FOUND)
 find_package(AStyle)
 if(ASTYLE_FOUND)
   add_custom_target(CodingConventions 
-    COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE} -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
+    COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE}
+                  -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
     COMMENT "AStyle"
     WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
     )
