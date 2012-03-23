@@ -28,8 +28,8 @@ add_flags(CMAKE_CXX_FLAGS "-std=c++0x -Wall
                                      #-Weffc++
 
 # Debug Build Settings
-add_flags(CMAKE_CXX_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
-add_flags(CMAKE_C_FLAGS_DEBUG "-pg -fprofile-arcs -ftest-coverage")
+add_flags(CMAKE_CXX_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
+add_flags(CMAKE_C_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 add_flags(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 
 # Doxygen
