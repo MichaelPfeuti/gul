@@ -35,19 +35,11 @@
 
 namespace TestXMLManager
 {
-  class TestClassString;
-  class TestNestedClass;
-  class TestClassPrimitives;
-}
-DEFINE_RTTI(TestXMLManager::TestClassString)
-DEFINE_RTTI(TestXMLManager::TestNestedClass)
-DEFINE_RTTI(TestXMLManager::TestClassPrimitives)
-
-namespace TestXMLManager
-{
 
   class TestClassString : public gul::XMLSerializationMacroHelper<TestClassString>
   {
+      DECLARE_RTTI(TestClassString)
+
     public:
       TestClassString(void)
         : string(nullptr) {}
@@ -88,17 +80,25 @@ namespace TestXMLManager
 
       DECLARE_SERIALIZABLE()
   };
+}
 
-  BEGIN_SAVE(TestClassString)
-  SAVE_VARIABLE(string)
-  END_SAVE(TestClassString)
+DEFINE_RTTI(TestXMLManager::TestClassString)
 
-  BEGIN_LOAD(TestClassString)
-  LOAD_VARIABLE(string)
-  END_LOAD(TestClassString)
 
+BEGIN_SAVE(TestXMLManager::TestClassString)
+SAVE_VARIABLE(string)
+END_SAVE(TestXMLManager::TestClassString)
+
+BEGIN_LOAD(TestXMLManager::TestClassString)
+LOAD_VARIABLE(string)
+END_LOAD(TestXMLManager::TestClassString)
+
+namespace TestXMLManager
+{
   class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
   {
+      DECLARE_RTTI(TestClassPrimitives)
+
     public:
       TestClassPrimitives(void)
         : integer(0), character(' '), floatingPoint(0.f), doublePrecision(0.), boolean(false)
@@ -138,24 +138,32 @@ namespace TestXMLManager
       DECLARE_SERIALIZABLE()
   };
 
-  BEGIN_SAVE(TestClassPrimitives)
-  SAVE_PRIMITIVE(integer)
-  SAVE_PRIMITIVE(character)
-  SAVE_PRIMITIVE(floatingPoint)
-  SAVE_PRIMITIVE(doublePrecision)
-  SAVE_PRIMITIVE(boolean)
-  END_SAVE(TestClassPrimitives)
+}
 
-  BEGIN_LOAD(TestClassPrimitives)
-  LOAD_PRIMITIVE(integer)
-  LOAD_PRIMITIVE(character)
-  LOAD_PRIMITIVE(floatingPoint)
-  LOAD_PRIMITIVE(doublePrecision)
-  LOAD_PRIMITIVE(boolean)
-  END_LOAD(TestClassPrimitives)
+DEFINE_RTTI(TestXMLManager::TestClassPrimitives)
 
+BEGIN_SAVE(TestXMLManager::TestClassPrimitives)
+SAVE_PRIMITIVE(integer)
+SAVE_PRIMITIVE(character)
+SAVE_PRIMITIVE(floatingPoint)
+SAVE_PRIMITIVE(doublePrecision)
+SAVE_PRIMITIVE(boolean)
+END_SAVE(TestXMLManager::TestClassPrimitives)
+
+BEGIN_LOAD(TestXMLManager::TestClassPrimitives)
+LOAD_PRIMITIVE(integer)
+LOAD_PRIMITIVE(character)
+LOAD_PRIMITIVE(floatingPoint)
+LOAD_PRIMITIVE(doublePrecision)
+LOAD_PRIMITIVE(boolean)
+END_LOAD(TestXMLManager::TestClassPrimitives)
+
+namespace TestXMLManager
+{
   class TestNestedClass : public gul::XMLSerializationMacroHelper<TestNestedClass>
   {
+      DECLARE_RTTI(TestNestedClass)
+
     public:
       TestNestedClass(void)
         : integer(0) {}
@@ -186,18 +194,24 @@ namespace TestXMLManager
       DECLARE_SERIALIZABLE()
 
   };
+}
 
-  BEGIN_SAVE(TestNestedClass)
-  SAVE_PRIMITIVE(integer)
-  SAVE_VARIABLE(stringClass)
-  SAVE_VARIABLE(primClass)
-  END_SAVE(TestNestedClass)
+DEFINE_RTTI(TestXMLManager::TestNestedClass)
 
-  BEGIN_LOAD(TestNestedClass)
-  LOAD_PRIMITIVE(integer)
-  LOAD_VARIABLE(stringClass)
-  LOAD_VARIABLE(primClass)
-  END_LOAD(TestNestedClass)
+BEGIN_SAVE(TestXMLManager::TestNestedClass)
+SAVE_PRIMITIVE(integer)
+SAVE_VARIABLE(stringClass)
+SAVE_VARIABLE(primClass)
+END_SAVE(TestXMLManager::TestNestedClass)
+
+BEGIN_LOAD(TestXMLManager::TestNestedClass)
+LOAD_PRIMITIVE(integer)
+LOAD_VARIABLE(stringClass)
+LOAD_VARIABLE(primClass)
+END_LOAD(TestXMLManager::TestNestedClass)
+
+namespace TestXMLManager
+{
 
   int SaveAndLoadPrimitivesClass(void)
   {

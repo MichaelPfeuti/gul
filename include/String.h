@@ -35,13 +35,24 @@
 
 namespace gul
 {
+  class RTTI;
+}
+
+namespace gul
+{
 
   /**
     *
     */
   class String : private NonCopyable, public XMLSerializable
   {
-
+    private:
+      static const gul::RTTI RTTI;
+    public:
+      virtual const gul::RTTI& GetRTTI(void) const
+      {
+        return String::RTTI;
+      }
 
     public:
       String(void);

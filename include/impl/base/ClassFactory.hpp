@@ -45,7 +45,7 @@ gul::ClassFactory<T>::ClassFactory(void)
   {
     ClassFactoryBase::pNameToFactoryMap = new ClassNameToFactoryMap();
   }
-  ClassFactoryBase::pNameToFactoryMap->Add(gul::RTTI<T>::GetName(), &gul::ClassFactory<T>::CreateConcreteClass);
+  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), &gul::ClassFactory<T>::CreateConcreteClass);
 }
 
 template<typename T>

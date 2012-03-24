@@ -1,8 +1,9 @@
 add_library(base STATIC
-		Assert.cpp
+    Assert.cpp
     ClassFactoryBase.cpp
-		String.cpp
+    String.cpp
     RTTI.cpp
+    Traits.cpp
 
     ${INCLUDE_TPL}/base/ClassFactory.hpp
 
@@ -14,6 +15,7 @@ add_library(base STATIC
     ${INCLUDE}/NonCopyable.h
     ${INCLUDE}/NonCreatable.h
     ${INCLUDE}/RTTI.h
+    ${INCLUDE}/Traits.h
 		)
 
 target_link_libraries(base memory persistance)

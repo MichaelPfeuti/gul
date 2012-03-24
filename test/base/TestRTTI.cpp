@@ -34,44 +34,81 @@
 
 class TestRTTIDummyClass
 {
+    DECLARE_RTTI(TestRTTIDummyClass)
 };
+DEFINE_RTTI(TestRTTIDummyClass);
 
 namespace TestRTTI
 {
 
   class NameSpaceDummyClass : public TestRTTIDummyClass
   {
+      DECLARE_RTTI(NameSpaceDummyClass)
   };
 
   template<typename T>
   class TemplateDummyClass : public TestRTTIDummyClass
   {
+      DECLARE_RTTI(TemplateDummyClass)
+  };
+
+  template<typename K, typename V>
+  class DualTemplateDummyClass : public NameSpaceDummyClass
+  {
+      DECLARE_RTTI(DualTemplateDummyClass)
   };
 }
-DEFINE_RTTI(TestRTTIDummyClass);
 DEFINE_RTTI(TestRTTI::NameSpaceDummyClass)
 DEFINE_TPL_RTTI(TestRTTI::TemplateDummyClass)
+DEFINE_2TPL_RTTI(TestRTTI::DualTemplateDummyClass)
 
 namespace TestRTTI
 {
   int ClassName(void)
   {
-    TEST_EQUAL(gul::RTTI<TestRTTIDummyClass>::GetName(), gul::String("TestRTTIDummyClass"));
-    TEST_EQUAL(gul::RTTI<NameSpaceDummyClass>::GetName(), gul::String("TestRTTI::NameSpaceDummyClass"));
-    TEST_EQUAL(gul::RTTI<TemplateDummyClass<int>>::GetName(), gul::String("TestRTTI::TemplateDummyClass<int>"));
+    TestRTTIDummyClass dummyClass;
+    NameSpaceDummyClass namespaceClass;
+    TemplateDummyClass<int> templateClass;
+
+    TEST_EQUAL(dummyClass.GetRTTI().GetName(), gul::Traits<TestRTTIDummyClass>::GetName());
+    TEST_EQUAL(namespaceClass.GetRTTI().GetName(), gul::Traits<NameSpaceDummyClass>::GetName());
+    TEST_EQUAL(templateClass.GetRTTI().GetName(), gul::Traits<TemplateDummyClass<int>>::GetName());
+
     return EXIT_SUCCESS;
   }
 
-  int Primitives(void)
+  int ClassNameInheritance(void)
   {
-    TEST_EQUAL(gul::RTTI<float>::GetName(), gul::String("float"));
-    TEST_EQUAL(gul::RTTI<double>::GetName(), gul::String("double"));
-    TEST_EQUAL(gul::RTTI<short>::GetName(), gul::String("short"));
-    TEST_EQUAL(gul::RTTI<int>::GetName(), gul::String("int"));
-    TEST_EQUAL(gul::RTTI<long>::GetName(), gul::String("long"));
-    TEST_EQUAL(gul::RTTI<long long>::GetName(), gul::String("long long"));
-    TEST_EQUAL(gul::RTTI<char>::GetName(), gul::String("char"));
-    TEST_EQUAL(gul::RTTI<bool>::GetName(), gul::String("bool"));
+    TestRTTIDummyClass* p = new TemplateDummyClass<TestRTTIDummyClass>();
+
+    TEST_EQUAL(p->GetRTTI().GetName(), gul::Traits<TemplateDummyClass<TestRTTIDummyClass>>::GetName());
+    TEST_NOT_EQUAL(p->GetRTTI().GetName(), gul::Traits<TestRTTIDummyClass>::GetName());
+
+    GUL_DELETE(p);
+    return EXIT_SUCCESS;
+  }
+
+
+  int DualTemplates(void)
+  {
+    DualTemplateDummyClass<int, float> dualTemplateClass;
+    gul::String truth1(gul::Traits<DualTemplateDummyClass<int, float>>::GetName());
+    TEST_EQUAL(dualTemplateClass.GetRTTI().GetName(), truth1);
+
+    NameSpaceDummyClass* namespacePointer = new DualTemplateDummyClass<TestRTTIDummyClass, TemplateDummyClass<float>>();
+    gul::String truth2(gul::Traits<DualTemplateDummyClass<TestRTTIDummyClass, TemplateDummyClass<float>>>::GetName());
+    TEST_EQUAL(namespacePointer->GetRTTI().GetName(), truth2);
+    TEST_NOT_EQUAL(namespacePointer->GetRTTI().GetName(), gul::Traits<NameSpaceDummyClass>::GetName());
+
+    return EXIT_SUCCESS;
+  }
+
+  int CompositedTemplates(void)
+  {
+    NameSpaceDummyClass* namespacePointer = new DualTemplateDummyClass<DualTemplateDummyClass<TemplateDummyClass<TestRTTIDummyClass>, NameSpaceDummyClass>, TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass, NameSpaceDummyClass>>>();
+    gul::String truth(gul::Traits<DualTemplateDummyClass<DualTemplateDummyClass<TemplateDummyClass<TestRTTIDummyClass>, NameSpaceDummyClass>, TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass, NameSpaceDummyClass>>>>::GetName());
+    TEST_EQUAL(namespacePointer->GetRTTI().GetName(), truth);
+    TEST_NOT_EQUAL(namespacePointer->GetRTTI().GetName(), gul::Traits<NameSpaceDummyClass>::GetName());
 
     return EXIT_SUCCESS;
   }

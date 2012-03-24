@@ -36,6 +36,8 @@
 
 #include "memleak.h"
 
+const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
+
 gul::String::String(void)
   : pString(nullptr),
     size(0)
@@ -110,7 +112,7 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
 {
   ASSERT_MSG(0 <= start, "Start must be larger that 0!");
   ASSERT_MSG(start <= end, "Start must be smaller than end!");
-  ASSERT_MSG(end <= this->Size(), "End must be smaller that the size of the string!");
+  ASSERT_MSG(end < this->Size(), "End must be smaller than the size of the string!");
 
   // this includes the null byte
   int newSize = start + rNew.Size() + this->Size() - end;
@@ -153,7 +155,7 @@ void gul::String::Save(pugi::xml_node& node, bool resetMode) const
 {
   GUL_UNUSED_VAR(node);
   GUL_UNUSED_VAR(resetMode);
-  node.set_name(gul::RTTI<String>::GetName().GetData());
+  node.set_name(GetRTTI().GetName().GetData());
   node.append_attribute("value").set_value(this->GetData());
 }
 

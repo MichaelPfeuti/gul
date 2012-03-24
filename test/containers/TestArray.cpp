@@ -332,10 +332,17 @@ namespace TestArray
     return EXIT_SUCCESS;
   }
 
+  int Traits(void)
+  {
+    TEST_EQUAL(gul::Traits<gul::Array<gul::String>>::GetName(), gul::String("gul::Array<gul::String>"));
+
+    return EXIT_SUCCESS;
+  }
+
   int RTTI(void)
   {
     gul::Array<gul::String> stringArray;
-    TEST_EQUAL(stringArray.RTTI.GetName(), gul::String("gul::Array<gul::String>"));
+    TEST_EQUAL(stringArray.GetRTTI().GetName(), gul::Traits<gul::Array<gul::String>>::GetName());
 
     return EXIT_SUCCESS;
   }

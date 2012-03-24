@@ -91,7 +91,7 @@ namespace gul
       __maxRef = 0; \
       __refIndex = -1; \
     } \
-    node.set_name(gul::RTTI<className>::GetName().GetData()); \
+    node.set_name(gul::Traits<className>::GetName().GetData()); \
     if (__saved && !resetMode) /* in this case we saved this node already.*/ \
     { \
       node.append_attribute("__ref").set_value(__refIndex); \

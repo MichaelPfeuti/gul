@@ -35,7 +35,9 @@
 
 class DummyClass : REGISTER_FACTORY(DummyClass)
 {
+    DECLARE_RTTI(DummyClass)
 };
+DEFINE_RTTI(DummyClass)
 
 namespace TestClassFactory
 {
@@ -43,15 +45,22 @@ namespace TestClassFactory
   class NameSpaceDummyClass : public DummyClass,
     REGISTER_FACTORY(NameSpaceDummyClass)
   {
+      DECLARE_RTTI(NameSpaceDummyClass)
   };
 
   template<typename T>
   class TemplateDummyClass : public DummyClass,
     REGISTER_FACTORY(TemplateDummyClass<T>)
   {
+      DECLARE_RTTI(TemplateDummyClass)
   };
 
+}
+DEFINE_RTTI(TestClassFactory::NameSpaceDummyClass)
+DEFINE_TPL_RTTI(TestClassFactory::TemplateDummyClass)
 
+namespace TestClassFactory
+{
   static const DummyClass a;
   static const NameSpaceDummyClass b;
   static const TemplateDummyClass<int> c;
@@ -88,6 +97,4 @@ namespace TestClassFactory
     return EXIT_SUCCESS;
   }
 }
-DEFINE_RTTI(DummyClass);
-DEFINE_RTTI(TestClassFactory::NameSpaceDummyClass)
-DEFINE_TPL_RTTI(TestClassFactory::TemplateDummyClass)
+

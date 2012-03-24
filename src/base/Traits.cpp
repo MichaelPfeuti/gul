@@ -1,7 +1,3 @@
-#pragma once
-#ifndef _GUL_BASE_RTTI_H_
-#define _GUL_BASE_RTTI_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -30,47 +26,3 @@
 **
 ***************************************************************************/
 
-#include "Traits.h"
-#include "String.h"
-
-namespace gul
-{
-
-  class RTTI
-  {
-    public:
-      RTTI(const gul::String& classname) : name(classname) {}
-      const gul::String& GetName() const
-      {
-        return name;
-      }
-
-    private:
-      const gul::String name;
-  };
-
-}
-
-#define DECLARE_RTTI(classname) \
-  private: \
-  static const gul::RTTI RTTI; \
-  public: \
-  virtual const gul::RTTI& GetRTTI() const { return classname::RTTI; }
-
-
-#define DEFINE_RTTI(classname) \
-  SPECIALIZE_TRAITS(classname) \
-  const gul::RTTI classname::RTTI(gul::String(gul::Traits<classname>::GetName()));
-
-#define DEFINE_TPL_RTTI(classname) \
-  SPECIALIZE_TPL_TRAITS(classname) \
-  template<typename T> \
-  const gul::RTTI classname<T>::RTTI(gul::Traits<classname<T>>::GetName());
-
-#define DEFINE_2TPL_RTTI(classname) \
-  SPECIALIZE_2TPL_TRAITS(classname) \
-  template<typename T1, typename T2> \
-  const gul::RTTI classname<T1, T2>::RTTI(gul::Traits<classname<T1, T2>>::GetName());
-
-
-#endif

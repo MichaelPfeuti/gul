@@ -34,6 +34,16 @@
 namespace TestString
 {
 
+  int Size(void)
+  {
+    TEST_EQUAL(gul::String("").Size(), 0);
+    TEST_EQUAL(gul::String("Test").Size(), 4);
+    TEST_EQUAL(gul::String("String").Size(), 6);
+    TEST_EQUAL(gul::String("TestStringSearch").Size(), 16);
+
+    return EXIT_SUCCESS;
+  }
+
   int Construction(void)
   {
     gul::String string("");
@@ -108,7 +118,7 @@ namespace TestString
 
     TEST_EQUAL(string.Replace(gul::String("GONE"), 0, 3), gul::String("GONEStringSearch"));
     TEST_EQUAL(string.Replace(gul::String("GONE"), 4, 9), gul::String("TestGONESearch"));
-    TEST_EQUAL(string.Replace(gul::String("GONE"), 10, string.Size()), gul::String("TestStringGONE"));
+    TEST_EQUAL(string.Replace(gul::String("GONE"), 10, string.Size() - 1), gul::String("TestStringGONE"));
 
     return EXIT_SUCCESS;
   }
@@ -157,9 +167,16 @@ namespace TestString
     return EXIT_SUCCESS;
   }
 
+  int Traits(void)
+  {
+    TEST_EQUAL(gul::Traits<gul::String>::GetName(), gul::String("gul::String"));
+    return EXIT_SUCCESS;
+  }
+
   int RTTI(void)
   {
-    TEST_EQUAL(gul::RTTI<gul::String>::GetName(), gul::String("gul::String"));
+    gul::String string;
+    TEST_EQUAL(string.GetRTTI().GetName(), gul::Traits<gul::String>::GetName());
 
     return EXIT_SUCCESS;
   }
