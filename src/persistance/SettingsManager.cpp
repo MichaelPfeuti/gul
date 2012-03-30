@@ -31,8 +31,6 @@
 #include "Assert.h"
 #include "String.h"
 
-#include "memleak.h"
-
 gul::SettingsManager::SettingsManager(void)
   : pFile(nullptr)
 {

@@ -29,6 +29,7 @@
 #include "RTTI.h"
 #include "String.h"
 #include "CTestAssert.h"
+#include "Misc.h"
 
 #include <cstdio>
 
@@ -100,6 +101,8 @@ namespace TestRTTI
     TEST_EQUAL(namespacePointer->GetRTTI().GetName(), truth2);
     TEST_NOT_EQUAL(namespacePointer->GetRTTI().GetName(), gul::Traits<NameSpaceDummyClass>::GetName());
 
+    GUL_DELETE(namespacePointer);
+
     return EXIT_SUCCESS;
   }
 
@@ -109,6 +112,8 @@ namespace TestRTTI
     gul::String truth(gul::Traits<DualTemplateDummyClass<DualTemplateDummyClass<TemplateDummyClass<TestRTTIDummyClass>, NameSpaceDummyClass>, TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass, NameSpaceDummyClass>>>>::GetName());
     TEST_EQUAL(namespacePointer->GetRTTI().GetName(), truth);
     TEST_NOT_EQUAL(namespacePointer->GetRTTI().GetName(), gul::Traits<NameSpaceDummyClass>::GetName());
+
+    GUL_DELETE(namespacePointer);
 
     return EXIT_SUCCESS;
   }

@@ -28,7 +28,6 @@
 
 #include "Assert.h"
 #include "Misc.h"
-#include "memleak.h"
 
 template<typename T>
 gul::Stack<T>::Stack(void)
@@ -110,5 +109,3 @@ void* gul::Stack<T>::Load(const pugi::xml_node& node, bool resetMode) const
   GUL_UNUSED_VAR(resetMode);
   return new Stack<T>();
 }
-
-#include "memleak_template_end.h"

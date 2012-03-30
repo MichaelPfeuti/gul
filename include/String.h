@@ -31,7 +31,6 @@
 
 #include <3rdParty/pugi/pugixml.hpp>
 #include "NonCopyable.h"
-#include "XMLSerializable.h"
 
 namespace gul
 {
@@ -44,7 +43,7 @@ namespace gul
   /**
     *
     */
-  class String : private NonCopyable, public XMLSerializable
+  class String : private NonCopyable
   {
     private:
       static const gul::RTTI RTTI;
@@ -77,9 +76,14 @@ namespace gul
       String Arg(const String& rString) const;
 
       int Find(const String& rString) const;
+      int FindBackward(const String& rString) const;
 
       String Replace(const String& rNew, int start, int end) const;
       String Replace(const String& rNew, const String& rSearch) const;
+      String ReplaceAll(const String& rNew, const String& rSearch) const;
+      String ReplaceBackward(const String& rNew, const String& rSearch) const;
+
+      int Count(const String& rString) const;
 
       const char* GetData(void) const
       {
@@ -87,13 +91,13 @@ namespace gul
       }
 
     private:
-      virtual void Save(pugi::xml_node& node, bool resetMode) const;
-      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      virtual void save(pugi::xml_node& node) const;
+      virtual void load(const pugi::xml_node& node);
       friend class XMLSerializable;
 
     private:
       const char* pString;
-      const int size;
+      int size;
 
       friend String operator+(const String&, const String&);
       friend bool operator!=(const String& rLeft, const String& rRight);

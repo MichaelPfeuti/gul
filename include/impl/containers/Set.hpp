@@ -28,7 +28,6 @@
 
 #include "String.h"
 #include "Assert.h"
-#include "memleak.h"
 
 template<typename T>
 gul::Set<T>::Set(void)
@@ -94,6 +93,3 @@ void* gul::Set<T>::Load(const pugi::xml_node& node, bool resetMode) const
   GUL_UNUSED_VAR(resetMode);
   return new Set<T>();
 }
-
-
-#include "memleak_template_end.h"

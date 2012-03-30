@@ -5,7 +5,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011, 2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -17,7 +17,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -30,12 +30,39 @@
 ***************************************************************************/
 
 #include "Misc.h"
+#include "String.h"
+#include "Map.h"
+#include "ClassFactory.h"
 
 namespace pugi
 {
   class xml_node;
 }
 
+
+#define PRIM_PERFORM_SAVE(TYPE) \
+  static void performSave(TYPE const& v, pugi::xml_node& node) \
+  { \
+    node.set_name(#TYPE);\
+    if(savingReferences.Contains(&v)) \
+    { \
+      node.append_attribute(refTag).set_value(savingReferences.Get(&v)); \
+    } \
+    else \
+    { \
+      node.append_attribute(refIndexTag).set_value(savingReferences.Size()); \
+      savingReferences.Add(&v, savingReferences.Size()); \
+      node.append_attribute("value").set_value(v); \
+    } \
+  }
+
+#define PRIM_PERFORM_LOAD(TYPE) \
+  static void performLoad(TYPE& v, pugi::xml_node& node) \
+  { \
+    v = node.attribute("value").as_##TYPE(); \
+  }
+
+#include <cstdio>
 
 namespace gul
 {
@@ -57,49 +84,145 @@ namespace gul
     */
   class XMLSerializable
   {
-    public:
+    protected:
+
+      PRIM_PERFORM_SAVE(bool)
+      PRIM_PERFORM_SAVE(char)
+      PRIM_PERFORM_SAVE(int)
+      PRIM_PERFORM_SAVE(unsigned int)
+      PRIM_PERFORM_SAVE(float)
+      PRIM_PERFORM_SAVE(double)
+
+      PRIM_PERFORM_LOAD(bool)
+      PRIM_PERFORM_LOAD(int)
+      PRIM_PERFORM_LOAD(float)
+      PRIM_PERFORM_LOAD(double)
+
+      static void performLoad(char& v, pugi::xml_node& node)
+      {
+        v = static_cast<char>(node.attribute("value").as_int());
+      }
+
+      static void performLoad(unsigned int& v, pugi::xml_node& node)
+      {
+        v = static_cast<char>(node.attribute("value").as_uint());
+      }
+
+
 
       template<typename T>
-      static void performSave(T const& v, pugi::xml_node& node, bool resetMode = false)
+      static void performSave(T const& v, pugi::xml_node& node)
       {
-        v.Save(node, resetMode);
+        node.set_name(createXMLValidTypeName(v.GetRTTI().GetName()).GetData());
+        if(savingReferences.Contains(&v))
+        {
+          node.append_attribute(refTag).set_value(savingReferences.Get(&v));
+        }
+        else
+        {
+          node.append_attribute(refIndexTag).set_value(savingReferences.Size());
+          savingReferences.Add(&v, savingReferences.Size());
+          v.save(node);
+        }
       }
 
 
       template<typename T>
-      static void performSave(T* const& v, pugi::xml_node& node, bool resetMode = false)
+      static void performSave(T* const& v, pugi::xml_node& node)
       {
-        performSave(*v, node, resetMode);
+        performSave(*v, node);
       }
 
 
-      template<typename T> static T* performLoad(T const& v, pugi::xml_node& node, bool resetMode = false)
+      template<typename T>
+      static void performLoad(T& v, pugi::xml_node& node)
       {
-        return static_cast<T*>(v.Load(node, resetMode));
+        ASSERT_MSG(node.attribute(refTag).empty() &&
+                   !node.attribute(refIndexTag).empty(),
+                   "When loading a non-pointer we must not have a reference. Otherwise something went terribly wrong!!!!");
+
+        T* loader = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.name())));
+        loader->load(node);
+        loadingReferences.Add(node.attribute(refIndexTag).as_int(), loader);
+        v = *loader;
+        GUL_DELETE(loader);
       }
 
-      template<typename T> static T** performLoad(T* const& v, pugi::xml_node& node, bool resetMode = false)
+      template<typename T>
+      static void performLoad(T*& v, pugi::xml_node& node)
       {
-        return new T*(performLoad(*v, node, resetMode));
+        ASSERT_MSG(!node.attribute(refTag).empty() ||
+                   !node.attribute(refIndexTag).empty(),
+                   "Each XML node must and a __ref or __refIndex");
+
+        if(node.attribute(refIndexTag).empty())
+        {
+          v = static_cast<T*>(loadingReferences.Get(node.attribute(refTag).as_int()));
+        }
+        else
+        {
+          v = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.name())));
+          v->load(node);
+          loadingReferences.Add(node.attribute(refIndexTag).as_int(), v);
+        }
       }
 
-      template<typename T> static void deleteLoaderObject(T*& v)
+      template<typename T>
+      static void performLoad(T**& v, pugi::xml_node& node)
       {
-        GUL_DELETE(v);
-      }
-
-      template<typename T> static void deleteLoaderObject(T** & v)
-      {
-        GUL_DELETE(*v);
-        GUL_DELETE(v);
+        v = new T*;
+        performLoad(*v, node);
       }
 
 
     private:
-      virtual void Save(pugi::xml_node& node, bool resetMode) const = 0;
-      virtual void* Load(const pugi::xml_node& node, bool resetMode) const = 0;
+      static void reset(void)
+      {
+        savingReferences.Clear();
+        loadingReferences.Clear();
+      }
+      virtual void save(pugi::xml_node& node) const = 0;
+      virtual void load(const pugi::xml_node& node) = 0;
 
       friend class XMLManager;
+
+    private:
+      static gul::String createXMLValidTypeName(const gul::String& typeName)
+      {
+        return typeName.ReplaceAll(gul::String("°"), gul::String("*"))
+                       .ReplaceAll(gul::String("-"), gul::String("<"))
+                       .ReplaceAll(gul::String("-"), gul::String(">"));
+      }
+
+      static gul::String createTypeNameFromXML(const gul::String& typeName)
+      {
+        int count = typeName.Count(gul::String("-"));
+        ASSERT_MSG(count%2 == 0, "TypeName must have an even number of -!");
+
+        count >>= 1;
+        if(count == 0) return typeName;
+
+        gul::String* pOld = new gul::String(typeName);
+        gul::String* pNew = nullptr;
+        for(int i = 0; i< count; ++i)
+        {
+          GUL_DELETE(pNew);
+          pNew = new gul::String(pOld->Replace(gul::String("<"), gul::String("-")).ReplaceBackward(gul::String(">"), gul::String("-")));
+          GUL_DELETE(pOld);
+          pOld = new gul::String(*pNew);
+        }
+        gul::String out = *pNew;
+        GUL_DELETE(pNew);
+        GUL_DELETE(pOld);
+        return out.ReplaceAll(gul::String("*"), gul::String("°"));
+      }
+
+    private:
+      static gul::Map<const void*, unsigned int> savingReferences;
+      static gul::Map<unsigned int, void*> loadingReferences;
+      static const char* refTag;
+      static const char* refIndexTag;
+
   };
 
 }

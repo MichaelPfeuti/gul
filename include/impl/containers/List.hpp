@@ -30,7 +30,6 @@
 #include "ContainerConstants.h"
 #include "Misc.h"
 #include "Math.h"
-#include "memleak.h"
 
 template<typename T>
 gul::List<T>::List(void)
@@ -275,5 +274,3 @@ void* gul::List<T>::Load(const pugi::xml_node& node, bool resetMode) const
   GUL_UNUSED_VAR(resetMode);
   return new List<T>();
 }
-
-#include "memleak_template_end.h"

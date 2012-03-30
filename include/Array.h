@@ -73,8 +73,8 @@ namespace gul
       void Clear(void);
 
     private:
-      virtual void Save(pugi::xml_node& node, bool resetMode) const;
-      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      virtual void save(pugi::xml_node& node) const;
+      virtual void load(const pugi::xml_node& node);
       friend class XMLSerializable;
 
     private:

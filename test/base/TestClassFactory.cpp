@@ -67,10 +67,18 @@ namespace TestClassFactory
 
   int CreateClass(void)
   {
+    DummyClass* p = gul::ClassFactory<DummyClass>::CreateInstance(gul::String("DummyClass"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
 
-    TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("DummyClass")));
-    TEST_NOT_NULL(gul::ClassFactory<TestClassFactory::NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
-    TEST_NOT_NULL(gul::ClassFactory<NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
+    p = gul::ClassFactory<TestClassFactory::NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
+
+    p = gul::ClassFactory<NameSpaceDummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
+
     TEST_ASSERTION(gul::ClassFactory<NameSpaceDummyClass>::CreateInstance(gul::String("NameSpaceDummyClass")));
     TEST_ASSERTION(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::DummyClass")));
 
@@ -79,7 +87,10 @@ namespace TestClassFactory
 
   int CreateTemplateClass(void)
   {
-    TEST_NOT_NULL(gul::ClassFactory<TestClassFactory::TemplateDummyClass<int>>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>")));
+    TemplateDummyClass<int>* p = gul::ClassFactory<TestClassFactory::TemplateDummyClass<int>>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
+
     return EXIT_SUCCESS;
   }
 
@@ -92,8 +103,14 @@ namespace TestClassFactory
 
   int CreateSuperClass(void)
   {
-    TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass")));
-    TEST_NOT_NULL(gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>")));
+    DummyClass* p = gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::NameSpaceDummyClass"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
+
+    p = gul::ClassFactory<DummyClass>::CreateInstance(gul::String("TestClassFactory::TemplateDummyClass<int>"));
+    TEST_NOT_NULL(p);
+    GUL_DELETE(p);
+
     return EXIT_SUCCESS;
   }
 }

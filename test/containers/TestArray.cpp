@@ -303,9 +303,9 @@ namespace TestArray
 
 
     TEST_EQUAL(pLoadedIntArray->Size(), 3);
-    TEST_EQUAL(pLoadedIntArray->Get(0), 3);
-    TEST_EQUAL(pLoadedIntArray->Get(1), 3);
-    TEST_EQUAL(pLoadedIntArray->Get(2), 3);
+    TEST_EQUAL(pLoadedIntArray->Get(0), -5);
+    TEST_EQUAL(pLoadedIntArray->Get(1), 0);
+    TEST_EQUAL(pLoadedIntArray->Get(2), 5);
 
     GUL_DELETE(pLoadedIntArray);
 
@@ -335,14 +335,16 @@ namespace TestArray
   int Traits(void)
   {
     TEST_EQUAL(gul::Traits<gul::Array<gul::String>>::GetName(), gul::String("gul::Array<gul::String>"));
+    TEST_EQUAL(gul::Traits<gul::Array<gul::Array<gul::String>>>::GetName(), gul::String("gul::Array<gul::Array<gul::String>>"));
+    TEST_EQUAL(gul::Traits<gul::Array<gul::Array<gul::String>*>>::GetName(), gul::String("gul::Array<gul::Array<gul::String>*>"));
 
     return EXIT_SUCCESS;
   }
 
   int RTTI(void)
   {
-    gul::Array<gul::String> stringArray;
-    TEST_EQUAL(stringArray.GetRTTI().GetName(), gul::Traits<gul::Array<gul::String>>::GetName());
+    gul::Array<gul::String*> stringArray;
+    TEST_EQUAL(stringArray.GetRTTI().GetName(), gul::Traits<gul::Array<gul::String*>>::GetName());
 
     return EXIT_SUCCESS;
   }

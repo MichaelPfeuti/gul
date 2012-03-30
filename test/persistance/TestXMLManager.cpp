@@ -36,7 +36,7 @@
 namespace TestXMLManager
 {
 
-  class TestClassString : public gul::XMLSerializationMacroHelper<TestClassString>
+class TestClassString : INHERIT_SERIALIZABLE(TestClassString)
   {
       DECLARE_RTTI(TestClassString)
 
@@ -95,7 +95,7 @@ END_LOAD(TestXMLManager::TestClassString)
 
 namespace TestXMLManager
 {
-  class TestClassPrimitives : public gul::XMLSerializationMacroHelper<TestClassPrimitives>
+  class TestClassPrimitives : INHERIT_SERIALIZABLE(TestClassPrimitives)
   {
       DECLARE_RTTI(TestClassPrimitives)
 
@@ -143,24 +143,24 @@ namespace TestXMLManager
 DEFINE_RTTI(TestXMLManager::TestClassPrimitives)
 
 BEGIN_SAVE(TestXMLManager::TestClassPrimitives)
-SAVE_PRIMITIVE(integer)
-SAVE_PRIMITIVE(character)
-SAVE_PRIMITIVE(floatingPoint)
-SAVE_PRIMITIVE(doublePrecision)
-SAVE_PRIMITIVE(boolean)
+SAVE_VARIABLE(integer)
+SAVE_VARIABLE(character)
+SAVE_VARIABLE(floatingPoint)
+SAVE_VARIABLE(doublePrecision)
+SAVE_VARIABLE(boolean)
 END_SAVE(TestXMLManager::TestClassPrimitives)
 
 BEGIN_LOAD(TestXMLManager::TestClassPrimitives)
-LOAD_PRIMITIVE(integer)
-LOAD_PRIMITIVE(character)
-LOAD_PRIMITIVE(floatingPoint)
-LOAD_PRIMITIVE(doublePrecision)
-LOAD_PRIMITIVE(boolean)
+LOAD_VARIABLE(integer)
+LOAD_VARIABLE(character)
+LOAD_VARIABLE(floatingPoint)
+LOAD_VARIABLE(doublePrecision)
+LOAD_VARIABLE(boolean)
 END_LOAD(TestXMLManager::TestClassPrimitives)
 
 namespace TestXMLManager
 {
-  class TestNestedClass : public gul::XMLSerializationMacroHelper<TestNestedClass>
+  class TestNestedClass : INHERIT_SERIALIZABLE(TestNestedClass)
   {
       DECLARE_RTTI(TestNestedClass)
 
@@ -199,16 +199,115 @@ namespace TestXMLManager
 DEFINE_RTTI(TestXMLManager::TestNestedClass)
 
 BEGIN_SAVE(TestXMLManager::TestNestedClass)
-SAVE_PRIMITIVE(integer)
+SAVE_VARIABLE(integer)
 SAVE_VARIABLE(stringClass)
 SAVE_VARIABLE(primClass)
 END_SAVE(TestXMLManager::TestNestedClass)
 
 BEGIN_LOAD(TestXMLManager::TestNestedClass)
-LOAD_PRIMITIVE(integer)
+LOAD_VARIABLE(integer)
 LOAD_VARIABLE(stringClass)
 LOAD_VARIABLE(primClass)
 END_LOAD(TestXMLManager::TestNestedClass)
+
+namespace TestXMLManager
+{
+  class TestPointerClass : INHERIT_SERIALIZABLE(TestPointerClass)
+  {
+    DECLARE_RTTI(TestPointerClass)
+
+    public:
+    TestPointerClass(void)
+      : pointer(nullptr) {}
+
+    void fillData(void)
+    {
+      pointer = new TestNestedClass();
+      pointer->fillData();
+    }
+
+    bool operator==(const TestPointerClass& o) const
+    {
+      return (pointer == nullptr && o.pointer == nullptr) ||
+             (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer);
+    }
+
+    bool operator!=(const TestPointerClass& o) const
+    {
+      return !operator ==(o);
+    }
+
+    TestNestedClass* GetPointer(void) { return pointer; }
+
+    private:
+      TestNestedClass* pointer;
+      DECLARE_SERIALIZABLE()
+  };
+}
+
+
+DEFINE_RTTI(TestXMLManager::TestPointerClass)
+
+BEGIN_SAVE(TestXMLManager::TestPointerClass)
+SAVE_VARIABLE(pointer)
+END_SAVE(TestXMLManager::TestPointerClass)
+
+BEGIN_LOAD(TestXMLManager::TestPointerClass)
+LOAD_VARIABLE(pointer)
+END_LOAD(TestXMLManager::TestPointerClass)
+
+namespace TestXMLManager
+{
+  class TestSamePointersClass : INHERIT_SERIALIZABLE(TestSamePointersClass)
+  {
+    DECLARE_RTTI(TestSamePointersClass)
+
+    public:
+    TestSamePointersClass(void)
+      : pointer(nullptr) {}
+
+    void fillData(void)
+    {
+      pointer = new TestPointerClass();
+      pointer->fillData();
+      nestedPointer = pointer->GetPointer();
+    }
+
+    bool operator==(const TestSamePointersClass& o) const
+    {
+      return ((pointer == nullptr && o.pointer == nullptr) ||
+              (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer))
+             &&
+             ((nestedPointer == nullptr && o.nestedPointer == nullptr) ||
+              (nestedPointer != nullptr && o.nestedPointer != nullptr && *nestedPointer == *o.nestedPointer))
+             &&
+              nestedPointer == pointer->GetPointer();
+    }
+
+    bool operator!=(const TestSamePointersClass& o) const
+    {
+      return !operator ==(o);
+    }
+
+    private:
+      TestNestedClass* nestedPointer;
+      TestPointerClass* pointer;
+      DECLARE_SERIALIZABLE()
+  };
+}
+
+
+DEFINE_RTTI(TestXMLManager::TestSamePointersClass)
+
+BEGIN_SAVE(TestXMLManager::TestSamePointersClass)
+SAVE_VARIABLE(pointer)
+SAVE_VARIABLE(nestedPointer)
+END_SAVE(TestXMLManager::TestSamePointersClass)
+
+BEGIN_LOAD(TestXMLManager::TestSamePointersClass)
+LOAD_VARIABLE(pointer)
+LOAD_VARIABLE(nestedPointer)
+END_LOAD(TestXMLManager::TestSamePointersClass)
 
 namespace TestXMLManager
 {
@@ -260,6 +359,40 @@ namespace TestXMLManager
     TEST_FALSE(*pStringLoaded != stringTruth);
 
     GUL_DELETE(pStringLoaded);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadPointerClass(void)
+  {
+    TestPointerClass pointerFalseReference;
+    TestPointerClass pointerTruth;
+    pointerTruth.fillData();
+    gul::XMLManager::Save(gul::String("pointerTest.xml"), pointerTruth);
+    TestPointerClass* pPointerLoaded = gul::XMLManager::Load<TestPointerClass>(gul::String("pointerTest.xml"));
+
+    TEST_NOT_EQUAL(*pPointerLoaded, pointerFalseReference);
+    TEST_EQUAL(*pPointerLoaded, pointerTruth);
+    TEST_FALSE(*pPointerLoaded != pointerTruth);
+
+    GUL_DELETE(pPointerLoaded);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SaveAndLoadSamePointers(void)
+  {
+    TestSamePointersClass falseReference;
+    TestSamePointersClass truth;
+    truth.fillData();
+    gul::XMLManager::Save(gul::String("samePointerTest.xml"), truth);
+    TestSamePointersClass* pLoaded = gul::XMLManager::Load<TestSamePointersClass>(gul::String("samePointerTest.xml"));
+
+    TEST_NOT_EQUAL(*pLoaded, falseReference);
+    TEST_EQUAL(*pLoaded, truth);
+    TEST_FALSE(*pLoaded != truth);
+
+    GUL_DELETE(pLoaded);
 
     return EXIT_SUCCESS;
   }

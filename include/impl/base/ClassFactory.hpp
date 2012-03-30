@@ -30,9 +30,6 @@
 #include "String.h"
 #include "Map.h"
 
-#include "memleak.h"
-
-
 /**
   * The template argument must be a concrete class such that we can create
   * an instance from it when requested.
@@ -72,5 +69,3 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
     return nullptr;
   }
 }
-
-#include "memleak_template_end.h"

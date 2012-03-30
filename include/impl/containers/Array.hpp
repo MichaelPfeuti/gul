@@ -33,7 +33,6 @@
 #include "String.h"
 #include "3rdParty/pugi/pugixml.hpp"
 #include <cstring>
-#include "memleak.h"
 
 template<typename T>
 gul::Array<T>::Array(void)
@@ -201,26 +200,24 @@ void gul::Array<T>::Clear(void)
 }
 
 template<typename T>
-void gul::Array<T>::Save(pugi::xml_node& node, bool resetMode) const
+void gul::Array<T>::save(pugi::xml_node& node) const
 {
-  GUL_UNUSED_VAR(resetMode);
-
-  node.set_name(GetRTTI().GetName().GetData());
   for(int i = 0; i < this->Size(); ++i)
   {
     pugi::xml_node childNode = node.append_child();
-    GUL_UNUSED_VAR(childNode);
-    //gul::XMLSerializable::performSave(this->Get(i), childNode, resetMode);
+    gul::XMLSerializable::performSave(this->Get(i), childNode);
   }
 }
 
 template<typename T>
-void* gul::Array<T>::Load(const pugi::xml_node& node, bool resetMode) const
+void gul::Array<T>::load(const pugi::xml_node& node)
 {
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  return new Array<T>();
+  pugi::xml_node child = node.first_child();
+  while (!child.empty())
+  {
+    T newInst;
+    performLoad(newInst, child);
+    this->Add(newInst);
+    child = child.next_sibling();
+  }
 }
-
-
-#include "memleak_template_end.h"

@@ -65,4 +65,4 @@ gul_add_test(Containers Stack Contains)
 
 gul_create_test()
 
-target_link_libraries(TestContainers containers base nvwa)
+target_link_libraries(TestContainers containers base)

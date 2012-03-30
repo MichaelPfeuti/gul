@@ -31,8 +31,6 @@
 #include "Map.h"
 #include "Misc.h"
 
-#include "memleak.h"
-
 gul::ClassFactoryBase::ClassNameToFactoryMap* gul::ClassFactoryBase::pNameToFactoryMap = nullptr;
 
 gul::ClassFactoryBase::~ClassFactoryBase()

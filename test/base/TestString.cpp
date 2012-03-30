@@ -128,13 +128,48 @@ namespace TestString
     gul::String string1("SEARCHTestString");
     gul::String string2("TestSEARCHString");
     gul::String string3("TestStringSEARCH");
+    gul::String string4("SEARCHStringSEARCH");
 
     TEST_EQUAL(string1.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
     TEST_EQUAL(string2.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
     TEST_EQUAL(string3.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestStringGONE"));
+    TEST_EQUAL(string4.Replace(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONEStringSEARCH"));
 
     return EXIT_SUCCESS;
   }
+
+  int ReplaceStringBackward(void)
+  {
+    gul::String string1("SEARCHTestString");
+    gul::String string2("TestSEARCHString");
+    gul::String string3("TestStringSEARCH");
+    gul::String string4("SEARCHStringSEARCH");
+
+    TEST_EQUAL(string1.ReplaceBackward(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
+    TEST_EQUAL(string2.ReplaceBackward(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
+    TEST_EQUAL(string3.ReplaceBackward(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestStringGONE"));
+    TEST_EQUAL(string4.ReplaceBackward(gul::String("GONE"), gul::String("SEARCH")), gul::String("SEARCHStringGONE"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReplaceStringAll(void)
+  {
+    gul::String string1("SEARCHTestString");
+    gul::String string2("TestSEARCHString");
+    gul::String string3("TestStringSEARCH");
+    gul::String string4("SEARCHStringSEARCH");
+    gul::String string5("SEARCHSEARCHSEARCH");
+
+    TEST_EQUAL(string1.ReplaceAll(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONETestString"));
+    TEST_EQUAL(string2.ReplaceAll(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestGONEString"));
+    TEST_EQUAL(string3.ReplaceAll(gul::String("GONE"), gul::String("SEARCH")), gul::String("TestStringGONE"));
+    TEST_EQUAL(string4.ReplaceAll(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONEStringGONE"));
+    TEST_EQUAL(string5.ReplaceAll(gul::String("GONE"), gul::String("SEARCH")), gul::String("GONEGONEGONE"));
+
+    return EXIT_SUCCESS;
+  }
+
 
   int CharAt(void)
   {
@@ -159,10 +194,44 @@ namespace TestString
     gul::String string1("SEARCHTestString");
     gul::String string2("TestSEARCHString");
     gul::String string3("TestStringSEARCH");
+    gul::String string4("TestString");
 
     TEST_EQUAL(string1.Find(gul::String("SEARCH")), 0);
     TEST_EQUAL(string2.Find(gul::String("SEARCH")), 4);
     TEST_EQUAL(string3.Find(gul::String("SEARCH")), 10);
+    TEST_EQUAL(string4.Find(gul::String("SEARCH")), -1);
+
+    return EXIT_SUCCESS;
+  }
+
+  int FindBackward(void)
+  {
+    gul::String string1("SEARCHTestString");
+    gul::String string2("TestSEARCHString");
+    gul::String string3("TestStringSEARCH");
+    gul::String string4("TestString");
+
+    TEST_EQUAL(string1.FindBackward(gul::String("SEARCH")), 0);
+    TEST_EQUAL(string2.FindBackward(gul::String("SEARCH")), 4);
+    TEST_EQUAL(string3.FindBackward(gul::String("SEARCH")), 10);
+    TEST_EQUAL(string4.FindBackward(gul::String("SEARCH")), -1);
+
+    return EXIT_SUCCESS;
+  }
+
+  int Count(void)
+  {
+    gul::String string1("SEARCHTestString");
+    gul::String string2("TestSEARCHSEARCH");
+    gul::String string3("SEARCHStringSEARCH");
+    gul::String string4("SEARCHSEARCHSEARCH");
+    gul::String string5("TestString");
+
+    TEST_EQUAL(string1.Count(gul::String("SEARCH")), 1);
+    TEST_EQUAL(string2.Count(gul::String("SEARCH")), 2);
+    TEST_EQUAL(string3.Count(gul::String("SEARCH")), 2);
+    TEST_EQUAL(string4.Count(gul::String("SEARCH")), 3);
+    TEST_EQUAL(string5.Count(gul::String("SEARCH")), 0);
 
     return EXIT_SUCCESS;
   }

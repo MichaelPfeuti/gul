@@ -34,8 +34,6 @@
 #include <cstdio>
 #include <typeinfo>
 
-#include "memleak.h"
-
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
 gul::String::String(void)
@@ -127,15 +125,42 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
 
 gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSearch) const
 {
-  const char* pSearchPos = strstr(this->pString, rSearch.pString);
-
-  ASSERT_MSG(pSearchPos != nullptr, "String to replace must occur!");
-
-  int idx = 0;
-  while(pSearchPos != this->pString + idx) ++idx;
+  int idx = Find(rSearch);
+  ASSERT_MSG(idx != -1, "String to replace must occur!");
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
+}
+
+gul::String gul::String::ReplaceBackward(const gul::String& rNew, const gul::String& rSearch) const
+{
+  int idx = FindBackward(rSearch);
+  ASSERT_MSG(idx != -1, "String to replace must occur!");
+
+  //@todo: this generates an unnecessary copy
+  return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
+}
+
+gul::String gul::String::ReplaceAll(const gul::String& rNew, const gul::String& rSearch) const
+{
+  int count = Count(rSearch);
+
+  if(count == 0) return *this;
+
+  gul::String* pOld = new gul::String(*this);
+  gul::String* pNew = nullptr;
+  for(int i = 0; i< count; ++i)
+  {
+    GUL_DELETE(pNew);
+    pNew = new gul::String(pOld->Replace(rNew, rSearch));
+    GUL_DELETE(pOld);
+    pOld = new gul::String(*pNew);
+  }
+  gul::String out = *pNew;
+  GUL_DELETE(pNew);
+  GUL_DELETE(pOld);
+
+  return out;
 }
 
 int gul::String::Find(const gul::String& rString) const
@@ -150,23 +175,51 @@ int gul::String::Find(const gul::String& rString) const
   return -1;
 }
 
-
-void gul::String::Save(pugi::xml_node& node, bool resetMode) const
+int gul::String::FindBackward(const gul::String& rString) const
 {
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
+  const char* pSearchPos = strstr(this->pString, rString.pString);
+  const char* pLastValidPos = pSearchPos;
+  while(pSearchPos != nullptr)
+  {
+    pLastValidPos = pSearchPos;
+    pSearchPos = strstr(pLastValidPos + 1, rString.pString);
+  }
+
+  for(int i = 0; i < this->size; ++i)
+  {
+    if(this->pString + i == pLastValidPos)
+      return i;
+  }
+  // TODO: use constant here;
+  return -1;
+}
+
+int gul::String::Count(const String& rString) const
+{
+  int count = 0;
+  const char* pSearchPos = strstr(this->pString, rString.pString);
+  while(pSearchPos != nullptr)
+  {
+    ++count;
+    pSearchPos = strstr(pSearchPos+1, rString.pString);
+  }
+  return count;
+}
+
+void gul::String::save(pugi::xml_node& node) const
+{
   node.set_name(GetRTTI().GetName().GetData());
   node.append_attribute("value").set_value(this->GetData());
 }
 
-void* gul::String::Load(const pugi::xml_node& node, bool resetMode) const
+void gul::String::load(const pugi::xml_node& node)
 {
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  if(resetMode) return nullptr;
+  ASSERT_MSG(this->Size() == 0 && this->pString == nullptr,
+             "We must only load into empty strings!");
 
-  String* s =  new String(node.attribute("value").value());
-  return s;
+
+  this->pString = strcpy(new char[strlen(node.attribute("value").value()) + 1], node.attribute("value").value());
+  this->size = strlen(pString);
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)

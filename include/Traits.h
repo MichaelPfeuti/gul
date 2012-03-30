@@ -48,7 +48,7 @@ namespace gul
     public:
       static gul::String GetName()
       {
-        return gul::Traits<T>::GetName();
+        return gul::Traits<T>::GetName() + gul::String("*");
       }
   };
 

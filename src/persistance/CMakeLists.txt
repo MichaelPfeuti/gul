@@ -1,7 +1,7 @@
 #######################
 ####### PUGIXML #######
 #######################
-set(XMLLIB_PATH "${CMAKE_HOME_DIRECTORY}/libs/pugixml-1.0/src")
+set(XMLLIB_PATH "${CMAKE_HOME_DIRECTORY}/libs/pugixml/src")
 
 include_directories("${XMLLIB_PATH}")
 
@@ -22,7 +22,8 @@ set_source_files_properties(${XMLLIB_PATH}/pugixml.cpp PROPERTIES COMPILE_FLAGS 
 ###########################
 add_library(persistance STATIC
     SettingsManager.cpp
-
+    XMLSerializable.cpp
+    
     ${INCLUDE_TPL}/persistance/XMLManager.hpp
 
 

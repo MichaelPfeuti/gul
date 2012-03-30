@@ -4,7 +4,8 @@ project(gul)
 
 include(CTest)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
-                      ${CMAKE_HOME_DIRECTORY}/tools/CTest)
+                      ${CMAKE_HOME_DIRECTORY}/tools/CTest
+                      ${CMAKE_HOME_DIRECTORY}/tools/CMake)
 
 macro(add_flags var)
   string(REPLACE "\n" " " _flags "${ARGN}")

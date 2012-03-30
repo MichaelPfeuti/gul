@@ -114,8 +114,12 @@ namespace TestTraits
 
   int PointerTypeClassName(void)
   {
-    TEST_EQUAL(gul::Traits<TestRTTIDummyClass**>::GetName(), gul::String("TestRTTIDummyClass"));
-    TEST_EQUAL(gul::Traits<TestRTTIDummyClass*>::GetName(), gul::String("TestRTTIDummyClass"));
+    TEST_EQUAL(gul::Traits<TestRTTIDummyClass**>::GetName(), gul::String("TestRTTIDummyClass**"));
+    TEST_EQUAL(gul::Traits<TestRTTIDummyClass*>::GetName(), gul::String("TestRTTIDummyClass*"));
+    gul::String test1 = gul::Traits<DualTemplateDummyClass<TestRTTIDummyClass*, TemplateDummyClass<TestRTTIDummyClass>*>>::GetName();
+    TEST_EQUAL(test1, gul::String("TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*, TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>"));
+    gul::String test2 = gul::Traits<TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass*, TemplateDummyClass<TestRTTIDummyClass>*>*>*>::GetName();
+    TEST_EQUAL(test2, gul::String("TestTraits::TemplateDummyClass<TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*, TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>*>*"));
 
     return EXIT_SUCCESS;
   }
