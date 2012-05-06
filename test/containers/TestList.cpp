@@ -28,6 +28,7 @@
 
 #include "CTestAssert.h"
 #include "List.h"
+#include "String.h"
 
 namespace TestList
 {
@@ -289,6 +290,26 @@ namespace TestList
     }
 
     return EXIT_SUCCESS;
+  }
+
+  int Traits(void)
+  {
+    TEST_EQUAL(gul::Traits<gul::List<gul::String>>::GetName(), gul::String("gul::List<gul::String>"));
+    TEST_EQUAL(gul::Traits<gul::List<gul::List<gul::String>>>::GetName(), gul::String("gul::List<gul::List<gul::String>>"));
+    TEST_EQUAL(gul::Traits<gul::List<gul::List<gul::String>*>>::GetName(), gul::String("gul::List<gul::List<gul::String>*>"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int RTTI(void)
+  {
+    //gul::List<gul::String*> stringList;
+    //TEST_EQUAL(stringList.GetRTTI().GetName(), gul::Traits<gul::List<gul::String*>>::GetName());
+
+    //gul::List<int> intList;
+    //TEST_EQUAL(intList.GetRTTI().GetName(), gul::Traits<gul::List<int>>::GetName());
+
+    return EXIT_FAILURE;
   }
 
 }

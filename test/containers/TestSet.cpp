@@ -232,4 +232,21 @@ namespace TestSet
     return EXIT_SUCCESS;
   }
 
+  int Traits(void)
+  {
+    TEST_EQUAL(gul::Traits<gul::Set<gul::String>>::GetName(), gul::String("gul::Set<gul::String>"));
+    TEST_EQUAL(gul::Traits<gul::Set<gul::Set<gul::String>>>::GetName(), gul::String("gul::Set<gul::Set<gul::String>>"));
+    TEST_EQUAL(gul::Traits<gul::Set<gul::Set<gul::String>*>>::GetName(), gul::String("gul::Set<gul::Set<gul::String>*>"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int RTTI(void)
+  {
+    gul::Set<gul::String*> stringSet;
+    TEST_EQUAL(stringSet.GetRTTI().GetName(), gul::Traits<gul::Set<gul::String*>>::GetName());
+
+    return EXIT_SUCCESS;
+  }
+
 }

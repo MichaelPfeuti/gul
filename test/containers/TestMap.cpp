@@ -293,4 +293,25 @@ namespace TestMap
     return EXIT_SUCCESS;
   }
 
+  int Traits(void)
+  {
+    gul::String tmp1 = gul::Traits<gul::Map<gul::String, int>>::GetName();
+    gul::String tmp2 = gul::Traits<gul::Map<gul::Map<gul::String, int>, int>>::GetName();
+    gul::String tmp3 = gul::Traits<gul::Map<gul::Map<gul::String, int>*, int*>>::GetName();
+
+    TEST_EQUAL(tmp1, gul::String("gul::Map<gul::String, int>"));
+    TEST_EQUAL(tmp2, gul::String("gul::Map<gul::Map<gul::String, int>, int>"));
+    TEST_EQUAL(tmp3, gul::String("gul::Map<gul::Map<gul::String, int>*, int*>"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int RTTI(void)
+  {
+    //gul::Map<gul::String*, int> stringMap;
+    //gul::String truth = gul::Traits<gul::Map<gul::String*, int>>::GetName();
+    //TEST_EQUAL(stringMap.GetRTTI().GetName(), truth);
+
+    return EXIT_FAILURE;
+  }
 }

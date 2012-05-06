@@ -30,8 +30,8 @@
 ***************************************************************************/
 
 #include "Container.h"
+#include "RTTI.h"
 #include "3rdParty/pugi/pugixml.hpp"
-
 
 namespace gul
 {
@@ -39,6 +39,8 @@ namespace gul
   template<typename T>
   class List : public Container<T>
   {
+   // DECLARE_RTTI(List)
+
     public:
       List(void);
       explicit List(int initSize);
@@ -69,8 +71,8 @@ namespace gul
       void Clear(void);
 
     private:
-      virtual void Save(pugi::xml_node& node, bool resetMode) const;
-      virtual void* Load(const pugi::xml_node& node, bool resetMode) const;
+      virtual void save(pugi::xml_node& node) const;
+      virtual void load(const pugi::xml_node& node);
       friend class XMLSerializable;
 
     private:
@@ -96,6 +98,10 @@ namespace gul
   };
 
 }
+
+SPECIALIZE_TPL_TRAITS(gul::List)
+//DEFINE_TPL_RTTI(gul::List)
+
 
 #include "impl/containers/List.hpp"
 

@@ -60,7 +60,7 @@ namespace gul
 
 #define DEFINE_RTTI(classname) \
   SPECIALIZE_TRAITS(classname) \
-  const gul::RTTI classname::RTTI(gul::String(gul::Traits<classname>::GetName()));
+  const gul::RTTI classname::RTTI(gul::Traits<classname>::GetName());
 
 #define DEFINE_TPL_RTTI(classname) \
   SPECIALIZE_TPL_TRAITS(classname) \

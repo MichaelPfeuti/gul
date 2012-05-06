@@ -39,6 +39,8 @@ namespace gul
   template<typename T>
   class Set : public Container<T>
   {
+    DECLARE_RTTI(Set)
+
     public:
       Set(void);
       virtual ~Set(void);
@@ -60,6 +62,8 @@ namespace gul
   };
 
 }
+
+DEFINE_TPL_RTTI(gul::Set)
 
 #include "impl/containers/Set.hpp"
 

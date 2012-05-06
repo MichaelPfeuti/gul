@@ -29,6 +29,7 @@
 **
 ***************************************************************************/
 
+#include "RTTI.h"
 #include "Container.h"
 #include "List.h"
 
@@ -38,6 +39,8 @@ namespace gul
   template<typename T>
   class Stack : public Container<T>
   {
+    DECLARE_RTTI(Stack)
+
     public:
       Stack(void);
       virtual ~Stack(void);
@@ -60,6 +63,8 @@ namespace gul
       List<T> list;
   };
 }
+
+DEFINE_TPL_RTTI(gul::Stack)
 
 #include "impl/containers/Stack.hpp"
 

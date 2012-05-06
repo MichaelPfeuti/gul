@@ -228,4 +228,21 @@ namespace TestStack
 
     return EXIT_SUCCESS;
   }
+
+  int Traits(void)
+  {
+    TEST_EQUAL(gul::Traits<gul::Stack<gul::String>>::GetName(), gul::String("gul::Stack<gul::String>"));
+    TEST_EQUAL(gul::Traits<gul::Stack<gul::Stack<gul::String>>>::GetName(), gul::String("gul::Stack<gul::Stack<gul::String>>"));
+    TEST_EQUAL(gul::Traits<gul::Stack<gul::Stack<gul::String>*>>::GetName(), gul::String("gul::Stack<gul::Stack<gul::String>*>"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int RTTI(void)
+  {
+    gul::Stack<gul::String*> stringStack;
+    TEST_EQUAL(stringStack.GetRTTI().GetName(), gul::Traits<gul::Stack<gul::String*>>::GetName());
+
+    return EXIT_SUCCESS;
+  }
 }
