@@ -52,6 +52,7 @@ namespace gul
       }
   };
 
+  // TODO: this is wrong. it works for xml saving and loading. but i need to strip the const in the loading/saving not here
   template<typename T>
   class Traits<const T>
   {
