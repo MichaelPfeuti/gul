@@ -39,7 +39,7 @@ namespace gul
   template<typename K, typename V>
   class Map
   {
-    //DECLARE_RTTI(Map)
+    DECLARE_RTTI(Map)
 
     public:
       Map(void);
@@ -72,8 +72,7 @@ namespace gul
 
 }
 
-//DEFINE_2TPL_RTTI(gul::Map)
-SPECIALIZE_2TPL_TRAITS(gul::Map)
+DEFINE_2TPL_RTTI(gul::Map)
 
 #include "impl/containers/Map.hpp"
 

@@ -39,7 +39,7 @@ namespace gul
   template<typename T>
   class List : public Container<T>
   {
-   // DECLARE_RTTI(List)
+    DECLARE_RTTI(List)
 
     public:
       List(void);
@@ -99,8 +99,7 @@ namespace gul
 
 }
 
-SPECIALIZE_TPL_TRAITS(gul::List)
-//DEFINE_TPL_RTTI(gul::List)
+DEFINE_TPL_RTTI(gul::List)
 
 
 #include "impl/containers/List.hpp"

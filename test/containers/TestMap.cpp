@@ -308,10 +308,10 @@ namespace TestMap
 
   int RTTI(void)
   {
-    //gul::Map<gul::String*, int> stringMap;
-    //gul::String truth = gul::Traits<gul::Map<gul::String*, int>>::GetName();
-    //TEST_EQUAL(stringMap.GetRTTI().GetName(), truth);
+    gul::Map<gul::String*, int> stringMap;
+    gul::String truth = gul::Traits<gul::Map<gul::String*, int>>::GetName();
+    TEST_EQUAL(stringMap.GetRTTI().GetName(), truth);
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
   }
 }

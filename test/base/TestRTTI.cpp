@@ -35,6 +35,8 @@
 
 class TestRTTIDummyClass
 {
+  public:
+    virtual ~TestRTTIDummyClass(void) {}
     DECLARE_RTTI(TestRTTIDummyClass)
 };
 DEFINE_RTTI(TestRTTIDummyClass);
@@ -44,18 +46,24 @@ namespace TestRTTI
 
   class NameSpaceDummyClass : public TestRTTIDummyClass
   {
+  public:
+    virtual ~NameSpaceDummyClass(void) {}
       DECLARE_RTTI(NameSpaceDummyClass)
   };
 
   template<typename T>
   class TemplateDummyClass : public TestRTTIDummyClass
   {
+  public:
+    virtual ~TemplateDummyClass(void) {}
       DECLARE_RTTI(TemplateDummyClass)
   };
 
   template<typename K, typename V>
   class DualTemplateDummyClass : public NameSpaceDummyClass
   {
+  public:
+    virtual ~DualTemplateDummyClass(void) {}
       DECLARE_RTTI(DualTemplateDummyClass)
   };
 }

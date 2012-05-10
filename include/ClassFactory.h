@@ -47,8 +47,6 @@ namespace gul
       ClassFactory(void);
       static T* CreateInstance(const gul::String& rClassName);
       void dummy(void) const {}
-    private:
-      static void* CreateConcreteClass(void);
   };
 
   template<typename T>

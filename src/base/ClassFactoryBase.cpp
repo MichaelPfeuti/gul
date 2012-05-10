@@ -37,6 +37,7 @@ gul::ClassFactoryBase::~ClassFactoryBase()
 {
   if(ClassFactoryBase::pNameToFactoryMap != nullptr)
   {
+    // TODO: delete functor objects
     GUL_DELETE(ClassFactoryBase::pNameToFactoryMap);
   }
 }

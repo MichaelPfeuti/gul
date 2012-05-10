@@ -23,6 +23,7 @@ gul_add_test(Base ClassFactory CreateSuperClass)
 gul_add_test(Base Traits ClassName)
 gul_add_test(Base Traits CompositedTemplates)
 gul_add_test(Base Traits Primitives)
+gul_add_test(Base Traits PrimitivePointers)
 gul_add_test(Base Traits DualTemplates)
 gul_add_test(Base Traits PointerTypeClassName)
 

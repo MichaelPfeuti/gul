@@ -1,12 +1,8 @@
-#pragma once
-#ifndef _GUL_BASE_CLASS_FACTORY_BASE_H_
-#define _GUL_BASE_CLASS_FACTORY_BASE_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011,2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -32,33 +28,4 @@
 
 #include "ClassCreatorFunctor.h"
 
-namespace gul
-{
-  template<typename, typename> class Map;
-  class String;
-}
-
-
-namespace gul
-{
-
-  class ClassFactoryBase
-  {
-
-
-    public:
-      virtual ~ClassFactoryBase();
-
-    protected:
-
-			// TODO: introduce proper functor class to avoid void*
-      // typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
-      typedef gul::Map<gul::String, const gul::ClassCreatorFunctor*> ClassNameToFactoryMap;
-
-      // must be a pointer. this way we can control when the map is created.
-      // if this is on the stack we get a runtime error
-      static ClassNameToFactoryMap* pNameToFactoryMap;
-  };
-
-}
-#endif
+DEFINE_RTTI(gul::ClassCreatorFunctor)

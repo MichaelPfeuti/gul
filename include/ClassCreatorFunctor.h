@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_BASE_CLASS_FACTORY_BASE_H_
-#define _GUL_BASE_CLASS_FACTORY_BASE_H_
+#ifndef _GUL_BASE_CLASS_CREATOR_FUNCTOR_H_
+#define _GUL_BASE_CLASS_CREATOR_FUNCTOR_H_
 
 /***************************************************************************
 **
@@ -30,35 +30,27 @@
 **
 ***************************************************************************/
 
-#include "ClassCreatorFunctor.h"
-
-namespace gul
-{
-  template<typename, typename> class Map;
-  class String;
-}
-
+#include "RTTI.h"
 
 namespace gul
 {
 
-  class ClassFactoryBase
+  class ClassCreatorFunctor
   {
-
-
+      DECLARE_RTTI(ClassCreatorFunctor)
     public:
-      virtual ~ClassFactoryBase();
-
-    protected:
-
-			// TODO: introduce proper functor class to avoid void*
-      // typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
-      typedef gul::Map<gul::String, const gul::ClassCreatorFunctor*> ClassNameToFactoryMap;
-
-      // must be a pointer. this way we can control when the map is created.
-      // if this is on the stack we get a runtime error
-      static ClassNameToFactoryMap* pNameToFactoryMap;
+      virtual void* operator()(void) const = 0;
   };
 
+  template<typename T>
+  class ClassCreatorFunctorSpecific : public ClassCreatorFunctor
+  {
+    public:
+      virtual void* operator()(void) const
+      {
+        return new T();
+      }
+  };
 }
+
 #endif

@@ -81,6 +81,32 @@ namespace TestTraits
     TEST_EQUAL(gul::Traits<long long>::GetName(), gul::String("long long"));
     TEST_EQUAL(gul::Traits<char>::GetName(), gul::String("char"));
     TEST_EQUAL(gul::Traits<bool>::GetName(), gul::String("bool"));
+    TEST_EQUAL(gul::Traits<void>::GetName(), gul::String("void"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int PrimitivePointers(void)
+  {
+    TEST_EQUAL(gul::Traits<float*>::GetName(), gul::String("float*"));
+    TEST_EQUAL(gul::Traits<double*>::GetName(), gul::String("double*"));
+    TEST_EQUAL(gul::Traits<short*>::GetName(), gul::String("short*"));
+    TEST_EQUAL(gul::Traits<int*>::GetName(), gul::String("int*"));
+    TEST_EQUAL(gul::Traits<long*>::GetName(), gul::String("long*"));
+    TEST_EQUAL(gul::Traits<long long*>::GetName(), gul::String("long long*"));
+    TEST_EQUAL(gul::Traits<char*>::GetName(), gul::String("char*"));
+    TEST_EQUAL(gul::Traits<bool*>::GetName(), gul::String("bool*"));
+    TEST_EQUAL(gul::Traits<void*>::GetName(), gul::String("void*"));
+
+    TEST_EQUAL(gul::Traits<float**>::GetName(), gul::String("float**"));
+    TEST_EQUAL(gul::Traits<double**>::GetName(), gul::String("double**"));
+    TEST_EQUAL(gul::Traits<short**>::GetName(), gul::String("short**"));
+    TEST_EQUAL(gul::Traits<int**>::GetName(), gul::String("int**"));
+    TEST_EQUAL(gul::Traits<long**>::GetName(), gul::String("long**"));
+    TEST_EQUAL(gul::Traits<long long**>::GetName(), gul::String("long long**"));
+    TEST_EQUAL(gul::Traits<char**>::GetName(), gul::String("char**"));
+    TEST_EQUAL(gul::Traits<bool**>::GetName(), gul::String("bool**"));
+    TEST_EQUAL(gul::Traits<void**>::GetName(), gul::String("void**"));
 
     return EXIT_SUCCESS;
   }

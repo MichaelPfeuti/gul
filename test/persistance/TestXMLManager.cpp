@@ -104,6 +104,8 @@ namespace TestXMLManager
         : integer(0), character(' '), floatingPoint(0.f), doublePrecision(0.), boolean(false)
       {}
 
+      virtual ~TestClassPrimitives(void) {}
+
       void fillData(void)
       {
         integer = -1;
@@ -168,6 +170,8 @@ namespace TestXMLManager
       TestNestedClass(void)
         : integer(0) {}
 
+      virtual ~TestNestedClass(void) {}
+
       void fillData(void)
       {
         integer = 20;
@@ -220,6 +224,8 @@ namespace TestXMLManager
     TestPointerClass(void)
       : pointer(nullptr) {}
 
+    virtual ~TestPointerClass(void) {}
+
     void fillData(void)
     {
       pointer = new TestNestedClass();
@@ -265,6 +271,8 @@ namespace TestXMLManager
     public:
     TestSamePointersClass(void)
       : pointer(nullptr) {}
+
+    virtual ~TestSamePointersClass(void) {}
 
     void fillData(void)
     {

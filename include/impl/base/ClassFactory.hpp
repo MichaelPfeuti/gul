@@ -42,13 +42,7 @@ gul::ClassFactory<T>::ClassFactory(void)
   {
     ClassFactoryBase::pNameToFactoryMap = new ClassNameToFactoryMap();
   }
-  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), &gul::ClassFactory<T>::CreateConcreteClass);
-}
-
-template<typename T>
-void* gul::ClassFactory<T>::CreateConcreteClass(void)
-{
-  return new T();
+  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), new gul::ClassCreatorFunctorSpecific<T>());
 }
 
 /**
@@ -60,7 +54,7 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
 {
   if(ClassFactoryBase::pNameToFactoryMap != nullptr && ClassFactoryBase::pNameToFactoryMap->Contains(rClassName))
   {
-    ClassFactoryBase::creatorFunction function = ClassFactoryBase::pNameToFactoryMap->Get(rClassName);
+    const gul::ClassCreatorFunctor& function = *ClassFactoryBase::pNameToFactoryMap->Get(rClassName);
     return static_cast<T*>(function());
   }
   else

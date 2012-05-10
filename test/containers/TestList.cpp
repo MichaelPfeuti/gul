@@ -303,13 +303,13 @@ namespace TestList
 
   int RTTI(void)
   {
-    //gul::List<gul::String*> stringList;
-    //TEST_EQUAL(stringList.GetRTTI().GetName(), gul::Traits<gul::List<gul::String*>>::GetName());
+    gul::List<gul::String*> stringList;
+    TEST_EQUAL(stringList.GetRTTI().GetName(), gul::Traits<gul::List<gul::String*>>::GetName());
 
-    //gul::List<int> intList;
-    //TEST_EQUAL(intList.GetRTTI().GetName(), gul::Traits<gul::List<int>>::GetName());
+    gul::List<int> intList;
+    TEST_EQUAL(intList.GetRTTI().GetName(), gul::Traits<gul::List<int>>::GetName());
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
   }
 
 }

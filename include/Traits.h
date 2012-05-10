@@ -52,6 +52,16 @@ namespace gul
       }
   };
 
+  template<typename T>
+  class Traits<const T>
+  {
+    public:
+      static gul::String GetName()
+      {
+        return gul::Traits<T>::GetName();
+      }
+  };
+
 }
 
 #define SPECIALIZE_TRAITS(classname) \
@@ -88,11 +98,16 @@ namespace gul
 SPECIALIZE_TRAITS(float)
 SPECIALIZE_TRAITS(double)
 SPECIALIZE_TRAITS(short)
+SPECIALIZE_TRAITS(unsigned short)
 SPECIALIZE_TRAITS(int)
+SPECIALIZE_TRAITS(unsigned int)
 SPECIALIZE_TRAITS(long)
+SPECIALIZE_TRAITS(unsigned long)
 SPECIALIZE_TRAITS(long long)
+SPECIALIZE_TRAITS(unsigned long long)
 SPECIALIZE_TRAITS(char)
 SPECIALIZE_TRAITS(bool)
+SPECIALIZE_TRAITS(void)
 SPECIALIZE_TRAITS(gul::String)
 
 
