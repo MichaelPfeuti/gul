@@ -190,21 +190,21 @@ namespace gul
       static gul::String createXMLValidTypeName(const gul::String& typeName)
       {
         return typeName.ReplaceAll(gul::String("°"), gul::String("*"))
-                       .ReplaceAll(gul::String("-"), gul::String("<"))
-                       .ReplaceAll(gul::String("-"), gul::String(">"));
+               .ReplaceAll(gul::String("-"), gul::String("<"))
+               .ReplaceAll(gul::String("-"), gul::String(">"));
       }
 
       static gul::String createTypeNameFromXML(const gul::String& typeName)
       {
         int count = typeName.Count(gul::String("-"));
-        ASSERT_MSG(count%2 == 0, "TypeName must have an even number of -!");
+        ASSERT_MSG(count % 2 == 0, "TypeName must have an even number of -!");
 
         count >>= 1;
         if(count == 0) return typeName;
 
         gul::String* pOld = new gul::String(typeName);
         gul::String* pNew = nullptr;
-        for(int i = 0; i< count; ++i)
+        for(int i = 0; i < count; ++i)
         {
           GUL_DELETE(pNew);
           pNew = new gul::String(pOld->Replace(gul::String("<"), gul::String("-")).ReplaceBackward(gul::String(">"), gul::String("-")));

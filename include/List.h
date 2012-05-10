@@ -39,7 +39,7 @@ namespace gul
   template<typename T>
   class List : public Container<T>
   {
-    DECLARE_RTTI(List)
+      DECLARE_RTTI(List)
 
     public:
       List(void);

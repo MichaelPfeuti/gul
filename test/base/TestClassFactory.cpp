@@ -36,8 +36,8 @@
 class DummyClass : REGISTER_FACTORY(DummyClass)
 {
   public:
-  virtual ~DummyClass(void){}
-  DECLARE_RTTI(DummyClass)
+    virtual ~DummyClass(void) {}
+    DECLARE_RTTI(DummyClass)
 };
 DEFINE_RTTI(DummyClass)
 
@@ -48,8 +48,8 @@ namespace TestClassFactory
     REGISTER_FACTORY(NameSpaceDummyClass)
   {
     public:
-    virtual ~NameSpaceDummyClass(void){}
-    DECLARE_RTTI(NameSpaceDummyClass)
+      virtual ~NameSpaceDummyClass(void) {}
+      DECLARE_RTTI(NameSpaceDummyClass)
   };
 
   template<typename T>
@@ -57,8 +57,8 @@ namespace TestClassFactory
     REGISTER_FACTORY(TemplateDummyClass<T>)
   {
     public:
-    virtual ~TemplateDummyClass(void){}
-    DECLARE_RTTI(TemplateDummyClass)
+      virtual ~TemplateDummyClass(void) {}
+      DECLARE_RTTI(TemplateDummyClass)
   };
 
 }

@@ -50,8 +50,10 @@ namespace gul
       ~FFMPEG(void);
 
       void OpenVideo(void);
-  private:
+
+    private:
       void SaveFrame(int width, int height, int iFrame);
+
     private:
       const gul::String path;
       AVFormatContext* pFormatCtx;

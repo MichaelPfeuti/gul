@@ -149,7 +149,7 @@ gul::String gul::String::ReplaceAll(const gul::String& rNew, const gul::String& 
 
   gul::String* pOld = new gul::String(*this);
   gul::String* pNew = nullptr;
-  for(int i = 0; i< count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     GUL_DELETE(pNew);
     pNew = new gul::String(pOld->Replace(rNew, rSearch));
@@ -201,7 +201,7 @@ int gul::String::Count(const String& rString) const
   while(pSearchPos != nullptr)
   {
     ++count;
-    pSearchPos = strstr(pSearchPos+1, rString.pString);
+    pSearchPos = strstr(pSearchPos + 1, rString.pString);
   }
   return count;
 }

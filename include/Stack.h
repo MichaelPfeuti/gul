@@ -39,7 +39,7 @@ namespace gul
   template<typename T>
   class Stack : public Container<T>
   {
-    DECLARE_RTTI(Stack)
+      DECLARE_RTTI(Stack)
 
     public:
       Stack(void);

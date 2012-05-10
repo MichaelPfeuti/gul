@@ -213,7 +213,7 @@ template<typename T>
 void gul::Array<T>::load(const pugi::xml_node& node)
 {
   pugi::xml_node child = node.first_child();
-  while (!child.empty())
+  while(!child.empty())
   {
     T newInst;
     performLoad(newInst, child);

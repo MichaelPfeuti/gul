@@ -39,7 +39,7 @@ namespace gul
   template<typename T>
   class Set : public Container<T>
   {
-    DECLARE_RTTI(Set)
+      DECLARE_RTTI(Set)
 
     public:
       Set(void);

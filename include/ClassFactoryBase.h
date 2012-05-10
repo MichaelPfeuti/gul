@@ -44,14 +44,12 @@ namespace gul
 
   class ClassFactoryBase
   {
-
-
     public:
       virtual ~ClassFactoryBase();
 
     protected:
 
-			// TODO: introduce proper functor class to avoid void*
+      // TODO: introduce proper functor class to avoid void*
       // typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
       typedef gul::Map<gul::String, const gul::ClassCreatorFunctor*> ClassNameToFactoryMap;
 

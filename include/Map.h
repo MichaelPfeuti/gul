@@ -39,7 +39,7 @@ namespace gul
   template<typename K, typename V>
   class Map
   {
-    DECLARE_RTTI(Map)
+      DECLARE_RTTI(Map)
 
     public:
       Map(void);

@@ -36,7 +36,7 @@
 namespace TestXMLManager
 {
 
-class TestClassString : INHERIT_SERIALIZABLE(TestClassString)
+  class TestClassString : INHERIT_SERIALIZABLE(TestClassString)
   {
       DECLARE_RTTI(TestClassString)
 
@@ -218,32 +218,35 @@ namespace TestXMLManager
 {
   class TestPointerClass : INHERIT_SERIALIZABLE(TestPointerClass)
   {
-    DECLARE_RTTI(TestPointerClass)
+      DECLARE_RTTI(TestPointerClass)
 
     public:
-    TestPointerClass(void)
-      : pointer(nullptr) {}
+      TestPointerClass(void)
+        : pointer(nullptr) {}
 
-    virtual ~TestPointerClass(void) {}
+      virtual ~TestPointerClass(void) {}
 
-    void fillData(void)
-    {
-      pointer = new TestNestedClass();
-      pointer->fillData();
-    }
+      void fillData(void)
+      {
+        pointer = new TestNestedClass();
+        pointer->fillData();
+      }
 
-    bool operator==(const TestPointerClass& o) const
-    {
-      return (pointer == nullptr && o.pointer == nullptr) ||
-             (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer);
-    }
+      bool operator==(const TestPointerClass& o) const
+      {
+        return (pointer == nullptr && o.pointer == nullptr) ||
+               (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer);
+      }
 
-    bool operator!=(const TestPointerClass& o) const
-    {
-      return !operator ==(o);
-    }
+      bool operator!=(const TestPointerClass& o) const
+      {
+        return !operator ==(o);
+      }
 
-    TestNestedClass* GetPointer(void) { return pointer; }
+      TestNestedClass* GetPointer(void)
+      {
+        return pointer;
+      }
 
     private:
       TestNestedClass* pointer;
@@ -266,36 +269,36 @@ namespace TestXMLManager
 {
   class TestSamePointersClass : INHERIT_SERIALIZABLE(TestSamePointersClass)
   {
-    DECLARE_RTTI(TestSamePointersClass)
+      DECLARE_RTTI(TestSamePointersClass)
 
     public:
-    TestSamePointersClass(void)
-      : pointer(nullptr) {}
+      TestSamePointersClass(void)
+        : pointer(nullptr) {}
 
-    virtual ~TestSamePointersClass(void) {}
+      virtual ~TestSamePointersClass(void) {}
 
-    void fillData(void)
-    {
-      pointer = new TestPointerClass();
-      pointer->fillData();
-      nestedPointer = pointer->GetPointer();
-    }
+      void fillData(void)
+      {
+        pointer = new TestPointerClass();
+        pointer->fillData();
+        nestedPointer = pointer->GetPointer();
+      }
 
-    bool operator==(const TestSamePointersClass& o) const
-    {
-      return ((pointer == nullptr && o.pointer == nullptr) ||
-              (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer))
-             &&
-             ((nestedPointer == nullptr && o.nestedPointer == nullptr) ||
-              (nestedPointer != nullptr && o.nestedPointer != nullptr && *nestedPointer == *o.nestedPointer))
-             &&
-              nestedPointer == pointer->GetPointer();
-    }
+      bool operator==(const TestSamePointersClass& o) const
+      {
+        return ((pointer == nullptr && o.pointer == nullptr) ||
+                (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer))
+               &&
+               ((nestedPointer == nullptr && o.nestedPointer == nullptr) ||
+                (nestedPointer != nullptr && o.nestedPointer != nullptr && *nestedPointer == *o.nestedPointer))
+               &&
+               nestedPointer == pointer->GetPointer();
+      }
 
-    bool operator!=(const TestSamePointersClass& o) const
-    {
-      return !operator ==(o);
-    }
+      bool operator!=(const TestSamePointersClass& o) const
+      {
+        return !operator ==(o);
+      }
 
     private:
       TestNestedClass* nestedPointer;
