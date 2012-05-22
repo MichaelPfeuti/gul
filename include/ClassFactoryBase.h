@@ -30,7 +30,7 @@
 **
 ***************************************************************************/
 
-#include "ClassCreatorFunctor.h"
+#include "RTTI.h"
 
 namespace gul
 {
@@ -48,10 +48,18 @@ namespace gul
       virtual ~ClassFactoryBase();
 
     protected:
+      class ClassCreatorFunctor
+      {
+        DECLARE_RTTI(ClassCreatorFunctor)
+
+        public:
+          virtual void* operator()(void) const = 0;
+      };
+
 
       // TODO: introduce proper functor class to avoid void*
       // typedef gul::Map<gul::String, creatorFunction> ClassNameToFactoryMap;
-      typedef gul::Map<gul::String, const gul::ClassCreatorFunctor*> ClassNameToFactoryMap;
+      typedef gul::Map<gul::String, const gul::ClassFactoryBase::ClassCreatorFunctor*> ClassNameToFactoryMap;
 
       // must be a pointer. this way we can control when the map is created.
       // if this is on the stack we get a runtime error
@@ -59,4 +67,6 @@ namespace gul
   };
 
 }
+
+SPECIALIZE_TRAITS(gul::ClassFactoryBase::ClassCreatorFunctor)
 #endif

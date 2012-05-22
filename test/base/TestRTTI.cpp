@@ -39,6 +39,7 @@ class TestRTTIDummyClass
     virtual ~TestRTTIDummyClass(void) {}
     DECLARE_RTTI(TestRTTIDummyClass)
 };
+SPECIALIZE_TRAITS(TestRTTIDummyClass)
 DEFINE_RTTI(TestRTTIDummyClass);
 
 namespace TestRTTI
@@ -67,6 +68,7 @@ namespace TestRTTI
       DECLARE_RTTI(DualTemplateDummyClass)
   };
 }
+SPECIALIZE_TRAITS(TestRTTI::NameSpaceDummyClass)
 DEFINE_RTTI(TestRTTI::NameSpaceDummyClass)
 DEFINE_TPL_RTTI(TestRTTI::TemplateDummyClass)
 DEFINE_2TPL_RTTI(TestRTTI::DualTemplateDummyClass)

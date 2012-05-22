@@ -31,6 +31,7 @@
 ***************************************************************************/
 
 #include "ClassFactoryBase.h"
+
 namespace gul
 {
   class String;
@@ -47,6 +48,16 @@ namespace gul
       ClassFactory(void);
       static T* CreateInstance(const gul::String& rClassName);
       void dummy(void) const {}
+
+  private:
+      class ClassCreatorFunctorSpecific : public ClassCreatorFunctor
+      {
+        public:
+          virtual void* operator()(void) const
+          {
+            return new T();
+          }
+      };
   };
 
   template<typename T>
@@ -86,6 +97,8 @@ namespace gul
 #define REGISTER_FACTORY(classname) \
   private gul::ClassRegisterer<classname>
 
+
+// to prevent cyclic inclusion we register the string class here
 namespace
 {
   class gul::ClassFactory<gul::String> a;

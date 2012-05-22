@@ -37,12 +37,12 @@
 template<typename T>
 gul::ClassFactory<T>::ClassFactory(void)
 {
-  // @todo: Caution with multithreading
+  // TODO: Caution with multithreading
   if(ClassFactoryBase::pNameToFactoryMap == nullptr)
   {
     ClassFactoryBase::pNameToFactoryMap = new ClassNameToFactoryMap();
   }
-  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), new gul::ClassCreatorFunctorSpecific<T>());
+  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), new ClassCreatorFunctorSpecific());
 }
 
 /**
@@ -54,7 +54,7 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
 {
   if(ClassFactoryBase::pNameToFactoryMap != nullptr && ClassFactoryBase::pNameToFactoryMap->Contains(rClassName))
   {
-    const gul::ClassCreatorFunctor& function = *ClassFactoryBase::pNameToFactoryMap->Get(rClassName);
+    const gul::ClassFactoryBase::ClassCreatorFunctor& function = *gul::ClassFactoryBase::pNameToFactoryMap->Get(rClassName);
     return static_cast<T*>(function());
   }
   else
@@ -62,4 +62,5 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
     FAIL(gul::String("ClassFactory cannot create Instance of %").Arg(rClassName).GetData());
     return nullptr;
   }
+  return nullptr;
 }

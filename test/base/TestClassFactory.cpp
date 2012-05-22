@@ -39,6 +39,7 @@ class DummyClass : REGISTER_FACTORY(DummyClass)
     virtual ~DummyClass(void) {}
     DECLARE_RTTI(DummyClass)
 };
+SPECIALIZE_TRAITS(DummyClass)
 DEFINE_RTTI(DummyClass)
 
 namespace TestClassFactory
@@ -62,6 +63,7 @@ namespace TestClassFactory
   };
 
 }
+SPECIALIZE_TRAITS(TestClassFactory::NameSpaceDummyClass)
 DEFINE_RTTI(TestClassFactory::NameSpaceDummyClass)
 DEFINE_TPL_RTTI(TestClassFactory::TemplateDummyClass)
 

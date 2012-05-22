@@ -81,7 +81,7 @@ namespace TestXMLManager
       DECLARE_SERIALIZABLE()
   };
 }
-
+SPECIALIZE_TRAITS(TestXMLManager::TestClassString)
 DEFINE_RTTI(TestXMLManager::TestClassString)
 
 
@@ -141,7 +141,7 @@ namespace TestXMLManager
   };
 
 }
-
+SPECIALIZE_TRAITS(TestXMLManager::TestClassPrimitives)
 DEFINE_RTTI(TestXMLManager::TestClassPrimitives)
 
 BEGIN_SAVE(TestXMLManager::TestClassPrimitives)
@@ -199,7 +199,7 @@ namespace TestXMLManager
 
   };
 }
-
+SPECIALIZE_TRAITS(TestXMLManager::TestNestedClass)
 DEFINE_RTTI(TestXMLManager::TestNestedClass)
 
 BEGIN_SAVE(TestXMLManager::TestNestedClass)
@@ -254,7 +254,7 @@ namespace TestXMLManager
   };
 }
 
-
+SPECIALIZE_TRAITS(TestXMLManager::TestPointerClass)
 DEFINE_RTTI(TestXMLManager::TestPointerClass)
 
 BEGIN_SAVE(TestXMLManager::TestPointerClass)
@@ -273,7 +273,8 @@ namespace TestXMLManager
 
     public:
       TestSamePointersClass(void)
-        : pointer(nullptr) {}
+        : nestedPointer(nullptr),
+          pointer(nullptr) {}
 
       virtual ~TestSamePointersClass(void) {}
 
@@ -307,7 +308,7 @@ namespace TestXMLManager
   };
 }
 
-
+SPECIALIZE_TRAITS(TestXMLManager::TestSamePointersClass)
 DEFINE_RTTI(TestXMLManager::TestSamePointersClass)
 
 BEGIN_SAVE(TestXMLManager::TestSamePointersClass)

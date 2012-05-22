@@ -31,6 +31,8 @@
 #include "Map.h"
 #include "Misc.h"
 
+DEFINE_RTTI(gul::ClassFactoryBase::ClassCreatorFunctor)
+
 gul::ClassFactoryBase::ClassNameToFactoryMap* gul::ClassFactoryBase::pNameToFactoryMap = nullptr;
 
 gul::ClassFactoryBase::~ClassFactoryBase()
