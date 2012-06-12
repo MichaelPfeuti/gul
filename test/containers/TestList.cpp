@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -29,265 +29,50 @@
 #include "CTestAssert.h"
 #include "List.h"
 #include "String.h"
+#include "XMLManager.h"
 
 namespace TestList
 {
 
-  int SizeAndIsEmpty(void)
+  int SaveAndLoadXMLPrimitives(void)
   {
-    gul::List<int> list;
-    TEST_EQUAL(list.Size(), 0);
-    TEST_TRUE(list.IsEmpty());
+    gul::List<int> intList;
 
-    list.Add(0);
-    TEST_EQUAL(list.Size(), 1);
-    TEST_FALSE(list.IsEmpty());
+    intList.Add(-5);
+    intList.Add(0);
+    intList.Add(5);
+    intList.Add(5);
+    gul::XMLManager::Save<gul::List<int> >(gul::String("test.xml"), intList);
+    gul::List<int>* pLoadedIntList = gul::XMLManager::Load<gul::List<int> >(gul::String("test.xml"));
 
-    list.Add(0);
-    TEST_EQUAL(list.Size(), 2);
-    TEST_FALSE(list.IsEmpty());
 
-    list.Remove(0);
-    TEST_EQUAL(list.Size(), 1);
-    TEST_FALSE(list.IsEmpty());
+    TEST_EQUAL(pLoadedIntList->Size(), 4);
+    TEST_EQUAL(pLoadedIntList->Get(0), -5);
+    TEST_EQUAL(pLoadedIntList->Get(1), 0);
+    TEST_EQUAL(pLoadedIntList->Get(2), 5);
+    TEST_EQUAL(pLoadedIntList->Get(3), 5);
 
-    list.Remove(0);
-    TEST_EQUAL(list.Size(), 0);
-    TEST_TRUE(list.IsEmpty());
+    GUL_DELETE(pLoadedIntList);
 
     return EXIT_SUCCESS;
   }
 
-  int Add(void)
+  int SaveAndLoadXML(void)
   {
-    gul::List<int> list;
-    TEST_EQUAL(list.Size(), 0);
-    TEST_TRUE(list.IsEmpty());
-
-    list.Add(0);
-    TEST_EQUAL(list.Size(), 1);
-    TEST_EQUAL(list.Get(0), 0);
-
-    list.Add(1);
-    TEST_EQUAL(list.Size(), 2);
-    TEST_EQUAL(list.Get(0), 0);
-    TEST_EQUAL(list.Get(1), 1);
-
-    return EXIT_SUCCESS;
-  }
-
-  int AddIndex(void)
-  {
-    gul::List<int> list;
-    TEST_EQUAL(list.Size(), 0);
-    TEST_TRUE(list.IsEmpty());
-
-    list.Add(0, 10);
-    TEST_EQUAL(list.Size(), 1);
-    TEST_EQUAL(list.Get(0), 0);
-
-    list.Add(1, 1);
-    TEST_EQUAL(list.Size(), 2);
-    TEST_EQUAL(list.Get(0), 0);
-    TEST_EQUAL(list.Get(1), 1);
-
-    list.Add(2, 10);
-    TEST_EQUAL(list.Size(), 3);
-    TEST_EQUAL(list.Get(0), 0);
-    TEST_EQUAL(list.Get(1), 1);
-    TEST_EQUAL(list.Get(2), 2);
-
-    list.Add(3, 1);
-    TEST_EQUAL(list.Size(), 4);
-    TEST_EQUAL(list.Get(0), 0);
-    TEST_EQUAL(list.Get(1), 3);
-    TEST_EQUAL(list.Get(2), 1);
-    TEST_EQUAL(list.Get(3), 2);
-
-    list.Add(4, 0);
-    TEST_EQUAL(list.Size(), 5);
-    TEST_EQUAL(list.Get(0), 4);
-    TEST_EQUAL(list.Get(1), 0);
-    TEST_EQUAL(list.Get(2), 3);
-    TEST_EQUAL(list.Get(3), 1);
-    TEST_EQUAL(list.Get(4), 2);
-
-    return EXIT_SUCCESS;
-  }
-
-  int AddIndexAssertion(void)
-  {
-    gul::List<int> list;
-    TEST_ASSERTION(list.Add(5, -1));
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveIndex(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 10);
-
-    TEST_EQUAL(list.Size(), 5);
-
-    list.Remove(0);
-    TEST_EQUAL(list.Size(), 4);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 12);
-    TEST_EQUAL(list.Get(2), 13);
-    TEST_EQUAL(list.Get(3), 14);
-
-    list.Remove(2);
-    TEST_EQUAL(list.Size(), 3);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 12);
-    TEST_EQUAL(list.Get(2), 14);
-
-    list.Remove(2);
-    TEST_EQUAL(list.Size(), 2);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 12);
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveIndexAssertion(void)
-  {
-    gul::List<int> list;
-
-    TEST_ASSERTION(list.Remove(0));
-
-    list.Add(0);
-    list.Add(1);
-
-    TEST_ASSERTION(list.Remove(2));
-    TEST_ASSERTION(list.Remove(-1));
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveElement(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 10);
-
-    TEST_EQUAL(list.Size(), 5);
-
-    list.RemoveElement(10);
-    TEST_EQUAL(list.Size(), 4);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 12);
-    TEST_EQUAL(list.Get(2), 13);
-    TEST_EQUAL(list.Get(3), 14);
-
-    list.RemoveElement(12);
-    TEST_EQUAL(list.Size(), 3);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 13);
-    TEST_EQUAL(list.Get(2), 14);
-
-    list.RemoveElement(14);
-    TEST_EQUAL(list.Size(), 2);
-    TEST_EQUAL(list.Get(0), 11);
-    TEST_EQUAL(list.Get(1), 13);
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveElementAssertion(void)
-  {
-    gul::List<int> list;
-
-    TEST_ASSERTION(list.RemoveElement(0));
-
-    list.Add(0);
-    list.Add(1);
-
-    TEST_ASSERTION(list.RemoveElement(2));
-    TEST_ASSERTION(list.RemoveElement(-1));
+    gul::List<gul::String*> stringList;
+    stringList.Add(new gul::String("-5"));
+    stringList.Add(new gul::String("0"));
+    stringList.Add(new gul::String("5"));
+    gul::XMLManager::Save<gul::List<gul::String*> >(gul::String("stringTest.xml"), stringList);
+    gul::List<gul::String*>* pLoadedStringList = gul::XMLManager::Load<gul::List<gul::String*> >(gul::String("stringTest.xml"));
 
 
-    return EXIT_SUCCESS;
-  }
+    TEST_EQUAL(pLoadedStringList->Size(), 3);
+    TEST_EQUAL(*pLoadedStringList->Get(0), gul::String("-5"));
+    TEST_EQUAL(*pLoadedStringList->Get(1), gul::String("0"));
+    TEST_EQUAL(*pLoadedStringList->Get(2), gul::String("5"));
 
-  int Clear(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i);
-
-    TEST_EQUAL(list.Size(), 5);
-
-    list.Clear();
-
-    TEST_EQUAL(list.Size(), 0);
-    TEST_TRUE(list.IsEmpty());
-
-    return EXIT_SUCCESS;
-  }
-
-  int IndexOf(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 1);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_EQUAL(list.IndexOf(i + 1), i);
-    }
-
-    TEST_EQUAL(list.IndexOf(6), gul::NOT_FOUND);
-    TEST_EQUAL(list.IndexOf(-1), gul::NOT_FOUND);
-
-    return EXIT_SUCCESS;
-  }
-
-  int Contains(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 1);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_TRUE(list.Contains(i + 1));
-    }
-
-    TEST_FALSE(list.Contains(6));
-    TEST_FALSE(list.Contains(-1));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Assignment(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 1);
-
-    gul::List<int> copy;
-    for(int i = 0; i < 50; ++i) copy.Add(i + 50);
-
-    TEST_EQUAL(copy.Size(), 50);
-
-    copy = list;
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_EQUAL(copy.Get(i), i + 1);
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int CopyConstructor(void)
-  {
-    gul::List<int> list;
-    for(int i = 0; i < 5; ++i) list.Add(i + 1);
-
-    gul::List<int> copy(list);
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_EQUAL(copy.Get(i), i + 1);
-    }
+    GUL_DELETE(pLoadedStringList);
 
     return EXIT_SUCCESS;
   }

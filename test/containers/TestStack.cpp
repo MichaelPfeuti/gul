@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -28,203 +28,48 @@
 
 #include "CTestAssert.h"
 #include "Stack.h"
+#include "XMLManager.h"
 
 namespace TestStack
 {
 
-  int SizeAndIsEmpty(void)
+  int SaveAndLoadXMLPrimitives(void)
   {
-    gul::Stack<int> stack;
+    gul::Stack<int> intStack;
 
-    TEST_EQUAL(stack.Size(), 0);
-    TEST_TRUE(stack.IsEmpty());
-    stack.Push(0);
-    TEST_EQUAL(stack.Size(), 1);
-    TEST_FALSE(stack.IsEmpty());
-    stack.Push(1);
-    TEST_EQUAL(stack.Size(), 2);
-    TEST_FALSE(stack.IsEmpty());
-    stack.Push(2);
-    TEST_EQUAL(stack.Size(), 3);
-    TEST_FALSE(stack.IsEmpty());
+    intStack.Push(-5);
+    intStack.Push(0);
+    intStack.Push(5);
+    gul::XMLManager::Save<gul::Stack<int> >(gul::String("test.xml"), intStack);
+    gul::Stack<int>* pLoadedIntStack = gul::XMLManager::Load<gul::Stack<int> >(gul::String("test.xml"));
 
-    stack.Top();
-    TEST_EQUAL(stack.Size(), 3);
-    TEST_FALSE(stack.IsEmpty());
 
-    stack.Pop();
-    TEST_EQUAL(stack.Size(), 2);
-    TEST_FALSE(stack.IsEmpty());
-    stack.Pop();
-    TEST_EQUAL(stack.Size(), 1);
-    TEST_FALSE(stack.IsEmpty());
-    stack.Pop();
-    TEST_EQUAL(stack.Size(), 0);
-    TEST_TRUE(stack.IsEmpty());
+    TEST_EQUAL(pLoadedIntStack->Size(), 3);
+    TEST_EQUAL(pLoadedIntStack->Pop(), 5);
+    TEST_EQUAL(pLoadedIntStack->Pop(), 0);
+    TEST_EQUAL(pLoadedIntStack->Pop(), -5);
 
+    GUL_DELETE(pLoadedIntStack);
 
     return EXIT_SUCCESS;
   }
 
-  int Push(void)
+  int SaveAndLoadXML(void)
   {
-    gul::Stack<int> stack;
+    gul::Stack<gul::String*> stringStack;
+    stringStack.Push(new gul::String("-5"));
+    stringStack.Push(new gul::String("0"));
+    stringStack.Push(new gul::String("5"));
+    gul::XMLManager::Save<gul::Stack<gul::String*> >(gul::String("stringTest.xml"), stringStack);
+    gul::Stack<gul::String*>* pLoadedStringStack = gul::XMLManager::Load<gul::Stack<gul::String*> >(gul::String("stringTest.xml"));
 
-    stack.Push(0);
-    TEST_EQUAL(stack.Size(), 1);
-    TEST_EQUAL(stack.Top(), 0)
-    stack.Push(1);
-    TEST_EQUAL(stack.Size(), 2);
-    TEST_EQUAL(stack.Top(), 1);
-    stack.Push(2);
-    TEST_EQUAL(stack.Size(), 3);
-    TEST_EQUAL(stack.Top(), 2);
 
-    stack.Pop();
-    TEST_EQUAL(stack.Top(), 1);
-    stack.Pop();
-    TEST_EQUAL(stack.Top(), 0);
+    TEST_EQUAL(pLoadedStringStack->Size(), 3);
+    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("5"));
+    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("0"));
+    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("-5"));
 
-    return EXIT_SUCCESS;
-  }
-
-  int TopAssertion(void)
-  {
-    gul::Stack<int> stack;
-    TEST_ASSERTION(stack.Top());
-
-    stack.Push(0);
-    stack.Top();
-    stack.Pop();
-
-    TEST_ASSERTION(stack.Top());
-
-    return EXIT_SUCCESS;
-  }
-
-  int Top(void)
-  {
-    gul::Stack<int> stack;
-
-    stack.Push(0);
-    TEST_EQUAL(stack.Top(), 0);
-    stack.Push(1);
-    TEST_EQUAL(stack.Top(), 1);
-    stack.Push(2);
-    TEST_EQUAL(stack.Top(), 2);
-    stack.Push(3);
-    TEST_EQUAL(stack.Top(), 3);
-
-    stack.Pop();
-    TEST_EQUAL(stack.Top(), 2);
-    stack.Pop();
-    TEST_EQUAL(stack.Top(), 1);
-    stack.Pop();
-    TEST_EQUAL(stack.Top(), 0);
-
-    return EXIT_SUCCESS;
-  }
-
-  int Pop(void)
-  {
-    gul::Stack<int> stack;
-
-    stack.Push(0);
-    stack.Push(1);
-    stack.Push(2);
-    stack.Push(3);
-
-    TEST_EQUAL(stack.Pop(), 3);
-    TEST_EQUAL(stack.Size(), 3);
-    TEST_EQUAL(stack.Pop(), 2);
-    TEST_EQUAL(stack.Size(), 2);
-    TEST_EQUAL(stack.Pop(), 1);
-    TEST_EQUAL(stack.Size(), 1);
-    TEST_EQUAL(stack.Pop(), 0);
-    TEST_EQUAL(stack.Size(), 0);
-
-    return EXIT_SUCCESS;
-  }
-
-  int PopAssertion(void)
-  {
-    gul::Stack<int> stack;
-    TEST_ASSERTION(stack.Pop());
-
-    stack.Push(0);
-    stack.Pop();
-
-    TEST_ASSERTION(stack.Pop());
-
-    return EXIT_SUCCESS;
-  }
-
-  int Clear(void)
-  {
-    gul::Stack<int> stack;
-    stack.Push(0);
-    stack.Push(1);
-    stack.Push(2);
-
-    TEST_EQUAL(stack.Size(), 3);
-    TEST_FALSE(stack.IsEmpty());
-    stack.Clear();
-    TEST_EQUAL(stack.Size(), 0);
-    TEST_TRUE(stack.IsEmpty());
-
-    return EXIT_SUCCESS;
-  }
-
-  int Assignment(void)
-  {
-    gul::Stack<int> stack;
-    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
-
-    gul::Stack<int> copy;
-    for(int i = 0; i < 50; ++i) copy.Push(i + 50);
-
-    TEST_EQUAL(copy.Size(), 50);
-
-    copy = stack;
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 5; i > 0; --i)
-    {
-      TEST_EQUAL(copy.Pop(), i);
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int CopyConstructor(void)
-  {
-    gul::Stack<int> stack;
-    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
-
-    gul::Stack<int> copy(stack);
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 5; i > 0; --i)
-    {
-      TEST_EQUAL(copy.Pop(), i);
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int Contains(void)
-  {
-    gul::Stack<int> stack;
-    for(int i = 0; i < 5; ++i) stack.Push(i + 1);
-    for(int i = 0; i < 5; ++i) TEST_TRUE(stack.Contains(i + 1));
-
-    stack.Pop();
-    for(int i = 0; i < 4; ++i) TEST_TRUE(stack.Contains(i + 1));
-    TEST_FALSE(stack.Contains(5));
-
-    stack.Push(5);
-    TEST_TRUE(stack.Contains(5));
-
-    for(int i = 0; i < 5; ++i) stack.Pop();
-    for(int i = 0; i < 5; ++i) TEST_FALSE(stack.Contains(i + 1));
+    GUL_DELETE(pLoadedStringStack);
 
     return EXIT_SUCCESS;
   }

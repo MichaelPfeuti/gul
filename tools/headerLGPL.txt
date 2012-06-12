@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 #FIRST AND LAST NAME#.
+** Copyright (c) 2011-2012 #FIRST AND LAST NAME#.
 **
 ** Contact: #FIRST AND LAST NAME# (#EMAIL#)
 **

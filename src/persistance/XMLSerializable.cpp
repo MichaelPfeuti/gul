@@ -28,8 +28,8 @@
 
 #include "XMLSerializable.h"
 
-gul::Map<const void*, unsigned int> gul::XMLSerializable::savingReferences;
-gul::Map<unsigned int, void*> gul::XMLSerializable::loadingReferences;
+gul::MapBasic<const void*, unsigned int> gul::XMLSerializable::savingReferences;
+gul::MapBasic<unsigned int, void*> gul::XMLSerializable::loadingReferences;
 
 const char* gul::XMLSerializable::refTag = "__ref";
 const char* gul::XMLSerializable::refIndexTag = "__refIndex";

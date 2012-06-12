@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -28,206 +28,83 @@
 
 #include "CTestAssert.h"
 #include "Set.h"
+#include "XMLManager.h"
+#include "ClassFactory.h"
+#include "RTTI.h"
 
 namespace TestSet
 {
 
-  int SizeAndIsEmpty(void)
+  class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
   {
-    gul::Set<int> set;
-    TEST_EQUAL(set.Size(), 0);
-    TEST_TRUE(set.IsEmpty());
+    DECLARE_RTTI(TestSaveClass)
 
-    for(int i = 0; i < 10; ++i)
-    {
-      set.Add(i);
-      TEST_EQUAL(set.Size(), i + 1);
-      TEST_FALSE(set.IsEmpty());
-    }
+    public:
+      TestSaveClass(int i = 0) : _i(i) {}
+      virtual ~TestSaveClass(void) {}
+      bool operator==(const TestSaveClass& c) const { return c._i == _i; }
 
-    set.Add(0);
-    set.Add(0);
-    set.Add(5);
-    TEST_EQUAL(set.Size(), 10);
-    TEST_FALSE(set.IsEmpty());
 
-    for(int i = 0; i < 9; ++i)
-    {
-      set.Remove(i);
-    }
+      void save(pugi::xml_node& node) const
+      {
+        node.append_attribute("i").set_value(_i);
+      }
 
-    TEST_EQUAL(set.Size(), 1);
-    TEST_FALSE(set.IsEmpty());
+      void load(const pugi::xml_node& node)
+      {
+        _i = node.attribute("i").as_int();
+      }
 
-    set.Remove(9);
-    TEST_EQUAL(set.Size(), 0);
-    TEST_TRUE(set.IsEmpty());
+    private:
+      int _i = 0;
+  };
+}
+SPECIALIZE_TRAITS(TestSet::TestSaveClass)
+DEFINE_RTTI(TestSet::TestSaveClass)
+
+
+namespace TestSet
+{
+
+  int SaveAndLoadXMLPrimitives(void)
+  {
+    gul::Set<int> intSet;
+
+    intSet.Add(-5);
+    intSet.Add(0);
+    intSet.Add(5);
+    gul::XMLManager::Save<gul::Set<int> >(gul::String("test.xml"), intSet);
+    gul::Set<int>* pLoadedIntSet = gul::XMLManager::Load<gul::Set<int> >(gul::String("test.xml"));
+
+
+    TEST_EQUAL(pLoadedIntSet->Size(), 3);
+    TEST_TRUE(pLoadedIntSet->Contains(-5));
+    TEST_TRUE(pLoadedIntSet->Contains(0));
+    TEST_TRUE(pLoadedIntSet->Contains(5));
+
+    GUL_DELETE(pLoadedIntSet);
 
     return EXIT_SUCCESS;
   }
 
-  int Add(void)
+  int SaveAndLoadXML(void)
   {
-    gul::Set<int> set;
-    set.Add(0);
-    TEST_EQUAL(set.Size(), 1);
-    TEST_TRUE(set.Contains(0));
-    TEST_FALSE(set.Contains(1));
-    TEST_FALSE(set.Contains(2));
+    gul::Set<TestSaveClass> intClass;
 
-    set.Add(1);
-    TEST_EQUAL(set.Size(), 2);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_FALSE(set.Contains(2));
+    intClass.Add(TestSaveClass(-5));
+    intClass.Add(TestSaveClass(0));
+    intClass.Add(TestSaveClass(5));
+    gul::XMLManager::Save<gul::Set<TestSaveClass> >(gul::String("test.xml"), intClass);
+    gul::Set<TestSaveClass>* pLoadedIntSet = gul::XMLManager::Load<gul::Set<TestSaveClass> >(gul::String("test.xml"));
 
-    set.Add(2);
-    TEST_EQUAL(set.Size(), 3);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
 
-    set.Add(0);
-    TEST_EQUAL(set.Size(), 3);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
+    TEST_EQUAL(pLoadedIntSet->Size(), 3);
+    TEST_TRUE(pLoadedIntSet->Contains(TestSaveClass(-5)));
+    TEST_TRUE(pLoadedIntSet->Contains(TestSaveClass(0)));
+    TEST_TRUE(pLoadedIntSet->Contains(TestSaveClass(5)));
+    TEST_FALSE(pLoadedIntSet->Contains(TestSaveClass(15)));
 
-    set.Add(2);
-    TEST_EQUAL(set.Size(), 3);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
-
-    set.Add(-1);
-    TEST_EQUAL(set.Size(), 4);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
-    TEST_TRUE(set.Contains(-1));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Remove(void)
-  {
-    gul::Set<int> set;
-    set.Add(0);
-    TEST_EQUAL(set.Size(), 1);
-    TEST_TRUE(set.Contains(0));
-
-    set.Remove(0);
-    TEST_EQUAL(set.Size(), 0);
-    TEST_FALSE(set.Contains(0));
-
-    set.Add(0);
-    TEST_EQUAL(set.Size(), 1);
-    TEST_TRUE(set.Contains(0));
-
-    set.Add(1);
-    set.Add(2);
-    TEST_EQUAL(set.Size(), 3);
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
-    TEST_FALSE(set.Contains(3));
-
-    set.Remove(0);
-    TEST_EQUAL(set.Size(), 2);
-    TEST_FALSE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_TRUE(set.Contains(2));
-
-    set.Remove(2);
-    TEST_EQUAL(set.Size(), 1);
-    TEST_FALSE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_FALSE(set.Contains(2));
-
-    set.Remove(1);
-    TEST_EQUAL(set.Size(), 0);
-    TEST_FALSE(set.Contains(0));
-    TEST_FALSE(set.Contains(1));
-    TEST_FALSE(set.Contains(2));
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveAssertion(void)
-  {
-    gul::Set<int> set;
-    TEST_ASSERTION(set.Remove(0));
-    set.Add(0);
-    set.Remove(0);
-    TEST_ASSERTION(set.Remove(0));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Clear(void)
-  {
-    gul::Set<int> set;
-    for(int i = 0; i < 10; ++i)
-    {
-      set.Add(i);
-    }
-
-    TEST_EQUAL(set.Size(), 10);
-    set.Clear();
-    TEST_EQUAL(set.Size(), 0);
-
-    set.Add(0);
-    TEST_EQUAL(set.Size(), 1);
-
-    return EXIT_SUCCESS;
-  }
-
-  int Contains(void)
-  {
-    gul::Set<int> set;
-    TEST_FALSE(set.Contains(0));
-
-    set.Add(0);
-    set.Add(1);
-
-    TEST_TRUE(set.Contains(0));
-    TEST_TRUE(set.Contains(1));
-    TEST_FALSE(set.Contains(2));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Assignment(void)
-  {
-    gul::Set<int> set;
-    for(int i = 0; i < 5; ++i) set.Add(i + 1);
-
-    gul::Set<int> copy;
-    for(int i = 0; i < 50; ++i) copy.Add(i + 50);
-
-    TEST_EQUAL(copy.Size(), 50);
-
-    copy = set;
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_TRUE(copy.Contains(i + 1));
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int CopyConstructor(void)
-  {
-    gul::Set<int> set;
-    for(int i = 0; i < 5; ++i) set.Add(i + 1);
-
-    gul::Set<int> copy(set);
-    TEST_EQUAL(copy.Size(), 5);
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_TRUE(copy.Contains(i + 1));
-    }
+    GUL_DELETE(pLoadedIntSet);
 
     return EXIT_SUCCESS;
   }

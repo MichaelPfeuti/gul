@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -66,7 +66,7 @@ namespace TestTraits
     // we cannot put the code directly into the macro, because the comma is
     // regarded as the seperation for the macro argument.
     gul::String test = gul::Traits<DualTemplateDummyClass<int, float>>::GetName();
-    gul::String truth("TestTraits::DualTemplateDummyClass<int, float>");
+    gul::String truth("TestTraits::DualTemplateDummyClass<int,float>");
     TEST_EQUAL(test, truth);
     return EXIT_SUCCESS;
   }
@@ -116,23 +116,23 @@ namespace TestTraits
     // we cannot put the code directly into the macro, because the comma is
     // regarded as the seperation for the macro argument.
     gul::String test1 = gul::Traits<DualTemplateDummyClass<TestRTTIDummyClass, float>>::GetName();
-    gul::String truth1("TestTraits::DualTemplateDummyClass<TestRTTIDummyClass, float>");
+    gul::String truth1("TestTraits::DualTemplateDummyClass<TestRTTIDummyClass,float>");
     TEST_EQUAL(test1, truth1);
 
     gul::String test2 = gul::Traits<DualTemplateDummyClass<int, NameSpaceDummyClass>>::GetName();
-    gul::String truth2("TestTraits::DualTemplateDummyClass<int, TestTraits::NameSpaceDummyClass>");
+    gul::String truth2("TestTraits::DualTemplateDummyClass<int,TestTraits::NameSpaceDummyClass>");
     TEST_EQUAL(test2, truth2);
 
     gul::String test3 = gul::Traits<DualTemplateDummyClass<TemplateDummyClass<int>, NameSpaceDummyClass>>::GetName();
-    gul::String truth3("TestTraits::DualTemplateDummyClass<TestTraits::TemplateDummyClass<int>, TestTraits::NameSpaceDummyClass>");
+    gul::String truth3("TestTraits::DualTemplateDummyClass<TestTraits::TemplateDummyClass<int>,TestTraits::NameSpaceDummyClass>");
     TEST_EQUAL(test3, truth3);
 
     gul::String test4 = gul::Traits<DualTemplateDummyClass<TemplateDummyClass<int>, DualTemplateDummyClass<TestRTTIDummyClass, NameSpaceDummyClass>>>::GetName();
-    gul::String truth4("TestTraits::DualTemplateDummyClass<TestTraits::TemplateDummyClass<int>, TestTraits::DualTemplateDummyClass<TestRTTIDummyClass, TestTraits::NameSpaceDummyClass>>");
+    gul::String truth4("TestTraits::DualTemplateDummyClass<TestTraits::TemplateDummyClass<int>,TestTraits::DualTemplateDummyClass<TestRTTIDummyClass,TestTraits::NameSpaceDummyClass>>");
     TEST_EQUAL(test4, truth4);
 
     gul::String test5 = gul::Traits<TemplateDummyClass<TemplateDummyClass<TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass, NameSpaceDummyClass>>>>>::GetName();
-    gul::String truth5("TestTraits::TemplateDummyClass<TestTraits::TemplateDummyClass<TestTraits::TemplateDummyClass<TestTraits::DualTemplateDummyClass<TestRTTIDummyClass, TestTraits::NameSpaceDummyClass>>>>");
+    gul::String truth5("TestTraits::TemplateDummyClass<TestTraits::TemplateDummyClass<TestTraits::TemplateDummyClass<TestTraits::DualTemplateDummyClass<TestRTTIDummyClass,TestTraits::NameSpaceDummyClass>>>>");
     TEST_EQUAL(test5, truth5);
 
     return EXIT_SUCCESS;
@@ -143,9 +143,9 @@ namespace TestTraits
     TEST_EQUAL(gul::Traits<TestRTTIDummyClass**>::GetName(), gul::String("TestRTTIDummyClass**"));
     TEST_EQUAL(gul::Traits<TestRTTIDummyClass*>::GetName(), gul::String("TestRTTIDummyClass*"));
     gul::String test1 = gul::Traits<DualTemplateDummyClass<TestRTTIDummyClass*, TemplateDummyClass<TestRTTIDummyClass>*>>::GetName();
-    TEST_EQUAL(test1, gul::String("TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*, TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>"));
+    TEST_EQUAL(test1, gul::String("TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*,TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>"));
     gul::String test2 = gul::Traits<TemplateDummyClass<DualTemplateDummyClass<TestRTTIDummyClass*, TemplateDummyClass<TestRTTIDummyClass>*>*>*>::GetName();
-    TEST_EQUAL(test2, gul::String("TestTraits::TemplateDummyClass<TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*, TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>*>*"));
+    TEST_EQUAL(test2, gul::String("TestTraits::TemplateDummyClass<TestTraits::DualTemplateDummyClass<TestRTTIDummyClass*,TestTraits::TemplateDummyClass<TestRTTIDummyClass>*>*>*"));
 
     return EXIT_SUCCESS;
   }

@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -70,7 +70,9 @@ namespace TestRTTI
 }
 SPECIALIZE_TRAITS(TestRTTI::NameSpaceDummyClass)
 DEFINE_RTTI(TestRTTI::NameSpaceDummyClass)
+SPECIALIZE_TPL_TRAITS(TestRTTI::TemplateDummyClass)
 DEFINE_TPL_RTTI(TestRTTI::TemplateDummyClass)
+SPECIALIZE_2TPL_TRAITS(TestRTTI::DualTemplateDummyClass)
 DEFINE_2TPL_RTTI(TestRTTI::DualTemplateDummyClass)
 
 namespace TestRTTI

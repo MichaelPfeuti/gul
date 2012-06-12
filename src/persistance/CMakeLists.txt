@@ -27,10 +27,10 @@ add_library(persistance STATIC
     ${INCLUDE_TPL}/persistance/XMLManager.hpp
 
 
-    ${INCLUDE}/SettingsManager.h
-    ${INCLUDE}/XMLSerializable.h
-    ${INCLUDE}/XMLManager.h
-    ${INCLUDE}/XMLMacros.h
+    ${INCLUDE}/persistance/SettingsManager.h
+    ${INCLUDE}/persistance/XMLSerializable.h
+    ${INCLUDE}/persistance/XMLManager.h
+    ${INCLUDE}/persistance/XMLMacros.h
 )
 
 set_target_properties(persistance PROPERTIES COMPILE_FLAGS "${LOCAL_CMAKE_CXX_FLAGS}")

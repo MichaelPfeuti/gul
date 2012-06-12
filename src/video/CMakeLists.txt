@@ -10,11 +10,8 @@ include_directories(${FFMPEG_INCLUDE_DIR})
 add_library(video STATIC
     FFMPEG.cpp
     
-    ${INCLUDE_TPL}/persistance/XMLManager.hpp
-
-
-    ${INCLUDE}/FFMPEG.h
-    )
+    ${INCLUDE}/video/FFMPEG.h
+)
 
 target_link_libraries(video base)
 target_link_libraries(video ${FFMPEG_LIBRARIES})

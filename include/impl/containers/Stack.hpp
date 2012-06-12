@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -29,83 +29,35 @@
 #include "Assert.h"
 #include "Misc.h"
 
+DEFINE_TPL_RTTI(gul::Stack)
+
+
 template<typename T>
-gul::Stack<T>::Stack(void)
-  : list()
+void gul::Stack<T>::save(pugi::xml_node& node) const
 {
+  const typename gul::Stack<T>::Iterator it = this->GetIterator();
+  while(it.HasNext())
+  {
+    pugi::xml_node childNode = node.append_child();
+    gul::XMLSerializable::performSave(it.Next(), childNode);
+  }
 }
 
 template<typename T>
-gul::Stack<T>::~Stack(void)
+void gul::Stack<T>::load(const pugi::xml_node& node)
 {
-}
+  pugi::xml_node child = node.first_child();
+  Stack reverseStack;
+  while(!child.empty())
+  {
+    T newInst;
+    gul::XMLSerializable::performLoad(newInst, child);
+    reverseStack.Push(newInst);
+    child = child.next_sibling();
+  }
 
-
-template<typename T>
-void gul::Stack<T>::Push(const T& rElement)
-{
-  this->list.Add(rElement);
-}
-
-template<typename T>
-const T& gul::Stack<T>::Top(void) const
-{
-  ASSERT(this->list.Size() > 0)
-  return this->list.Get(this->list.Size() - 1);
-}
-
-template<typename T>
-T& gul::Stack<T>::Top(void)
-{
-  ASSERT(this->list.Size() > 0)
-  return this->list.Get(this->list.Size() - 1);
-}
-
-template<typename T>
-T gul::Stack<T>::Pop(void)
-{
-  ASSERT(this->list.Size() > 0)
-  T removed = this->list.Get(this->list.Size() - 1);
-  this->list.Remove(this->list.Size() - 1);
-  return removed;
-}
-
-template<typename T>
-void gul::Stack<T>::Clear(void)
-{
-  this->list.Clear();
-}
-
-template<typename T>
-int gul::Stack<T>::Size(void) const
-{
-  return this->list.Size();
-}
-
-template<typename T>
-bool gul::Stack<T>::IsEmpty(void) const
-{
-  return this->list.IsEmpty();
-}
-
-template<typename T>
-bool gul::Stack<T>::Contains(const T& rElement) const
-{
-  return this->list.Contains(rElement);
-}
-
-template<typename T>
-void gul::Stack<T>::Save(pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  node.set_name("gul::Stack<T>");
-}
-
-template<typename T>
-void* gul::Stack<T>::Load(const pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  return new Stack<T>();
+  while(!reverseStack.IsEmpty())
+  {
+    this->Push(reverseStack.Pop());
+  }
 }

@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -161,6 +161,18 @@ gul::String gul::String::ReplaceAll(const gul::String& rNew, const gul::String& 
   GUL_DELETE(pOld);
 
   return out;
+}
+
+gul::String gul::String::Substring(int start, int end) const
+{
+  ASSERT_MSG(start >= 0 && start < this->size, "Start index must be positive and smaller than the strings length");
+  ASSERT_MSG(end >= 0 && end <= this->size, "End index must be positive and smaller than the strings length");
+
+  char pSubstring[end - start + 1];
+  strncpy(pSubstring, this->pString + start, end - start);
+  pSubstring[end - start] = '\0';
+
+  return gul::String(pSubstring);
 }
 
 int gul::String::Find(const gul::String& rString) const

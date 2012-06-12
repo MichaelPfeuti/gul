@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -28,267 +28,85 @@
 
 #include "CTestAssert.h"
 #include "Map.h"
+#include "XMLManager.h"
 
 namespace TestMap
 {
 
-  int CopyConstructor(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
+class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
+{
+  DECLARE_RTTI(TestSaveClass)
+
+  public:
+    TestSaveClass(int i = 0) : _i(i) {}
+    virtual ~TestSaveClass(void) {}
+    bool operator==(const TestSaveClass& c) const { return c._i == _i; }
+
+
+    void save(pugi::xml_node& node) const
     {
-      map.Add(i, i + 10);
+      node.append_attribute("i").set_value(_i);
     }
 
-    gul::Map<int, int> mapCopy(map);
-    for(int i = 0; i < 5; ++i)
+    void load(const pugi::xml_node& node)
     {
-      TEST_EQUAL(mapCopy.Get(i), i + 10);
-      TEST_TRUE(mapCopy.Contains(i));
+      _i = node.attribute("i").as_int();
     }
-    TEST_EQUAL(mapCopy.Size(), map.Size());
+
+  private:
+    int _i = 0;
+};
+}
+SPECIALIZE_TRAITS(TestMap::TestSaveClass)
+DEFINE_RTTI(TestMap::TestSaveClass)
+
+namespace TestMap
+{
+
+  int SaveAndLoadXMLPrimitives(void)
+  {
+    gul::Map<int, float> intFloatMap;
+
+    intFloatMap.Add(-5, 0.5);
+    intFloatMap.Add(0, 1.0);
+    intFloatMap.Add(5, 2.0);
+    gul::XMLManager::Save<gul::Map<int, float> >(gul::String("test.xml"), intFloatMap);
+    gul::Map<int, float>* pLoadedIntFloatMap = gul::XMLManager::Load<gul::Map<int, float> >(gul::String("test.xml"));
+
+
+    TEST_EQUAL(pLoadedIntFloatMap->Size(), 3);
+    TEST_EQUAL(pLoadedIntFloatMap->Get(-5), 0.5);
+    TEST_EQUAL(pLoadedIntFloatMap->Get(0), 1.0);
+    TEST_EQUAL(pLoadedIntFloatMap->Get(5), 2.0);
+    TEST_FALSE(pLoadedIntFloatMap->Contains(1));
+
+    GUL_DELETE(pLoadedIntFloatMap);
 
     return EXIT_SUCCESS;
   }
 
-  int Assignment(void)
+  int SaveAndLoadXML(void)
   {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-    }
+    gul::Map<TestSaveClass, float> saveMap;
 
-    gul::Map<int, int> mapWithElements;
-    for(int i = 10; i < 15; ++i)
-    {
-      map.Add(i, i + 10);
-    }
+    TestSaveClass a(-5);
+    TestSaveClass b(0);
+    TestSaveClass c(5);
+    TestSaveClass d(15);
+    saveMap.Add(a, 0.5);
+    saveMap.Add(b, 1.0);
+    saveMap.Add(c, 2.0);
+    gul::XMLManager::Save<gul::Map<TestSaveClass, float> >(gul::String("test.xml"), saveMap);
+    gul::Map<TestSaveClass, float>* pLoadedMap = gul::XMLManager::Load<gul::Map<TestSaveClass, float> >(gul::String("test.xml"));
 
-    gul::Map<int, int> mapEmpty;
 
-    mapWithElements = map;
-    mapEmpty = map;
+    TEST_EQUAL(pLoadedMap->Size(), 3);
+    TEST_EQUAL(pLoadedMap->Get(a), 0.5);
+    TEST_EQUAL(pLoadedMap->Get(b), 1.0);
+    TEST_EQUAL(pLoadedMap->Get(c), 2.0);
+    TEST_FALSE(pLoadedMap->Contains(d));
 
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_EQUAL(mapWithElements.Get(i), i + 10);
-      TEST_TRUE(mapWithElements.Contains(i));
-
-      TEST_EQUAL(mapEmpty.Get(i), i + 10);
-      TEST_TRUE(mapEmpty.Contains(i));
-    }
-    TEST_EQUAL(mapWithElements.Size(), map.Size());
-    TEST_EQUAL(mapEmpty.Size(), map.Size());
-
-    return EXIT_SUCCESS;
-  }
-
-  int SizeAndIsEmpty(void)
-  {
-    gul::Map<int, int> map;
-    TEST_TRUE(map.IsEmpty());
-    TEST_EQUAL(map.Size(), 0);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_FALSE(map.IsEmpty());
-      TEST_EQUAL(map.Size(), i + 1);
-    }
-
-    for(int i = 0; i < 4; ++i)
-    {
-      map.Remove(i);
-      TEST_FALSE(map.IsEmpty());
-      TEST_EQUAL(map.Size(), 4 - i);
-    }
-
-    map.Remove(4);
-    TEST_TRUE(map.IsEmpty());
-    TEST_EQUAL(map.Size(), 0);
-
-    return EXIT_SUCCESS;
-  }
-
-  int Add(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-      TEST_TRUE(map.Contains(i));
-    }
-
-    map.Remove(4);
-    TEST_FALSE(map.Contains(4));
-
-    map.Add(4, 40);
-    TEST_EQUAL(map.Get(4), 40);
-    TEST_TRUE(map.Contains(4));
-
-    map.Add(4, 41);
-    TEST_EQUAL(map.Get(4), 41);
-    TEST_TRUE(map.Contains(4));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Remove(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-
-    TEST_EQUAL(map.Size(), 5);
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Remove(i);
-      TEST_FALSE(map.Contains(i));
-      TEST_EQUAL(map.Size(), 4 - i);
-    }
-
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-    TEST_EQUAL(map.Size(), 5);
-
-    return EXIT_SUCCESS;
-  }
-
-  int RemoveAssertion(void)
-  {
-    gul::Map<int, int> map;
-
-    TEST_ASSERTION(map.Remove(0));
-    map.Add(0, 10);
-    map.Remove(0);
-    TEST_ASSERTION(map.Remove(0));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Clear(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-
-    TEST_EQUAL(map.Size(), 5);
-    map.Clear();
-    TEST_EQUAL(map.Size(), 0);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_FALSE(map.Contains(i));
-    }
-
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-    TEST_EQUAL(map.Size(), 5);
-
-    return EXIT_SUCCESS;
-  }
-
-  int Contains(void)
-  {
-    gul::Map<int, int> map;
-
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_TRUE(map.Contains(i));
-    }
-
-    TEST_FALSE(map.Contains(10));
-    map.Add(10, 20);
-    TEST_TRUE(map.Contains(10));
-    map.Add(10, 20);
-    TEST_TRUE(map.Contains(10));
-    map.Remove(10);
-    TEST_FALSE(map.Contains(10));
-
-    return EXIT_SUCCESS;
-  }
-
-  int Get(void)
-  {
-    gul::Map<int, int> map;
-
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-
-    map.Remove(0);
-    map.Add(0, 50);
-    TEST_EQUAL(map.Get(0), 50);
-
-    return EXIT_SUCCESS;
-  }
-
-  int GetAssertion(void)
-  {
-    gul::Map<int, int> map;
-
-    TEST_ASSERTION(map.Get(0));
-    map.Add(0, 10);
-    map.Get(0);
-    map.Remove(0);
-    TEST_ASSERTION(map.Get(0));
-
-    return EXIT_SUCCESS;
-  }
-
-  int GetKeys(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-
-    const gul::Container<int>& rKeys = map.GetKeys();
-    TEST_EQUAL(rKeys.Size(), 5);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_TRUE(rKeys.Contains(i));
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int GetValues(void)
-  {
-    gul::Map<int, int> map;
-    for(int i = 0; i < 5; ++i)
-    {
-      map.Add(i, i + 10);
-      TEST_EQUAL(map.Get(i), i + 10);
-    }
-
-    const gul::Container<int>& rValues = map.GetValues();
-    TEST_EQUAL(rValues.Size(), 5);
-
-    for(int i = 0; i < 5; ++i)
-    {
-      TEST_TRUE(rValues.Contains(i + 10));
-    }
+    GUL_DELETE(pLoadedMap);
 
     return EXIT_SUCCESS;
   }
@@ -299,9 +117,9 @@ namespace TestMap
     gul::String tmp2 = gul::Traits<gul::Map<gul::Map<gul::String, int>, int>>::GetName();
     gul::String tmp3 = gul::Traits<gul::Map<gul::Map<gul::String, int>*, int*>>::GetName();
 
-    TEST_EQUAL(tmp1, gul::String("gul::Map<gul::String, int>"));
-    TEST_EQUAL(tmp2, gul::String("gul::Map<gul::Map<gul::String, int>, int>"));
-    TEST_EQUAL(tmp3, gul::String("gul::Map<gul::Map<gul::String, int>*, int*>"));
+    TEST_EQUAL(tmp1, gul::String("gul::Map<gul::String,int>"));
+    TEST_EQUAL(tmp2, gul::String("gul::Map<gul::Map<gul::String,int>,int>"));
+    TEST_EQUAL(tmp3, gul::String("gul::Map<gul::Map<gul::String,int>*,int*>"));
 
     return EXIT_SUCCESS;
   }

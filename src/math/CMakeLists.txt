@@ -1,7 +1,9 @@
-add_library(math SHARED 
+add_library(math STATIC
     MathConstants.cpp
-    Math.hpp
+    Math.cpp
 
-    ${INCLUDE}/Math.h
-    ${INCLUDE}/MathConstants.h
+    ${INCLUDE_TPL}/math/Math.hpp
+
+    ${INCLUDE}/math/Math.h
+    ${INCLUDE}/math/MathConstants.h
     )

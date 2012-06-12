@@ -59,6 +59,13 @@ endif(ASTYLE_FOUND)
 set(INCLUDE_TPL "${CMAKE_HOME_DIRECTORY}/include/impl")
 set(INCLUDE "${CMAKE_HOME_DIRECTORY}/include")
 include_directories("${INCLUDE}")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/base")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/containers")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/image")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/math")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/memory")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/persistance")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/video")
 
 # source files
 if(BUILD_TESTING)

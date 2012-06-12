@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -28,68 +28,30 @@
 
 #include "String.h"
 #include "Assert.h"
+#include "Misc.h"
+
+DEFINE_TPL_RTTI(gul::Set)
 
 template<typename T>
-gul::Set<T>::Set(void)
-  : list()
+void gul::Set<T>::save(pugi::xml_node& node) const
 {
+  const typename gul::Set<T>::Iterator it = this->GetIterator();
+  while(it.HasNext())
+  {
+    pugi::xml_node childNode = node.append_child();
+    gul::XMLSerializable::performSave(it.Next(), childNode);
+  }
 }
 
 template<typename T>
-gul::Set<T>::~Set(void)
+void gul::Set<T>::load(const pugi::xml_node& node)
 {
-}
-
-template<typename T>
-int gul::Set<T>::Size(void) const
-{
-  return this->list.Size();
-}
-
-template<typename T>
-bool gul::Set<T>::IsEmpty(void) const
-{
-  return this->list.IsEmpty();
-}
-
-template<typename T>
-bool gul::Set<T>::Contains(const T& rElement) const
-{
-  return this->list.Contains(rElement);
-}
-
-template<typename T>
-void gul::Set<T>::Add(const T& rElement)
-{
-  if(!this->list.Contains(rElement))
-    this->list.Add(rElement);
-}
-
-template<typename T>
-void gul::Set<T>::Remove(const T& rElement)
-{
-  ASSERT(this->list.Contains(rElement));
-  this->list.RemoveElement(rElement);
-}
-
-template<typename T>
-void gul::Set<T>::Clear(void)
-{
-  this->list.Clear();
-}
-
-template<typename T>
-void gul::Set<T>::Save(pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  node.set_name("gul::Set<T>");
-}
-
-template<typename T>
-void* gul::Set<T>::Load(const pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-  return new Set<T>();
+  pugi::xml_node child = node.first_child();
+  while(!child.empty())
+  {
+    T newInst;
+    performLoad(newInst, child);
+    this->Add(newInst);
+    child = child.next_sibling();
+  }
 }

@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -29,114 +29,68 @@
 #include "Assert.h"
 #include "Misc.h"
 
-template<typename K, typename V>
-gul::Map<K, V>::Map(void)
-  : keys(),
-    values()
-{
-}
+DEFINE_2TPL_RTTI(gul::Map)
+
 
 template<typename K, typename V>
-gul::Map<K, V>::~Map(void)
+void gul::Map<K, V>::save(pugi::xml_node& node) const
 {
-}
-
-template<typename K, typename V>
-int gul::Map<K, V>::Size(void) const
-{
-  ASSERT(this->keys.Size() == this->values.Size());
-  return this->keys.Size();
-}
-
-template<typename K, typename V>
-bool gul::Map<K, V>::IsEmpty(void) const
-{
-  return this->Size() == 0;
-}
-
-template<typename K, typename V>
-V& gul::Map<K, V>::Get(const K& rKey)
-{
-  ASSERT(this->keys.Contains(rKey));
-
-  int idx = this->keys.IndexOf(rKey);
-  return this->values.Get(idx);
-}
-
-template<typename K, typename V>
-const V& gul::Map<K, V>::Get(const K& rKey) const
-{
-  ASSERT(this->keys.Contains(rKey));
-
-  // TODO: duplication
-  int idx = this->keys.IndexOf(rKey);
-  return this->values.Get(idx);
-}
-
-template<typename K, typename V>
-void gul::Map<K, V>::Add(const K& rKey, const V& rValue)
-{
-  if(this->keys.Contains(rKey))
+  typename gul::MapBasic<K,V>::Iterator it = this->GetIterator();
+  int i = 0;
+  while(it.HasNext())
   {
-    int idx = this->keys.IndexOf(rKey);
-    this->values.Remove(idx);
-    this->values.Add(rValue, idx);
-  }
-  else
-  {
-    this->keys.Add(rKey);
-    this->values.Add(rValue);
+    it.Next();
+
+    pugi::xml_node keyNode = node.append_child();
+    keyNode.set_name("key");
+    keyNode.append_attribute("idx").set_value(i);
+    pugi::xml_node keyData = keyNode.append_child();
+    gul::XMLSerializable::performSave(it.Get().GetKey(), keyData);
+
+    pugi::xml_node valueNode = node.append_child();
+    valueNode.set_name("value");
+    valueNode.append_attribute("idx").set_value(i);
+    pugi::xml_node valueData = valueNode.append_child();
+    gul::XMLSerializable::performSave(it.Get().GetValue(), valueData);
+
+    ++i;
   }
 }
 
 template<typename K, typename V>
-void gul::Map<K, V>::Remove(const K& rKey)
+void gul::Map<K, V>::load(const pugi::xml_node& node)
 {
-  ASSERT(this->keys.Contains(rKey));
+  pugi::xml_node child = node.first_child();
+  while(!child.empty())
+  {
+    // find only keynodes
+    while(gul::String(child.name()) != gul::String("key"))
+    {
+      child = child.next_sibling();
 
-  int idx = this->keys.IndexOf(rKey);
-  this->keys.Remove(idx);
-  this->values.Remove(idx);
-}
+      if(child.empty()) return;
+    }
 
-template<typename K, typename V>
-void gul::Map<K, V>::Clear(void)
-{
-  this->keys.Clear();
-  this->values.Clear();
-}
+    // get key data
+    pugi::xml_node keyData = child.first_child();
+    K newKey;
+    gul::XMLSerializable::performLoad(newKey, keyData);
 
-template<typename K, typename V>
-bool gul::Map<K, V>::Contains(const K& rKey) const
-{
-  return this->keys.Contains(rKey);
-}
+    // find corresponding value and its data
+    pugi::xml_node valueNode = node.find_child_by_attribute("value", "idx", child.attribute("idx").value());
 
-template<typename K, typename V>
-const gul::Container<K>& gul::Map<K, V>::GetKeys(void) const
-{
-  return this->keys;
-}
+    // TODO: only log this event or throw exception
+    ASSERT_MSG(!valueNode.empty(), "Invalid Map XML Data (no matching value found)!");
 
-template<typename K, typename V>
-const gul::Container<V>& gul::Map<K, V>::GetValues(void) const
-{
-  return this->values;
-}
+    if(!valueNode.empty())
+    {
+      V newValue;
+      pugi::xml_node valueData = valueNode.first_child();
+      gul::XMLSerializable::performLoad(newValue, valueData);
 
-template<typename K, typename V>
-void gul::Map<K, V>::Save(pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(resetMode);
+      this->Add(newKey, newValue);
+    }
 
-  node.set_name("gul::Map<K,V>");
-}
-
-template<typename K, typename V>
-void* gul::Map<K, V>::Load(const pugi::xml_node& node, bool resetMode) const
-{
-  GUL_UNUSED_VAR(node);
-  GUL_UNUSED_VAR(resetMode);
-
-  return new Map<K, V>();
+    child = child.next_sibling();
+  }
 }

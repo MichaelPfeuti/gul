@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -27,8 +27,8 @@
 ***************************************************************************/
 
 #include "RTTI.h"
+#include "Assert.h"
 #include "String.h"
-#include "Map.h"
 
 /**
   * The template argument must be a concrete class such that we can create
@@ -42,7 +42,7 @@ gul::ClassFactory<T>::ClassFactory(void)
   {
     ClassFactoryBase::pNameToFactoryMap = new ClassNameToFactoryMap();
   }
-  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName(), new ClassCreatorFunctorSpecific());
+  ClassFactoryBase::pNameToFactoryMap->Add(gul::Traits<T>::GetName().GetData(), new ClassCreatorFunctorSpecific());
 }
 
 /**
@@ -52,10 +52,12 @@ gul::ClassFactory<T>::ClassFactory(void)
 template<typename T>
 T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
 {
-  if(ClassFactoryBase::pNameToFactoryMap != nullptr && ClassFactoryBase::pNameToFactoryMap->Contains(rClassName))
+  ASSERT(ClassFactoryBase::pNameToFactoryMap != nullptr);
+
+  const gul::ClassFactoryBase::ClassCreatorFunctor* function = gul::ClassFactoryBase::pNameToFactoryMap->Get(rClassName.GetData());
+  if(function != nullptr)
   {
-    const gul::ClassFactoryBase::ClassCreatorFunctor& function = *gul::ClassFactoryBase::pNameToFactoryMap->Get(rClassName);
-    return static_cast<T*>(function());
+    return static_cast<T*>((*function)());
   }
   else
   {

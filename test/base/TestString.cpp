@@ -2,7 +2,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011 Michael Pfeuti.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -14,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -170,6 +170,17 @@ namespace TestString
     return EXIT_SUCCESS;
   }
 
+  int Substring(void)
+  {
+    gul::String string("StartMiddleEnd");
+
+    TEST_EQUAL(string.Substring(0, 5), gul::String("Start"));
+    fprintf(stderr, string.Substring(5, 11).GetData());
+    TEST_EQUAL(string.Substring(5, 11), gul::String("Middle"));
+    TEST_EQUAL(string.Substring(11, 14), gul::String("End"));
+
+    return EXIT_SUCCESS;
+  }
 
   int CharAt(void)
   {
