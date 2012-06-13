@@ -43,14 +43,14 @@ class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
     bool operator==(const TestSaveClass& c) const { return c._i == _i; }
 
 
-    void save(pugi::xml_node& node) const
+    void save(gul::XMLNode& node) const
     {
-      node.append_attribute("i").set_value(_i);
+      node.AppendAttribute(gul::String("i")).SetValue(_i);
     }
 
-    void load(const pugi::xml_node& node)
+    void load(const gul::XMLNode& node)
     {
-      _i = node.attribute("i").as_int();
+      _i = node.GetAttribute(gul::String("i")).GetInt();
     }
 
   private:

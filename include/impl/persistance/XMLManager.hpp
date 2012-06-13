@@ -26,7 +26,7 @@
 **
 ***************************************************************************/
 
-#include <3rdParty/pugi/pugixml.hpp>
+#include "XMLDocument.h"
 #include <iostream>
 #include "Assert.h"
 #include "XMLSerializable.h"
@@ -36,9 +36,9 @@ T* gul::XMLManager::Load(const gul::String& rFile)
 {
   gul::XMLSerializable::reset();
 
-  pugi::xml_document doc;
-  doc.load_file(rFile.GetData());
-  pugi::xml_node rootNode = doc.first_child();
+  gul::XMLDocument doc;
+  doc.LoadFile(File(rFile));
+  gul::XMLNode rootNode = doc.GetRoot();
 
   T* pLoadedInstance;
   gul::XMLSerializable::performLoad(pLoadedInstance, rootNode);
@@ -53,9 +53,9 @@ bool gul::XMLManager::Save(const gul::String& rPath, const T& rInstance)
 {
   gul::XMLSerializable::reset();
 
-  pugi::xml_document doc;
-  pugi::xml_node rootNode = doc.append_child("root");
+  gul::XMLDocument doc;
+  gul::XMLNode rootNode = doc.GetRoot();
   gul::XMLSerializable::performSave(rInstance, rootNode);
 
-  return doc.save_file(rPath.GetData());
+  return doc.SaveFile(File(rPath));
 }

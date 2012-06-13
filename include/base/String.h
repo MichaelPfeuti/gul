@@ -29,12 +29,12 @@
 **
 ***************************************************************************/
 
-#include <3rdParty/pugi/pugixml.hpp>
 #include "NonCopyable.h"
 
 namespace gul
 {
   class RTTI;
+  class XMLNode;
 }
 
 namespace gul
@@ -93,8 +93,8 @@ namespace gul
       }
 
     private:
-      virtual void save(pugi::xml_node& node) const;
-      virtual void load(const pugi::xml_node& node);
+      virtual void save(gul::XMLNode& node) const;
+      virtual void load(const gul::XMLNode& node);
       friend class XMLSerializable;
 
     private:

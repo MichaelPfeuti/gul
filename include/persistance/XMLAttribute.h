@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTAINERS_MAP_H_
-#define _GUL_CONTAINERS_MAP_H_
+#ifndef _GUL_PERSISTANCE_XML_ATTRIBUTE_H_
+#define _GUL_PERSISTANCE_XML_ATTRIBUTE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,30 +29,42 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "MapBasic.h"
-#include "List.h"
-#include "ClassFactory.h"
-#include "XMLSerializable.h"
+namespace gul
+{
+  class String;
+}
+
+#include "3rdParty/pugi/pugixml.hpp"
 
 namespace gul
 {
 
-  template<typename K, typename V>
-  class Map : public MapBasic<K, V>, private gul::ClassRegisterer<Map<K, V>>, public XMLSerializable
+  class XMLAttribute
   {
-      DECLARE_RTTI(Map)
+    public:
+     XMLAttribute(pugi::xml_attribute a);
+
+     void SetValue(const gul::String& val);
+     void SetValue(unsigned int i);
+     void SetValue(int i);
+     void SetValue(float f);
+     void SetValue(double d);
+     void SetValue(bool b);
+
+     gul::String GetString(void) const;
+     int GetInt(void) const;
+     unsigned int GetUnsignedInt(void) const;
+     float GetFloat(void) const;
+     double GetDouble(void) const;
+     bool GetBool(void) const;
+
+     bool IsValid(void) const;
 
     private:
-      virtual void save(gul::XMLNode& node) const;
-      virtual void load(const gul::XMLNode& node);
-      friend class XMLSerializable;
+      pugi::xml_attribute attribute;
   };
 
 }
 
-SPECIALIZE_2TPL_TRAITS(gul::Map)
-
-#include "impl/containers/Map.hpp"
-
 #endif
+

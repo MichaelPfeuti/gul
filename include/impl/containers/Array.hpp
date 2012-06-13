@@ -29,25 +29,25 @@
 DEFINE_TPL_RTTI(gul::Array)
 
 template<typename T>
-void gul::Array<T>::save(pugi::xml_node& node) const
+void gul::Array<T>::save(gul::XMLNode& node) const
 {
   for(int i = 0; i < this->Size(); ++i)
   {
-    pugi::xml_node childNode = node.append_child();
+    gul::XMLNode childNode = node.AppendChild();
     gul::XMLSerializable::performSave(this->Get(i), childNode);
   }
 }
 
 template<typename T>
-void gul::Array<T>::load(const pugi::xml_node& node)
+void gul::Array<T>::load(const gul::XMLNode& node)
 {
-  pugi::xml_node child = node.first_child();
-  while(!child.empty())
+  gul::XMLNode child = node.GetFirstChild();
+  while(child.IsValid())
   {
     T newInst;
     performLoad(newInst, child);
     this->Add(newInst);
-    child = child.next_sibling();
+    child = child.GetNextSibling();
   }
 }
 

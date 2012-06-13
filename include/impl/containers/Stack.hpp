@@ -33,27 +33,27 @@ DEFINE_TPL_RTTI(gul::Stack)
 
 
 template<typename T>
-void gul::Stack<T>::save(pugi::xml_node& node) const
+void gul::Stack<T>::save(gul::XMLNode& node) const
 {
   const typename gul::Stack<T>::Iterator it = this->GetIterator();
   while(it.HasNext())
   {
-    pugi::xml_node childNode = node.append_child();
+    gul::XMLNode childNode = node.AppendChild();
     gul::XMLSerializable::performSave(it.Next(), childNode);
   }
 }
 
 template<typename T>
-void gul::Stack<T>::load(const pugi::xml_node& node)
+void gul::Stack<T>::load(const gul::XMLNode& node)
 {
-  pugi::xml_node child = node.first_child();
+  gul::XMLNode child = node.GetFirstChild();
   Stack reverseStack;
-  while(!child.empty())
+  while(child.IsValid())
   {
     T newInst;
     gul::XMLSerializable::performLoad(newInst, child);
     reverseStack.Push(newInst);
-    child = child.next_sibling();
+    child = child.GetNextSibling();
   }
 
   while(!reverseStack.IsEmpty())

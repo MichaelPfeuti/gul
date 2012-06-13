@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTAINERS_MAP_H_
-#define _GUL_CONTAINERS_MAP_H_
+#ifndef _GUL_PERSISTANCE_XML_NODE_H_
+#define _GUL_PERSISTANCE_XML_NODE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,30 +29,43 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "MapBasic.h"
-#include "List.h"
-#include "ClassFactory.h"
-#include "XMLSerializable.h"
+namespace gul
+{
+  class String;
+}
+
+#include "3rdParty/pugi/pugixml.hpp"
+#include "XMLAttribute.h"
 
 namespace gul
 {
 
-  template<typename K, typename V>
-  class Map : public MapBasic<K, V>, private gul::ClassRegisterer<Map<K, V>>, public XMLSerializable
+  class XMLNode
   {
-      DECLARE_RTTI(Map)
+    public:
+     XMLNode(pugi::xml_node n);
+
+     XMLAttribute AppendAttribute(const gul::String& name);
+     XMLAttribute GetAttribute(const gul::String& name);
+     const XMLAttribute GetAttribute(const gul::String& name) const;
+
+     void SetName(const gul::String& name);
+     const String GetName(void) const;
+
+     XMLNode AppendChild(void);
+     XMLNode GetFirstChild(void);
+     const XMLNode GetFirstChild(void) const;
+     XMLNode GetNextSibling(void);
+     const XMLNode GetNextSibling(void) const;
+     XMLNode FindChildByAttribute(const gul::String& name, const String &attributName, const String &attributValue);
+     const XMLNode FindChildByAttribute(const gul::String& name, const String &attributName, const String &attributValue) const;
+
+     bool IsValid(void) const;
 
     private:
-      virtual void save(gul::XMLNode& node) const;
-      virtual void load(const gul::XMLNode& node);
-      friend class XMLSerializable;
+      pugi::xml_node node;
   };
 
 }
-
-SPECIALIZE_2TPL_TRAITS(gul::Map)
-
-#include "impl/containers/Map.hpp"
 
 #endif

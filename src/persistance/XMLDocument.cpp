@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_CONTAINERS_MAP_H_
-#define _GUL_CONTAINERS_MAP_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,30 +26,32 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "MapBasic.h"
-#include "List.h"
-#include "ClassFactory.h"
-#include "XMLSerializable.h"
+#include "XMLDocument.h"
 
-namespace gul
+gul::XMLDocument::XMLDocument(void)
+  :hasRootNode(false)
 {
-
-  template<typename K, typename V>
-  class Map : public MapBasic<K, V>, private gul::ClassRegisterer<Map<K, V>>, public XMLSerializable
-  {
-      DECLARE_RTTI(Map)
-
-    private:
-      virtual void save(gul::XMLNode& node) const;
-      virtual void load(const gul::XMLNode& node);
-      friend class XMLSerializable;
-  };
-
 }
 
-SPECIALIZE_2TPL_TRAITS(gul::Map)
+bool gul::XMLDocument::SaveFile(const File& file)
+{
+  return this->doc.save_file(file.GetPath().GetData());
+}
 
-#include "impl/containers/Map.hpp"
+void gul::XMLDocument::LoadFile(const File& file)
+{
+  this->doc.load_file(file.GetPath().GetData());
+  this->hasRootNode = true;
+}
 
-#endif
+gul::XMLNode gul::XMLDocument::GetRoot(void)
+{
+  if(this->hasRootNode)
+  {
+    return gul::XMLNode(this->doc.first_child());
+  }
+  else
+  {
+    return gul::XMLNode(doc.append_child());
+  }
+}

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTAINERS_MAP_H_
-#define _GUL_CONTAINERS_MAP_H_
+#ifndef _GUL_PERSISTANCE_XML_DOCUMENT_H_
+#define _GUL_PERSISTANCE_XML_DOCUMENT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,30 +29,28 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "MapBasic.h"
-#include "List.h"
-#include "ClassFactory.h"
-#include "XMLSerializable.h"
+#include "File.h"
+#include "XMLNode.h"
+#include <3rdParty/pugi/pugixml.hpp>
 
 namespace gul
 {
 
-  template<typename K, typename V>
-  class Map : public MapBasic<K, V>, private gul::ClassRegisterer<Map<K, V>>, public XMLSerializable
+  class XMLDocument
   {
-      DECLARE_RTTI(Map)
+    public:
+      XMLDocument(void);
+
+      bool SaveFile(const File& file);
+      void LoadFile(const File& file);
+      XMLNode GetRoot(void);
+
 
     private:
-      virtual void save(gul::XMLNode& node) const;
-      virtual void load(const gul::XMLNode& node);
-      friend class XMLSerializable;
+      pugi::xml_document doc;
+      bool hasRootNode;
   };
 
 }
-
-SPECIALIZE_2TPL_TRAITS(gul::Map)
-
-#include "impl/containers/Map.hpp"
 
 #endif

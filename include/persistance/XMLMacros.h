@@ -44,8 +44,8 @@
 
 #define DECLARE_SERIALIZABLE(className) \
   private:\
-  virtual void save(pugi::xml_node& node) const; \
-  virtual void load(const pugi::xml_node& node); \
+  virtual void save(gul::XMLNode& node) const; \
+  virtual void load(const gul::XMLNode& node); \
   friend class gul::XMLSerializable; \
   private:
 
@@ -55,7 +55,7 @@
 // #### SAVING MACROS ####
 // #######################
 #define BEGIN_SAVE(className) \
-  void className::save(pugi::xml_node& node) const \
+  void className::save(gul::XMLNode& node) const \
   {
 
 #define SAVE_BASE_CLASS(className) \
@@ -63,8 +63,8 @@
 
 #define SAVE_VARIABLE(attributeArg) \
   { \
-    pugi::xml_node childNode = node.append_child(); \
-    childNode.append_attribute("__attributeName").set_value(#attributeArg); \
+    gul::XMLNode childNode = node.AppendChild(); \
+    childNode.AppendAttribute(gul::String("__attributeName")).SetValue(gul::String(#attributeArg)); \
     performSave(attributeArg, childNode); \
   }
 
@@ -79,20 +79,20 @@
 // #### LOADING MACROS ####
 // ########################
 #define BEGIN_LOAD(className) \
-  void className::load(const pugi::xml_node& node) {
+  void className::load(const gul::XMLNode& node) {
 
 #define LOAD_BASE_CLASS(className) \
   className::load(node);
 
 #define LOAD_VARIABLE(attributeArg) \
   { \
-    pugi::xml_node listNode = node.first_child(); \
-    while (!listNode.empty()) { \
-      gul::String __string(listNode.attribute("__attributeName").value()); \
+    gul::XMLNode listNode = node.GetFirstChild(); \
+    while (listNode.IsValid()) { \
+      gul::String __string(listNode.GetAttribute(gul::String("__attributeName")).GetString()); \
       if (__string == gul::String(#attributeArg)) { \
         performLoad(attributeArg, listNode); \
       } \
-      listNode = listNode.next_sibling();  \
+      listNode = listNode.GetNextSibling();  \
     } \
   }
 

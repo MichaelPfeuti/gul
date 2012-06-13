@@ -33,6 +33,7 @@
 #include <cstring>
 #include <cstdio>
 #include <typeinfo>
+#include "XMLNode.h"
 
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
@@ -218,19 +219,20 @@ int gul::String::Count(const String& rString) const
   return count;
 }
 
-void gul::String::save(pugi::xml_node& node) const
+void gul::String::save(gul::XMLNode& node) const
 {
-  node.set_name(GetRTTI().GetName().GetData());
-  node.append_attribute("value").set_value(this->GetData());
+  node.SetName(GetRTTI().GetName());
+  node.AppendAttribute(gul::String("value")).SetValue(*this);
 }
 
-void gul::String::load(const pugi::xml_node& node)
+void gul::String::load(const gul::XMLNode& node)
 {
   ASSERT_MSG(this->Size() == 0 && this->pString == nullptr,
              "We must only load into empty strings!");
 
 
-  this->pString = strcpy(new char[strlen(node.attribute("value").value()) + 1], node.attribute("value").value());
+  this->pString = strcpy(new char[node.GetAttribute(gul::String("value")).GetString().Size() + 1],
+                         node.GetAttribute(gul::String("value")).GetString().GetData());
   this->size = strlen(pString);
 }
 

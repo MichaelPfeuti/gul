@@ -41,11 +41,16 @@ gul::File::~File(void)
   GUL_DELETE(pPath);
 }
 
-gul::String gul::File::GetSuffix(void)
+gul::String gul::File::GetSuffix(void) const
 {
   int idx = pPath->FindBackward(gul::String("."));
   if(idx < 0)
     return gul::String();
 
   return pPath->Substring(idx, pPath->Size());
+}
+
+gul::String gul::File::GetPath(void) const
+{
+  return *this->pPath;
 }

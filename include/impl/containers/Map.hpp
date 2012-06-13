@@ -33,7 +33,7 @@ DEFINE_2TPL_RTTI(gul::Map)
 
 
 template<typename K, typename V>
-void gul::Map<K, V>::save(pugi::xml_node& node) const
+void gul::Map<K, V>::save(gul::XMLNode& node) const
 {
   typename gul::MapBasic<K,V>::Iterator it = this->GetIterator();
   int i = 0;
@@ -41,16 +41,16 @@ void gul::Map<K, V>::save(pugi::xml_node& node) const
   {
     it.Next();
 
-    pugi::xml_node keyNode = node.append_child();
-    keyNode.set_name("key");
-    keyNode.append_attribute("idx").set_value(i);
-    pugi::xml_node keyData = keyNode.append_child();
+    gul::XMLNode keyNode = node.AppendChild();
+    keyNode.SetName(gul::String("key"));
+    keyNode.AppendAttribute(gul::String("idx")).SetValue(i);
+    gul::XMLNode keyData = keyNode.AppendChild();
     gul::XMLSerializable::performSave(it.Get().GetKey(), keyData);
 
-    pugi::xml_node valueNode = node.append_child();
-    valueNode.set_name("value");
-    valueNode.append_attribute("idx").set_value(i);
-    pugi::xml_node valueData = valueNode.append_child();
+    gul::XMLNode valueNode = node.AppendChild();
+    valueNode.SetName(gul::String("value"));
+    valueNode.AppendAttribute(gul::String("idx")).SetValue(i);
+    gul::XMLNode valueData = valueNode.AppendChild();
     gul::XMLSerializable::performSave(it.Get().GetValue(), valueData);
 
     ++i;
@@ -58,39 +58,39 @@ void gul::Map<K, V>::save(pugi::xml_node& node) const
 }
 
 template<typename K, typename V>
-void gul::Map<K, V>::load(const pugi::xml_node& node)
+void gul::Map<K, V>::load(const gul::XMLNode& node)
 {
-  pugi::xml_node child = node.first_child();
-  while(!child.empty())
+  gul::XMLNode child = node.GetFirstChild();
+  while(child.IsValid())
   {
     // find only keynodes
-    while(gul::String(child.name()) != gul::String("key"))
+    while(gul::String(child.GetName()) != gul::String("key"))
     {
-      child = child.next_sibling();
+      child = child.GetNextSibling();
 
-      if(child.empty()) return;
+      if(!child.IsValid()) return;
     }
 
     // get key data
-    pugi::xml_node keyData = child.first_child();
+    const gul::XMLNode keyData = child.GetFirstChild();
     K newKey;
     gul::XMLSerializable::performLoad(newKey, keyData);
 
     // find corresponding value and its data
-    pugi::xml_node valueNode = node.find_child_by_attribute("value", "idx", child.attribute("idx").value());
+    gul::XMLNode valueNode = node.FindChildByAttribute(gul::String("value"), gul::String("idx"), child.GetAttribute(gul::String("idx")).GetString());
 
     // TODO: only log this event or throw exception
-    ASSERT_MSG(!valueNode.empty(), "Invalid Map XML Data (no matching value found)!");
+    ASSERT_MSG(valueNode.IsValid(), "Invalid Map XML Data (no matching value found)!");
 
-    if(!valueNode.empty())
+    if(valueNode.IsValid())
     {
       V newValue;
-      pugi::xml_node valueData = valueNode.first_child();
+      gul::XMLNode valueData = valueNode.GetFirstChild();
       gul::XMLSerializable::performLoad(newValue, valueData);
 
       this->Add(newKey, newValue);
     }
 
-    child = child.next_sibling();
+   child = child.GetNextSibling();
   }
 }

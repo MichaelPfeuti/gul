@@ -33,25 +33,25 @@
 DEFINE_TPL_RTTI(gul::Set)
 
 template<typename T>
-void gul::Set<T>::save(pugi::xml_node& node) const
+void gul::Set<T>::save(gul::XMLNode& node) const
 {
   const typename gul::Set<T>::Iterator it = this->GetIterator();
   while(it.HasNext())
   {
-    pugi::xml_node childNode = node.append_child();
+    gul::XMLNode childNode = node.AppendChild();
     gul::XMLSerializable::performSave(it.Next(), childNode);
   }
 }
 
 template<typename T>
-void gul::Set<T>::load(const pugi::xml_node& node)
+void gul::Set<T>::load(const gul::XMLNode& node)
 {
-  pugi::xml_node child = node.first_child();
-  while(!child.empty())
+  gul::XMLNode child = node.GetFirstChild();
+  while(child.IsValid())
   {
     T newInst;
     performLoad(newInst, child);
     this->Add(newInst);
-    child = child.next_sibling();
+    child = child.GetNextSibling();
   }
 }

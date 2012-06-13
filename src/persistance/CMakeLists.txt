@@ -23,7 +23,10 @@ set_source_files_properties(${XMLLIB_PATH}/pugixml.cpp PROPERTIES COMPILE_FLAGS 
 add_library(persistance STATIC
     SettingsManager.cpp
     XMLSerializable.cpp
-    
+    XMLNode.cpp
+    XMLDocument.cpp
+    XMLAttribute.cpp
+
     ${INCLUDE_TPL}/persistance/XMLManager.hpp
 
 
@@ -31,6 +34,9 @@ add_library(persistance STATIC
     ${INCLUDE}/persistance/XMLSerializable.h
     ${INCLUDE}/persistance/XMLManager.h
     ${INCLUDE}/persistance/XMLMacros.h
+    ${INCLUDE}/persistance/XMLNode.h
+    ${INCLUDE}/persistance/XMLDocument.h
+    ${INCLUDE}/persistance/XMLAttribute.h
 )
 
 set_target_properties(persistance PROPERTIES COMPILE_FLAGS "${LOCAL_CMAKE_CXX_FLAGS}")

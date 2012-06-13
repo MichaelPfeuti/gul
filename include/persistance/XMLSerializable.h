@@ -33,6 +33,7 @@
 #include "String.h"
 #include "MapBasic.h"
 #include "ClassFactory.h"
+#include "XMLNode.h"
 
 namespace pugi
 {
@@ -41,25 +42,19 @@ namespace pugi
 
 
 #define PRIM_PERFORM_SAVE(TYPE) \
-  static void performSave(TYPE const& v, pugi::xml_node& node) \
+  static void performSave(TYPE const& v, gul::XMLNode& node) \
   { \
-    node.set_name(#TYPE);\
+    node.SetName(gul::String(#TYPE));\
     if(savingReferences.Contains(&v)) \
     { \
-      node.append_attribute(refTag).set_value(savingReferences.Get(&v)); \
+      node.AppendAttribute(refTag).SetValue(savingReferences.Get(&v)); \
     } \
     else \
     { \
-      node.append_attribute(refIndexTag).set_value(savingReferences.Size()); \
+      node.AppendAttribute(refIndexTag).SetValue(savingReferences.Size()); \
       savingReferences.Add(&v, savingReferences.Size()); \
-      node.append_attribute("value").set_value(v); \
+      node.AppendAttribute(gul::String("value")).SetValue(v); \
     } \
-  }
-
-#define PRIM_PERFORM_LOAD(TYPE) \
-  static void performLoad(TYPE& v, pugi::xml_node& node) \
-  { \
-    v = node.attribute("value").as_##TYPE(); \
   }
 
 #include <cstdio>
@@ -97,34 +92,47 @@ namespace gul
       PRIM_PERFORM_SAVE(float)
       PRIM_PERFORM_SAVE(double)
 
-      PRIM_PERFORM_LOAD(bool)
-      PRIM_PERFORM_LOAD(int)
-      PRIM_PERFORM_LOAD(float)
-      PRIM_PERFORM_LOAD(double)
-
-      static void performLoad(char& v, pugi::xml_node& node)
+      static void performLoad(bool& v, const gul::XMLNode& node)
       {
-        v = static_cast<char>(node.attribute("value").as_int());
+        v = node.GetAttribute(gul::String("value")).GetBool();
       }
 
-      static void performLoad(unsigned int& v, pugi::xml_node& node)
+      static void performLoad(char& v, const gul::XMLNode& node)
       {
-        v = static_cast<char>(node.attribute("value").as_uint());
+        v = static_cast<char>(node.GetAttribute(gul::String("value")).GetInt());
       }
 
+      static void performLoad(int& v, const gul::XMLNode& node)
+      {
+        v = node.GetAttribute(gul::String("value")).GetInt();
+      }
 
+      static void performLoad(unsigned int& v, const gul::XMLNode& node)
+      {
+        v = node.GetAttribute(gul::String("value")).GetUnsignedInt();
+      }
+
+      static void performLoad(float& v, const gul::XMLNode& node)
+      {
+        v = node.GetAttribute(gul::String("value")).GetFloat();
+      }
+
+      static void performLoad(double& v, const gul::XMLNode& node)
+      {
+        v = node.GetAttribute(gul::String("value")).GetDouble();
+      }
 
       template<typename T>
-      static void performSave(T const& v, pugi::xml_node& node)
+      static void performSave(T const& v, gul::XMLNode& node)
       {
-        node.set_name(createXMLValidTypeName(v.GetRTTI().GetName()).GetData());
+        node.SetName(createXMLValidTypeName(v.GetRTTI().GetName()));
         if(savingReferences.Contains(&v))
         {
-          node.append_attribute(refTag).set_value(savingReferences.Get(&v));
+          node.AppendAttribute(refTag).SetValue(savingReferences.Get(&v));
         }
         else
         {
-          node.append_attribute(refIndexTag).set_value(savingReferences.Size());
+          node.AppendAttribute(refIndexTag).SetValue(savingReferences.Size());
           savingReferences.Add(&v, savingReferences.Size());
           v.save(node);
         }
@@ -132,47 +140,47 @@ namespace gul
 
 
       template<typename T>
-      static void performSave(T* const& v, pugi::xml_node& node)
+      static void performSave(T* const& v, gul::XMLNode& node)
       {
         performSave(*v, node);
       }
 
 
       template<typename T>
-      static void performLoad(T& v, pugi::xml_node& node)
+      static void performLoad(T& v, const gul::XMLNode& node)
       {
-        ASSERT_MSG(node.attribute(refTag).empty() &&
-                   !node.attribute(refIndexTag).empty(),
+        ASSERT_MSG(!node.GetAttribute(refTag).IsValid() &&
+                   node.GetAttribute(refIndexTag).IsValid(),
                    "When loading a non-pointer we must not have a reference. Otherwise something went terribly wrong!!!!");
 
-        T* loader = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.name())));
+        T* loader = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.GetName())));
         loader->load(node);
-        loadingReferences.Add(node.attribute(refIndexTag).as_int(), loader);
+        loadingReferences.Add(node.GetAttribute(refIndexTag).GetInt(), loader);
         v = *loader;
         GUL_DELETE(loader);
       }
 
       template<typename T>
-      static void performLoad(T*& v, pugi::xml_node& node)
+      static void performLoad(T*& v, const gul::XMLNode& node)
       {
-        ASSERT_MSG(!node.attribute(refTag).empty() ||
-                   !node.attribute(refIndexTag).empty(),
+        ASSERT_MSG(node.GetAttribute(refTag).IsValid() ||
+                   node.GetAttribute(refIndexTag).IsValid(),
                    "Each XML node must and a __ref or __refIndex");
 
-        if(node.attribute(refIndexTag).empty())
+        if(!node.GetAttribute(refIndexTag).IsValid())
         {
-          v = static_cast<T*>(loadingReferences.Get(node.attribute(refTag).as_int()));
+          v = static_cast<T*>(loadingReferences.Get(node.GetAttribute(refTag).GetInt()));
         }
         else
         {
-          v = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.name())));
+          v = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.GetName())));
           v->load(node);
-          loadingReferences.Add(node.attribute(refIndexTag).as_int(), v);
+          loadingReferences.Add(node.GetAttribute(refIndexTag).GetInt(), v);
         }
       }
 
       template<typename T>
-      static void performLoad(T**& v, pugi::xml_node& node)
+      static void performLoad(T**& v, const gul::XMLNode& node)
       {
         v = new T*;
         performLoad(*v, node);
@@ -185,8 +193,8 @@ namespace gul
         savingReferences.Clear();
         loadingReferences.Clear();
       }
-      virtual void save(pugi::xml_node& node) const = 0;
-      virtual void load(const pugi::xml_node& node) = 0;
+      virtual void save(gul::XMLNode& node) const = 0;
+      virtual void load(const gul::XMLNode& node) = 0;
 
       friend class XMLManager;
 
@@ -226,8 +234,8 @@ namespace gul
     private:
       static gul::MapBasic<const void*, unsigned int> savingReferences;
       static gul::MapBasic<unsigned int, void*> loadingReferences;
-      static const char* refTag;
-      static const char* refIndexTag;
+      static const gul::String refTag;
+      static const gul::String refIndexTag;
 
   };
 

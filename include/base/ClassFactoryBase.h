@@ -33,6 +33,8 @@
 #include "RTTI.h"
 #include "MapBasic.h"
 
+#include <string>
+
 namespace gul
 {
 

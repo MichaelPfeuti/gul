@@ -29,10 +29,7 @@
 **
 ***************************************************************************/
 
-namespace gul
-{
-  class String;
-}
+#include "String.h"
 
 namespace gul
 {
@@ -42,11 +39,11 @@ namespace gul
       File(const String& rPath);
       virtual ~File(void);
 
-      String GetSuffix(void);
+      String GetSuffix(void) const;
+      String GetPath(void) const;
 
     private:
       String* pPath;
-
   };
 }
 
