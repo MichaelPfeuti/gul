@@ -59,18 +59,18 @@ namespace TestList
 
   int SaveAndLoadXML(void)
   {
-    gul::List<gul::String*> stringList;
-    stringList.Add(new gul::String("-5"));
-    stringList.Add(new gul::String("0"));
-    stringList.Add(new gul::String("5"));
-    gul::XMLManager::Save<gul::List<gul::String*> >(gul::String("stringTest.xml"), stringList);
-    gul::List<gul::String*>* pLoadedStringList = gul::XMLManager::Load<gul::List<gul::String*> >(gul::String("stringTest.xml"));
+    gul::List<gul::String> stringList;
+    stringList.Add(gul::String("-5"));
+    stringList.Add(gul::String("0"));
+    stringList.Add(gul::String("5"));
+    gul::XMLManager::Save<gul::List<gul::String> >(gul::String("stringTest.xml"), stringList);
+    gul::List<gul::String>* pLoadedStringList = gul::XMLManager::Load<gul::List<gul::String> >(gul::String("stringTest.xml"));
 
 
     TEST_EQUAL(pLoadedStringList->Size(), 3);
-    TEST_EQUAL(*pLoadedStringList->Get(0), gul::String("-5"));
-    TEST_EQUAL(*pLoadedStringList->Get(1), gul::String("0"));
-    TEST_EQUAL(*pLoadedStringList->Get(2), gul::String("5"));
+    TEST_EQUAL(pLoadedStringList->Get(0), gul::String("-5"));
+    TEST_EQUAL(pLoadedStringList->Get(1), gul::String("0"));
+    TEST_EQUAL(pLoadedStringList->Get(2), gul::String("5"));
 
     GUL_DELETE(pLoadedStringList);
 
@@ -88,8 +88,8 @@ namespace TestList
 
   int RTTI(void)
   {
-    gul::List<gul::String*> stringList;
-    TEST_EQUAL(stringList.GetRTTI().GetName(), gul::Traits<gul::List<gul::String*>>::GetName());
+    gul::List<gul::String> stringList;
+    TEST_EQUAL(stringList.GetRTTI().GetName(), gul::Traits<gul::List<gul::String>>::GetName());
 
     gul::List<int> intList;
     TEST_EQUAL(intList.GetRTTI().GetName(), gul::Traits<gul::List<int>>::GetName());

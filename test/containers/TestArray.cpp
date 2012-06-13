@@ -55,18 +55,18 @@ namespace TestArray
 
   int SaveAndLoadXML(void)
   {
-    gul::Array<gul::String*> stringArray;
-    stringArray.Add(new gul::String("-5"));
-    stringArray.Add(new gul::String("0"));
-    stringArray.Add(new gul::String("5"));
-    gul::XMLManager::Save<gul::Array<gul::String*> >(gul::String("stringTest.xml"), stringArray);
-    gul::Array<gul::String*>* pLoadedStringArray = gul::XMLManager::Load<gul::Array<gul::String*> >(gul::String("stringTest.xml"));
+    gul::Array<gul::String> stringArray;
+    stringArray.Add(gul::String("-5"));
+    stringArray.Add(gul::String("0"));
+    stringArray.Add(gul::String("5"));
+    gul::XMLManager::Save<gul::Array<gul::String> >(gul::String("stringTest.xml"), stringArray);
+    gul::Array<gul::String>* pLoadedStringArray = gul::XMLManager::Load<gul::Array<gul::String> >(gul::String("stringTest.xml"));
 
 
     TEST_EQUAL(pLoadedStringArray->Size(), 3);
-    TEST_EQUAL(*pLoadedStringArray->Get(0), gul::String("-5"));
-    TEST_EQUAL(*pLoadedStringArray->Get(1), gul::String("0"));
-    TEST_EQUAL(*pLoadedStringArray->Get(2), gul::String("5"));
+    TEST_EQUAL(pLoadedStringArray->Get(0), gul::String("-5"));
+    TEST_EQUAL(pLoadedStringArray->Get(1), gul::String("0"));
+    TEST_EQUAL(pLoadedStringArray->Get(2), gul::String("5"));
 
     GUL_DELETE(pLoadedStringArray);
 
@@ -84,8 +84,8 @@ namespace TestArray
 
   int RTTI(void)
   {
-    gul::Array<gul::String*> stringArray;
-    TEST_EQUAL(stringArray.GetRTTI().GetName(), gul::Traits<gul::Array<gul::String*>>::GetName());
+    gul::Array<gul::String> stringArray;
+    TEST_EQUAL(stringArray.GetRTTI().GetName(), gul::Traits<gul::Array<gul::String>>::GetName());
 
     return EXIT_SUCCESS;
   }

@@ -34,7 +34,6 @@
 namespace gul
 {
   class RTTI;
-  class XMLNode;
 }
 
 namespace gul
@@ -43,7 +42,7 @@ namespace gul
   /**
     *
     */
-  class String : private NonCopyable
+  class String
   {
     private:
       static const gul::RTTI RTTI;
@@ -57,7 +56,8 @@ namespace gul
       String(void);
       String(const String& rString);
       explicit String(const char*);
-      ~String();
+      virtual ~String();
+      String& operator=(const String& other);
 
     public:
       bool IsEmpty(void) const
@@ -91,11 +91,6 @@ namespace gul
       {
         return pString;
       }
-
-    private:
-      virtual void save(gul::XMLNode& node) const;
-      virtual void load(const gul::XMLNode& node);
-      friend class XMLSerializable;
 
     private:
       const char* pString;

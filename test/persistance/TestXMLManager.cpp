@@ -42,32 +42,18 @@ namespace TestXMLManager
 
     public:
       TestClassString(void)
-        : string(nullptr) {}
+      : string("") {}
 
-      virtual ~TestClassString(void)
-      {
-        GUL_DELETE(string);
-      }
-
-      TestClassString& operator= (const TestClassString& other)
-      {
-        if(this != &other)  // protect against invalid self-assignment
-        {
-          this->string = new gul::String(*other.string);
-        }
-        // by convention, always return *this
-        return *this;
-      }
+      virtual ~TestClassString(void) {}
 
       void fillData(void)
       {
-        string = new gul::String("TEST String");
+        string = gul::String("TEST String");
       }
 
       bool operator==(const TestClassString& o) const
       {
-        return (string == nullptr && o.string == nullptr) ||
-               (string != nullptr && o.string != nullptr && *string == *o.string);
+        return string == o.string;
       }
 
       bool operator!=(const TestClassString& o) const
@@ -76,7 +62,7 @@ namespace TestXMLManager
       }
 
     private:
-      gul::String* string;
+      gul::String string;
 
       DECLARE_SERIALIZABLE()
   };

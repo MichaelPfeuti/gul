@@ -120,8 +120,8 @@ namespace TestSet
 
   int RTTI(void)
   {
-    gul::Set<gul::String*> stringSet;
-    TEST_EQUAL(stringSet.GetRTTI().GetName(), gul::Traits<gul::Set<gul::String*>>::GetName());
+    gul::Set<gul::String> stringSet;
+    TEST_EQUAL(stringSet.GetRTTI().GetName(), gul::Traits<gul::Set<gul::String>>::GetName());
 
     return EXIT_SUCCESS;
   }

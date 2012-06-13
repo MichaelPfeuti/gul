@@ -91,6 +91,7 @@ namespace gul
       PRIM_PERFORM_SAVE(unsigned int)
       PRIM_PERFORM_SAVE(float)
       PRIM_PERFORM_SAVE(double)
+      PRIM_PERFORM_SAVE(gul::String)
 
       static void performLoad(bool& v, const gul::XMLNode& node)
       {
@@ -120,6 +121,11 @@ namespace gul
       static void performLoad(double& v, const gul::XMLNode& node)
       {
         v = node.GetAttribute(gul::String("value")).GetDouble();
+      }
+
+      static void performLoad(gul::String& v, const gul::XMLNode& node)
+      {
+        v = node.GetAttribute(gul::String("value")).GetString();
       }
 
       template<typename T>

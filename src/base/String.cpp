@@ -33,7 +33,6 @@
 #include <cstring>
 #include <cstdio>
 #include <typeinfo>
-#include "XMLNode.h"
 
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
@@ -44,8 +43,7 @@ gul::String::String(void)
 }
 
 gul::String::String(const gul::String& rString)
-  : gul::NonCopyable(),
-    pString(strcpy(new char[rString.Size() + 1], rString.pString)),
+  : pString(strcpy(new char[rString.Size() + 1], rString.pString)),
     size(rString.Size())
 {
 }
@@ -59,6 +57,21 @@ gul::String::String(const char* pCString)
 gul::String::~String()
 {
   GUL_DELETE_ARRAY(pString);
+}
+
+gul::String& gul::String::operator=(const gul::String& other)
+{
+  if (this != &other) // protect against invalid self-assignment
+  {
+    char* newString = new char[other.size+1];
+    strcpy(newString, other.pString);
+
+    GUL_DELETE_ARRAY(this->pString);
+    this->pString = newString;
+    this->size = other.size;
+  }
+  // by convention, always return *this
+  return *this;
 }
 
 char gul::String::CharAt(int index) const
@@ -217,23 +230,6 @@ int gul::String::Count(const String& rString) const
     pSearchPos = strstr(pSearchPos + 1, rString.pString);
   }
   return count;
-}
-
-void gul::String::save(gul::XMLNode& node) const
-{
-  node.SetName(GetRTTI().GetName());
-  node.AppendAttribute(gul::String("value")).SetValue(*this);
-}
-
-void gul::String::load(const gul::XMLNode& node)
-{
-  ASSERT_MSG(this->Size() == 0 && this->pString == nullptr,
-             "We must only load into empty strings!");
-
-
-  this->pString = strcpy(new char[node.GetAttribute(gul::String("value")).GetString().Size() + 1],
-                         node.GetAttribute(gul::String("value")).GetString().GetData());
-  this->size = strlen(pString);
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)

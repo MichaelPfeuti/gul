@@ -56,18 +56,18 @@ namespace TestStack
 
   int SaveAndLoadXML(void)
   {
-    gul::Stack<gul::String*> stringStack;
-    stringStack.Push(new gul::String("-5"));
-    stringStack.Push(new gul::String("0"));
-    stringStack.Push(new gul::String("5"));
-    gul::XMLManager::Save<gul::Stack<gul::String*> >(gul::String("stringTest.xml"), stringStack);
-    gul::Stack<gul::String*>* pLoadedStringStack = gul::XMLManager::Load<gul::Stack<gul::String*> >(gul::String("stringTest.xml"));
+    gul::Stack<gul::String> stringStack;
+    stringStack.Push(gul::String("-5"));
+    stringStack.Push(gul::String("0"));
+    stringStack.Push(gul::String("5"));
+    gul::XMLManager::Save<gul::Stack<gul::String> >(gul::String("stringTest.xml"), stringStack);
+    gul::Stack<gul::String>* pLoadedStringStack = gul::XMLManager::Load<gul::Stack<gul::String> >(gul::String("stringTest.xml"));
 
 
     TEST_EQUAL(pLoadedStringStack->Size(), 3);
-    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("5"));
-    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("0"));
-    TEST_EQUAL(*pLoadedStringStack->Pop(), gul::String("-5"));
+    TEST_EQUAL(pLoadedStringStack->Pop(), gul::String("5"));
+    TEST_EQUAL(pLoadedStringStack->Pop(), gul::String("0"));
+    TEST_EQUAL(pLoadedStringStack->Pop(), gul::String("-5"));
 
     GUL_DELETE(pLoadedStringStack);
 
@@ -85,8 +85,8 @@ namespace TestStack
 
   int RTTI(void)
   {
-    gul::Stack<gul::String*> stringStack;
-    TEST_EQUAL(stringStack.GetRTTI().GetName(), gul::Traits<gul::Stack<gul::String*>>::GetName());
+    gul::Stack<gul::String> stringStack;
+    TEST_EQUAL(stringStack.GetRTTI().GetName(), gul::Traits<gul::Stack<gul::String>>::GetName());
 
     return EXIT_SUCCESS;
   }
