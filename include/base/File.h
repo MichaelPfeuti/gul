@@ -36,11 +36,15 @@ namespace gul
   class File
   {
     public:
+      File(void);
       File(const String& rPath);
       virtual ~File(void);
 
       String GetSuffix(void) const;
       String GetPath(void) const;
+
+      bool IsPathValid(void) const;
+      bool Exists(void) const;
 
     private:
       String* pPath;

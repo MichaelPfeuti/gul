@@ -1,11 +1,11 @@
 #pragma once
-#ifndef _GUL_IMAGE_IMAGE_H_
-#define _GUL_IMAGE_IMAGE_H_
+#ifndef _GUL_TEST_DATA_H_
+#define _GUL_TEST_DATA_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,56 +29,26 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "RGBA.h"
+#include "File.h"
+#include "String.h"
 
 namespace gul
 {
 
-  class Image
+  class CTestData
   {
-    DECLARE_RTTI(Image)
-
     public:
-      enum ImageType
+      static gul::String GetFilePath(const gul::String& filename)
       {
-        IT_UNDEFINED,
-        IT_RGBA
-      };
+        return gul::String("@GUL_TEST_DATA_SET_FOLDER@/") + filename;
+      }
 
-    public:
-      Image(void);
-      Image(int w, int h);
-      virtual ~Image(void);
-
-      void AllocateMemory(void);
-
-      int GetWidth(void) const;
-      int GetHeight(void) const;
-      int GetNumberOfChannels(void) const;
-      ImageType GetImageType(void) const;
-
-      const RGBA GetPixel(int x, int y) const;
-      void SetPixel(int x, int y, const gul::RGBA &rgba);
-
-    private:
-      float* pData;
-      int width;
-      int height;
-      ImageType imageType;
-
+      static gul::String GetTempFilePath(const gul::String& filename)
+      {
+        return gul::String("@GUL_TEST_TEMP_FOLDER@/") + filename;
+      }
   };
-}
 
-SPECIALIZE_TRAITS(gul::Image)
-
-namespace gul {
-  template<>
-  class Traits<gul::Image::ImageType>
-  {
-    public:
-    static String GetName() { return gul::String("gul::Image::IT_RGBA"); }
-  };
 }
 
 #endif

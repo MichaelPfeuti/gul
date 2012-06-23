@@ -29,6 +29,13 @@
 #include "File.h"
 #include "Misc.h"
 #include "String.h"
+#include <unistd.h>
+
+
+gul::File::File(void)
+  : pPath(nullptr)
+{
+}
 
 gul::File::File(const String& rPath)
   :pPath(new gul::String(rPath))
@@ -53,4 +60,15 @@ gul::String gul::File::GetSuffix(void) const
 gul::String gul::File::GetPath(void) const
 {
   return *this->pPath;
+}
+
+bool gul::File::IsPathValid(void) const
+{
+  return pPath != nullptr;
+}
+
+bool gul::File::Exists(void) const
+{
+  return IsPathValid() &&
+         access(pPath->GetData(), F_OK ) == 0;
 }

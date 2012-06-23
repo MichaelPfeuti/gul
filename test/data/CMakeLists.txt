@@ -1,0 +1,4 @@
+
+set(GUL_TEST_DATA_SET_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
+set(GUL_TEST_TEMP_FOLDER "${CMAKE_BINARY_DIR}/test")
+configure_file(CTestData.h.in CTestData.h @ONLY])

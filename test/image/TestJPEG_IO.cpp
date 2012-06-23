@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_IMAGE_IMAGE_H_
-#define _GUL_IMAGE_IMAGE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,56 +26,21 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "RGBA.h"
+#include "CTestAssert.h"
+#include "CTestData.h"
+#include "JPEG_IO.h"
 
-namespace gul
+namespace TestJPEG_IO
 {
-
-  class Image
+  int Read_Write(void)
   {
-    DECLARE_RTTI(Image)
+    gul::JPEG_IO jpegIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena.jpg"));
+    gul::Image lenaImage = jpegIO.Load(lenaPath);
 
-    public:
-      enum ImageType
-      {
-        IT_UNDEFINED,
-        IT_RGBA
-      };
+    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
+    jpegIO.Save(lenaTmpPath, lenaImage);
 
-    public:
-      Image(void);
-      Image(int w, int h);
-      virtual ~Image(void);
-
-      void AllocateMemory(void);
-
-      int GetWidth(void) const;
-      int GetHeight(void) const;
-      int GetNumberOfChannels(void) const;
-      ImageType GetImageType(void) const;
-
-      const RGBA GetPixel(int x, int y) const;
-      void SetPixel(int x, int y, const gul::RGBA &rgba);
-
-    private:
-      float* pData;
-      int width;
-      int height;
-      ImageType imageType;
-
-  };
+    return EXIT_FAILURE;
+  }
 }
-
-SPECIALIZE_TRAITS(gul::Image)
-
-namespace gul {
-  template<>
-  class Traits<gul::Image::ImageType>
-  {
-    public:
-    static String GetName() { return gul::String("gul::Image::IT_RGBA"); }
-  };
-}
-
-#endif

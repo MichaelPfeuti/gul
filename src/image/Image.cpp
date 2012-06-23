@@ -28,6 +28,7 @@
 
 #include "Image.h"
 #include "Misc.h"
+#include "Assert.h"
 
 DEFINE_RTTI(gul::Image);
 
@@ -35,24 +36,65 @@ gul::Image::Image(void)
   : pData(nullptr),
     width(0),
     height(0),
-    depth(0),
-    type(IT_UNDEFINED)
+    imageType(IT_UNDEFINED)
 {
 
 }
 
-gul::Image::Image(const gul::File& rPath)
+gul::Image::Image(int w, int h)
   : pData(nullptr),
-    width(0),
-    height(0),
-    depth(0),
-    type(IT_UNDEFINED)
+    width(w),
+    height(h),
+    imageType(IT_RGBA)
 {
-  //rPath.
+}
+
+void gul::Image::AllocateMemory(void)
+{
+  ASSERT(pData == nullptr);
+  ASSERT(GetWidth()*GetHeight()*GetNumberOfChannels() > 0);
+
+  int size = GetWidth()*GetHeight()*GetNumberOfChannels();
+  pData = new float[size];
 }
 
 gul::Image::~Image(void)
 {
-  GUL_DELETE(pData);
+  GUL_DELETE_ARRAY(pData);
 }
 
+int gul::Image::GetWidth(void) const
+{
+  return this->width;
+}
+
+int gul::Image::GetHeight(void) const
+{
+  return this->height;
+}
+
+int gul::Image::GetNumberOfChannels(void) const
+{
+  return 4;
+}
+
+gul::Image::ImageType gul::Image::GetImageType(void) const
+{
+  return this->imageType;
+}
+
+const gul::RGBA gul::Image::GetPixel(int x, int y) const
+{
+  return gul::RGBA(this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0],
+                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1],
+                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2],
+                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 4]);
+}
+
+void gul::Image::SetPixel(int x, int y, const gul::RGBA &rgba)
+{
+  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0] = rgba.GetRed();
+  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
+  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
+  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 4] = rgba.GetAlpha();
+}

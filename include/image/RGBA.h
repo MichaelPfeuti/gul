@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_IMAGE_IMAGE_H_
-#define _GUL_IMAGE_IMAGE_H_
+#ifndef _GUL_IMAGE_RGBA_H_
+#define _GUL_IMAGE_RGBA_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,56 +29,26 @@
 **
 ***************************************************************************/
 
-#include "RTTI.h"
-#include "RGBA.h"
-
 namespace gul
 {
 
-  class Image
+  class RGBA
   {
-    DECLARE_RTTI(Image)
+  public:
+    RGBA(float r, float g, float b, float a);
 
-    public:
-      enum ImageType
-      {
-        IT_UNDEFINED,
-        IT_RGBA
-      };
+    float GetRed(void) const;
+    float GetGreen(void) const;
+    float GetBlue(void) const;
+    float GetAlpha(void) const;
 
-    public:
-      Image(void);
-      Image(int w, int h);
-      virtual ~Image(void);
-
-      void AllocateMemory(void);
-
-      int GetWidth(void) const;
-      int GetHeight(void) const;
-      int GetNumberOfChannels(void) const;
-      ImageType GetImageType(void) const;
-
-      const RGBA GetPixel(int x, int y) const;
-      void SetPixel(int x, int y, const gul::RGBA &rgba);
-
-    private:
-      float* pData;
-      int width;
-      int height;
-      ImageType imageType;
-
+  private:
+    float red;
+    float green;
+    float blue;
+    float alpha;
   };
-}
 
-SPECIALIZE_TRAITS(gul::Image)
-
-namespace gul {
-  template<>
-  class Traits<gul::Image::ImageType>
-  {
-    public:
-    static String GetName() { return gul::String("gul::Image::IT_RGBA"); }
-  };
 }
 
 #endif
