@@ -29,5 +29,31 @@
 **
 ***************************************************************************/
 
+#include "ImageIO.h"
+
+namespace gul {
+
+  class PPM_IO : public ImageIO
+  {
+    public:
+      enum PPMMode
+      {
+        PPM_ASCII,
+        PPM_BINARY
+      };
+
+    public:
+      void SetMode(PPMMode m);
+
+      virtual Image Load(const File& rPath);
+
+      virtual void Save(const File& rPath, const Image& rImage);
+
+    private:
+      PPMMode mode = PPM_BINARY;
+
+  };
+
+}
 
 #endif

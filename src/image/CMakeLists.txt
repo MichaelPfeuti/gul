@@ -4,6 +4,7 @@ set(image_sources
     ImageFileHandler.cpp
     ImageIO.cpp
     BMP_IO.cpp
+    PPM_IO.cpp
     RGBA.cpp
 
     ${INCLUDE}/image/Image.h
