@@ -72,13 +72,5 @@ namespace gul
 
 SPECIALIZE_TRAITS(gul::Image)
 
-namespace gul {
-  template<>
-  class Traits<gul::Image::ImageType>
-  {
-    public:
-    static String GetName() { return gul::String("gul::Image::IT_RGBA"); }
-  };
-}
 
 #endif

@@ -32,7 +32,7 @@
 
 namespace TestJPEG_IO
 {
-  int Read_Write(void)
+  int ReadWrite(void)
   {
     gul::JPEG_IO jpegIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena.jpg"));

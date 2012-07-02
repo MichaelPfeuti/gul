@@ -33,6 +33,21 @@
 #include <cstdlib>
 #include <cstdio>
 #include <jpeglib.h>
+#include <setjmp.h>
+
+struct ErrorManager
+{
+  struct jpeg_error_mgr pub;
+  jmp_buf setjmp_buffer;
+};
+
+METHODDEF(void)
+ErrorCallback(j_common_ptr cinfo)
+{
+  struct ErrorManager* err = (struct ErrorManager*)(cinfo->err);
+  (*cinfo->err->output_message) (cinfo);
+  longjmp(err->setjmp_buffer, 1);
+}
 
 void gul::JPEG_IO::SetQuality(int qual)
 {
@@ -44,7 +59,7 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
   gul::Image gulImage;
 
   struct jpeg_decompress_struct cinfo;
-  struct jpeg_error_mgr jerr;
+  struct ErrorManager jerr;
   FILE * infile;
   JSAMPARRAY buffer;
   int row_stride;
@@ -52,10 +67,19 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
   if ((infile = fopen(rPath.GetPath().GetData(), "rb")) == NULL)
   {
     FAIL("cannot open file!");
-    return gulImage;
+    return gul::Image();
   }
 
-  cinfo.err = jpeg_std_error(&jerr);
+  cinfo.err = jpeg_std_error(&jerr.pub);
+  jerr.pub.error_exit = ErrorCallback;
+  if (setjmp(jerr.setjmp_buffer))
+  {
+    jpeg_destroy_decompress(&cinfo);
+    fclose(infile);
+    FAIL("Invalid JPEG file!");
+    return gul::Image();
+  }
+
   jpeg_create_decompress(&cinfo);
   jpeg_stdio_src(&cinfo, infile);
   (void) jpeg_read_header(&cinfo, TRUE);
@@ -87,9 +111,9 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
   jpeg_destroy_decompress(&cinfo);
   fclose(infile);
 
-  if(jerr.num_warnings != 0)
+  if(jerr.pub.num_warnings != 0)
   {
-    gulImage = gul::Image();
+    FAIL("Corrupt JPEG file!");
   }
 
   return gulImage;
@@ -120,7 +144,7 @@ void gul::JPEG_IO::Save(const gul::File& rPath, const gul::Image& rImage)
   if((outfile = fopen(rPath.GetPath().GetData(), "wb")) == NULL)
   {
     fprintf(stderr, "can't open %s\n", rPath.GetPath().GetData());
-    exit(1);
+    return;
   }
   jpeg_stdio_dest(&cinfo, outfile);
 

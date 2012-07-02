@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_IMAGE_PNG_IO_H_
-#define _GUL_IMAGE_PNG_IO_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,19 +26,22 @@
 **
 ***************************************************************************/
 
-#include "ImageIO.h"
+#include "CTestAssert.h"
+#include "CTestData.h"
+#include "JPEG_IO.h"
+#include "PNG_IO.h"
 
-namespace gul {
-
-  class PNG_IO : public ImageIO
+namespace TestPNG_IO
+{
+  int ReadWrite(void)
   {
-    public:
-      virtual Image Load(const File& rPath);
+    gul::PNG_IO pngIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_grey.png"));
+    gul::Image lenaImage = pngIO.Load(lenaPath);
 
-      virtual void Save(const File& rPath, const Image& rImage);
+    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
+    pngIO.Save(lenaTmpPath, lenaImage);
 
-  };
-
+    return EXIT_FAILURE;
+  }
 }
-
-#endif

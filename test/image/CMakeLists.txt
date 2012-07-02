@@ -1,4 +1,6 @@
-gul_add_test(Image JPEG_IO Read_Write)
+gul_add_test(Image JPEG_IO ReadWrite)
+
+gul_add_test(Image PNG_IO ReadWrite)
 
 gul_add_test(Image PPM_IO ReadWriteRGBASCII)
 gul_add_test(Image PPM_IO ReadWriteRGBBinary)

@@ -60,7 +60,7 @@ void gul::Image::AllocateMemory(void)
 
 gul::Image::~Image(void)
 {
-  GUL_DELETE_ARRAY(pData);
+//  GUL_DELETE_ARRAY(pData);
 }
 
 int gul::Image::GetWidth(void) const
@@ -88,7 +88,7 @@ const gul::RGBA gul::Image::GetPixel(int x, int y) const
   return gul::RGBA(this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0],
                    this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1],
                    this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2],
-                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 4]);
+                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 3]);
 }
 
 void gul::Image::SetPixel(int x, int y, const gul::RGBA &rgba)
@@ -96,5 +96,5 @@ void gul::Image::SetPixel(int x, int y, const gul::RGBA &rgba)
   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0] = rgba.GetRed();
   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
-  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 4] = rgba.GetAlpha();
+  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 3] = rgba.GetAlpha();
 }
