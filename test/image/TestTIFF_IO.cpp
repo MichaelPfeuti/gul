@@ -28,18 +28,18 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "PNG_IO.h"
+#include "TIFF_IO.h"
 
-namespace TestPNG_IO
+namespace TestTIFF_IO
 {
   int ReadWrite(void)
   {
-    gul::PNG_IO pngIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_grey.png"));
-    gul::Image lenaImage = pngIO.Load(lenaPath);
+    gul::TIFF_IO tiffIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_deflate.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
-    pngIO.Save(lenaTmpPath, lenaImage);
+    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.tiff"));
+    tiffIO.Save(lenaTmpPath, lenaImage);
 
     return EXIT_FAILURE;
   }

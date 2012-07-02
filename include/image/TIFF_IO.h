@@ -29,5 +29,17 @@
 **
 ***************************************************************************/
 
+#include "ImageIO.h"
+
+namespace gul {
+
+  class TIFF_IO : public ImageIO
+  {
+    public:
+      virtual Image Load(const File& rPath);
+
+      virtual void Save(const File& rPath, const Image& rImage);
+  };
+}
 
 #endif

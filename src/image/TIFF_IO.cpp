@@ -25,3 +25,94 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "TIFF_IO.h"
+#include <tiffio.h>
+#include "File.h"
+#include "Assert.h"
+
+gul::Image gul::TIFF_IO::Load(const gul::File &rPath)
+{
+  TIFF *tif=TIFFOpen(rPath.GetPath().GetData(), "r");
+  if(tif == nullptr)
+  {
+    FAIL("Could not open TIFF file!");
+    return gul::Image();
+  }
+
+  uint32 width, height;
+  TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
+  TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
+
+  gul::Image image(width, height);
+  image.AllocateMemory();
+
+  uint32 npixels=width*height;
+  uint32* raster= static_cast<uint32*>(_TIFFmalloc(npixels*sizeof(uint32)));
+  if(TIFFReadRGBAImage(tif, width, height, raster, 0))
+  {
+    for(uint32 y = 0; y < height; ++y)
+    {
+      for(uint32 x = 0; x < width; ++x)
+      {
+        image.SetPixel(x, height-y-1, gul::RGBA(TIFFGetR(raster[x + y*width])/255.f,
+                                                TIFFGetG(raster[x + y*width])/255.f,
+                                                TIFFGetB(raster[x + y*width])/255.f,
+                                                TIFFGetA(raster[x + y*width])/255.f));
+      }
+    }
+  }
+  else
+  {
+    image = gul::Image();
+    FAIL("TIFF file could no be read!");
+  }
+
+  _TIFFfree(raster);
+  TIFFClose(tif);
+
+  return image;
+}
+
+
+void gul::TIFF_IO::Save(const gul::File &rPath, const gul::Image &rImage)
+{
+  TIFF *out= TIFFOpen(rPath.GetPath().GetData(), "w");
+  if(out == nullptr)
+  {
+    FAIL("Could not open TIFF file for writing!");
+    return;
+  }
+
+  TIFFSetField(out, TIFFTAG_IMAGEWIDTH, rImage.GetWidth());
+  TIFFSetField(out, TIFFTAG_IMAGELENGTH, rImage.GetHeight());
+  TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, rImage.GetNumberOfChannels());
+  TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 8);
+  TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
+  TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+  TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+
+  unsigned char *buf = static_cast<unsigned char*>(_TIFFmalloc(rImage.GetNumberOfChannels()*rImage.GetWidth()));
+  TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, rImage.GetNumberOfChannels()*rImage.GetWidth()));
+
+  //Now writing image to the file one strip at a time
+  for (int row = 0; row < rImage.GetHeight(); ++row)
+  {
+    for(int x = 0; x < rImage.GetWidth(); ++x)
+    {
+      gul::RGBA rgba = rImage.GetPixel(x, row);
+      buf[x*4 + 0] = rgba.GetRed()*255;
+      buf[x*4 + 1] = rgba.GetGreen()*255;
+      buf[x*4 + 2] = rgba.GetBlue()*255;
+      buf[x*4 + 3] = rgba.GetAlpha()*255;
+    }
+
+    if (TIFFWriteScanline(out, buf, row, 0) < 0)
+    {
+      FAIL("TIFF file could no be written!");
+    }
+  }
+
+  _TIFFfree(buf);
+  TIFFClose(out);
+}
