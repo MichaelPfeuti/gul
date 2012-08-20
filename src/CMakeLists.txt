@@ -1,3 +1,4 @@
+add_subdirectory(algorithms)
 add_subdirectory(base)
 add_subdirectory(containers)
 add_subdirectory(image)
