@@ -27,6 +27,7 @@
 ***************************************************************************/
 
 #include "TIFF_IO.h"
+#define JPEG_SUPPORT
 #include <tiffio.h>
 #include "File.h"
 #include "Assert.h"

@@ -43,12 +43,15 @@ namespace gul
       enum ImageType
       {
         IT_UNDEFINED,
-        IT_RGBA
+        IT_RGBA,
+        IT_RGB,
+        IT_GREY
       };
 
     public:
       Image(void);
       Image(int w, int h);
+      Image(int w, int h, ImageType dataImageType, const unsigned char* data);
       virtual ~Image(void);
 
       void AllocateMemory(void);

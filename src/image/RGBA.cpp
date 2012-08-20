@@ -28,6 +28,14 @@
 
 #include "RGBA.h"
 
+gul::RGBA::RGBA(void)
+  : red(0),
+    green(0),
+    blue(0),
+    alpha(0)
+{
+}
+
 gul::RGBA::RGBA(float r, float g, float b, float a)
   : red(r),
     green(g),
@@ -36,6 +44,26 @@ gul::RGBA::RGBA(float r, float g, float b, float a)
 {
 }
 
+gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+  : red(r/255.f),
+    green(g/255.f),
+    blue(b/255.f),
+    alpha(a/255.f)
+{
+}
+
+bool gul::RGBA::operator==(const RGBA& other) const
+{
+  return other.red == red &&
+      other.green == green &&
+      other.blue == blue &&
+      other.alpha == alpha;
+}
+
+bool gul::RGBA::operator!=(const RGBA& other) const
+{
+  return ! operator ==(other);
+}
 
 float gul::RGBA::GetRed(void) const
 {

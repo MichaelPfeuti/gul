@@ -35,7 +35,12 @@ namespace gul
   class RGBA
   {
   public:
+    RGBA(void);
+    RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
     RGBA(float r, float g, float b, float a);
+
+    bool operator==(const RGBA& other) const;
+    bool operator!=(const RGBA& other) const;
 
     float GetRed(void) const;
     float GetGreen(void) const;

@@ -29,78 +29,95 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "PPM_IO.h"
+#include "Utils.h"
 
 namespace TestPPM_IO
 {
-  int ReadWriteRGBASCII(void)
+  int ReadRGBASCII(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_ascii.ppm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.ppm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_rgb_ascii.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_ASCII);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
+    return EXIT_SUCCESS;
   }
 
-  int ReadWriteRGBBinary(void)
+  int WriteReadRGBASCII(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_bin.ppm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::Image image = getGroudTruth();
+    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.ppm"));
+    ppmIO.SetMode(gul::PPM_IO::PPM_ASCII);
+    ppmIO.Save(colorImageSamplePath, image);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_rgb_bin.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_BINARY);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    image = ppmIO.Load(colorImageSamplePath);
+    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+
+    return EXIT_SUCCESS;
   }
 
-  int ReadWriteGreyscaleASCII(void)
+  int ReadRGBBinary(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_ascii.pgm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.ppm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_grey_ascii.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_ASCII);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
+    return EXIT_SUCCESS;
   }
 
-  int ReadWriteGreyscaleBinary(void)
+  int WriteReadRGBBinary(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_bin.pgm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::Image image = getGroudTruth();
+    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.ppm"));
+    ppmIO.SetMode(gul::PPM_IO::PPM_BINARY);
+    ppmIO.Save(colorImageSamplePath, image);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_grey_bin.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_BINARY);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    image = ppmIO.Load(colorImageSamplePath);
+    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+
+    return EXIT_SUCCESS;
   }
 
-  int ReadWriteBlackAndWhiteASCII(void)
+  int ReadGreyscaleASCII(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_ascii.pbm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.pgm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_bw_ascii.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_ASCII);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    return EXIT_SUCCESS;
   }
 
-  int ReadWriteBlackAndWhiteBinary(void)
+  int ReadGreyscaleBinary(void)
   {
-    gul::PPM_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_bin.pbm"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.pgm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena_bw_bin.ppm"));
-    jpegIO.SetMode(gul::PPM_IO::PPM_BINARY);
-    jpegIO.Save(lenaTmpPath, lenaImage);
-    return EXIT_FAILURE;
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    return EXIT_SUCCESS;
+  }
+
+  int ReadBlackAndWhiteASCII(void)
+  {
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.pbm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
+
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    return EXIT_SUCCESS;
+  }
+
+  int ReadBlackAndWhiteBinary(void)
+  {
+    gul::PPM_IO ppmIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.pbm"));
+    gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
+
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    return EXIT_SUCCESS;
   }
 }

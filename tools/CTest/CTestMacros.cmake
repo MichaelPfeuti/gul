@@ -115,6 +115,13 @@ macro(gul_split_test string)
 endmacro(gul_split_test)
 
 #####################################################
+#### add additional sources to a test collection ####
+#####################################################
+macro(gul_add_util_sources) 
+  set(utils_sources ${utils_sources} ${ARGV})
+endmacro(gul_add_util_sources)
+
+#####################################################
 ####### This macro is used to add a new test ########
 #####################################################
 macro(gul_add_test collection suite test)
@@ -173,7 +180,7 @@ macro(gul_create_test)
     
     # there is an executable for each collection named Test[COLLECTION_NAME]
     include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-    add_executable(Test${collectionCurrent} ${collection_cpp};TestMain${collectionCurrent}.cpp)
+    add_executable(Test${collectionCurrent} ${collection_cpp};TestMain${collectionCurrent}.cpp;${utils_sources})
 
   endwhile(length GREATER 0)
   ### end process collections
@@ -188,6 +195,7 @@ macro(gul_create_test)
   unset(suiteCurrent)
   unset(gul_test)
   unset(GUL_TESTS)
+  unset(utils_sources)
   
 endmacro(gul_create_test)
 

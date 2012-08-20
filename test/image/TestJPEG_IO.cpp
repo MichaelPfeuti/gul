@@ -29,18 +29,31 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "JPEG_IO.h"
+#include "Utils.h"
 
 namespace TestJPEG_IO
 {
-  int ReadWrite(void)
+  int Read(void)
   {
     gul::JPEG_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena.jpg"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.jpg"));
+    gul::Image colorImageSampleImage = jpegIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
-    jpegIO.Save(lenaTmpPath, lenaImage);
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+  }
+
+  int WriteRead(void)
+  {
+    gul::JPEG_IO jpegIO;
+    gul::Image image = getGroudTruth();
+    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.jpg"));
+    jpegIO.Save(colorImageSamplePath, image);
+
+    image = jpegIO.Load(colorImageSamplePath);
+    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+
+    return EXIT_SUCCESS;
   }
 }

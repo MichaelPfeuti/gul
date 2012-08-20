@@ -63,8 +63,8 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
   fscanf(f, " %d %d ", &width, &height);
 
   // read max value when not in binary mode
-  int maxValueInt;
-  float maxValue;
+  int maxValueInt = 0;
+  float maxValue = 0;
   if(strcmp(dataMode, "P1") != 0 &&
      strcmp(dataMode, "P4") != 0)
   {
@@ -90,8 +90,8 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
         {
           bw = fgetc(f);
         }
-        bw = 1-atoi(&bw);
-        gul::RGBA rgba(bw, bw, bw, 0);
+        float greyVal = bw = 1-atof(&bw);
+        gul::RGBA rgba(greyVal,greyVal,greyVal, 0);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -142,7 +142,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
     {
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        unsigned char bw = 1-(ucData[x/8+y*byteWidth]>>bitShift & 1);
+        float bw = 1.f-(ucData[x/8+y*byteWidth]>>bitShift & 1);
         gul::RGBA rgba(bw, bw, bw, 0.f);
         image.SetPixel(x,y,rgba);
         --bitShift;

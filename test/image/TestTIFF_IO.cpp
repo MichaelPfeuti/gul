@@ -29,18 +29,53 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "TIFF_IO.h"
+#include "Utils.h"
 
 namespace TestTIFF_IO
 {
-  int ReadWrite(void)
+  int Read(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_deflate.tiff"));
-    gul::Image lenaImage = tiffIO.Load(lenaPath);
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.tiff"));
+    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.tiff"));
-    tiffIO.Save(lenaTmpPath, lenaImage);
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+  }
+
+  int WriteRead(void)
+  {
+    gul::TIFF_IO tiffIO;
+    gul::Image image = getGroudTruth();
+    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.tiff"));
+    tiffIO.Save(colorImageSamplePath, image);
+
+    image = tiffIO.Load(colorImageSamplePath);
+    TEST_TRUE(isEqualWithGroundTruth(image));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadDeflate(void)
+  {
+    gul::TIFF_IO tiffIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_deflate.tiff"));
+    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
+
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadJPEG(void)
+  {
+    gul::TIFF_IO tiffIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_jpeg.tiff"));
+    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
+
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+
+    return EXIT_SUCCESS;
   }
 }

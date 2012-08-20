@@ -29,18 +29,42 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "PNG_IO.h"
+#include "Utils.h"
 
 namespace TestPNG_IO
 {
-  int ReadWrite(void)
+  int Read(void)
   {
     gul::PNG_IO pngIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("lena_grey.png"));
-    gul::Image lenaImage = pngIO.Load(lenaPath);
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.png"));
+    gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
 
-    gul::File lenaTmpPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
-    pngIO.Save(lenaTmpPath, lenaImage);
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+  }
+
+  int WriteRead(void)
+  {
+    gul::PNG_IO pngIO;
+    gul::Image image = getGroudTruth();
+    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.png"));
+    pngIO.Save(colorImageSamplePath, image);
+
+    image = pngIO.Load(colorImageSamplePath);
+    TEST_TRUE(isEqualWithGroundTruth(image));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadInterlaced(void)
+  {
+    gul::PNG_IO pngIO;
+    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_interlaced.png"));
+    gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
+
+    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+
+    return EXIT_SUCCESS;
   }
 }

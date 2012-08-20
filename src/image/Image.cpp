@@ -49,6 +49,45 @@ gul::Image::Image(int w, int h)
 {
 }
 
+gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* data)
+  : pData(nullptr),
+    width(w),
+    height(h),
+    imageType(IT_RGBA)
+{
+  AllocateMemory();
+  for(int y = 0; y < h; ++y)
+  for(int x = 0; x < w; ++x)
+  {
+    gul::RGBA rgba;
+    switch(dataImageType)
+    {
+    case IT_RGBA:
+      rgba = gul::RGBA(data[(y*w + x)*4 + 0],
+                       data[(y*w + x)*4 + 1],
+                       data[(y*w + x)*4 + 2],
+                       data[(y*w + x)*4 + 3]);
+      break;
+    case IT_RGB:
+      rgba = gul::RGBA(data[(y*w + x)*3 + 0],
+                       data[(y*w + x)*3 + 1],
+                       data[(y*w + x)*3 + 2],
+                       255);
+      break;
+    case IT_GREY:
+      rgba = gul::RGBA(data[(y*w + x)*3 + 0],
+                       data[(y*w + x)*3 + 0],
+                       data[(y*w + x)*3 + 0],
+                       255);
+      break;
+    default:
+      FAIL("Unknown Image Type!");
+      break;
+    }
+    SetPixel(x, y, rgba);
+  }
+}
+
 void gul::Image::AllocateMemory(void)
 {
   ASSERT(pData == nullptr);
