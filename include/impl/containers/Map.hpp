@@ -35,7 +35,7 @@ DEFINE_2TPL_RTTI(gul::Map)
 template<typename K, typename V>
 void gul::Map<K, V>::save(gul::XMLNode& node) const
 {
-  typename gul::MapBasic<K,V>::Iterator it = this->GetIterator();
+  typename gul::MapBasic<K, V>::Iterator it = this->GetIterator();
   int i = 0;
   while(it.HasNext())
   {
@@ -91,6 +91,6 @@ void gul::Map<K, V>::load(const gul::XMLNode& node)
       this->Add(newKey, newValue);
     }
 
-   child = child.GetNextSibling();
+    child = child.GetNextSibling();
   }
 }

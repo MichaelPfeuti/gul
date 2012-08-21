@@ -37,12 +37,15 @@ namespace TestSet
 
   class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
   {
-    DECLARE_RTTI(TestSaveClass)
+      DECLARE_RTTI(TestSaveClass)
 
     public:
       TestSaveClass(int i = 0) : _i(i) {}
       virtual ~TestSaveClass(void) {}
-      bool operator==(const TestSaveClass& c) const { return c._i == _i; }
+      bool operator==(const TestSaveClass& c) const
+      {
+        return c._i == _i;
+      }
 
 
       void save(gul::XMLNode& node) const

@@ -42,7 +42,7 @@ namespace TestXMLManager
 
     public:
       TestClassString(void)
-      : string("") {}
+        : string("") {}
 
       virtual ~TestClassString(void) {}
 

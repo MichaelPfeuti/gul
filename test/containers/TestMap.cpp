@@ -33,29 +33,32 @@
 namespace TestMap
 {
 
-class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
-{
-  DECLARE_RTTI(TestSaveClass)
+  class TestSaveClass : REGISTER_FACTORY(TestSaveClass)
+  {
+      DECLARE_RTTI(TestSaveClass)
 
-  public:
-    TestSaveClass(int i = 0) : _i(i) {}
-    virtual ~TestSaveClass(void) {}
-    bool operator==(const TestSaveClass& c) const { return c._i == _i; }
+    public:
+      TestSaveClass(int i = 0) : _i(i) {}
+      virtual ~TestSaveClass(void) {}
+      bool operator==(const TestSaveClass& c) const
+      {
+        return c._i == _i;
+      }
 
 
-    void save(gul::XMLNode& node) const
-    {
-      node.AppendAttribute(gul::String("i")).SetValue(_i);
-    }
+      void save(gul::XMLNode& node) const
+      {
+        node.AppendAttribute(gul::String("i")).SetValue(_i);
+      }
 
-    void load(const gul::XMLNode& node)
-    {
-      _i = node.GetAttribute(gul::String("i")).GetInt();
-    }
+      void load(const gul::XMLNode& node)
+      {
+        _i = node.GetAttribute(gul::String("i")).GetInt();
+      }
 
-  private:
-    int _i = 0;
-};
+    private:
+      int _i = 0;
+  };
 }
 SPECIALIZE_TRAITS(TestMap::TestSaveClass)
 DEFINE_RTTI(TestMap::TestSaveClass)
