@@ -31,7 +31,8 @@
 
 #include "ImageIO.h"
 
-namespace gul {
+namespace gul
+{
 
   class PNG_IO : public ImageIO
   {

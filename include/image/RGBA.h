@@ -34,30 +34,30 @@ namespace gul
 
   class RGBA
   {
-  public:
-    RGBA(void);
-    RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
-    RGBA(unsigned char r, unsigned char g, unsigned char b);
-    RGBA(float r, float g, float b, float a);
-    RGBA(float r, float g, float b);
+    public:
+      RGBA(void);
+      RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+      RGBA(unsigned char r, unsigned char g, unsigned char b);
+      RGBA(float r, float g, float b, float a);
+      RGBA(float r, float g, float b);
 
-    bool operator==(const RGBA& other) const;
-    bool operator!=(const RGBA& other) const;
-    RGBA& operator+=(const RGBA& other);
-    RGBA& operator-=(const RGBA& other);
-    RGBA operator+(const RGBA& other) const;
-    RGBA operator-(const RGBA& other) const;
+      bool operator==(const RGBA& other) const;
+      bool operator!=(const RGBA& other) const;
+      RGBA& operator+=(const RGBA& other);
+      RGBA& operator-=(const RGBA& other);
+      RGBA operator+(const RGBA& other) const;
+      RGBA operator-(const RGBA& other) const;
 
-    float GetRed(void) const;
-    float GetGreen(void) const;
-    float GetBlue(void) const;
-    float GetAlpha(void) const;
+      float GetRed(void) const;
+      float GetGreen(void) const;
+      float GetBlue(void) const;
+      float GetAlpha(void) const;
 
-  private:
-    float red;
-    float green;
-    float blue;
-    float alpha;
+    private:
+      float red;
+      float green;
+      float blue;
+      float alpha;
   };
 
 

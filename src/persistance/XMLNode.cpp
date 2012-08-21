@@ -84,12 +84,12 @@ const gul::XMLNode gul::XMLNode::GetNextSibling(void) const
   return gul::XMLNode(this->node.next_sibling());
 }
 
-gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String &name, const gul::String &attributName, const gul::String &attributValue)
+gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& name, const gul::String& attributName, const gul::String& attributValue)
 {
   return gul::XMLNode(this->node.find_child_by_attribute(name.GetData(), attributName.GetData(), attributValue.GetData()));
 }
 
-const gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String &name, const gul::String &attributName, const gul::String &attributValue) const
+const gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& name, const gul::String& attributName, const gul::String& attributValue) const
 {
   return gul::XMLNode(this->node.find_child_by_attribute(name.GetData(), attributName.GetData(), attributValue.GetData()));
 }

@@ -29,7 +29,7 @@
 #include "XMLDocument.h"
 
 gul::XMLDocument::XMLDocument(void)
-  :hasRootNode(false)
+  : hasRootNode(false)
 {
 }
 

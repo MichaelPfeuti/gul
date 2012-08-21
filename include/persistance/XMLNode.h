@@ -43,24 +43,24 @@ namespace gul
   class XMLNode
   {
     public:
-     XMLNode(pugi::xml_node n);
+      XMLNode(pugi::xml_node n);
 
-     XMLAttribute AppendAttribute(const gul::String& name);
-     XMLAttribute GetAttribute(const gul::String& name);
-     const XMLAttribute GetAttribute(const gul::String& name) const;
+      XMLAttribute AppendAttribute(const gul::String& name);
+      XMLAttribute GetAttribute(const gul::String& name);
+      const XMLAttribute GetAttribute(const gul::String& name) const;
 
-     void SetName(const gul::String& name);
-     const String GetName(void) const;
+      void SetName(const gul::String& name);
+      const String GetName(void) const;
 
-     XMLNode AppendChild(void);
-     XMLNode GetFirstChild(void);
-     const XMLNode GetFirstChild(void) const;
-     XMLNode GetNextSibling(void);
-     const XMLNode GetNextSibling(void) const;
-     XMLNode FindChildByAttribute(const gul::String& name, const String &attributName, const String &attributValue);
-     const XMLNode FindChildByAttribute(const gul::String& name, const String &attributName, const String &attributValue) const;
+      XMLNode AppendChild(void);
+      XMLNode GetFirstChild(void);
+      const XMLNode GetFirstChild(void) const;
+      XMLNode GetNextSibling(void);
+      const XMLNode GetNextSibling(void) const;
+      XMLNode FindChildByAttribute(const gul::String& name, const String& attributName, const String& attributValue);
+      const XMLNode FindChildByAttribute(const gul::String& name, const String& attributName, const String& attributValue) const;
 
-     bool IsValid(void) const;
+      bool IsValid(void) const;
 
     private:
       pugi::xml_node node;

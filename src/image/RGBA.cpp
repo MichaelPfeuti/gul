@@ -54,17 +54,17 @@ gul::RGBA::RGBA(float r, float g, float b)
 }
 
 gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-  : red(r/255.f),
-    green(g/255.f),
-    blue(b/255.f),
-    alpha(a/255.f)
+  : red(r / 255.f),
+    green(g / 255.f),
+    blue(b / 255.f),
+    alpha(a / 255.f)
 {
 }
 
 gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b)
-  : red(r/255.f),
-    green(g/255.f),
-    blue(b/255.f),
+  : red(r / 255.f),
+    green(g / 255.f),
+    blue(b / 255.f),
     alpha(1.f)
 {
 }
@@ -72,9 +72,9 @@ gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b)
 bool gul::RGBA::operator==(const RGBA& other) const
 {
   return other.red == red &&
-      other.green == green &&
-      other.blue == blue &&
-      other.alpha == alpha;
+         other.green == green &&
+         other.blue == blue &&
+         other.alpha == alpha;
 }
 
 bool gul::RGBA::operator!=(const RGBA& other) const

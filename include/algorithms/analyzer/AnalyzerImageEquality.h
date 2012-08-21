@@ -34,30 +34,30 @@
 
 namespace gul
 {
-class AnalyzerImageEquality : public Analyzer
-{
+  class AnalyzerImageEquality : public Analyzer
+  {
 
-public:
-  AnalyzerImageEquality(void);
-  virtual ~AnalyzerImageEquality(void);
+    public:
+      AnalyzerImageEquality(void);
+      virtual ~AnalyzerImageEquality(void);
 
-  void SetParameter(const Image& one, const Image& theOther);
+      void SetParameter(const Image& one, const Image& theOther);
 
-  void SetParameter(float differenceThreshold);
+      void SetParameter(float differenceThreshold);
 
-  bool GetResult(void) const;
+      bool GetResult(void) const;
 
-  virtual void Execute(void);
+      virtual void Execute(void);
 
-  static bool Execute(const Image& image1, const Image& image2, float differenceThreshold = 0.f);
+      static bool Execute(const Image& image1, const Image& image2, float differenceThreshold = 0.f);
 
-private:
-  Image image1;
-  Image image2;
+    private:
+      Image image1;
+      Image image2;
 
-  float threshold;
-  float difference;
-};
+      float threshold;
+      float difference;
+  };
 }
 
 #endif

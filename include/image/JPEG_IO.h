@@ -31,19 +31,20 @@
 
 #include "ImageIO.h"
 
-namespace gul {
+namespace gul
+{
 
   class JPEG_IO : public ImageIO
   {
-  public:
-    void SetQuality(int qual);
+    public:
+      void SetQuality(int qual);
 
-    virtual Image Load(const File& rPath);
+      virtual Image Load(const File& rPath);
 
-    virtual void Save(const File& rPath, const Image& rImage);
+      virtual void Save(const File& rPath, const Image& rImage);
 
-  private:
-    int quality = 100;
+    private:
+      int quality = 100;
   };
 
 }

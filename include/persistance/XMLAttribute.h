@@ -42,23 +42,23 @@ namespace gul
   class XMLAttribute
   {
     public:
-     XMLAttribute(pugi::xml_attribute a);
+      XMLAttribute(pugi::xml_attribute a);
 
-     void SetValue(const gul::String& val);
-     void SetValue(unsigned int i);
-     void SetValue(int i);
-     void SetValue(float f);
-     void SetValue(double d);
-     void SetValue(bool b);
+      void SetValue(const gul::String& val);
+      void SetValue(unsigned int i);
+      void SetValue(int i);
+      void SetValue(float f);
+      void SetValue(double d);
+      void SetValue(bool b);
 
-     gul::String GetString(void) const;
-     int GetInt(void) const;
-     unsigned int GetUnsignedInt(void) const;
-     float GetFloat(void) const;
-     double GetDouble(void) const;
-     bool GetBool(void) const;
+      gul::String GetString(void) const;
+      int GetInt(void) const;
+      unsigned int GetUnsignedInt(void) const;
+      float GetFloat(void) const;
+      double GetDouble(void) const;
+      bool GetBool(void) const;
 
-     bool IsValid(void) const;
+      bool IsValid(void) const;
 
     private:
       pugi::xml_attribute attribute;

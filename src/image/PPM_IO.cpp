@@ -51,9 +51,9 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
 
   // ignore any comment lines
   char c = getc(f);
-  while (c == '#')
+  while(c == '#')
   {
-    while (getc(f) != '\n') ;
+    while(getc(f) != '\n') ;
     c = getc(f);
   }
   ungetc(c, f);
@@ -90,9 +90,9 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
         {
           bw = fgetc(f);
         }
-        float greyVal = bw = 1-atof(&bw);
-        gul::RGBA rgba(greyVal,greyVal,greyVal, 1.f);
-        image.SetPixel(x,y,rgba);
+        float greyVal = bw = 1 - atof(&bw);
+        gul::RGBA rgba(greyVal, greyVal, greyVal, 1.f);
+        image.SetPixel(x, y, rgba);
       }
     }
   }
@@ -105,11 +105,11 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
       {
         unsigned int bw;
         fscanf(f, " %u ", &bw);
-        gul::RGBA rgba(bw/maxValue,
-                       bw/maxValue,
-                       bw/maxValue,
+        gul::RGBA rgba(bw / maxValue,
+                       bw / maxValue,
+                       bw / maxValue,
                        1.f);
-        image.SetPixel(x,y,rgba);
+        image.SetPixel(x, y, rgba);
       }
     }
   }
@@ -122,29 +122,29 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
       {
         unsigned int r, g, b;
         fscanf(f, " %u %u %u ", &r, &g, &b);
-        gul::RGBA rgba(r/maxValue,
-                       g/maxValue,
-                       b/maxValue,
+        gul::RGBA rgba(r / maxValue,
+                       g / maxValue,
+                       b / maxValue,
                        1.f);
-        image.SetPixel(x,y,rgba);
+        image.SetPixel(x, y, rgba);
       }
     }
   }
   else if(strcmp(dataMode, "P4") == 0)
   {
     // b/w image 8 pixels packed in one byte.
-    unsigned char ucData[width*height];
-    int byteWidth = (width+0.5f)/8;
-    fread(ucData, sizeof(unsigned char), byteWidth*height, f);
+    unsigned char ucData[width * height];
+    int byteWidth = (width + 0.5f) / 8;
+    fread(ucData, sizeof(unsigned char), byteWidth * height, f);
 
     int bitShift = 7;
     for(int y = 0; y < image.GetHeight(); ++y)
     {
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        float bw = 1.f-(ucData[x/8+y*byteWidth]>>bitShift & 1);
+        float bw = 1.f - (ucData[x / 8 + y * byteWidth] >> bitShift & 1);
         gul::RGBA rgba(bw, bw, bw, 1.f);
-        image.SetPixel(x,y,rgba);
+        image.SetPixel(x, y, rgba);
         --bitShift;
         if(bitShift < 0)
           bitShift = 7;
@@ -155,32 +155,32 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
   else if(strcmp(dataMode, "P5") == 0)
   {
     // greyscale image
-    unsigned char ucData[width*height];
-    fread(ucData, sizeof(unsigned char),width*height,f);
+    unsigned char ucData[width * height];
+    fread(ucData, sizeof(unsigned char), width * height, f);
     for(int y = 0; y < image.GetHeight(); ++y)
     {
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        float grey = ucData[x+y*width]/maxValue;
+        float grey = ucData[x + y * width] / maxValue;
         gul::RGBA rgba(grey, grey, grey, 1.f);
-        image.SetPixel(x,y,rgba);
+        image.SetPixel(x, y, rgba);
       }
     }
   }
   else if(strcmp(dataMode, "P6") == 0)
   {
     // rgb image
-    unsigned char ucData[width*height*3];
-    fread(ucData, sizeof(unsigned char), 3*width*height,f);
+    unsigned char ucData[width * height * 3];
+    fread(ucData, sizeof(unsigned char), 3 * width * height, f);
     for(int y = 0; y < image.GetHeight(); ++y)
     {
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        gul::RGBA rgba(ucData[(x+y*width)*3 + 0]/maxValue,
-                       ucData[(x+y*width)*3 + 1]/maxValue,
-                       ucData[(x+y*width)*3 + 2]/maxValue,
+        gul::RGBA rgba(ucData[(x + y * width) * 3 + 0] / maxValue,
+                       ucData[(x + y * width) * 3 + 1] / maxValue,
+                       ucData[(x + y * width) * 3 + 2] / maxValue,
                        1.f);
-        image.SetPixel(x,y,rgba);
+        image.SetPixel(x, y, rgba);
       }
     }
   }
@@ -201,53 +201,53 @@ void gul::PPM_IO::Save(const gul::File& rPath, const gul::Image& rImage)
 
   switch(mode)
   {
-  case PPM_BINARY:
-  {
-    fprintf(f, "P6\n");
-    fprintf(f, "# CREATOR: gul (Graphic Utility Library)\n");
-
-    fprintf(f, "%u %u\n", rImage.GetWidth(), rImage.GetHeight());
-    fprintf(f, "%u\n", 255);
-
-    unsigned char ucData[rImage.GetWidth()*rImage.GetHeight()*3];
-
-    for(int y = 0; y < rImage.GetHeight(); ++y)
-    {
-      for(int x = 0; x < rImage.GetWidth(); ++x)
+    case PPM_BINARY:
       {
-        gul::RGBA rgba = rImage.GetPixel(x, y);
-        ucData[(x+y*rImage.GetWidth())*3 + 0] = static_cast<unsigned char>(rgba.GetRed()*255);
-        ucData[(x+y*rImage.GetWidth())*3 + 1] = static_cast<unsigned char>(rgba.GetGreen()*255);
-        ucData[(x+y*rImage.GetWidth())*3 + 2] = static_cast<unsigned char>(rgba.GetBlue()*255);
+        fprintf(f, "P6\n");
+        fprintf(f, "# CREATOR: gul (Graphic Utility Library)\n");
+
+        fprintf(f, "%u %u\n", rImage.GetWidth(), rImage.GetHeight());
+        fprintf(f, "%u\n", 255);
+
+        unsigned char ucData[rImage.GetWidth()*rImage.GetHeight() * 3];
+
+        for(int y = 0; y < rImage.GetHeight(); ++y)
+        {
+          for(int x = 0; x < rImage.GetWidth(); ++x)
+          {
+            gul::RGBA rgba = rImage.GetPixel(x, y);
+            ucData[(x + y * rImage.GetWidth()) * 3 + 0] = static_cast<unsigned char>(rgba.GetRed() * 255);
+            ucData[(x + y * rImage.GetWidth()) * 3 + 1] = static_cast<unsigned char>(rgba.GetGreen() * 255);
+            ucData[(x + y * rImage.GetWidth()) * 3 + 2] = static_cast<unsigned char>(rgba.GetBlue() * 255);
+          }
+        }
+        fwrite(ucData, sizeof(unsigned char), rImage.GetWidth()*rImage.GetHeight() * 3, f);
+
+        break;
       }
-    }
-    fwrite(ucData, sizeof(unsigned char), rImage.GetWidth()*rImage.GetHeight()*3, f);
-
-    break;
-  }
-  case PPM_ASCII:
-  {
-    fprintf(f, "P3\n");
-    fprintf(f, "# CREATOR: gul (Graphic Utility Library)\n");
-    fprintf(f, "%u %u\n", rImage.GetWidth(), rImage.GetHeight());
-    fprintf(f, "%u\n", 255);
-
-    for(int y = 0; y < rImage.GetHeight(); ++y)
-    {
-      for(int x = 0; x < rImage.GetWidth(); ++x)
+    case PPM_ASCII:
       {
-        gul::RGBA rgba = rImage.GetPixel(x, y);
-        fprintf(f, "%u\n%u\n%u\n", static_cast<unsigned char>(rgba.GetRed()*255),
-                                   static_cast<unsigned char>(rgba.GetGreen()*255),
-                                   static_cast<unsigned char>(rgba.GetBlue()*255));
-      }
-      fprintf(f, "\n");
-    }
+        fprintf(f, "P3\n");
+        fprintf(f, "# CREATOR: gul (Graphic Utility Library)\n");
+        fprintf(f, "%u %u\n", rImage.GetWidth(), rImage.GetHeight());
+        fprintf(f, "%u\n", 255);
 
-    break;
-  }
-  default:
-    FAIL("Unknown Enum!");
+        for(int y = 0; y < rImage.GetHeight(); ++y)
+        {
+          for(int x = 0; x < rImage.GetWidth(); ++x)
+          {
+            gul::RGBA rgba = rImage.GetPixel(x, y);
+            fprintf(f, "%u\n%u\n%u\n", static_cast<unsigned char>(rgba.GetRed() * 255),
+                    static_cast<unsigned char>(rgba.GetGreen() * 255),
+                    static_cast<unsigned char>(rgba.GetBlue() * 255));
+          }
+          fprintf(f, "\n");
+        }
+
+        break;
+      }
+    default:
+      FAIL("Unknown Enum!");
   }
 
   fclose(f);

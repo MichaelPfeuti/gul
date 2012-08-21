@@ -29,7 +29,8 @@
 **
 ***************************************************************************/
 
-namespace gul {
+namespace gul
+{
   class ImageLoader;
 }
 
@@ -42,8 +43,8 @@ namespace gul
   class ImageFileHandler
   {
 
-    static void InitializeAllLoaders(void);
-    static void DeinitializeLoaders(void);
+      static void InitializeAllLoaders(void);
+      static void DeinitializeLoaders(void);
 
     private:
       static bool ImageAreLoadersInitialized;

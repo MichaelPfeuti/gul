@@ -45,7 +45,7 @@ METHODDEF(void)
 ErrorCallback(j_common_ptr cinfo)
 {
   struct ErrorManager* err = (struct ErrorManager*)(cinfo->err);
-  (*cinfo->err->output_message) (cinfo);
+  (*cinfo->err->output_message)(cinfo);
   longjmp(err->setjmp_buffer, 1);
 }
 
@@ -60,11 +60,11 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
 
   struct jpeg_decompress_struct cinfo;
   struct ErrorManager jerr;
-  FILE * infile;
+  FILE* infile;
   JSAMPARRAY buffer;
   int row_stride;
 
-  if ((infile = fopen(rPath.GetPath().GetData(), "rb")) == NULL)
+  if((infile = fopen(rPath.GetPath().GetData(), "rb")) == NULL)
   {
     FAIL("cannot open file!");
     return gul::Image();
@@ -72,7 +72,7 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
 
   cinfo.err = jpeg_std_error(&jerr.pub);
   jerr.pub.error_exit = ErrorCallback;
-  if (setjmp(jerr.setjmp_buffer))
+  if(setjmp(jerr.setjmp_buffer))
   {
     jpeg_destroy_decompress(&cinfo);
     fclose(infile);
@@ -86,21 +86,21 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
 
   (void) jpeg_start_decompress(&cinfo);
   row_stride = cinfo.output_width * cinfo.output_components;
-  buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+  buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
   gulImage = gul::Image(cinfo.output_width, cinfo.output_height);
   gulImage.AllocateMemory();
 
   int y = 0;
-  while (cinfo.output_scanline < cinfo.output_height)
+  while(cinfo.output_scanline < cinfo.output_height)
   {
     (void) jpeg_read_scanlines(&cinfo, buffer, 1);
 
     for(unsigned int x = 0; x < cinfo.output_width; ++x)
     {
-      gulImage.SetPixel(x, y, gul::RGBA(buffer[0][x*cinfo.output_components + 0] / 255.f,
-                                        buffer[0][x*cinfo.output_components + 1] / 255.f,
-                                        buffer[0][x*cinfo.output_components + 2] / 255.f,
+      gulImage.SetPixel(x, y, gul::RGBA(buffer[0][x * cinfo.output_components + 0] / 255.f,
+                                        buffer[0][x * cinfo.output_components + 1] / 255.f,
+                                        buffer[0][x * cinfo.output_components + 2] / 255.f,
                                         1.f));
 
     }
@@ -121,14 +121,14 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
 
 void gul::JPEG_IO::Save(const gul::File& rPath, const gul::Image& rImage)
 {
-  unsigned char image_buffer[rImage.GetHeight()*rImage.GetWidth()*3];
+  unsigned char image_buffer[rImage.GetHeight()*rImage.GetWidth() * 3];
   for(int y = 0; y < rImage.GetHeight(); ++y)
   {
     for(int x = 0; x < rImage.GetWidth(); ++x)
     {
-      image_buffer[(x + y*rImage.GetWidth())*3 + 0] = rImage.GetPixel(x,y).GetRed()  * 255.f;
-      image_buffer[(x + y*rImage.GetWidth())*3 + 1] = rImage.GetPixel(x,y).GetGreen()* 255.f;
-      image_buffer[(x + y*rImage.GetWidth())*3 + 2] = rImage.GetPixel(x,y).GetBlue() * 255.f;
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 0] = rImage.GetPixel(x, y).GetRed()  * 255.f;
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 1] = rImage.GetPixel(x, y).GetGreen() * 255.f;
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 2] = rImage.GetPixel(x, y).GetBlue() * 255.f;
     }
   }
 
@@ -166,7 +166,7 @@ void gul::JPEG_IO::Save(const gul::File& rPath, const gul::Image& rImage)
 
   jpeg_start_compress(&cinfo, TRUE);
 
-  row_stride = rImage.GetWidth()*3;
+  row_stride = rImage.GetWidth() * 3;
   while(cinfo.next_scanline < cinfo.image_height)
   {
     rowPointer[0] = &image_buffer[cinfo.next_scanline * row_stride];

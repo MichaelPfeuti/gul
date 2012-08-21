@@ -38,23 +38,23 @@ namespace gul
     public:
       class Iterator
       {
-      private:
-        Iterator(const ArrayBasic<T>& array);
+        private:
+          Iterator(const ArrayBasic<T>& array);
 
-      public:
-        bool HasNext(void) const;
+        public:
+          bool HasNext(void) const;
 
-        T& Next(void);
-        const T& Next(void) const;
+          T& Next(void);
+          const T& Next(void) const;
 
-        T& Get(void);
-        const T& Get(void) const;
+          T& Get(void);
+          const T& Get(void) const;
 
-      private:
-        const ArrayBasic<T>& array;
-        mutable int currentIndex;
+        private:
+          const ArrayBasic<T>& array;
+          mutable int currentIndex;
 
-        friend class ArrayBasic<T>;
+          friend class ArrayBasic<T>;
       };
 
     public:

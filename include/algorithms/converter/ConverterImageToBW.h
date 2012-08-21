@@ -34,30 +34,30 @@
 
 namespace gul
 {
-class ConverterImageToBW : public Converter
-{
+  class ConverterImageToBW : public Converter
+  {
 
-public:
-  ConverterImageToBW(void);
+    public:
+      ConverterImageToBW(void);
 
-  virtual ~ConverterImageToBW(void);
+      virtual ~ConverterImageToBW(void);
 
-  void SetParameter(float bwThreshold);
+      void SetParameter(float bwThreshold);
 
-  void SetParameter(const gul::Image& grayImage);
+      void SetParameter(const gul::Image& grayImage);
 
-  virtual void Execute(void);
+      virtual void Execute(void);
 
-  gul::Image GetResult(void) const;
+      gul::Image GetResult(void) const;
 
-  static gul::Image Execute(const gul::Image& grayImage);
+      static gul::Image Execute(const gul::Image& grayImage);
 
-private:
-  gul::Image inputImage;
-  gul::Image outputImage;
+    private:
+      gul::Image inputImage;
+      gul::Image outputImage;
 
-  float threshold;
-};
+      float threshold;
+  };
 
 }
 

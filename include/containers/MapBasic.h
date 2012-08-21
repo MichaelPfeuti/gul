@@ -51,30 +51,30 @@ namespace gul
           K* key;
           V* value;
 
-        friend class MapBasic<K, V>::Iterator;
+          friend class MapBasic<K, V>::Iterator;
       };
 
       class Iterator
       {
-      private:
-        Iterator(const MapBasic<K, V>& map);
+        private:
+          Iterator(const MapBasic<K, V>& map);
 
-      public:
-        bool HasNext(void) const;
+        public:
+          bool HasNext(void) const;
 
-        Pair Next(void);
-        const Pair Next(void) const;
+          Pair Next(void);
+          const Pair Next(void) const;
 
-        Pair Get(void);
-        const Pair Get(void) const;
+          Pair Get(void);
+          const Pair Get(void) const;
 
-      private:
-        const MapBasic<K, V>& map;
-        mutable int currentIndex;
-        mutable Pair currentPair;
+        private:
+          const MapBasic<K, V>& map;
+          mutable int currentIndex;
+          mutable Pair currentPair;
 
-        friend class MapBasic<K, V>;
-      };      
+          friend class MapBasic<K, V>;
+      };
 
       friend class Iterator;
 

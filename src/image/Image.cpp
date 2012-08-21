@@ -65,14 +65,14 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
 {
   AllocateMemory();
   for(int y = 0; y < h; ++y)
-  for(int x = 0; x < w; ++x)
-  {
-    gul::RGBA rgba = gul::RGBA(data[(y*w + x)*4 + 0],
-                               data[(y*w + x)*4 + 1],
-                               data[(y*w + x)*4 + 2],
-                               data[(y*w + x)*4 + 3]);
-    SetPixel(x, y, rgba);
-  }
+    for(int x = 0; x < w; ++x)
+    {
+      gul::RGBA rgba = gul::RGBA(data[(y * w + x) * 4 + 0],
+                                 data[(y * w + x) * 4 + 1],
+                                 data[(y * w + x) * 4 + 2],
+                                 data[(y * w + x) * 4 + 3]);
+      SetPixel(x, y, rgba);
+    }
 }
 
 void gul::Image::AllocateMemory(void)
@@ -80,7 +80,7 @@ void gul::Image::AllocateMemory(void)
   ASSERT(pData == nullptr);
   ASSERT(GetWidth()*GetHeight()*GetNumberOfChannels() > 0);
 
-  int size = GetWidth()*GetHeight()*GetNumberOfChannels();
+  int size = GetWidth() * GetHeight() * GetNumberOfChannels();
   pData = new float[size];
 }
 
@@ -111,16 +111,16 @@ gul::Image::ImageType gul::Image::GetImageType(void) const
 
 const gul::RGBA gul::Image::GetPixel(int x, int y) const
 {
-  return gul::RGBA(this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0],
-                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1],
-                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2],
-                   this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 3]);
+  return gul::RGBA(this->pData[(x + y * this->GetWidth()) * this->GetNumberOfChannels() + 0],
+                   this->pData[(x + y * this->GetWidth()) * this->GetNumberOfChannels() + 1],
+                   this->pData[(x + y * this->GetWidth()) * this->GetNumberOfChannels() + 2],
+                   this->pData[(x + y * this->GetWidth()) * this->GetNumberOfChannels() + 3]);
 }
 
-void gul::Image::SetPixel(int x, int y, const gul::RGBA &rgba)
+void gul::Image::SetPixel(int x, int y, const gul::RGBA& rgba)
 {
-  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 0] = rgba.GetRed();
-  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
-  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
-  this->pData[(x + y*this->GetWidth())*this->GetNumberOfChannels() + 3] = rgba.GetAlpha();
+  this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 0] = rgba.GetRed();
+  this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
+  this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
+  this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 3] = rgba.GetAlpha();
 }

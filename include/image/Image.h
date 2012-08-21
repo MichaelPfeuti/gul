@@ -37,7 +37,7 @@ namespace gul
 
   class Image
   {
-    DECLARE_RTTI(Image)
+      DECLARE_RTTI(Image)
 
     public:
       enum ImageType
@@ -64,7 +64,7 @@ namespace gul
       ImageType GetImageType(void) const;
 
       const RGBA GetPixel(int x, int y) const;
-      void SetPixel(int x, int y, const gul::RGBA &rgba);
+      void SetPixel(int x, int y, const gul::RGBA& rgba);
 
     private:
       float* pData;

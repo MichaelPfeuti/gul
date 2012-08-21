@@ -61,9 +61,9 @@ gul::String::~String()
 
 gul::String& gul::String::operator=(const gul::String& other)
 {
-  if (this != &other) // protect against invalid self-assignment
+  if(this != &other)  // protect against invalid self-assignment
   {
-    char* newString = new char[other.size+1];
+    char* newString = new char[other.size + 1];
     strcpy(newString, other.pString);
 
     GUL_DELETE_ARRAY(this->pString);

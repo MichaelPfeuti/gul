@@ -46,7 +46,7 @@ namespace gul
     protected:
       class ClassCreatorFunctor
       {
-        DECLARE_RTTI(ClassCreatorFunctor)
+          DECLARE_RTTI(ClassCreatorFunctor)
 
         public:
           virtual ~ClassCreatorFunctor(void) {}

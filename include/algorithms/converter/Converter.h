@@ -34,10 +34,10 @@
 namespace gul
 {
 
-class Converter : public Algorithm
-{
+  class Converter : public Algorithm
+  {
 
-};
+  };
 
 }
 

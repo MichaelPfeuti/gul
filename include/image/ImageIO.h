@@ -41,10 +41,10 @@ namespace gul
 
   class ImageIO
   {
-  public:
-    virtual Image Load(const File& path) = 0;
+    public:
+      virtual Image Load(const File& path) = 0;
 
-    virtual void Save(const File& path, const Image& image) = 0;
+      virtual void Save(const File& path, const Image& image) = 0;
 
   };
 

@@ -31,7 +31,8 @@
 
 #include "ImageIO.h"
 
-namespace gul {
+namespace gul
+{
 
   class TIFF_IO : public ImageIO
   {

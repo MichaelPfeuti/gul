@@ -36,27 +36,27 @@ namespace gul
 
   template<typename T>
   class StackBasic
-  { 
+  {
     public:
       class Iterator
       {
-      private:
-        Iterator(const StackBasic<T>& list);
+        private:
+          Iterator(const StackBasic<T>& list);
 
-      public:
-        bool HasNext(void) const;
+        public:
+          bool HasNext(void) const;
 
-        T& Next(void);
-        const T& Next(void) const;
+          T& Next(void);
+          const T& Next(void) const;
 
-        T& Get(void);
-        const T& Get(void) const;
+          T& Get(void);
+          const T& Get(void) const;
 
-      private:
-        const StackBasic<T>& stack;
-        mutable int currentIndex;
+        private:
+          const StackBasic<T>& stack;
+          mutable int currentIndex;
 
-        friend class StackBasic<T>;
+          friend class StackBasic<T>;
       };
 
       friend class Iterator;

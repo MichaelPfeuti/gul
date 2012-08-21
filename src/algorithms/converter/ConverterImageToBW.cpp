@@ -64,11 +64,11 @@ void gul::ConverterImageToBW::Execute(void)
       gul::RGBA in = inputImage.GetPixel(x, y);
       if(in.GetRed() < threshold)
       {
-        outputImage.SetPixel(x, y, gul::RGBA(0.f,0.f,0.f,1.f));
+        outputImage.SetPixel(x, y, gul::RGBA(0.f, 0.f, 0.f, 1.f));
       }
       else
       {
-        outputImage.SetPixel(x, y, gul::RGBA(1.f,1.f,1.f,1.f));
+        outputImage.SetPixel(x, y, gul::RGBA(1.f, 1.f, 1.f, 1.f));
       }
     }
   }

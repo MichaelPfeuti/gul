@@ -34,10 +34,10 @@
 namespace gul
 {
 
-class Analyzer : public Algorithm
-{
+  class Analyzer : public Algorithm
+  {
 
-};
+  };
 
 }
 

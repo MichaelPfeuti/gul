@@ -49,7 +49,7 @@ namespace gul
       static T* CreateInstance(const gul::String& rClassName);
       void dummy(void) const {}
 
-  private:
+    private:
       class ClassCreatorFunctorSpecific : public ClassCreatorFunctor
       {
         public:

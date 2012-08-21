@@ -80,7 +80,7 @@ void gul::AnalyzerImageEquality::Execute(void)
   difference = rgbaSAD.GetRed() + rgbaSAD.GetGreen() + rgbaSAD.GetBlue() + rgbaSAD.GetAlpha();
   difference /= 4.f;
 
-  difference /= image1.GetWidth()*image1.GetHeight();
+  difference /= image1.GetWidth() * image1.GetHeight();
 
   fprintf(stderr, "error: %f, %f, %f, %f -> %f\n", rgbaSAD.GetRed(), rgbaSAD.GetGreen(), rgbaSAD.GetBlue(), rgbaSAD.GetAlpha(), difference);
 }

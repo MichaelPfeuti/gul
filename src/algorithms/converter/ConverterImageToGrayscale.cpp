@@ -48,25 +48,25 @@ gul::RGBA gul::ConverterImageToGrayscale::computeGreyValue(const RGBA& rgba) con
 
   switch(conversionType)
   {
-  case GCT_AVERAGE:
-    gray = rgba.GetRed() + rgba.GetGreen() + rgba.GetBlue();
-    gray /= 3;
-    break;
+    case GCT_AVERAGE:
+      gray = rgba.GetRed() + rgba.GetGreen() + rgba.GetBlue();
+      gray /= 3;
+      break;
 
-  case GCT_LIGHTNESS:
-    gray  = gul::min(gul::min(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
-    gray += gul::max(gul::max(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
-    gray /= 2;
-    break;
+    case GCT_LIGHTNESS:
+      gray  = gul::min(gul::min(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
+      gray += gul::max(gul::max(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
+      gray /= 2;
+      break;
 
-  case GCT_LUMINOSITY:
-    gray  = 0.21*rgba.GetRed();
-    gray += 0.71*rgba.GetGreen();
-    gray += 0.07*rgba.GetBlue();
-    break;
+    case GCT_LUMINOSITY:
+      gray  = 0.21 * rgba.GetRed();
+      gray += 0.71 * rgba.GetGreen();
+      gray += 0.07 * rgba.GetBlue();
+      break;
 
-  default:
-    FAIL("Unknown Grey Conversion Type!");
+    default:
+      FAIL("Unknown Grey Conversion Type!");
   }
 
   return gul::RGBA(gray, gray, gray);

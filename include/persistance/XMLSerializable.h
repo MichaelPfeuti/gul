@@ -234,7 +234,7 @@ namespace gul
         GUL_DELETE(pNew);
         GUL_DELETE(pOld);
         return out.ReplaceAll(gul::String("*"), gul::String("°"))
-                  .ReplaceAll(gul::String(","), gul::String("."));
+               .ReplaceAll(gul::String(","), gul::String("."));
       }
 
     private:

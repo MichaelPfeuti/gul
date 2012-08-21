@@ -38,7 +38,7 @@ gul::File::File(void)
 }
 
 gul::File::File(const String& rPath)
-  :pPath(new gul::String(rPath))
+  : pPath(new gul::String(rPath))
 {
 
 }
@@ -70,5 +70,5 @@ bool gul::File::IsPathValid(void) const
 bool gul::File::Exists(void) const
 {
   return IsPathValid() &&
-         access(pPath->GetData(), F_OK ) == 0;
+         access(pPath->GetData(), F_OK) == 0;
 }

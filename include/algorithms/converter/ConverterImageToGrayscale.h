@@ -34,41 +34,41 @@
 
 namespace gul
 {
-class ConverterImageToGrayscale : public Converter
-{
-
-public:
-  enum GreyscaleConversionType
+  class ConverterImageToGrayscale : public Converter
   {
-    GCT_LIGHTNESS,
-    GCT_AVERAGE,
-    GCT_LUMINOSITY
+
+    public:
+      enum GreyscaleConversionType
+      {
+        GCT_LIGHTNESS,
+        GCT_AVERAGE,
+        GCT_LUMINOSITY
+      };
+
+    public:
+      ConverterImageToGrayscale(void);
+
+      virtual ~ConverterImageToGrayscale(void);
+
+      void SetParameter(GreyscaleConversionType type);
+
+      void SetParameter(const gul::Image& colorImage);
+
+      virtual void Execute(void);
+
+      gul::Image GetResult(void) const;
+
+      static gul::Image Execute(const gul::Image& colorImage);
+
+
+    private:
+      gul::RGBA computeGreyValue(const RGBA& rgba) const;
+
+    private:
+      gul::Image inputImage;
+      gul::Image outputImage;
+      GreyscaleConversionType conversionType;
   };
-
-public:
-  ConverterImageToGrayscale(void);
-
-  virtual ~ConverterImageToGrayscale(void);
-
-  void SetParameter(GreyscaleConversionType type);
-
-  void SetParameter(const gul::Image& colorImage);
-
-  virtual void Execute(void);
-
-  gul::Image GetResult(void) const;
-
-  static gul::Image Execute(const gul::Image& colorImage);
-
-
-private:
-  gul::RGBA computeGreyValue(const RGBA& rgba) const;
-
-private:
-  gul::Image inputImage;
-  gul::Image outputImage;
-  GreyscaleConversionType conversionType;
-};
 
 }
 
