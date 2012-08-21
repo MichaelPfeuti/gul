@@ -34,7 +34,8 @@ namespace gul
 
 class Algorithm
 {
-
+public:
+  virtual void Execute(void) = 0;
 };
 
 }

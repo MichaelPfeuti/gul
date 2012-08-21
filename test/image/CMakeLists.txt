@@ -21,7 +21,7 @@ gul_add_test(Image PPM_IO ReadBlackAndWhiteBinary)
 
 gul_add_util_sources(Utils.h Utils.cpp)
 gul_create_test()
-target_link_libraries(TestImage image)
+target_link_libraries(TestImage image algorithms_analyzer algorithms_converter)
 
 
 

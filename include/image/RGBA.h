@@ -37,10 +37,16 @@ namespace gul
   public:
     RGBA(void);
     RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+    RGBA(unsigned char r, unsigned char g, unsigned char b);
     RGBA(float r, float g, float b, float a);
+    RGBA(float r, float g, float b);
 
     bool operator==(const RGBA& other) const;
     bool operator!=(const RGBA& other) const;
+    RGBA& operator+=(const RGBA& other);
+    RGBA& operator-=(const RGBA& other);
+    RGBA operator+(const RGBA& other) const;
+    RGBA operator-(const RGBA& other) const;
 
     float GetRed(void) const;
     float GetGreen(void) const;
@@ -53,6 +59,9 @@ namespace gul
     float blue;
     float alpha;
   };
+
+
+  RGBA absoluteDifference(const gul::RGBA& rFirst, const gul::RGBA& rSecond);
 
 }
 

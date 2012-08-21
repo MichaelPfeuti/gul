@@ -91,7 +91,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
           bw = fgetc(f);
         }
         float greyVal = bw = 1-atof(&bw);
-        gul::RGBA rgba(greyVal,greyVal,greyVal, 0);
+        gul::RGBA rgba(greyVal,greyVal,greyVal, 1.f);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -108,7 +108,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
         gul::RGBA rgba(bw/maxValue,
                        bw/maxValue,
                        bw/maxValue,
-                       0);
+                       1.f);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -125,7 +125,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
         gul::RGBA rgba(r/maxValue,
                        g/maxValue,
                        b/maxValue,
-                       0);
+                       1.f);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -143,7 +143,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
       for(int x = 0; x < image.GetWidth(); ++x)
       {
         float bw = 1.f-(ucData[x/8+y*byteWidth]>>bitShift & 1);
-        gul::RGBA rgba(bw, bw, bw, 0.f);
+        gul::RGBA rgba(bw, bw, bw, 1.f);
         image.SetPixel(x,y,rgba);
         --bitShift;
         if(bitShift < 0)
@@ -162,7 +162,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
       for(int x = 0; x < image.GetWidth(); ++x)
       {
         float grey = ucData[x+y*width]/maxValue;
-        gul::RGBA rgba(grey, grey, grey, 0.f);
+        gul::RGBA rgba(grey, grey, grey, 1.f);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -179,7 +179,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
         gul::RGBA rgba(ucData[(x+y*width)*3 + 0]/maxValue,
                        ucData[(x+y*width)*3 + 1]/maxValue,
                        ucData[(x+y*width)*3 + 2]/maxValue,
-                       0.f);
+                       1.f);
         image.SetPixel(x,y,rgba);
       }
     }
@@ -237,9 +237,9 @@ void gul::PPM_IO::Save(const gul::File& rPath, const gul::Image& rImage)
       for(int x = 0; x < rImage.GetWidth(); ++x)
       {
         gul::RGBA rgba = rImage.GetPixel(x, y);
-        fprintf(f, "%u\n%u\n%u\n", (unsigned char) (rgba.GetRed()*255),
-                                   (unsigned char) (rgba.GetGreen()*255),
-                                   (unsigned char) (rgba.GetBlue()*255));
+        fprintf(f, "%u\n%u\n%u\n", static_cast<unsigned char>(rgba.GetRed()*255),
+                                   static_cast<unsigned char>(rgba.GetGreen()*255),
+                                   static_cast<unsigned char>(rgba.GetBlue()*255));
       }
       fprintf(f, "\n");
     }

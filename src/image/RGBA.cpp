@@ -27,6 +27,7 @@
 ***************************************************************************/
 
 #include "RGBA.h"
+#include "Math.h"
 
 gul::RGBA::RGBA(void)
   : red(0),
@@ -44,11 +45,27 @@ gul::RGBA::RGBA(float r, float g, float b, float a)
 {
 }
 
+gul::RGBA::RGBA(float r, float g, float b)
+  : red(r),
+    green(g),
+    blue(b),
+    alpha(1.f)
+{
+}
+
 gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
   : red(r/255.f),
     green(g/255.f),
     blue(b/255.f),
     alpha(a/255.f)
+{
+}
+
+gul::RGBA::RGBA(unsigned char r, unsigned char g, unsigned char b)
+  : red(r/255.f),
+    green(g/255.f),
+    blue(b/255.f),
+    alpha(1.f)
 {
 }
 
@@ -83,4 +100,44 @@ float gul::RGBA::GetBlue(void) const
 float gul::RGBA::GetAlpha(void) const
 {
   return alpha;
+}
+
+gul::RGBA& gul::RGBA::operator+=(const RGBA& other)
+{
+  red   = red   + other.red;
+  green = green + other.green;
+  blue  = blue  + other.blue;
+  alpha = alpha + other.alpha;
+  return *this;
+}
+
+gul::RGBA& gul::RGBA::operator-=(const RGBA& other)
+{
+  red   = red   - other.red;
+  green = green - other.green;
+  blue  = blue  - other.blue;
+  alpha = alpha - other.alpha;
+  return *this;
+}
+
+gul::RGBA gul::RGBA::operator+(const RGBA& other) const
+{
+  gul::RGBA rgba = *this;
+  rgba += other;
+  return rgba;
+}
+
+gul::RGBA gul::RGBA::operator-(const RGBA& other) const
+{
+  gul::RGBA rgba = *this;
+  rgba -= other;
+  return rgba;
+}
+
+gul::RGBA gul::absoluteDifference(const gul::RGBA& rFirst, const gul::RGBA& rSecond)
+{
+  return RGBA(absoluteDifference(rFirst.GetRed(), rSecond.GetRed()),
+              absoluteDifference(rFirst.GetGreen(), rSecond.GetGreen()),
+              absoluteDifference(rFirst.GetBlue(), rSecond.GetBlue()),
+              absoluteDifference(rFirst.GetAlpha(), rSecond.GetAlpha()));
 }

@@ -30,12 +30,33 @@
 ***************************************************************************/
 
 #include "Analyzer.h"
+#include "Image.h"
 
 namespace gul
 {
 class AnalyzerImageEquality : public Analyzer
 {
 
+public:
+  AnalyzerImageEquality(void);
+  virtual ~AnalyzerImageEquality(void);
+
+  void SetParameter(const Image& one, const Image& theOther);
+
+  void SetParameter(float differenceThreshold);
+
+  bool GetResult(void) const;
+
+  virtual void Execute(void);
+
+  static bool Execute(const Image& image1, const Image& image2, float differenceThreshold = 0.f);
+
+private:
+  Image image1;
+  Image image2;
+
+  float threshold;
+  float difference;
 };
 }
 

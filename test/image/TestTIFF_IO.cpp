@@ -30,6 +30,7 @@
 #include "CTestData.h"
 #include "TIFF_IO.h"
 #include "Utils.h"
+#include "AnalyzerImageEquality.h"
 
 namespace TestTIFF_IO
 {
@@ -39,7 +40,7 @@ namespace TestTIFF_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.tiff"));
     gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -47,12 +48,12 @@ namespace TestTIFF_IO
   int WriteRead(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::Image image = getGroudTruth();
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.tiff"));
     tiffIO.Save(colorImageSamplePath, image);
 
     image = tiffIO.Load(colorImageSamplePath);
-    TEST_TRUE(isEqualWithGroundTruth(image));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -63,7 +64,7 @@ namespace TestTIFF_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_deflate.tiff"));
     gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -74,7 +75,7 @@ namespace TestTIFF_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_jpeg.tiff"));
     gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }

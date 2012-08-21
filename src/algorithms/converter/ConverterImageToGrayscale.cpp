@@ -27,3 +27,86 @@
 ***************************************************************************/
 
 #include "ConverterImageToGrayscale.h"
+#include "Misc.h"
+#include "Assert.h"
+#include "Math.h"
+
+gul::ConverterImageToGrayscale::ConverterImageToGrayscale(void)
+  : inputImage(),
+    outputImage(),
+    conversionType(GCT_LUMINOSITY)
+{
+}
+
+gul::ConverterImageToGrayscale::~ConverterImageToGrayscale(void)
+{
+}
+
+gul::RGBA gul::ConverterImageToGrayscale::computeGreyValue(const RGBA& rgba) const
+{
+  float gray = 0.f;
+
+  switch(conversionType)
+  {
+  case GCT_AVERAGE:
+    gray = rgba.GetRed() + rgba.GetGreen() + rgba.GetBlue();
+    gray /= 3;
+    break;
+
+  case GCT_LIGHTNESS:
+    gray  = gul::min(gul::min(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
+    gray += gul::max(gul::max(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
+    gray /= 2;
+    break;
+
+  case GCT_LUMINOSITY:
+    gray  = 0.21*rgba.GetRed();
+    gray += 0.71*rgba.GetGreen();
+    gray += 0.07*rgba.GetBlue();
+    break;
+
+  default:
+    FAIL("Unknown Grey Conversion Type!");
+  }
+
+  return gul::RGBA(gray, gray, gray);
+}
+
+void gul::ConverterImageToGrayscale::SetParameter(GreyscaleConversionType type)
+{
+  conversionType = type;
+}
+
+void gul::ConverterImageToGrayscale::SetParameter(const gul::Image& colorImage)
+{
+  inputImage = colorImage;
+}
+
+void gul::ConverterImageToGrayscale::Execute(void)
+{
+  outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
+  outputImage.AllocateMemory();
+
+  for(int y = 0; y < inputImage.GetHeight(); ++y)
+  {
+    for(int x = 0; x < inputImage.GetWidth(); ++x)
+    {
+      gul::RGBA in = inputImage.GetPixel(x, y);
+      outputImage.SetPixel(x, y, computeGreyValue(in));
+    }
+  }
+}
+
+gul::Image gul::ConverterImageToGrayscale::GetResult(void) const
+{
+  return outputImage;
+}
+
+gul::Image gul::ConverterImageToGrayscale::Execute(const gul::Image& colorImage)
+{
+  ConverterImageToGrayscale converter;
+  converter.SetParameter(colorImage);
+  converter.Execute();
+  return converter.GetResult();
+}
+

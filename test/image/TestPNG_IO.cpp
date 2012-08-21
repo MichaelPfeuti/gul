@@ -30,6 +30,7 @@
 #include "CTestData.h"
 #include "PNG_IO.h"
 #include "Utils.h"
+#include "AnalyzerImageEquality.h"
 
 namespace TestPNG_IO
 {
@@ -39,7 +40,7 @@ namespace TestPNG_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.png"));
     gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -47,12 +48,12 @@ namespace TestPNG_IO
   int WriteRead(void)
   {
     gul::PNG_IO pngIO;
-    gul::Image image = getGroudTruth();
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.png"));
     pngIO.Save(colorImageSamplePath, image);
 
     image = pngIO.Load(colorImageSamplePath);
-    TEST_TRUE(isEqualWithGroundTruth(image));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -63,7 +64,7 @@ namespace TestPNG_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_interlaced.png"));
     gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }

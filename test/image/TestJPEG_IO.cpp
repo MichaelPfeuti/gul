@@ -30,6 +30,7 @@
 #include "CTestData.h"
 #include "JPEG_IO.h"
 #include "Utils.h"
+#include "AnalyzerImageEquality.h"
 
 namespace TestJPEG_IO
 {
@@ -39,7 +40,7 @@ namespace TestJPEG_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.jpg"));
     gul::Image colorImageSampleImage = jpegIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }
@@ -47,12 +48,12 @@ namespace TestJPEG_IO
   int WriteRead(void)
   {
     gul::JPEG_IO jpegIO;
-    gul::Image image = getGroudTruth();
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.jpg"));
     jpegIO.Save(colorImageSamplePath, image);
 
     image = jpegIO.Load(colorImageSamplePath);
-    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }

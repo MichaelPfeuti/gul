@@ -44,13 +44,15 @@ namespace gul
       {
         IT_UNDEFINED,
         IT_RGBA,
-        IT_RGB,
-        IT_GREY
+        IT_CMYK,
+        IT_HSL,
+        IT_HSV
       };
 
     public:
       Image(void);
       Image(int w, int h);
+      Image(int w, int h, ImageType dataImageType);
       Image(int w, int h, ImageType dataImageType, const unsigned char* data);
       virtual ~Image(void);
 

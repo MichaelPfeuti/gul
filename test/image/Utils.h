@@ -32,7 +32,8 @@
 
 #include "Image.h"
 
-gul::Image getGroudTruth(void);
-bool isEqualWithGroundTruth(const gul::Image& image, gul::Image::ImageType typeToCheck = gul::Image::IT_RGBA);
+gul::Image GetColorImageGT(void);
+gul::Image GetGrayscaleImageGT(void);
+gul::Image GetBWImageGT(void);
 
 #endif

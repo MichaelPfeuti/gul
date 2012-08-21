@@ -30,6 +30,9 @@
 #include "CTestData.h"
 #include "PPM_IO.h"
 #include "Utils.h"
+#include "ConverterImageToGrayscale.h"
+#include "ConverterImageToBW.h"
+#include "AnalyzerImageEquality.h"
 
 namespace TestPPM_IO
 {
@@ -39,20 +42,20 @@ namespace TestPPM_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.ppm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
     return EXIT_SUCCESS;
   }
 
   int WriteReadRGBASCII(void)
   {
     gul::PPM_IO ppmIO;
-    gul::Image image = getGroudTruth();
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.ppm"));
     ppmIO.SetMode(gul::PPM_IO::PPM_ASCII);
     ppmIO.Save(colorImageSamplePath, image);
 
     image = ppmIO.Load(colorImageSamplePath);
-    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -60,23 +63,24 @@ namespace TestPPM_IO
   int ReadRGBBinary(void)
   {
     gul::PPM_IO ppmIO;
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.ppm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
     return EXIT_SUCCESS;
   }
 
   int WriteReadRGBBinary(void)
   {
     gul::PPM_IO ppmIO;
-    gul::Image image = getGroudTruth();
+    gul::Image image = GetColorImageGT();
     gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.ppm"));
     ppmIO.SetMode(gul::PPM_IO::PPM_BINARY);
     ppmIO.Save(colorImageSamplePath, image);
 
     image = ppmIO.Load(colorImageSamplePath);
-    TEST_TRUE(isEqualWithGroundTruth(image, gul::Image::IT_RGB));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
 
     return EXIT_SUCCESS;
   }
@@ -87,7 +91,7 @@ namespace TestPPM_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.pgm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetGrayscaleImageGT()));
     return EXIT_SUCCESS;
   }
 
@@ -97,7 +101,7 @@ namespace TestPPM_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.pgm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetGrayscaleImageGT()));
     return EXIT_SUCCESS;
   }
 
@@ -107,7 +111,7 @@ namespace TestPPM_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_ascii.pbm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetBWImageGT()));
     return EXIT_SUCCESS;
   }
 
@@ -117,7 +121,8 @@ namespace TestPPM_IO
     gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_bin.pbm"));
     gul::Image colorImageSampleImage = ppmIO.Load(colorImageSamplePath);
 
-    TEST_TRUE(isEqualWithGroundTruth(colorImageSampleImage, gul::Image::IT_GREY));
+    gul::Image gtBW = gul::ConverterImageToBW::Execute(GetColorImageGT());
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetBWImageGT()));
     return EXIT_SUCCESS;
   }
 }

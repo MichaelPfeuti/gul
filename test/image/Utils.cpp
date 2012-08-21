@@ -29,56 +29,23 @@
 #include "Utils.h"
 
 #include "colorImageSample.c"
+#include "grayscaleImageSample.c"
+#include "bwImageSample.c"
 
-gul::Image getGroudTruth(void)
+gul::Image GetColorImageGT(void)
 {
   return gul::Image(colorImageSample.width, colorImageSample.height,
                     gul::Image::IT_RGBA, colorImageSample.pixel_data);
 }
 
-bool isEqualWithGroundTruth(const gul::Image& image, gul::Image::ImageType typeToCheck)
+gul::Image GetGrayscaleImageGT(void)
 {
-  if(image.GetWidth() != colorImageSample.width ||
-     image.GetHeight() != colorImageSample.height)
-    return false;
-
-  const int widthStride = colorImageSample.width*colorImageSample.bytes_per_pixel;
-  for(int y = 0; y < image.GetHeight(); ++y)
-  for(int x = 0; x < image.GetWidth(); ++x)
-  {
-    gul::RGBA rgbaGT(colorImageSample.pixel_data[y*widthStride + x*colorImageSample.bytes_per_pixel + 0],
-                     colorImageSample.pixel_data[y*widthStride + x*colorImageSample.bytes_per_pixel + 1],
-                     colorImageSample.pixel_data[y*widthStride + x*colorImageSample.bytes_per_pixel + 2],
-                     colorImageSample.pixel_data[y*widthStride + x*colorImageSample.bytes_per_pixel + 3]);
-    gul::RGBA rgba = image.GetPixel(x, y);
-
-    switch(typeToCheck)
-    {
-    case gul::Image::IT_RGBA:
-      if(rgba.GetRed() != rgbaGT.GetRed() ||
-         rgba.GetBlue() != rgbaGT.GetBlue() ||
-         rgba.GetGreen() != rgbaGT.GetGreen() ||
-         rgba.GetAlpha() != rgbaGT.GetAlpha())
-        return false;
-      break;
-    case gul::Image::IT_RGB:
-      if(rgba.GetRed() != rgbaGT.GetRed() ||
-         rgba.GetBlue() != rgbaGT.GetBlue() ||
-         rgba.GetGreen() != rgbaGT.GetGreen())
-        return false;
-      break;
-    case gul::Image::IT_GREY:
-//      if(rgba.GetRed() != rgbaGT.GetRed() ||
-//         rgba.GetBlue() != rgbaGT.GetBlue() ||
-//         rgba.GetGreen() != rgbaGT.GetGreen() ||
-//         rgba.GetAlpha() != rgbaGT.GetAlpha())
-        return false;
-      break;
-    }
-
-  }
-
-  return true;
+  return gul::Image(grayscaleImageSample.width, grayscaleImageSample.height,
+                    gul::Image::IT_RGBA, grayscaleImageSample.pixel_data);
 }
 
-
+gul::Image GetBWImageGT(void)
+{
+  return gul::Image(bwImageSample.width, bwImageSample.height,
+                    gul::Image::IT_RGBA, bwImageSample.pixel_data);
+}

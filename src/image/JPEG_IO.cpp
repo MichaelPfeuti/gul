@@ -154,6 +154,14 @@ void gul::JPEG_IO::Save(const gul::File& rPath, const gul::Image& rImage)
   cinfo.in_color_space = JCS_RGB;
   jpeg_set_defaults(&cinfo);
 
+  cinfo.comp_info[0].h_samp_factor = 1;
+  cinfo.comp_info[0].v_samp_factor = 1;
+  cinfo.comp_info[1].h_samp_factor = 1;
+  cinfo.comp_info[1].v_samp_factor = 1;
+  cinfo.comp_info[2].h_samp_factor = 1;
+  cinfo.comp_info[2].v_samp_factor = 1;
+  cinfo.progressive_mode = FALSE;
+
   jpeg_set_quality(&cinfo, this->quality, TRUE);
 
   jpeg_start_compress(&cinfo, TRUE);
