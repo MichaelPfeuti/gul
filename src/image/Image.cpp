@@ -66,6 +66,7 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
     imageType(dataImageType)
 {
   AllocateMemory();
+  FILE* f = fopen("Image.txt", "w");
   for(int y = 0; y < h; ++y)
   {
     for(int x = 0; x < w; ++x)
@@ -75,11 +76,11 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
                                  data[(y * w + x) * 4 + 2],
                                  data[(y * w + x) * 4 + 3]);
       SetPixel(x, y, rgba);
-      fprintf(stderr, "%d ", data[(y * w + x) * 4 + 0]);
+      fprintf(f, "%d ", data[(y * w + x) * 4 + 2]);
     }
-    fprintf(stderr, "\n");
+    fprintf(f, "\n");
   }
-  fprintf(stderr, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+  fclose(f);
 }
 
 void gul::Image::AllocateMemory(void)

@@ -42,7 +42,7 @@ namespace TestTIFF_IO
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }
@@ -55,7 +55,7 @@ namespace TestTIFF_IO
     tiffIO.Save(lenaPath, image);
 
     image = tiffIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }
@@ -66,12 +66,8 @@ namespace TestTIFF_IO
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_deflate.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    gul::PNG_IO pngIO;
-    pngIO.Save(gul::CTestData::GetTempFilePath(gul::String("out.png")), lenaImage);
-    pngIO.Save(gul::CTestData::GetTempFilePath(gul::String("gt.png")), GetLenaAlphaGT());
 
-
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }
@@ -82,18 +78,7 @@ namespace TestTIFF_IO
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_jpeg.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
-
-    return EXIT_SUCCESS;
-  }
-
-  int ReadLZW(void)
-  {
-    gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_lzw.tiff"));
-    gul::Image lenaImage = tiffIO.Load(lenaPath);
-
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.007f));
 
     return EXIT_SUCCESS;
   }
@@ -104,7 +89,7 @@ namespace TestTIFF_IO
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_packbits.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.001f));
 
     return EXIT_SUCCESS;
   }

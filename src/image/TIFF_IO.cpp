@@ -50,21 +50,26 @@ gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
 
   uint32 npixels = width * height;
   uint32* raster = static_cast<uint32*>(_TIFFmalloc(npixels * sizeof(uint32)));
-  if(TIFFReadRGBAImage(tif, width, height, raster, 0))
+  if(TIFFReadRGBAImageOriented(tif, width, height, raster, ORIENTATION_TOPLEFT, 0))
   {
+    FILE* f = fopen("Load.txt","w");
+    float alpha;
     for(uint32 y = 0; y < height; ++y)
     {
       for(uint32 x = 0; x < width; ++x)
       {
-        image.SetPixel(x, height - y - 1, gul::RGBA(TIFFGetR(raster[x + y * width]) / 255.f,
-                                                    TIFFGetG(raster[x + y * width]) / 255.f,
-                                                    TIFFGetB(raster[x + y * width]) / 255.f,
-                                                    TIFFGetA(raster[x + y * width]) / 255.f));
-        fprintf(stderr, "%d ", TIFFGetR(raster[x + y * width]));
+        //TODO: this is premuptiplied by the ReadRGBA function. use ReadEncodedStrip
+        //      to prevent the small rounding error due to the premultiplication!
+        alpha = TIFFGetA(raster[x + y * width]) / 255.f;
+        image.SetPixel(x, y, gul::RGBA(TIFFGetR(raster[x + y * width]) / (255.f * alpha),
+                                       TIFFGetG(raster[x + y * width]) / (255.f * alpha),
+                                       TIFFGetB(raster[x + y * width]) / (255.f * alpha),
+                                       alpha));
+        fprintf(f, "%1.0f ", image.GetPixel(x, y).GetBlue()*255);
       }
-      fprintf(stderr, "\n");
+      fprintf(f, "\n");
     }
-    fprintf(stderr, "\n\n");
+    fclose(f);
   }
   else
   {
