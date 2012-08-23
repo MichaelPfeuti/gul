@@ -57,6 +57,8 @@ gul::Image::Image(int w, int h, ImageType dataImageType)
 {
 }
 
+#include <cstdio>
+
 gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* data)
   : pData(nullptr),
     width(w),
@@ -65,6 +67,7 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
 {
   AllocateMemory();
   for(int y = 0; y < h; ++y)
+  {
     for(int x = 0; x < w; ++x)
     {
       gul::RGBA rgba = gul::RGBA(data[(y * w + x) * 4 + 0],
@@ -72,7 +75,11 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
                                  data[(y * w + x) * 4 + 2],
                                  data[(y * w + x) * 4 + 3]);
       SetPixel(x, y, rgba);
+      fprintf(stderr, "%d ", data[(y * w + x) * 4 + 0]);
     }
+    fprintf(stderr, "\n");
+  }
+  fprintf(stderr, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 }
 
 void gul::Image::AllocateMemory(void)

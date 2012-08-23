@@ -28,24 +28,31 @@
 
 #include "Utils.h"
 
-#include "colorImageSample.c"
-#include "grayscaleImageSample.c"
-#include "bwImageSample.c"
+#include "image/lena.c"
+#include "image/lena_alpha.c"
+#include "image/lena_bw.c"
+#include "image/lena_gray.c"
 
-gul::Image GetColorImageGT(void)
+gul::Image GetLenaGT(void)
 {
-  return gul::Image(colorImageSample.width, colorImageSample.height,
-                    gul::Image::IT_RGBA, colorImageSample.pixel_data);
+  return gul::Image(lena.width, lena.height,
+                    gul::Image::IT_RGBA, lena.pixel_data);
 }
 
-gul::Image GetGrayscaleImageGT(void)
+gul::Image GetLenaAlphaGT(void)
 {
-  return gul::Image(grayscaleImageSample.width, grayscaleImageSample.height,
-                    gul::Image::IT_RGBA, grayscaleImageSample.pixel_data);
+  return gul::Image(lena_alpha.width, lena_alpha.height,
+                    gul::Image::IT_RGBA, lena_alpha.pixel_data);
 }
 
-gul::Image GetBWImageGT(void)
+gul::Image GetLenaGrayscaleGT(void)
 {
-  return gul::Image(bwImageSample.width, bwImageSample.height,
-                    gul::Image::IT_RGBA, bwImageSample.pixel_data);
+  return gul::Image(lena_gray.width, lena_gray.height,
+                    gul::Image::IT_RGBA, lena_gray.pixel_data);
+}
+
+gul::Image GetLenaBWGT(void)
+{
+  return gul::Image(lena_bw.width, lena_bw.height,
+                    gul::Image::IT_RGBA, lena_bw.pixel_data);
 }

@@ -3,6 +3,7 @@ include_directories("${CMAKE_SOURCE_DIR}/test/data")
 include_directories("${CMAKE_HOME_DIRECTORY}/tools/CTest")
 include("${CMAKE_HOME_DIRECTORY}/tools/CTest/CTestMacros.cmake")
 
+add_subdirectory(algorithms)
 add_subdirectory(base)
 add_subdirectory(containers)
 add_subdirectory(data)

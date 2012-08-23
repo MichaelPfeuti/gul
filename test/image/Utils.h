@@ -32,8 +32,9 @@
 
 #include "Image.h"
 
-gul::Image GetColorImageGT(void);
-gul::Image GetGrayscaleImageGT(void);
-gul::Image GetBWImageGT(void);
+gul::Image GetLenaGT(void);
+gul::Image GetLenaAlphaGT(void);
+gul::Image GetLenaGrayscaleGT(void);
+gul::Image GetLenaBWGT(void);
 
 #endif

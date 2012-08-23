@@ -37,10 +37,10 @@ namespace TestPNG_IO
   int Read(void)
   {
     gul::PNG_IO pngIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.png"));
-    gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena.png"));
+    gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
@@ -48,12 +48,12 @@ namespace TestPNG_IO
   int WriteRead(void)
   {
     gul::PNG_IO pngIO;
-    gul::Image image = GetColorImageGT();
-    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.png"));
-    pngIO.Save(colorImageSamplePath, image);
+    gul::Image image = GetLenaAlphaGT();
+    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
+    pngIO.Save(lenaPath, image);
 
-    image = pngIO.Load(colorImageSamplePath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
+    image = pngIO.Load(lenaPath);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
@@ -61,10 +61,10 @@ namespace TestPNG_IO
   int ReadInterlaced(void)
   {
     gul::PNG_IO pngIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_interlaced.png"));
-    gul::Image colorImageSampleImage = pngIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_interlaced.png"));
+    gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }

@@ -32,15 +32,17 @@
 #include "Utils.h"
 #include "AnalyzerImageEquality.h"
 
+#include "PNG_IO.h"
+
 namespace TestTIFF_IO
 {
   int Read(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.tiff"));
-    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
@@ -48,12 +50,12 @@ namespace TestTIFF_IO
   int WriteRead(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::Image image = GetColorImageGT();
-    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.tiff"));
-    tiffIO.Save(colorImageSamplePath, image);
+    gul::Image image = GetLenaAlphaGT();
+    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.tiff"));
+    tiffIO.Save(lenaPath, image);
 
-    image = tiffIO.Load(colorImageSamplePath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT()));
+    image = tiffIO.Load(lenaPath);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
@@ -61,10 +63,15 @@ namespace TestTIFF_IO
   int ReadDeflate(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_deflate.tiff"));
-    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_deflate.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
+    gul::PNG_IO pngIO;
+    pngIO.Save(gul::CTestData::GetTempFilePath(gul::String("out.png")), lenaImage);
+    pngIO.Save(gul::CTestData::GetTempFilePath(gul::String("gt.png")), GetLenaAlphaGT());
+
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
@@ -72,10 +79,32 @@ namespace TestTIFF_IO
   int ReadJPEG(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample_jpeg.tiff"));
-    gul::Image colorImageSampleImage = tiffIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_jpeg.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadLZW(void)
+  {
+    gul::TIFF_IO tiffIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_lzw.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadPackBits(void)
+  {
+    gul::TIFF_IO tiffIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_packbits.tiff"));
+    gul::Image lenaImage = tiffIO.Load(lenaPath);
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
 
     return EXIT_SUCCESS;
   }

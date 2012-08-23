@@ -38,9 +38,11 @@ namespace gul
   class CTestData
   {
     public:
-      static gul::String GetFilePath(const gul::String& filename)
+      static gul::String GetFilePath(const gul::String& folder, 
+                                     const gul::String& filename)
       {
-        return gul::String("@GUL_TEST_DATA_SET_FOLDER@/") + filename;
+        return gul::String("@GUL_TEST_DATA_SET_FOLDER@/") +
+               folder + gul::String("/") + filename;
       }
 
       static gul::String GetTempFilePath(const gul::String& filename)

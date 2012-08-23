@@ -57,11 +57,14 @@ gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
       for(uint32 x = 0; x < width; ++x)
       {
         image.SetPixel(x, height - y - 1, gul::RGBA(TIFFGetR(raster[x + y * width]) / 255.f,
-                       TIFFGetG(raster[x + y * width]) / 255.f,
-                       TIFFGetB(raster[x + y * width]) / 255.f,
-                       TIFFGetA(raster[x + y * width]) / 255.f));
+                                                    TIFFGetG(raster[x + y * width]) / 255.f,
+                                                    TIFFGetB(raster[x + y * width]) / 255.f,
+                                                    TIFFGetA(raster[x + y * width]) / 255.f));
+        fprintf(stderr, "%d ", TIFFGetR(raster[x + y * width]));
       }
+      fprintf(stderr, "\n");
     }
+    fprintf(stderr, "\n\n");
   }
   else
   {
@@ -85,16 +88,20 @@ void gul::TIFF_IO::Save(const gul::File& rPath, const gul::Image& rImage)
     return;
   }
 
+  //TIFFSetField(out, TIFFTAG_DOCUMENTNAME, rPath.GetPath().GetData());
   TIFFSetField(out, TIFFTAG_IMAGEWIDTH, rImage.GetWidth());
   TIFFSetField(out, TIFFTAG_IMAGELENGTH, rImage.GetHeight());
-  TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, rImage.GetNumberOfChannels());
+  TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 4);
   TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 8);
   TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
   TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
   TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+  //TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
+  uint16 extra_samples[] = {EXTRASAMPLE_UNASSALPHA};
+  TIFFSetField(out, TIFFTAG_EXTRASAMPLES, 1, extra_samples);
+  TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, 4*rImage.GetWidth()));
 
-  unsigned char* buf = static_cast<unsigned char*>(_TIFFmalloc(rImage.GetNumberOfChannels() * rImage.GetWidth()));
-  TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, rImage.GetNumberOfChannels()*rImage.GetWidth()));
+  unsigned char* buf = static_cast<unsigned char*>(_TIFFmalloc(4 * rImage.GetWidth()));
 
   //Now writing image to the file one strip at a time
   for(int row = 0; row < rImage.GetHeight(); ++row)
@@ -113,6 +120,7 @@ void gul::TIFF_IO::Save(const gul::File& rPath, const gul::Image& rImage)
       FAIL("TIFF file could no be written!");
     }
   }
+  TIFFFlushData(out);
 
   _TIFFfree(buf);
   TIFFClose(out);

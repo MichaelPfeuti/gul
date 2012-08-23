@@ -37,10 +37,10 @@ namespace TestJPEG_IO
   int Read(void)
   {
     gul::JPEG_IO jpegIO;
-    gul::File colorImageSamplePath = gul::CTestData::GetFilePath(gul::String("colorImageSample.jpg"));
-    gul::Image colorImageSampleImage = jpegIO.Load(colorImageSamplePath);
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.jpg"));
+    gul::Image lenaImage = jpegIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(colorImageSampleImage, GetColorImageGT(), 0.001f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.0015f));
 
     return EXIT_SUCCESS;
   }
@@ -48,12 +48,12 @@ namespace TestJPEG_IO
   int WriteRead(void)
   {
     gul::JPEG_IO jpegIO;
-    gul::Image image = GetColorImageGT();
-    gul::File colorImageSamplePath = gul::CTestData::GetTempFilePath(gul::String("colorImageSample.jpg"));
-    jpegIO.Save(colorImageSamplePath, image);
+    gul::Image image = GetLenaGT();
+    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
+    jpegIO.Save(lenaPath, image);
 
-    image = jpegIO.Load(colorImageSamplePath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetColorImageGT(), 0.001f));
+    image = jpegIO.Load(lenaPath);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT(), 0.0015f));
 
     return EXIT_SUCCESS;
   }
