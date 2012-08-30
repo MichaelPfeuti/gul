@@ -52,7 +52,6 @@ gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
   uint32* raster = static_cast<uint32*>(_TIFFmalloc(npixels * sizeof(uint32)));
   if(TIFFReadRGBAImageOriented(tif, width, height, raster, ORIENTATION_TOPLEFT, 0))
   {
-    FILE* f = fopen("Load.txt","w");
     float alpha;
     for(uint32 y = 0; y < height; ++y)
     {
@@ -65,11 +64,8 @@ gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
                                        TIFFGetG(raster[x + y * width]) / (255.f * alpha),
                                        TIFFGetB(raster[x + y * width]) / (255.f * alpha),
                                        alpha));
-        fprintf(f, "%1.0f ", image.GetPixel(x, y).GetBlue()*255);
       }
-      fprintf(f, "\n");
     }
-    fclose(f);
   }
   else
   {

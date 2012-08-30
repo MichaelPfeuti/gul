@@ -10,6 +10,7 @@ gul_add_test(Image TIFF_IO WriteRead)
 gul_add_test(Image TIFF_IO ReadDeflate)
 gul_add_test(Image TIFF_IO ReadJPEG)
 gul_add_test(Image TIFF_IO ReadPackBits)
+gul_add_test(Image TIFF_IO ReadLZW)
 
 gul_add_test(Image PPM_IO ReadRGBASCII)
 gul_add_test(Image PPM_IO WriteReadRGBASCII)
