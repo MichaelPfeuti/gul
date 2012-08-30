@@ -26,13 +26,13 @@
 **
 ***************************************************************************/
 
-#include "TIFF_IO.h"
+#include "ImageIO_TIFF.h"
 #define JPEG_SUPPORT
 #include <tiffio.h>
 #include "File.h"
 #include "Assert.h"
 
-gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
+gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
 {
   TIFF* tif = TIFFOpen(rPath.GetPath().GetData(), "r");
   if(tif == nullptr)
@@ -80,7 +80,7 @@ gul::Image gul::TIFF_IO::Load(const gul::File& rPath)
 }
 
 
-void gul::TIFF_IO::Save(const gul::File& rPath, const gul::Image& rImage)
+void gul::ImageIO_TIFF::Save(const gul::File& rPath, const gul::Image& rImage)
 {
   TIFF* out = TIFFOpen(rPath.GetPath().GetData(), "w");
   if(out == nullptr)

@@ -28,32 +28,43 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "JPEG_IO.h"
+#include "ImageIO_PNG.h"
 #include "Utils.h"
 #include "AnalyzerImageEquality.h"
 
-namespace TestJPEG_IO
+namespace TestImageIO_PNG
 {
   int Read(void)
   {
-    gul::JPEG_IO jpegIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.jpg"));
-    gul::Image lenaImage = jpegIO.Load(lenaPath);
+    gul::ImageIO_PNG pngIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.png"));
+    gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.0015f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }
 
   int WriteRead(void)
   {
-    gul::JPEG_IO jpegIO;
-    gul::Image image = GetLenaGT();
-    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
-    jpegIO.Save(lenaPath, image);
+    gul::ImageIO_PNG pngIO;
+    gul::Image image = GetLenaAlphaGT();
+    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
+    pngIO.Save(lenaPath, image);
 
-    image = jpegIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT(), 0.0015f));
+    image = pngIO.Load(lenaPath);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT()));
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadInterlaced(void)
+  {
+    gul::ImageIO_PNG pngIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_interlaced.png"));
+    gul::Image lenaImage = pngIO.Load(lenaPath);
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
 
     return EXIT_SUCCESS;
   }

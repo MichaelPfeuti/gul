@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_IMAGE_PNG_IO_H_
+#define _GUL_IMAGE_PNG_IO_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +28,19 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include "ImageIO.h"
+
+namespace gul
+{
+
+  class ImageIO_PNG : public ImageIO
+  {
+    public:
+      virtual Image Load(const File& rPath);
+
+      virtual void Save(const File& rPath, const Image& rImage);
+  };
+}
+
+#endif

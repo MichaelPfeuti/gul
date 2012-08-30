@@ -28,17 +28,17 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "TIFF_IO.h"
+#include "ImageIO_TIFF.h"
 #include "Utils.h"
 #include "AnalyzerImageEquality.h"
 
-#include "PNG_IO.h"
+#include "ImageIO_PNG.h"
 
-namespace TestTIFF_IO
+namespace TestImageIO_TIFF
 {
   int Read(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
@@ -49,7 +49,7 @@ namespace TestTIFF_IO
 
   int WriteRead(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::Image image = GetLenaAlphaGT();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lenaGT.tiff"));
     tiffIO.Save(lenaPath, image);
@@ -67,7 +67,7 @@ namespace TestTIFF_IO
 
   int ReadDeflate(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_deflate.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
@@ -78,7 +78,7 @@ namespace TestTIFF_IO
 
   int ReadJPEG(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_jpeg.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
@@ -89,7 +89,7 @@ namespace TestTIFF_IO
 
   int ReadPackBits(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_packbits.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
@@ -100,7 +100,7 @@ namespace TestTIFF_IO
 
   int ReadLZW(void)
   {
-    gul::TIFF_IO tiffIO;
+    gul::ImageIO_TIFF tiffIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_lzw.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 

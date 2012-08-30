@@ -26,7 +26,7 @@
 **
 ***************************************************************************/
 
-#include "JPEG_IO.h"
+#include "ImageIO_JPEG.h"
 #include "Assert.h"
 #include "Misc.h"
 #include "File.h"
@@ -49,12 +49,12 @@ ErrorCallback(j_common_ptr cinfo)
   longjmp(err->setjmp_buffer, 1);
 }
 
-void gul::JPEG_IO::SetQuality(int qual)
+void gul::ImageIO_JPEG::SetQuality(int qual)
 {
   this->quality = qual;
 }
 
-gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
+gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
 {
   gul::Image gulImage;
 
@@ -119,7 +119,7 @@ gul::Image gul::JPEG_IO::Load(const gul::File& rPath)
   return gulImage;
 }
 
-void gul::JPEG_IO::Save(const gul::File& rPath, const gul::Image& rImage)
+void gul::ImageIO_JPEG::Save(const gul::File& rPath, const gul::Image& rImage)
 {
   unsigned char image_buffer[rImage.GetHeight()*rImage.GetWidth() * 3];
   for(int y = 0; y < rImage.GetHeight(); ++y)

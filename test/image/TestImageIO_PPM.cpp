@@ -28,17 +28,17 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "PPM_IO.h"
+#include "ImageIO_PPM.h"
 #include "Utils.h"
 #include "ConverterImageToGrayscale.h"
 #include "ConverterImageToBW.h"
 #include "AnalyzerImageEquality.h"
 
-namespace TestPPM_IO
+namespace TestImageIO_PPM
 {
   int ReadRGBASCII(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.ppm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
@@ -48,10 +48,10 @@ namespace TestPPM_IO
 
   int WriteReadRGBASCII(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::Image image = GetLenaGT();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.ppm"));
-    ppmIO.SetMode(gul::PPM_IO::PPM_ASCII);
+    ppmIO.SetMode(gul::ImageIO_PPM::PPM_ASCII);
     ppmIO.Save(lenaPath, image);
 
     image = ppmIO.Load(lenaPath);
@@ -62,7 +62,7 @@ namespace TestPPM_IO
 
   int ReadRGBBinary(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::Image image = GetLenaGT();
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.ppm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
@@ -73,10 +73,10 @@ namespace TestPPM_IO
 
   int WriteReadRGBBinary(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::Image image = GetLenaGT();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.ppm"));
-    ppmIO.SetMode(gul::PPM_IO::PPM_BINARY);
+    ppmIO.SetMode(gul::ImageIO_PPM::PPM_BINARY);
     ppmIO.Save(lenaPath, image);
 
     image = ppmIO.Load(lenaPath);
@@ -87,7 +87,7 @@ namespace TestPPM_IO
 
   int ReadGreyscaleASCII(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.pgm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
@@ -97,7 +97,7 @@ namespace TestPPM_IO
 
   int ReadGreyscaleBinary(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pgm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
@@ -107,7 +107,7 @@ namespace TestPPM_IO
 
   int ReadBlackAndWhiteASCII(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
@@ -117,7 +117,7 @@ namespace TestPPM_IO
 
   int ReadBlackAndWhiteBinary(void)
   {
-    gul::PPM_IO ppmIO;
+    gul::ImageIO_PPM ppmIO;
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 

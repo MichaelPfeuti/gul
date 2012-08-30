@@ -3,15 +3,13 @@ set(image_sources
     Image.cpp
     ImageFileHandler.cpp
     ImageIO.cpp
-    BMP_IO.cpp
-    PPM_IO.cpp
+    ImageIO_PPM.cpp
     RGBA.cpp
 
     ${INCLUDE}/image/Image.h
     ${INCLUDE}/image/ImageFileHandler.h
     ${INCLUDE}/image/ImageIO.h
-    ${INCLUDE}/image/BMP_IO.h
-    ${INCLUDE}/image/PPM_IO.h
+    ${INCLUDE}/image/ImageIO_PPM.h
     ${INCLUDE}/image/RGBA.h
     )
 
@@ -21,8 +19,8 @@ find_package(TIFF)
 
 if(PNG_FOUND)
   set(image_sources ${image_sources}
-                    PNG_IO.cpp
-                    ${INCLUDE}/image/PNG_IO.h
+                    ImageIO_PNG.cpp
+                    ${INCLUDE}/image/ImageIO_PNG.h
   )
   include_directories(${PNG_INCLUDE_DIR})
   set(image_libs ${image_libs} ${PNG_LIBRARIES})
@@ -30,8 +28,8 @@ endif(PNG_FOUND)
 
 if(JPEG_FOUND)
   set(image_sources ${image_sources}
-                    JPEG_IO.cpp
-                    ${INCLUDE}/image/JPEG_IO.h
+                    ImageIO_JPEG.cpp
+                    ${INCLUDE}/image/ImageIO_JPEG.h
   )
   include_directories(${JPEG_INCLUDE_DIR})
 set(image_libs ${image_libs} ${JPEG_LIBRARIES})
@@ -39,8 +37,8 @@ endif(JPEG_FOUND)
 
 if(TIFF_FOUND)
   set(image_sources ${image_sources}
-                    TIFF_IO.cpp
-                    ${INCLUDE}/image/TIFF_IO.h
+                    ImageIO_TIFF.cpp
+                    ${INCLUDE}/image/ImageIO_TIFF.h
   )
   include_directories(${TIFF_INCLUDE_DIR})
 set(image_libs ${image_libs} ${TIFF_LIBRARIES})

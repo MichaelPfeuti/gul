@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_IMAGE_TIFF_IO_H_
-#define _GUL_IMAGE_TIFF_IO_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,18 +26,35 @@
 **
 ***************************************************************************/
 
-#include "ImageIO.h"
+#include "CTestAssert.h"
+#include "CTestData.h"
+#include "ImageIO_JPEG.h"
+#include "Utils.h"
+#include "AnalyzerImageEquality.h"
 
-namespace gul
+namespace TestImageIO_JPEG
 {
-
-  class TIFF_IO : public ImageIO
+  int Read(void)
   {
-    public:
-      virtual Image Load(const File& rPath);
+    gul::ImageIO_JPEG jpegIO;
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.jpg"));
+    gul::Image lenaImage = jpegIO.Load(lenaPath);
 
-      virtual void Save(const File& rPath, const Image& rImage);
-  };
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.0015f));
+
+    return EXIT_SUCCESS;
+  }
+
+  int WriteRead(void)
+  {
+    gul::ImageIO_JPEG jpegIO;
+    gul::Image image = GetLenaGT();
+    gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
+    jpegIO.Save(lenaPath, image);
+
+    image = jpegIO.Load(lenaPath);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT(), 0.0015f));
+
+    return EXIT_SUCCESS;
+  }
 }
-
-#endif

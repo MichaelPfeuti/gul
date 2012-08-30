@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_IMAGE_JPEG_IO_H_
-#define _GUL_IMAGE_JPEG_IO_H_
+#ifndef _GUL_IMAGE_TIFF_IO_H_
+#define _GUL_IMAGE_TIFF_IO_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -34,19 +34,13 @@
 namespace gul
 {
 
-  class JPEG_IO : public ImageIO
+  class ImageIO_TIFF : public ImageIO
   {
     public:
-      void SetQuality(int qual);
-
       virtual Image Load(const File& rPath);
 
       virtual void Save(const File& rPath, const Image& rImage);
-
-    private:
-      int quality = 100;
   };
-
 }
 
 #endif

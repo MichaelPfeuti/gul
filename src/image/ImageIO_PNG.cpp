@@ -26,13 +26,13 @@
 **
 ***************************************************************************/
 
-#include "PNG_IO.h"
+#include "ImageIO_PNG.h"
 #include <cstdio>
 #include <png.h>
 #include "File.h"
 #include "Assert.h"
 
-gul::Image gul::PNG_IO::Load(const gul::File& rPath)
+gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
 {
   const int HEADER_SIZE = 8;
   unsigned char header[HEADER_SIZE];
@@ -158,7 +158,7 @@ gul::Image gul::PNG_IO::Load(const gul::File& rPath)
   return image;
 }
 
-void gul::PNG_IO::Save(const File& rPath, const Image& rImage)
+void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
 {
   FILE* fp;
   png_structp png_ptr;

@@ -26,7 +26,7 @@
 **
 ***************************************************************************/
 
-#include "PPM_IO.h"
+#include "ImageIO_PPM.h"
 #include <cstdio>
 #include <cstring>
 #include <ctype.h>
@@ -34,12 +34,12 @@
 #include "Assert.h"
 #include "File.h"
 
-void gul::PPM_IO::SetMode(PPMMode m)
+void gul::ImageIO_PPM::SetMode(PPMMode m)
 {
   mode = m;
 }
 
-gul::Image gul::PPM_IO::Load(const gul::File& rPath)
+gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
 {
   ASSERT_MSG(rPath.Exists(), "File does not exists.");
 
@@ -194,7 +194,7 @@ gul::Image gul::PPM_IO::Load(const gul::File& rPath)
   return image;
 }
 
-void gul::PPM_IO::Save(const gul::File& rPath, const gul::Image& rImage)
+void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
 {
   FILE* f = fopen(rPath.GetPath().GetData(), "w");
 
