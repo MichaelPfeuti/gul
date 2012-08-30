@@ -100,7 +100,7 @@ void gul::TIFF_IO::Save(const gul::File& rPath, const gul::Image& rImage)
   //TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
   uint16 extra_samples[] = {EXTRASAMPLE_UNASSALPHA};
   TIFFSetField(out, TIFFTAG_EXTRASAMPLES, 1, extra_samples);
-  TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, 4*rImage.GetWidth()));
+  TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, 4 * rImage.GetWidth()));
 
   unsigned char* buf = static_cast<unsigned char*>(_TIFFmalloc(4 * rImage.GetWidth()));
 

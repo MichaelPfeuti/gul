@@ -37,7 +37,7 @@ namespace TestPNG_IO
   int Read(void)
   {
     gul::PNG_IO pngIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena.png"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
@@ -61,7 +61,7 @@ namespace TestPNG_IO
   int ReadInterlaced(void)
   {
     gul::PNG_IO pngIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_interlaced.png"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_interlaced.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));

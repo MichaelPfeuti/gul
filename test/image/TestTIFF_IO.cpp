@@ -39,7 +39,7 @@ namespace TestTIFF_IO
   int Read(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena.tiff"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
@@ -68,7 +68,7 @@ namespace TestTIFF_IO
   int ReadDeflate(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_deflate.tiff"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_deflate.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
@@ -79,7 +79,7 @@ namespace TestTIFF_IO
   int ReadJPEG(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_jpeg.tiff"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_jpeg.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.007f));
@@ -90,7 +90,7 @@ namespace TestTIFF_IO
   int ReadPackBits(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_packbits.tiff"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_packbits.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
@@ -101,7 +101,7 @@ namespace TestTIFF_IO
   int ReadLZW(void)
   {
     gul::TIFF_IO tiffIO;
-    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String( "lena_lzw.tiff"));
+    gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_lzw.tiff"));
     gul::Image lenaImage = tiffIO.Load(lenaPath);
 
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT(), 0.001f));
