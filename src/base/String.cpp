@@ -33,6 +33,7 @@
 #include <cstring>
 #include <cstdio>
 #include <typeinfo>
+#include <ctype.h>
 
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
@@ -230,6 +231,19 @@ int gul::String::Count(const String& rString) const
     pSearchPos = strstr(pSearchPos + 1, rString.pString);
   }
   return count;
+}
+
+gul::String gul::String::LowerCase(void) const
+{
+  char toBeLowered[Size() + 1];
+  strcpy(toBeLowered, this->pString);
+
+  for(int i = 0; i < this->size; ++i)
+  {
+    toBeLowered[i] = tolower(toBeLowered[i]);
+  }
+
+  return gul::String(toBeLowered);
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)

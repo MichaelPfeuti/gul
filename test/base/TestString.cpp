@@ -247,6 +247,15 @@ namespace TestString
     return EXIT_SUCCESS;
   }
 
+  int LowerCase(void)
+  {
+    gul::String string("This Is A Mixed Case String!");
+
+    TEST_EQUAL(string.LowerCase(), "this is a mixed case string!");
+
+    return EXIT_SUCCESS;
+  }
+
   int Traits(void)
   {
     TEST_EQUAL(gul::Traits<gul::String>::GetName(), gul::String("gul::String"));

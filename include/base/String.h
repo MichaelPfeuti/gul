@@ -55,7 +55,7 @@ namespace gul
     public:
       String(void);
       String(const String& rString);
-      explicit String(const char*);
+      String(const char*);
       virtual ~String();
       String& operator=(const String& other);
 
@@ -86,6 +86,8 @@ namespace gul
       String Substring(int start, int end) const;
 
       int Count(const String& rString) const;
+
+      String LowerCase(void) const;
 
       const char* GetData(void) const
       {

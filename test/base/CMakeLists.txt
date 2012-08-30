@@ -13,6 +13,7 @@ gul_add_test(Base String CharAt)
 gul_add_test(Base String Find)
 gul_add_test(Base String FindBackward)
 gul_add_test(Base String Count)
+gul_add_test(Base String LowerCase)
 gul_add_test(Base String Traits)
 gul_add_test(Base String RTTI)
 
