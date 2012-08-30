@@ -32,8 +32,6 @@
 #include "Utils.h"
 #include "AnalyzerImageEquality.h"
 
-#include "ImageIO_PNG.h"
-
 namespace TestImageIO_TIFF
 {
   int Read(void)

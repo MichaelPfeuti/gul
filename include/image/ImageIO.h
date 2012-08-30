@@ -46,6 +46,8 @@ namespace gul
 
       virtual void Save(const File& path, const Image& image) = 0;
 
+      virtual ~ImageIO(void) {}
+
   };
 
 }

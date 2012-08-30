@@ -38,7 +38,7 @@
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
 gul::String::String(void)
-  : pString(nullptr),
+  : pString(strcpy(new char[1], "")),
     size(0)
 {
 }

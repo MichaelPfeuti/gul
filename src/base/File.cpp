@@ -54,7 +54,7 @@ gul::String gul::File::GetSuffix(void) const
   if(idx < 0)
     return gul::String();
 
-  return pPath->Substring(idx, pPath->Size());
+  return pPath->Substring(idx+1, pPath->Size());
 }
 
 gul::String gul::File::GetPath(void) const

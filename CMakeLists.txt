@@ -12,6 +12,13 @@ macro(add_flags var)
   set(${var} "${${var}} ${_flags}")
 endmacro(add_flags)
 
+# Default Build Type
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Release CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
 # Common Build Settings
 add_flags(CMAKE_CXX_FLAGS "-std=c++0x -Wall
                                       -Wextra

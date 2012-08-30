@@ -63,6 +63,8 @@ namespace gul
       int GetNumberOfChannels(void) const;
       ImageType GetImageType(void) const;
 
+      bool IsNull(void) const;
+
       const RGBA GetPixel(int x, int y) const;
       void SetPixel(int x, int y, const gul::RGBA& rgba);
 

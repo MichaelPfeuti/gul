@@ -57,8 +57,6 @@ gul::Image::Image(int w, int h, ImageType dataImageType)
 {
 }
 
-#include <cstdio>
-
 gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* data)
   : pData(nullptr),
     width(w),
@@ -127,4 +125,9 @@ void gul::Image::SetPixel(int x, int y, const gul::RGBA& rgba)
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 3] = rgba.GetAlpha();
+}
+
+bool gul::Image::IsNull(void) const
+{
+  return width == 0 && height == 0;
 }

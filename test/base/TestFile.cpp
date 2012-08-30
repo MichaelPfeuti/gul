@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_IMAGE_IMAGE_FILE_HANDLER_H_
-#define _GUL_IMAGE_IMAGE_FILE_HANDLER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,39 +26,23 @@
 **
 ***************************************************************************/
 
-namespace gul
+#include "File.h"
+#include "CTestAssert.h"
+
+namespace TestFile
 {
-  class ImageIO;
-  class File;
-}
-
-#include "MapBasic.h"
-#include "String.h"
-#include "Image.h"
-
-namespace gul
-{
-
-  class ImageFileHandler
+  int GetSuffix(void)
   {
-    public:
-      static ImageFileHandler& Instance(void);
-      Image Load(const gul::File& file) const;
-      void Save(const gul::File& file, const Image& image) const;
+    gul::File fileWithoutSuffix("test");
+    TEST_EQUAL(fileWithoutSuffix.GetSuffix(), "");
 
-    private:
-      ImageFileHandler(void);
-      virtual ~ImageFileHandler(void);
+    gul::File fileWithSuffix("test.file");
+    TEST_EQUAL(fileWithSuffix.GetSuffix(), "file");
 
-      void initializeAllLoaders(void);
-      static void deleteInstance(void);
+    gul::File fileWithTwoSuffix("test.file.suffix");
+    TEST_EQUAL(fileWithTwoSuffix.GetSuffix(), "suffix");
 
-    private:
-      MapBasic<String, ImageIO*> endingsMap;
-      static ImageFileHandler* instance;
-
-  };
+    return EXIT_SUCCESS;
+  }
 
 }
-
-#endif

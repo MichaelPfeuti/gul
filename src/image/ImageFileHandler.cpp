@@ -28,20 +28,98 @@
 
 #include "ImageFileHandler.h"
 #include <cstdlib>
+#include "ImageIO_PPM.h"
+#include "File.h"
 
-bool gul::ImageFileHandler::ImageAreLoadersInitialized = false;
+#ifdef LIBJPEG_FOUND
+#  include "ImageIO_JPEG.h"
+#endif
 
-void gul::ImageFileHandler::DeinitializeLoaders(void)
+#ifdef LIBPNG_FOUND
+#  include "ImageIO_PNG.h"
+#endif
+
+#ifdef LIBTIFF_FOUND
+#  include "ImageIO_TIFF.h"
+#endif
+
+gul::ImageFileHandler* gul::ImageFileHandler::instance = nullptr;
+
+gul::ImageFileHandler::ImageFileHandler(void)
 {
-
+  initializeAllLoaders();
 }
 
-void gul::ImageFileHandler::InitializeAllLoaders(void)
+gul::ImageFileHandler::~ImageFileHandler(void)
 {
-  if(!ImageAreLoadersInitialized)
+  MapBasic<String, ImageIO*>::Iterator it = endingsMap.GetIterator();
+  while(it.HasNext())
   {
-    atexit(DeinitializeLoaders);
-    ImageAreLoadersInitialized = true;
+    MapBasic<String, ImageIO*>::Pair pair = it.Next();
+    GUL_DELETE(pair.GetValue());
+  }
+  endingsMap.Clear();
+}
+
+void gul::ImageFileHandler::initializeAllLoaders(void)
+{
+#ifdef LIBJPEG_FOUND
+  endingsMap.Add("jpeg", new ImageIO_JPEG());
+  endingsMap.Add("jpg", new ImageIO_JPEG());
+  endingsMap.Add("jpe", new ImageIO_JPEG());
+  endingsMap.Add("jif", new ImageIO_JPEG());
+  endingsMap.Add("jfif", new ImageIO_JPEG());
+  endingsMap.Add("jfi", new ImageIO_JPEG());
+#endif
+
+#ifdef LIBPNG_FOUND
+  endingsMap.Add("png", new ImageIO_PNG());
+#endif
+
+#ifdef LIBTIFF_FOUND
+  endingsMap.Add("tiff", new ImageIO_TIFF());
+  endingsMap.Add("tif", new ImageIO_TIFF());
+#endif
+
+  endingsMap.Add("ppm", new ImageIO_PPM());
+  endingsMap.Add("pgm", new ImageIO_PPM());
+  endingsMap.Add("pbm", new ImageIO_PPM());
+  endingsMap.Add("pnm", new ImageIO_PPM());
+}
+
+gul::Image gul::ImageFileHandler::Load(const gul::File& file) const
+{
+  ASSERT_MSG(file.Exists(), "File does not exist!");
+
+  gul::ImageIO* io = endingsMap.Get(file.GetSuffix().LowerCase());
+  ASSERT_MSG(io != nullptr, "Unknown Image Input Format!");
+
+  return io->Load(file);
+}
+
+void gul::ImageFileHandler::Save(const gul::File& file, const gul::Image& image) const
+{
+  ASSERT_MSG(file.IsPathValid(), "Invalid Path!");
+  file.GetPath();
+
+  gul::ImageIO* io = endingsMap.Get(file.GetSuffix().LowerCase());
+  ASSERT_MSG(io != nullptr, "Unknown Image Output Format!");
+
+  io->Save(file, image);
+}
+
+gul::ImageFileHandler& gul::ImageFileHandler::Instance(void)
+{
+  if(instance == nullptr)
+  {
+    instance = new ImageFileHandler();
+    atexit(deleteInstance);
   }
 
+  return *instance;
+}
+
+void gul::ImageFileHandler::deleteInstance(void)
+{
+  GUL_DELETE(instance);
 }

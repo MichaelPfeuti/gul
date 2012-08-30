@@ -187,6 +187,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
   else
   {
     FAIL("Unknown PPM Mode!");
+    return gul::Image();
   }
 
   fclose(f);
