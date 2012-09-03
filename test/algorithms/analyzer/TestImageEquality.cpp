@@ -28,16 +28,24 @@
 
 #include "AnalyzerImageEquality.h"
 #include "CTestAssert.h"
+#include "Utils.h"
 
 namespace TestImageEquality
 {
   int Equality(void)
   {
-    return EXIT_FAILURE;
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaAlphaGT(), GetLenaAlphaGT()));
+
+    return EXIT_SUCCESS;
   }
 
   int Inequality(void)
   {
-    return EXIT_FAILURE;
+    gul::Image img = GetLenaAlphaGT();
+    gul::RGBA rgba = img.GetPixel(0,0);
+    img.SetPixel(2,0, rgba);
+    TEST_FALSE(gul::AnalyzerImageEquality::Execute(GetLenaAlphaGT(), img));
+
+    return EXIT_SUCCESS;
   }
 }
