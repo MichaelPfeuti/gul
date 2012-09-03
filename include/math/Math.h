@@ -38,9 +38,10 @@ namespace gul
   template<typename T>
   T min(const T& rFirst, const T& rSecond);
 
-  template<typename F, typename T>
-  T round(const F& rValue);
+  template<typename T>
+  T abs(const T& rValue);
 
+  //TODO: introduce proper metics and build a distance measure from them
   template<typename T>
   T absoluteDifference(const T& rFirst, const T& rSecond);
 

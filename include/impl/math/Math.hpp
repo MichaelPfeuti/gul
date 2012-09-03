@@ -26,6 +26,8 @@
 **
 ***************************************************************************/
 
+#include <cmath>
+
 template<typename T>
 T gul::max(const T& rFirst, const T& rSecond)
 {
@@ -39,14 +41,13 @@ T gul::min(const T& rFirst, const T& rSecond)
 }
 
 template<typename T>
-T gul::absoluteDifference(const T& rFirst, const T& rSecond)
+T gul::abs(const T& rValue)
 {
-  T tmp = rFirst - rSecond;
-  return tmp < 0 ? -tmp : tmp;
+  return rValue < 0 ? -rValue : rValue;
 }
 
-template<typename F, typename T>
-T gul::round(const F& rValue)
+template<typename T>
+T gul::absoluteDifference(const T& rFirst, const T& rSecond)
 {
-  return rValue + 0.5;
+  return gul::abs(rFirst - rSecond);
 }
