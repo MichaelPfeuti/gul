@@ -27,27 +27,48 @@
 ***************************************************************************/
 
 #include "ConverterImageToGrayscale.h"
+#include "AnalyzerImageEquality.h"
 #include "CTestAssert.h"
+#include "Utils.h"
 
 namespace TestImageToGrayscale
 {
-  int StaticExecution(void)
-  {
-    return EXIT_FAILURE;
-  }
-
   int Average(void)
   {
-    return EXIT_FAILURE;
+    gul::Image color = GetLenaAlphaGT();
+    gul::ConverterImageToGrayscale converter;
+    converter.SetParameter(color);
+    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_AVERAGE);
+
+    converter.Execute();
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayAverage(), converter.GetResult(), 0.0007f));
+
+    return EXIT_SUCCESS;
   }
 
   int Luminosity(void)
   {
-    return EXIT_FAILURE;
+    gul::Image color = GetLenaAlphaGT();
+    gul::ConverterImageToGrayscale converter;
+    converter.SetParameter(color);
+    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_LUMINOSITY);
+
+    converter.Execute();
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLuminosity(), converter.GetResult(), 0.001f));
+
+    return EXIT_SUCCESS;
   }
 
   int Lightness(void)
   {
-    return EXIT_FAILURE;
+    gul::Image color = GetLenaAlphaGT();
+    gul::ConverterImageToGrayscale converter;
+    converter.SetParameter(color);
+    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_LIGHTNESS);
+
+    converter.Execute();
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLightness(), converter.GetResult(), 0.0008f));
+
+    return EXIT_SUCCESS;
   }
 }

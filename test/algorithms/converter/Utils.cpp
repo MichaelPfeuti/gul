@@ -26,18 +26,33 @@
 **
 ***************************************************************************/
 
-#include "AnalyzerImageEquality.h"
-#include "CTestAssert.h"
+#include "Utils.h"
 
-namespace TestImageEquality
+#include "algorithms/lena_gray_average.c"
+#include "algorithms/lena_gray_luminosity.c"
+#include "algorithms/lena_gray_lightness.c"
+#include "image/lena_alpha.c"
+
+gul::Image GetLenaGrayAverage(void)
 {
-  int Equality(void)
-  {
-    return EXIT_FAILURE;
-  }
+  return gul::Image(lena_gray_average.width, lena_gray_average.height,
+                    gul::Image::IT_RGBA, lena_gray_average.pixel_data);
+}
 
-  int Inequality(void)
-  {
-    return EXIT_FAILURE;
-  }
+gul::Image GetLenaGrayLuminosity(void)
+{
+  return gul::Image(lena_gray_luminosity.width, lena_gray_luminosity.height,
+                    gul::Image::IT_RGBA, lena_gray_luminosity.pixel_data);
+}
+
+gul::Image GetLenaGrayLightness(void)
+{
+  return gul::Image(lena_gray_lightness.width, lena_gray_lightness.height,
+                    gul::Image::IT_RGBA, lena_gray_lightness.pixel_data);
+}
+
+gul::Image GetLenaAlphaGT(void)
+{
+  return gul::Image(lena_alpha.width, lena_alpha.height,
+                    gul::Image::IT_RGBA, lena_alpha.pixel_data);
 }

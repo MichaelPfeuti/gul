@@ -44,3 +44,9 @@ T gul::absoluteDifference(const T& rFirst, const T& rSecond)
   T tmp = rFirst - rSecond;
   return tmp < 0 ? -tmp : tmp;
 }
+
+template<typename F, typename T>
+T gul::round(const F& rValue)
+{
+  return rValue + 0.5;
+}

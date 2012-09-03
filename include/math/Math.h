@@ -38,6 +38,9 @@ namespace gul
   template<typename T>
   T min(const T& rFirst, const T& rSecond);
 
+  template<typename F, typename T>
+  T round(const F& rValue);
+
   template<typename T>
   T absoluteDifference(const T& rFirst, const T& rSecond);
 

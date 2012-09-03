@@ -63,7 +63,7 @@ void gul::AnalyzerImageEquality::Execute(void)
   if(image1.GetWidth() != image2.GetWidth() ||
      image1.GetHeight() != image2.GetHeight())
   {
-    difference = threshold - 1.f;
+    difference = threshold + 1.f;
     return;
   }
 

@@ -26,18 +26,12 @@
 **
 ***************************************************************************/
 
-#include "AnalyzerImageEquality.h"
-#include "CTestAssert.h"
+#include "Utils.h"
 
-namespace TestImageEquality
+#include "image/lena_alpha.c"
+
+gul::Image GetLenaAlphaGT(void)
 {
-  int Equality(void)
-  {
-    return EXIT_FAILURE;
-  }
-
-  int Inequality(void)
-  {
-    return EXIT_FAILURE;
-  }
+  return gul::Image(lena_alpha.width, lena_alpha.height,
+                    gul::Image::IT_RGBA, lena_alpha.pixel_data);
 }

@@ -32,9 +32,9 @@
 namespace gul
 {
   class ImageIO;
-  class File;
 }
 
+#include "File.h"
 #include "MapBasic.h"
 #include "String.h"
 #include "Image.h"

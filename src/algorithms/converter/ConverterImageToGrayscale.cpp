@@ -50,26 +50,26 @@ gul::RGBA gul::ConverterImageToGrayscale::computeGreyValue(const RGBA& rgba) con
   {
     case GCT_AVERAGE:
       gray = rgba.GetRed() + rgba.GetGreen() + rgba.GetBlue();
-      gray /= 3;
+      gray /= 3.f;
       break;
 
     case GCT_LIGHTNESS:
       gray  = gul::min(gul::min(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
       gray += gul::max(gul::max(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
-      gray /= 2;
+      gray /= 2.f;
       break;
 
     case GCT_LUMINOSITY:
-      gray  = 0.21 * rgba.GetRed();
-      gray += 0.71 * rgba.GetGreen();
-      gray += 0.07 * rgba.GetBlue();
+      gray  = 0.21f * rgba.GetRed();
+      gray += 0.72f * rgba.GetGreen();
+      gray += 0.07f * rgba.GetBlue();
       break;
 
     default:
       FAIL("Unknown Grey Conversion Type!");
   }
 
-  return gul::RGBA(gray, gray, gray);
+  return gul::RGBA(gray, gray, gray, rgba.GetAlpha());
 }
 
 void gul::ConverterImageToGrayscale::SetParameter(GreyscaleConversionType type)

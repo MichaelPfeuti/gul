@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_TEST_IMAGE_UTILS_H_
+#define _GUL_TEST_IMAGE_UTILS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,18 +29,9 @@
 **
 ***************************************************************************/
 
-#include "AnalyzerImageEquality.h"
-#include "CTestAssert.h"
 
-namespace TestImageEquality
-{
-  int Equality(void)
-  {
-    return EXIT_FAILURE;
-  }
+#include "Image.h"
 
-  int Inequality(void)
-  {
-    return EXIT_FAILURE;
-  }
-}
+gul::Image GetLenaAlphaGT(void);
+
+#endif

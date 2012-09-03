@@ -31,7 +31,7 @@
 
 namespace TestImageToBW
 {
-  int StaticExecution(void)
+  int ColorToBW(void)
   {
     return EXIT_FAILURE;
   }
