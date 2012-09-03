@@ -30,8 +30,6 @@
 #include "CTestData.h"
 #include "ImageIO_PPM.h"
 #include "Utils.h"
-#include "ConverterImageToGrayscale.h"
-#include "ConverterImageToBW.h"
 #include "AnalyzerImageEquality.h"
 
 namespace TestImageIO_PPM
@@ -121,7 +119,6 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    gul::Image gtBW = gul::ConverterImageToBW::Execute(GetLenaGT());
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaBWGT()));
     return EXIT_SUCCESS;
   }
