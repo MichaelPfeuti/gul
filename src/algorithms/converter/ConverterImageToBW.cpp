@@ -44,11 +44,14 @@ gul::ConverterImageToBW::~ConverterImageToBW(void)
 
 void gul::ConverterImageToBW::SetParameter(float bwThreshold)
 {
+  ASSERT_MSG(0.f <= bwThreshold, "threshold must be between 0 and 1");
+  ASSERT_MSG(1.f >= bwThreshold, "threshold must be between 0 and 1");
   threshold = bwThreshold;
 }
 
 void gul::ConverterImageToBW::SetParameter(const gul::Image& grayImage)
 {
+  ASSERT_MSG(grayImage.GetImageType() == gul::Image::IT_GRAY, "Input must be a grayscale image");
   inputImage = grayImage;
 }
 
@@ -64,11 +67,11 @@ void gul::ConverterImageToBW::Execute(void)
       gul::RGBA in = inputImage.GetPixel(x, y);
       if(in.GetRed() < threshold)
       {
-        outputImage.SetPixel(x, y, gul::RGBA(0.f, 0.f, 0.f, 1.f));
+        outputImage.SetPixel(x, y, gul::RGBA(0.f, 0.f, 0.f, in.GetAlpha()));
       }
       else
       {
-        outputImage.SetPixel(x, y, gul::RGBA(1.f, 1.f, 1.f, 1.f));
+        outputImage.SetPixel(x, y, gul::RGBA(1.f, 1.f, 1.f, in.GetAlpha()));
       }
     }
   }

@@ -43,6 +43,7 @@ namespace gul
       enum ImageType
       {
         IT_UNDEFINED,
+        IT_GRAY,      //!< IT_RGBA where all RGB values are the same
         IT_RGBA,
         IT_CMYK,
         IT_HSL,

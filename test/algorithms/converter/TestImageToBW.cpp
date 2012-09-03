@@ -28,11 +28,17 @@
 
 #include "ConverterImageToBW.h"
 #include "CTestAssert.h"
+#include "AnalyzerImageEquality.h"
+#include "Utils.h"
 
 namespace TestImageToBW
 {
   int ColorToBW(void)
   {
-    return EXIT_FAILURE;
+    gul::Image bw = gul::ConverterImageToBW::Execute(GetLenaGrayLightness());
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw, 0.005f));
+
+    return EXIT_SUCCESS;
   }
 }

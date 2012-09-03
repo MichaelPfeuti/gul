@@ -32,9 +32,11 @@
 
 #include "Image.h"
 
+gul::Image GetLenaBW(void);
 gul::Image GetLenaGrayAverage(void);
 gul::Image GetLenaGrayLuminosity(void);
 gul::Image GetLenaGrayLightness(void);
 gul::Image GetLenaAlphaGT(void);
+gul::Image GetLenaGT(void);
 
 #endif
