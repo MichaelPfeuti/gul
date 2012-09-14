@@ -35,34 +35,34 @@
 namespace gul
 {
 
-class SharedResource
-{
-protected:
-  SharedResource(void);
-  SharedResource(const SharedResource& other) = delete;
-  virtual ~SharedResource(void);
-  virtual SharedResource& operator=(const SharedResource& other);
+  class SharedResource
+  {
+    protected:
+      SharedResource(void);
+      SharedResource(const SharedResource& other) = delete;
+      virtual ~SharedResource(void);
+      virtual SharedResource& operator=(const SharedResource& other);
 
-  void initConstructor(void);
-  void initCopyConstructor(const gul::SharedResource& other);
-  void detach(void);
+      void initConstructor(void);
+      void initCopyConstructor(const gul::SharedResource& other);
+      void detach(void);
 
-  virtual SharedResource* createSharedResourceOwner(void) const = 0;
-  virtual void deleteSharedResource(void) = 0;
-  virtual void transferSharedResourceFrom(const SharedResource& newOwner) = 0;
+      virtual SharedResource* createSharedResourceOwner(void) const = 0;
+      virtual void deleteSharedResource(void) = 0;
+      virtual void transferSharedResourceFrom(const SharedResource& newOwner) = 0;
 
-private:
-  void attachToNewResource(SharedResource &owner);
-  void attachToResource(const SharedResource& otherReferee);
-  void detachFromResource(void);
-  bool isLastReferee(void) const;
-  bool isOwner(void) const;
+    private:
+      void attachToNewResource(SharedResource& owner);
+      void attachToResource(const SharedResource& otherReferee);
+      void detachFromResource(void);
+      bool isLastReferee(void) const;
+      bool isOwner(void) const;
 
-private:
-  SharedResource* pOwner;
-  gul::ArrayBasic<const SharedResource*>* pReferees;
+    private:
+      SharedResource* pOwner;
+      gul::ArrayBasic<const SharedResource*>* pReferees;
 
-};
+  };
 
 }
 

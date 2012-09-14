@@ -36,10 +36,12 @@ gul_add_test(Image Image Assignment)
 gul_add_test(Image Image AssignmentSelf)
 gul_add_test(Image Image AssignmentExchange)
 gul_add_test(Image Image DeleteReferee)
+gul_add_test(Image Image SetPixel)
+gul_add_test(Image Image SetPixelSharedResource)
+gul_add_test(Image Image GetData)
+gul_add_test(Image Image GetDataConst)
+gul_add_test(Image Image NoCopySingleReferee)
 
 gul_add_util_sources(Utils.h Utils.cpp)
 gul_create_test()
 target_link_libraries(TestImage image algorithms_analyzer algorithms_converter)
-
-
-

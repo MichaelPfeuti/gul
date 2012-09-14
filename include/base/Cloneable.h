@@ -32,11 +32,11 @@
 namespace gul
 {
 
-class Cloneable
-{
-public:
-    virtual Cloneable* Clone(void) const = 0;
-};
+  class Cloneable
+  {
+    public:
+      virtual Cloneable* Clone(void) const = 0;
+  };
 
 }
 

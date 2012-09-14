@@ -84,7 +84,7 @@ namespace gul
       virtual gul::Image* createSharedResourceOwner(void) const;
 
     private:
-      Image(const Image &rImage, bool allocate);
+      Image(const Image& rImage, bool allocate);
 
     private:
       float* pData;

@@ -70,7 +70,7 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
 
 }
 
-gul::Image::Image(const Image &rImage)
+gul::Image::Image(const Image& rImage)
   : SharedResource(),
     pData(nullptr),
     width(rImage.width),
@@ -80,7 +80,7 @@ gul::Image::Image(const Image &rImage)
   initCopyConstructor(rImage);
 }
 
-gul::Image& gul::Image::operator =(const Image &rImage)
+gul::Image& gul::Image::operator =(const Image& rImage)
 {
   SharedResource::operator =(rImage);
   if(this != &rImage)
@@ -126,6 +126,7 @@ const gul::RGBA gul::Image::GetPixel(int x, int y) const
 
 void gul::Image::SetPixel(int x, int y, const gul::RGBA& rgba)
 {
+  detach();
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 0] = rgba.GetRed();
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 1] = rgba.GetGreen();
   this->pData[(x + y * this->GetWidth())*this->GetNumberOfChannels() + 2] = rgba.GetBlue();
@@ -150,6 +151,7 @@ const float* gul::Image::GetData(void) const
 
 float* gul::Image::GetData(void)
 {
+  detach();
   return pData;
 }
 
@@ -161,6 +163,7 @@ void gul::Image::allocateSharedResource(void)
 
   int size = GetWidth() * GetHeight() * GetNumberOfChannels();
   pData = new float[size];
+  memset(pData, 0, sizeof(float)*size);
 }
 
 void gul::Image::deleteSharedResource(void)
@@ -173,7 +176,7 @@ void gul::Image::transferSharedResourceFrom(const SharedResource& newOwner)
   pData = static_cast<const Image&>(newOwner).pData;
 }
 
-gul::Image::Image(const Image &rImage, bool allocate)
+gul::Image::Image(const Image& rImage, bool allocate)
   : pData(nullptr),
     width(rImage.width),
     height(rImage.height),

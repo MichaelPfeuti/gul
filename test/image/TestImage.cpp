@@ -34,7 +34,7 @@ namespace TestImage
 
   int Constructor(void)
   {
-    gul::Image img(50,80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IT_RGBA);
 
     TEST_EQUAL(img.GetWidth(), 50);
     TEST_EQUAL(img.GetHeight(), 80);
@@ -46,7 +46,7 @@ namespace TestImage
 
   int CopyConstructor(void)
   {
-    gul::Image img(50,80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IT_RGBA);
     gul::Image copy = img;
 
     TEST_EQUAL(copy.GetWidth(), 50);
@@ -60,7 +60,7 @@ namespace TestImage
 
   int Assignment(void)
   {
-    gul::Image img(50,80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IT_RGBA);
     gul::Image nullImg;
     nullImg = img;
 
@@ -78,9 +78,9 @@ namespace TestImage
 
   int AssignmentSelf(void)
   {
-    gul::Image first(50,80, gul::Image::IT_RGBA);
+    gul::Image first(50, 80, gul::Image::IT_RGBA);
     const float* pData = first.GetDataConst();
-    gul::Image *pFirst = &first;
+    gul::Image* pFirst = &first;
 
     first = *pFirst;
     TEST_NOT_NULL(pFirst->GetDataConst());
@@ -96,7 +96,7 @@ namespace TestImage
 
   int AssignmentExchange(void)
   {
-    gul::Image first(40,80, gul::Image::IT_RGBA);
+    gul::Image first(40, 80, gul::Image::IT_RGBA);
     gul::Image second(80, 160, gul::Image::IT_RGBA);
     gul::Image tmp;
 
@@ -136,8 +136,8 @@ namespace TestImage
 
   int DeleteReferee(void)
   {
-    gul::Image *ref1 = new gul::Image(50,80, gul::Image::IT_RGBA);
-    gul::Image *ref2 = new gul::Image(*ref1);
+    gul::Image* ref1 = new gul::Image(50, 80, gul::Image::IT_RGBA);
+    gul::Image* ref2 = new gul::Image(*ref1);
 
     TEST_NOT_NULL(ref2->GetDataConst());
     TEST_EQUAL(ref2->GetDataConst(), ref1->GetDataConst());
@@ -149,6 +149,97 @@ namespace TestImage
     // deleted from the first delete.
     GUL_DELETE(ref2);
     TEST_NULL(ref2);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SetPixel(void)
+  {
+    gul::Image img(10, 10, gul::Image::IT_RGBA);
+    gul::RGBA old = img.GetPixel(5, 5);
+    gul::RGBA changed(0.5f, 0.5f, 0.5f, 0.5f);
+
+    img.SetPixel(5, 5, changed);
+
+    TEST_NOT_EQUAL(img.GetPixel(5, 5), old);
+    TEST_EQUAL(img.GetPixel(5, 5), changed);
+
+    return EXIT_SUCCESS;
+  }
+
+  int SetPixelSharedResource(void)
+  {
+    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img2 = img1;
+
+    gul::RGBA old = img1.GetPixel(5, 5);
+    TEST_NOT_NULL(img1.GetDataConst());
+    TEST_NOT_NULL(img2.GetDataConst());
+    TEST_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+
+    gul::RGBA changed(old.GetRed(), 0.5f, 0.5f, 0.5f);
+    img1.SetPixel(5, 5, changed);
+    TEST_NOT_NULL(img1.GetDataConst());
+    TEST_NOT_NULL(img2.GetDataConst());
+    TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+
+    return EXIT_SUCCESS;
+  }
+
+  int GetData(void)
+  {
+    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img2 = img1;
+    const gul::Image img3 = img1;
+
+    float* pData2 = img2.GetData();
+    const float* pData3 = img3.GetData();
+
+    TEST_NOT_NULL(pData2);
+    TEST_NOT_NULL(pData3);
+    TEST_NOT_EQUAL(pData2, pData3);
+    TEST_EQUAL(pData3, img1.GetDataConst());
+    TEST_EQUAL(pData2, img2.GetDataConst());
+    TEST_EQUAL(pData3, img3.GetDataConst());
+
+    return EXIT_SUCCESS;
+  }
+
+  int GetDataConst(void)
+  {
+    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img2 = img1;
+    const gul::Image img3 = img1;
+
+    const float* pData2 = img2.GetDataConst();
+    const float* pData3 = img3.GetData();
+
+    TEST_NOT_NULL(pData2);
+    TEST_NOT_NULL(pData3);
+    TEST_EQUAL(pData2, pData3);
+    TEST_EQUAL(pData3, img1.GetDataConst());
+    TEST_EQUAL(pData2, img2.GetDataConst());
+    TEST_EQUAL(pData3, img3.GetDataConst());
+
+    return EXIT_SUCCESS;
+  }
+
+  int NoCopySingleReferee(void)
+  {
+    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img2 = img1;
+
+    const float* pOldData1 = img1.GetDataConst();
+    const float* pOldData2 = img2.GetDataConst();
+    TEST_EQUAL(pOldData1, pOldData2);
+
+    float* pData1 = img1.GetData();
+    TEST_NOT_NULL(pData1);
+    TEST_NOT_EQUAL(pData1, pOldData1);
+
+    float* pData2 = img2.GetData();
+    TEST_NOT_NULL(pData2);
+    TEST_EQUAL(pOldData2, img2.GetDataConst());
 
     return EXIT_SUCCESS;
   }

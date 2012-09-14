@@ -42,8 +42,8 @@ namespace TestImageEquality
   int Inequality(void)
   {
     gul::Image img = GetLenaAlphaGT();
-    gul::RGBA rgba = img.GetPixel(0,0);
-    img.SetPixel(2,0, rgba);
+    gul::RGBA rgba = img.GetPixel(0, 0);
+    img.SetPixel(2, 0, rgba);
     TEST_FALSE(gul::AnalyzerImageEquality::Execute(GetLenaAlphaGT(), img));
 
     return EXIT_SUCCESS;
