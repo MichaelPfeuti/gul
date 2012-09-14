@@ -270,4 +270,22 @@ namespace TestString
     return EXIT_SUCCESS;
   }
 
+  int Assignment(void)
+  {
+    gul::String str1("STRING1");
+    gul::String str2("STRING2");
+    gul::String str3("STRING3");
+
+    TEST_NOT_EQUAL(str1, str2);
+    str2 = str1;
+    TEST_EQUAL(str1, str2);
+
+    TEST_NOT_EQUAL(str2, str3);
+    str2 = str3;
+    TEST_NOT_EQUAL(str2, str1);
+    TEST_EQUAL(str2, str3);
+
+    return EXIT_SUCCESS;
+  }
+
 }

@@ -2,6 +2,7 @@ gul_add_test(Base Assert Assertion)
 
 gul_add_test(Base String Size)
 gul_add_test(Base String Construction)
+gul_add_test(Base String Assignment)
 gul_add_test(Base String Concatenation)
 gul_add_test(Base String PlaceHolder)
 gul_add_test(Base String ReplaceString)
