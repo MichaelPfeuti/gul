@@ -86,8 +86,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
                &interlace_type, NULL, NULL);
 
   png_bytep* row_pointers = png_get_rows(png_ptr, info_ptr);
-  gul::Image image(width, height);
-  image.AllocateMemory();
+  gul::Image image(width, height, gul::Image::IT_RGBA);
   switch(color_type)
   {
     case PNG_COLOR_TYPE_GRAY:

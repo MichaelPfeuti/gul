@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_PERSISTANCE_SETTINGS_MANAGER_H_
-#define _GUL_PERSISTANCE_SETTINGS_MANAGER_H_
+#ifndef _GUL_BASE_SHARED_RESOURCE_H_
+#define _GUL_BASE_SHARED_RESOURCE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,47 +29,40 @@
 **
 ***************************************************************************/
 
-#include "NonCopyable.h"
-#include <cstdio>
-
-namespace gul
-{
-  class String;
-  class File;
-}
+#include "ArrayBasic.h"
+#include "Cloneable.h"
 
 namespace gul
 {
 
-  class SettingsManager : public NonCopyable
-  {
+class SharedResource
+{
+protected:
+  SharedResource(void);
+  SharedResource(const SharedResource& other) = delete;
+  virtual ~SharedResource(void);
+  virtual SharedResource& operator=(const SharedResource& other);
 
-    public:
-      SettingsManager(void);
-      explicit SettingsManager(const File& rPath);
-      virtual ~SettingsManager(void);
+  void initConstructor(void);
+  void initCopyConstructor(const gul::SharedResource& other);
+  void detach(void);
 
-      void Write(const String& rKey, const String& rValue);
-      void Write(const String& rKey, double rValue);
-      void Write(const String& rKey, int rValue);
-      void Write(const String& rKey, long rValue);
+  virtual SharedResource* createSharedResourceOwner(void) const = 0;
+  virtual void deleteSharedResource(void) = 0;
+  virtual void transferSharedResourceFrom(const SharedResource& newOwner) = 0;
 
-      int ReadInt(const String& rKey) const;
-      double ReadDouble(const String& rKey) const;
-      String ReadString(const String& rKey) const;
+private:
+  void attachToNewResource(SharedResource &owner);
+  void attachToResource(const SharedResource& otherReferee);
+  void detachFromResource(void);
+  bool isLastReferee(void) const;
+  bool isOwner(void) const;
 
-      bool Contains(const String& rKey) const;
-      void Clear(void) const;
-      bool IsEmpty(void) const;
+private:
+  SharedResource* pOwner;
+  gul::ArrayBasic<const SharedResource*>* pReferees;
 
-      void Flush(void) const;
-
-    private:
-      void load(void);
-
-    private:
-      FILE* pFile;
-  };
+};
 
 }
 

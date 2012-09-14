@@ -58,7 +58,6 @@ void gul::ConverterImageToBW::SetParameter(const gul::Image& grayImage)
 void gul::ConverterImageToBW::Execute(void)
 {
   outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
-  outputImage.AllocateMemory();
 
   for(int y = 0; y < inputImage.GetHeight(); ++y)
   {

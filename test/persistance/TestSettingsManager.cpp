@@ -28,13 +28,13 @@
 
 #include "CTestAssert.h"
 #include "SettingsManager.h"
-#include "String.h"
+#include "File.h"
 
 namespace TestSettingsManager
 {
   int Overwrite(void)
   {
-    gul::SettingsManager m(gul::String("test.config"));
+    gul::SettingsManager m(gul::File("test.config"));
     m.Write(gul::String("int2"), 2);
     m.Write(gul::String("float-100"), -100.0);
     m.Write(gul::String("string"), gul::String("a String"));
@@ -54,7 +54,7 @@ namespace TestSettingsManager
 
   int Contains(void)
   {
-    gul::SettingsManager m(gul::String("test.config"));
+    gul::SettingsManager m(gul::File("test.config"));
     TEST_FALSE(m.Contains(gul::String("int2")));
     m.Write(gul::String("int2"), 2);
     TEST_TRUE(m.Contains(gul::String("int2")));
@@ -65,7 +65,7 @@ namespace TestSettingsManager
 
   int Clear(void)
   {
-    gul::SettingsManager m(gul::String("test.config"));
+    gul::SettingsManager m(gul::File("test.config"));
     m.Write(gul::String("int2"), 2);
     TEST_EQUAL(m.ReadInt(gul::String("int2")), 2);
 
@@ -77,7 +77,7 @@ namespace TestSettingsManager
 
   int ReadWriteNumerics(void)
   {
-    gul::SettingsManager m(gul::String("test.config"));
+    gul::SettingsManager m(gul::File("test.config"));
     m.Write(gul::String("int2"), 2);
     m.Write(gul::String("int-100"), -100);
     m.Write(gul::String("int0"), 0);
@@ -100,7 +100,7 @@ namespace TestSettingsManager
 
   int ReadWriteStrings(void)
   {
-    gul::SettingsManager m(gul::String("test.config"));
+    gul::SettingsManager m(gul::File("test.config"));
     m.Write(gul::String("shortString"), gul::String("short"));
     m.Write(gul::String("longString"), gul::String("this is a long long long long string"));
     m.Write(gul::String("newlineString"), gul::String("this contains a\nnewline"));

@@ -38,15 +38,6 @@ gul::Image::Image(void)
     height(0),
     imageType(IT_UNDEFINED)
 {
-
-}
-
-gul::Image::Image(int w, int h)
-  : pData(nullptr),
-    width(w),
-    height(h),
-    imageType(IT_UNDEFINED)
-{
 }
 
 gul::Image::Image(int w, int h, ImageType dataImageType)
@@ -55,6 +46,7 @@ gul::Image::Image(int w, int h, ImageType dataImageType)
     height(h),
     imageType(dataImageType)
 {
+  initConstructor();
 }
 
 gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* data)
@@ -63,7 +55,7 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
     height(h),
     imageType(dataImageType)
 {
-  AllocateMemory();
+  initConstructor();
   for(int y = 0; y < h; ++y)
   {
     for(int x = 0; x < w; ++x)
@@ -75,20 +67,33 @@ gul::Image::Image(int w, int h, ImageType dataImageType, const unsigned char* da
       SetPixel(x, y, rgba);
     }
   }
+
 }
 
-void gul::Image::AllocateMemory(void)
+gul::Image::Image(const Image &rImage)
+  : SharedResource(),
+    pData(nullptr),
+    width(rImage.width),
+    height(rImage.height),
+    imageType(rImage.imageType)
 {
-  ASSERT(pData == nullptr);
-  ASSERT(GetWidth()*GetHeight()*GetNumberOfChannels() > 0);
+  initCopyConstructor(rImage);
+}
 
-  int size = GetWidth() * GetHeight() * GetNumberOfChannels();
-  pData = new float[size];
+gul::Image& gul::Image::operator =(const Image &rImage)
+{
+  SharedResource::operator =(rImage);
+  if(this != &rImage)
+  {
+    width = rImage.width;
+    height = rImage.height;
+    imageType = rImage.imageType;
+  }
+  return *this;
 }
 
 gul::Image::~Image(void)
 {
-//  GUL_DELETE_ARRAY(pData);
 }
 
 int gul::Image::GetWidth(void) const
@@ -130,4 +135,57 @@ void gul::Image::SetPixel(int x, int y, const gul::RGBA& rgba)
 bool gul::Image::IsNull(void) const
 {
   return width == 0 && height == 0;
+}
+
+
+const float* gul::Image::GetDataConst(void) const
+{
+  return pData;
+}
+
+const float* gul::Image::GetData(void) const
+{
+  return pData;
+}
+
+float* gul::Image::GetData(void)
+{
+  return pData;
+}
+
+
+void gul::Image::allocateSharedResource(void)
+{
+  ASSERT(pData == nullptr);
+  ASSERT(GetWidth()*GetHeight()*GetNumberOfChannels() > 0);
+
+  int size = GetWidth() * GetHeight() * GetNumberOfChannels();
+  pData = new float[size];
+}
+
+void gul::Image::deleteSharedResource(void)
+{
+  GUL_DELETE_ARRAY(pData);
+}
+
+void gul::Image::transferSharedResourceFrom(const SharedResource& newOwner)
+{
+  pData = static_cast<const Image&>(newOwner).pData;
+}
+
+gul::Image::Image(const Image &rImage, bool allocate)
+  : pData(nullptr),
+    width(rImage.width),
+    height(rImage.height),
+    imageType(rImage.imageType)
+{
+  if(allocate)
+  {
+    allocateSharedResource();
+  }
+}
+
+gul::Image* gul::Image::createSharedResourceOwner(void) const
+{
+  return new gul::Image(*this, true);
 }

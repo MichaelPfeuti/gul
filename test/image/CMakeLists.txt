@@ -30,6 +30,13 @@ gul_add_test(Image ImageFileHandler SavePPM)
 gul_add_test(Image ImageFileHandler LoadTIFF)
 gul_add_test(Image ImageFileHandler SaveTIFF)
 
+gul_add_test(Image Image Constructor)
+gul_add_test(Image Image CopyConstructor)
+gul_add_test(Image Image Assignment)
+gul_add_test(Image Image AssignmentSelf)
+gul_add_test(Image Image AssignmentExchange)
+gul_add_test(Image Image DeleteReferee)
+
 gul_add_util_sources(Utils.h Utils.cpp)
 gul_create_test()
 target_link_libraries(TestImage image algorithms_analyzer algorithms_converter)

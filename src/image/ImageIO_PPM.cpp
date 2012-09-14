@@ -75,8 +75,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
   // ignore any trailing whitespaces
   //while (fgetc(f) != '\n') ;
 
-  gul::Image image(width, height);
-  image.AllocateMemory();
+  gul::Image image(width, height, gul::Image::IT_RGBA);
 
   if(strcmp(dataMode, "P1") == 0)
   {

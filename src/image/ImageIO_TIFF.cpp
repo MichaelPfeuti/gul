@@ -45,8 +45,7 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
   TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
   TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
 
-  gul::Image image(width, height);
-  image.AllocateMemory();
+  gul::Image image(width, height, gul::Image::IT_RGBA);
 
   uint32 npixels = width * height;
   uint32* raster = static_cast<uint32*>(_TIFFmalloc(npixels * sizeof(uint32)));

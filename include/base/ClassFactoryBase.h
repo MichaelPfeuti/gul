@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _GUL_BASE_CLASS_FACTORY_BASE_H_
 #define _GUL_BASE_CLASS_FACTORY_BASE_H_
-
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).

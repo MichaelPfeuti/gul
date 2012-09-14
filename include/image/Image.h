@@ -31,11 +31,12 @@
 
 #include "RTTI.h"
 #include "RGBA.h"
+#include "SharedResource.h"
 
 namespace gul
 {
 
-  class Image
+  class Image : private SharedResource
   {
       DECLARE_RTTI(Image)
 
@@ -52,12 +53,13 @@ namespace gul
 
     public:
       Image(void);
-      Image(int w, int h);
       Image(int w, int h, ImageType dataImageType);
       Image(int w, int h, ImageType dataImageType, const unsigned char* data);
+      Image(const Image& rImage);
       virtual ~Image(void);
 
-      void AllocateMemory(void);
+      Image& operator=(const Image& other);
+
 
       int GetWidth(void) const;
       int GetHeight(void) const;
@@ -69,12 +71,26 @@ namespace gul
       const RGBA GetPixel(int x, int y) const;
       void SetPixel(int x, int y, const gul::RGBA& rgba);
 
+      const float* GetDataConst(void) const;
+      const float* GetData(void) const;
+      float* GetData(void);
+
+
+    protected:
+      using SharedResource::operator =;
+      void allocateSharedResource(void);
+      virtual void deleteSharedResource(void);
+      virtual void transferSharedResourceFrom(const SharedResource& newOwner);
+      virtual gul::Image* createSharedResourceOwner(void) const;
+
+    private:
+      Image(const Image &rImage, bool allocate);
+
     private:
       float* pData;
       int width;
       int height;
       ImageType imageType;
-
   };
 }
 

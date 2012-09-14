@@ -72,7 +72,7 @@
   }
 
 #define TEST_NULL(test) \
-  if(test == nullptr) \
+  if(test != nullptr) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \

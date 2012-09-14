@@ -88,8 +88,7 @@ gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
   row_stride = cinfo.output_width * cinfo.output_components;
   buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-  gulImage = gul::Image(cinfo.output_width, cinfo.output_height);
-  gulImage.AllocateMemory();
+  gulImage = gul::Image(cinfo.output_width, cinfo.output_height, gul::Image::IT_RGBA);
 
   int y = 0;
   while(cinfo.output_scanline < cinfo.output_height)

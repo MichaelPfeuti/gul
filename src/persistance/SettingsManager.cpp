@@ -29,6 +29,7 @@
 #include "SettingsManager.h"
 #include "Misc.h"
 #include "Assert.h"
+#include "File.h"
 #include "String.h"
 
 gul::SettingsManager::SettingsManager(void)
@@ -38,13 +39,13 @@ gul::SettingsManager::SettingsManager(void)
 
 }
 
-gul::SettingsManager::SettingsManager(const String& rPath)
+gul::SettingsManager::SettingsManager(const gul::File& rPath)
   : pFile(nullptr)
 {
-  ASSERT_MSG(!rPath.IsEmpty(), "The path to the file cannot be empty")
-  pFile = fopen(rPath.GetData(), "w+");
-
+  ASSERT_MSG(!rPath.IsPathValid(), "The path to the file cannot be empty")
+  pFile = fopen(rPath.GetPath().GetData(), "w+");
   ASSERT_MSG(pFile != nullptr, "Could not create/open settings file");
+
 }
 
 gul::SettingsManager::~SettingsManager(void)
@@ -76,37 +77,37 @@ void gul::SettingsManager::Write(const String& rKey, long rValue)
   GUL_UNUSED_VAR(rValue);
 }
 
-int gul::SettingsManager::ReadInt(const String& rKey)
+int gul::SettingsManager::ReadInt(const String& rKey) const
 {
   GUL_UNUSED_VAR(rKey);
   return 0;
 }
 
-double gul::SettingsManager::ReadDouble(const String& rKey)
+double gul::SettingsManager::ReadDouble(const String& rKey) const
 {
   GUL_UNUSED_VAR(rKey);
   return 0.0;
 }
 
-gul::String gul::SettingsManager::ReadString(const String& rKey)
+gul::String gul::SettingsManager::ReadString(const String& rKey) const
 {
   GUL_UNUSED_VAR(rKey);
   return gul::String("");
 }
 
-bool gul::SettingsManager::Contains(const String& rKey)
+bool gul::SettingsManager::Contains(const String& rKey) const
 {
   GUL_UNUSED_VAR(rKey);
   return false;
 }
 
 
-void gul::SettingsManager::Clear(void)
+void gul::SettingsManager::Clear(void) const
 {
 
 }
 
-bool gul::SettingsManager::IsEmpty(void)
+bool gul::SettingsManager::IsEmpty(void) const
 {
   return true;
 }

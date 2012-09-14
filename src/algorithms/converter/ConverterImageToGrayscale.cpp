@@ -85,7 +85,6 @@ void gul::ConverterImageToGrayscale::SetParameter(const gul::Image& colorImage)
 void gul::ConverterImageToGrayscale::Execute(void)
 {
   outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
-  outputImage.AllocateMemory();
 
   for(int y = 0; y < inputImage.GetHeight(); ++y)
   {
