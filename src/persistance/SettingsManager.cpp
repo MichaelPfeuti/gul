@@ -32,83 +32,168 @@
 #include "File.h"
 #include "String.h"
 
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include <string>
+#if defined __GNUC__
+# include <unistd.h>
+#endif
+
+const gul::String gul::SettingsManager::DELIMITER(":");
+
 gul::SettingsManager::SettingsManager(void)
-  : pFile(nullptr)
+  : path()
 {
-  //TODO: some default path
+#ifdef _WIN32 // note the underscore: without it, it's not msdn official!
+    // Windows (x64 and x86)
+#elif __unix__ // all unices
+    // Unix
+#elif __posix__
+    path = getDefaultPathPosix();
+#elif __linux__
+    // linux
+#elif __APPLE__
+    // Mac OS, not sure if this is covered by __posix__ and/or __unix__ though...
+#endif
 
 }
 
 gul::SettingsManager::SettingsManager(const gul::File& rPath)
-  : pFile(nullptr)
+  : path(rPath)
 {
-  ASSERT_MSG(!rPath.IsPathValid(), "The path to the file cannot be empty")
-  pFile = fopen(rPath.GetPath().GetData(), "w+");
-  ASSERT_MSG(pFile != nullptr, "Could not create/open settings file");
-
+  ASSERT_MSG(rPath.IsPathValid(), "The path to the file cannot be empty");
+  load();
 }
 
 gul::SettingsManager::~SettingsManager(void)
 {
-  fclose(pFile);
+  Flush();
+}
+
+gul::String gul::SettingsManager::getDefaultPathPosix(void) const
+{
+//#if __posix__
+  //char defaultPath[4096];
+  //readlink("/proc/self", path, sizeof(defaultPath));
+//#endif
+  return gul::String();
 }
 
 void gul::SettingsManager::Write(const String& rKey, const String& rValue)
 {
-  GUL_UNUSED_VAR(rKey);
-  GUL_UNUSED_VAR(rValue);
+  map.Add(rKey, rValue);
 }
 
 void gul::SettingsManager::Write(const String& rKey, double rValue)
 {
-  GUL_UNUSED_VAR(rKey);
-  GUL_UNUSED_VAR(rValue);
+  map.Add(rKey, gul::String("%").Arg(rValue));
 }
 
 void gul::SettingsManager::Write(const String& rKey, int rValue)
 {
-  GUL_UNUSED_VAR(rKey);
-  GUL_UNUSED_VAR(rValue);
+  map.Add(rKey, gul::String("%").Arg(rValue));
 }
 
 void gul::SettingsManager::Write(const String& rKey, long rValue)
 {
-  GUL_UNUSED_VAR(rKey);
-  GUL_UNUSED_VAR(rValue);
+  map.Add(rKey, gul::String("%").Arg(rValue));
 }
 
-int gul::SettingsManager::ReadInt(const String& rKey) const
+long gul::SettingsManager::ReadInt(const String& rKey) const
 {
-  GUL_UNUSED_VAR(rKey);
-  return 0;
+  if(map.Contains(rKey))
+    return map.Get(rKey).ToLong();
+  else
+    return 0;
 }
 
-double gul::SettingsManager::ReadDouble(const String& rKey) const
+double gul::SettingsManager::ReadFloat(const String& rKey) const
 {
-  GUL_UNUSED_VAR(rKey);
-  return 0.0;
+  if(map.Contains(rKey))
+    return map.Get(rKey).ToDouble();
+  else
+    return 0;
 }
 
 gul::String gul::SettingsManager::ReadString(const String& rKey) const
 {
-  GUL_UNUSED_VAR(rKey);
-  return gul::String("");
+  if(map.Contains(rKey))
+    return map.Get(rKey);
+  else
+    return "";
 }
 
 bool gul::SettingsManager::Contains(const String& rKey) const
 {
-  GUL_UNUSED_VAR(rKey);
-  return false;
+  return map.Contains(rKey);
 }
 
-
-void gul::SettingsManager::Clear(void) const
+void gul::SettingsManager::Clear(void)
 {
-
+  map.Clear();
 }
 
 bool gul::SettingsManager::IsEmpty(void) const
 {
-  return true;
+  return map.IsEmpty();
 }
 
+void gul::SettingsManager::Flush(void)
+{
+  std::ofstream file(path.GetPath().GetData());
+  if(!file.is_open())
+  {
+    //TODO: Log
+    FAIL("Config file couldn't be written!");
+    return;
+  }
+  gul::MapBasic<String, String>::Iterator it = map.GetIterator();
+  gul::MapBasic<String, String>::Pair pair;
+  while(it.HasNext())
+  {
+    pair = it.Next();
+    file << pair.GetKey().GetData()
+         << DELIMITER.GetData()
+         << pair.GetValue().GetData()
+         << std::endl;
+
+    std::cout << pair.GetValue().GetData() << std::endl;
+  }
+  file.close();
+}
+
+void gul::SettingsManager::load(void)
+{
+  std::ifstream file(path.GetPath().GetData());
+  if(!file.is_open())
+  {
+    //TODO: add logging here.
+    //FAIL("Config file couldn't be read!!");
+    return;
+  }
+  std::string line;
+
+  while(getline(file, line))
+  {
+    if(line.find("#") == 0 || line.find("//") == 0)
+      continue;
+
+    char toSplit[line.length()+1];
+    strcpy(toSplit, line.c_str());
+    char* token = strtok(toSplit, DELIMITER.GetData());
+    gul::String key, value;
+    if(token != nullptr)
+    {
+      key = token;
+      token = strtok(nullptr, DELIMITER.GetData());
+      if(token != nullptr)
+      {
+        value = token;
+      }
+    }
+
+    if(!key.IsEmpty() && !value.IsEmpty())
+      map.Add(key, value);
+  }
+}

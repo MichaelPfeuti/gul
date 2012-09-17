@@ -31,19 +31,16 @@
 
 #include "NonCopyable.h"
 #include <cstdio>
+#include "String.h"
+#include "File.h"
+#include "MapBasic.h"
 
-namespace gul
-{
-  class String;
-  class File;
-}
 
 namespace gul
 {
 
   class SettingsManager : public NonCopyable
   {
-
     public:
       SettingsManager(void);
       explicit SettingsManager(const File& rPath);
@@ -54,21 +51,24 @@ namespace gul
       void Write(const String& rKey, int rValue);
       void Write(const String& rKey, long rValue);
 
-      int ReadInt(const String& rKey) const;
-      double ReadDouble(const String& rKey) const;
+      long ReadInt(const String& rKey) const;
+      double ReadFloat(const String& rKey) const;
       String ReadString(const String& rKey) const;
 
       bool Contains(const String& rKey) const;
-      void Clear(void) const;
       bool IsEmpty(void) const;
 
-      void Flush(void) const;
+      void Clear(void);
+      void Flush(void);
 
     private:
+      gul::String getDefaultPathPosix(void) const;
       void load(void);
 
     private:
-      FILE* pFile;
+      gul::File path;
+      MapBasic<String, String> map;
+      static const gul::String DELIMITER;
   };
 
 }

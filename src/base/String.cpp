@@ -34,6 +34,9 @@
 #include <cstdio>
 #include <typeinfo>
 #include <ctype.h>
+#include <cstdlib>
+
+static const int MAX_REPLACE_VALUE_LENGTH = 256;
 
 const gul::RTTI gul::String::RTTI(gul::String("gul::String"));
 
@@ -80,15 +83,14 @@ char gul::String::CharAt(int index) const
   return this->pString[index];
 }
 
-gul::String gul::String::Arg(double value) const
+gul::String gul::String::Arg(double value, int precision) const
 {
   int idx = this->Find(String("%"));
   ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
-  const int valueLength = 256;
-  char pNewString[this->Size() + valueLength];
+  char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
-  sprintf(pNewString, "%.*s%g%s", idx, this->pString, value, this->pString + idx + 1);
+  sprintf(pNewString, "%.*s%.*f%s", idx, this->pString, precision, value, this->pString + idx + 1);
   return String(pNewString);
 }
 
@@ -97,8 +99,7 @@ gul::String gul::String::Arg(int value) const
   int idx = this->Find(String("%"));
   ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
-  const int valueLength = 256;
-  char pNewString[this->Size() + valueLength];
+  char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
   sprintf(pNewString, "%.*s%d%s", idx, this->pString, value, this->pString + idx + 1);
   return String(pNewString);
@@ -109,11 +110,18 @@ gul::String gul::String::Arg(long value) const
   int idx = this->Find(String("%"));
   ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
-  const int valueLength = 255;
-  char pNewString[this->Size() + valueLength];
+  char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
   sprintf(pNewString, "%.*s%ld%s", idx, this->pString, value, this->pString + idx + 1);
   return String(pNewString);
+}
+
+gul::String gul::String::Arg(bool value) const
+{
+  if(value)
+    return this->Replace("true", gul::String("%"));
+  else
+    return this->Replace("false", gul::String("%"));
 }
 
 gul::String gul::String::Arg(const gul::String& rString) const
@@ -244,6 +252,23 @@ gul::String gul::String::LowerCase(void) const
   }
 
   return gul::String(toBeLowered);
+}
+
+long gul::String::ToLong(void) const
+{
+  return atol(pString);
+}
+
+double gul::String::ToDouble(void) const
+{
+  return atof(pString);
+}
+
+bool gul::String::ToBool(void) const
+{
+  return this->LowerCase() == gul::String("true") ||
+         this->LowerCase() == gul::String("on") ||
+         this->LowerCase() == gul::String("yes");
 }
 
 gul::String gul::operator+(const gul::String& rLeft, const gul::String& rRight)

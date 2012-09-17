@@ -47,7 +47,7 @@ namespace gul
       bool Exists(void) const;
 
     private:
-      String* pPath;
+      String pPath;
   };
 }
 

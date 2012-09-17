@@ -70,7 +70,8 @@ namespace gul
       }
       char CharAt(int index) const;
 
-      String Arg(double value) const;
+      String Arg(bool value) const;
+      String Arg(double value, int precision = 6) const;
       String Arg(long value) const;
       String Arg(int value) const;
       String Arg(const String& rString) const;
@@ -93,6 +94,10 @@ namespace gul
       {
         return pString;
       }
+
+      long ToLong(void) const;
+      double ToDouble(void) const;
+      bool ToBool(void) const;
 
     private:
       const char* pString;

@@ -33,42 +33,41 @@
 
 
 gul::File::File(void)
-  : pPath(nullptr)
+  : pPath()
 {
 }
 
 gul::File::File(const String& rPath)
-  : pPath(new gul::String(rPath))
+  : pPath(rPath)
 {
 
 }
 
 gul::File::~File(void)
 {
-  GUL_DELETE(pPath);
 }
 
 gul::String gul::File::GetSuffix(void) const
 {
-  int idx = pPath->FindBackward(gul::String("."));
+  int idx = pPath.FindBackward(gul::String("."));
   if(idx < 0)
     return gul::String();
 
-  return pPath->Substring(idx + 1, pPath->Size());
+  return pPath.Substring(idx + 1, pPath.Size());
 }
 
 gul::String gul::File::GetPath(void) const
 {
-  return *this->pPath;
+  return this->pPath;
 }
 
 bool gul::File::IsPathValid(void) const
 {
-  return pPath != nullptr;
+  return !pPath.IsEmpty();
 }
 
 bool gul::File::Exists(void) const
 {
   return IsPathValid() &&
-         access(pPath->GetData(), F_OK) == 0;
+         access(pPath.GetData(), F_OK) == 0;
 }

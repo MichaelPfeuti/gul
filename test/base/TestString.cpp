@@ -109,6 +109,21 @@ namespace TestString
     TEST_EQUAL(gul::String("%%TestTest").Arg(1.2345).Arg(1), gul::String("1.23451TestTest"));
     TEST_EQUAL(gul::String("TestTest%%").Arg(99).Arg(1.2345), gul::String("TestTest991.2345"));
 
+    TEST_EQUAL(gul::String("Test%%Test").Arg(true).Arg(false), gul::String("TesttruefalseTest"));
+    TEST_EQUAL(gul::String("%%TestTest").Arg(false).Arg(true), gul::String("falsetrueTestTest"));
+    TEST_EQUAL(gul::String("TestTest%%").Arg(true).Arg(false), gul::String("TestTesttruefalse"));
+
+    return EXIT_SUCCESS;
+  }
+
+  int PlaceHolderPrecision(void)
+  {
+    double val = 123.456789102345;
+    TEST_EQUAL(gul::String("%").Arg(val), gul::String("123.456789"));
+    TEST_EQUAL(gul::String("%").Arg(val, 0), gul::String("123"));
+    TEST_EQUAL(gul::String("%").Arg(val, 3), gul::String("123.457"));
+    TEST_EQUAL(gul::String("%").Arg(val, 12), gul::String("123.456789102345"));
+
     return EXIT_SUCCESS;
   }
 
@@ -288,4 +303,54 @@ namespace TestString
     return EXIT_SUCCESS;
   }
 
+  int ToLong(void)
+  {
+    long val = 1234567890123456789;
+    gul::String str1("1234567890123456789");
+    gul::String str2 = gul::String("%").Arg(val);
+
+    TEST_EQUAL(str1.ToLong(), val);
+    TEST_EQUAL(str2.ToLong(), val);
+
+    return EXIT_SUCCESS;
+  }
+
+  int ToDouble(void)
+  {
+    double val = 12345.06789;
+    gul::String str1("12345.06789");
+    gul::String str2 = gul::String("%").Arg(val);
+
+    TEST_EQUAL(str1.ToDouble(), val);
+    TEST_EQUAL(str2.ToDouble(), val);
+
+    return EXIT_SUCCESS;
+  }
+
+  int ToBool(void)
+  {
+    bool valTrue = true;
+    bool valFalse = false;
+    gul::String str1True("truE");
+    gul::String str1False("fAlse");
+    gul::String str1Yes("yEs");
+    gul::String str1No("nO");
+    gul::String str1On("oN");
+    gul::String str1Off("oFf");
+    gul::String str2True = gul::String("%").Arg(valTrue);
+    gul::String str2False = gul::String("%").Arg(valFalse);
+
+    TEST_EQUAL(str1True.ToBool(), valTrue);
+    TEST_EQUAL(str1False.ToBool(), valFalse);
+    TEST_EQUAL(str1Yes.ToBool(), valTrue);
+    TEST_EQUAL(str1No.ToBool(), valFalse);
+    TEST_EQUAL(str1On.ToBool(), valTrue);
+    TEST_EQUAL(str1Off.ToBool(), valFalse);
+    TEST_EQUAL(str2True.ToBool(), valTrue);
+    TEST_EQUAL(str2False.ToBool(), valFalse);
+
+    return EXIT_SUCCESS;
+  }
+
 }
+
