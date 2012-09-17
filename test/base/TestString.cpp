@@ -89,25 +89,25 @@ namespace TestString
   {
     TEST_EQUAL(gul::String("Test%").Arg(1), gul::String("Test1"));
     TEST_EQUAL(gul::String("Test%").Arg(99), gul::String("Test99"));
-    TEST_EQUAL(gul::String("Test%").Arg(1.2345), gul::String("Test1.2345"));
+    TEST_EQUAL(gul::String("Test%").Arg(1.2345, 4), gul::String("Test1.2345"));
     TEST_EQUAL(gul::String("Test%").Arg(gul::String("Repl")), gul::String("TestRepl"));
 
     TEST_EQUAL(gul::String("Test%Test").Arg(1), gul::String("Test1Test"));
     TEST_EQUAL(gul::String("Test%Test").Arg(99), gul::String("Test99Test"));
-    TEST_EQUAL(gul::String("Test%Test").Arg(1.2345), gul::String("Test1.2345Test"));
+    TEST_EQUAL(gul::String("Test%Test").Arg(1.2345, 4), gul::String("Test1.2345Test"));
     TEST_EQUAL(gul::String("Test%Test").Arg(gul::String("Repl")), gul::String("TestReplTest"));
 
     TEST_EQUAL(gul::String("%Test").Arg(1), gul::String("1Test"));
     TEST_EQUAL(gul::String("%Test").Arg(99), gul::String("99Test"));
-    TEST_EQUAL(gul::String("%Test").Arg(1.2345), gul::String("1.2345Test"));
+    TEST_EQUAL(gul::String("%Test").Arg(1.2345, 4), gul::String("1.2345Test"));
     TEST_EQUAL(gul::String("%Test").Arg(gul::String("Repl")), gul::String("ReplTest"));
 
-    TEST_EQUAL(gul::String("Test%Test%").Arg(99).Arg(1.2345), gul::String("Test99Test1.2345"));
-    TEST_EQUAL(gul::String("%Test%Test").Arg(99).Arg(1.2345), gul::String("99Test1.2345Test"));
+    TEST_EQUAL(gul::String("Test%Test%").Arg(99).Arg(1.2345, 4), gul::String("Test99Test1.2345"));
+    TEST_EQUAL(gul::String("%Test%Test").Arg(99).Arg(1.2345, 4), gul::String("99Test1.2345Test"));
 
-    TEST_EQUAL(gul::String("Test%%Test").Arg(1).Arg(1.2345), gul::String("Test11.2345Test"));
-    TEST_EQUAL(gul::String("%%TestTest").Arg(1.2345).Arg(1), gul::String("1.23451TestTest"));
-    TEST_EQUAL(gul::String("TestTest%%").Arg(99).Arg(1.2345), gul::String("TestTest991.2345"));
+    TEST_EQUAL(gul::String("Test%%Test").Arg(1).Arg(1.2345, 4), gul::String("Test11.2345Test"));
+    TEST_EQUAL(gul::String("%%TestTest").Arg(1.2345, 4).Arg(1), gul::String("1.23451TestTest"));
+    TEST_EQUAL(gul::String("TestTest%%").Arg(99).Arg(1.2345, 4), gul::String("TestTest991.2345"));
 
     TEST_EQUAL(gul::String("Test%%Test").Arg(true).Arg(false), gul::String("TesttruefalseTest"));
     TEST_EQUAL(gul::String("%%TestTest").Arg(false).Arg(true), gul::String("falsetrueTestTest"));

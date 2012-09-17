@@ -46,15 +46,15 @@ gul::SettingsManager::SettingsManager(void)
   : path()
 {
 #ifdef _WIN32 // note the underscore: without it, it's not msdn official!
-    // Windows (x64 and x86)
+  // Windows (x64 and x86)
 #elif __unix__ // all unices
-    // Unix
+  // Unix
 #elif __posix__
-    path = getDefaultPathPosix();
+  path = getDefaultPathPosix();
 #elif __linux__
-    // linux
+  // linux
 #elif __APPLE__
-    // Mac OS, not sure if this is covered by __posix__ and/or __unix__ though...
+  // Mac OS, not sure if this is covered by __posix__ and/or __unix__ though...
 #endif
 
 }
@@ -179,7 +179,7 @@ void gul::SettingsManager::load(void)
     if(line.find("#") == 0 || line.find("//") == 0)
       continue;
 
-    char toSplit[line.length()+1];
+    char toSplit[line.length() + 1];
     strcpy(toSplit, line.c_str());
     char* token = strtok(toSplit, DELIMITER.GetData());
     gul::String key, value;
