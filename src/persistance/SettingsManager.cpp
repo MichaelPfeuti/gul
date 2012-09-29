@@ -42,23 +42,6 @@
 
 const gul::String gul::SettingsManager::DELIMITER(":");
 
-gul::SettingsManager::SettingsManager(void)
-  : path()
-{
-#ifdef _WIN32 // note the underscore: without it, it's not msdn official!
-  // Windows (x64 and x86)
-#elif __unix__ // all unices
-  // Unix
-#elif __posix__
-  path = getDefaultPathPosix();
-#elif __linux__
-  // linux
-#elif __APPLE__
-  // Mac OS, not sure if this is covered by __posix__ and/or __unix__ though...
-#endif
-
-}
-
 gul::SettingsManager::SettingsManager(const gul::File& rPath)
   : path(rPath)
 {
@@ -69,15 +52,6 @@ gul::SettingsManager::SettingsManager(const gul::File& rPath)
 gul::SettingsManager::~SettingsManager(void)
 {
   Flush();
-}
-
-gul::String gul::SettingsManager::getDefaultPathPosix(void) const
-{
-//#if __posix__
-  //char defaultPath[4096];
-  //readlink("/proc/self", path, sizeof(defaultPath));
-//#endif
-  return gul::String();
 }
 
 void gul::SettingsManager::Write(const String& rKey, const String& rValue)

@@ -75,6 +75,8 @@ namespace gul
       const float* GetData(void) const;
       float* GetData(void);
 
+      int GetPitch(void) const;
+
 
     protected:
       using SharedResource::operator =;

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_VIDEO_FFMPEG_H_
-#define _GUL_VIDEO_FFMPEG_H_
+#ifndef _GUL_VIDEO_VIDEO_FRAME_H_
+#define _GUL_VIDEO_VIDEO_FRAME_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,44 +29,25 @@
 **
 ***************************************************************************/
 
-#include "String.h"
-
+#include "Image.h"
 #include <cstdint>
-
-class AVFormatContext;
-class AVCodecContext;
-class AVCodec;
-class AVFrame;
-class SwsContext;
-
 
 namespace gul
 {
 
-  class FFMPEG
-  {
-    public:
-      FFMPEG(const gul::String& videoPath);
-      ~FFMPEG(void);
+class VideoFrame : public gul::Image
+{
+public:
+  explicit VideoFrame(const gul::Image& img);
 
-      void OpenVideo(void);
+  void SetPresentationTime(uint64_t pts);
+  uint64_t GetPresentationTime(void) const;
 
-    private:
-      void SaveFrame(int width, int height, int iFrame);
-
-    private:
-      const gul::String path;
-      AVFormatContext* pFormatCtx;
-      AVCodecContext* pCodecCtx;
-      SwsContext* pSWSContext;
-      AVCodec* pCodec;
-      AVFrame* pFrame;
-      AVFrame* pFrameRGBA;
-      uint8_t* pDataBufferRGBA;
-
-      static bool codecsAreRegistered;
-  };
+private:
+  uint64_t presentationTime;
+};
 
 }
+
 
 #endif

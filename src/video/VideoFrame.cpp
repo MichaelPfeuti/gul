@@ -2,9 +2,9 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti.
+** Copyright (c) 2011-2012#FIRST AND LAST NAME#.
 **
-** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
+** Contact: #FIRST AND LAST NAME# (#EMAIL#)
 **
 **
 ** gul is free software: you can redistribute it and/or modify it under the
@@ -22,24 +22,25 @@
 **
 **
 ** If you have questions regarding the use of this file, please contact
-** Michael Pfeuti at mpfeuti@ganymede.ch.
+** #FIRST AND LAST NAME# at #EMAIL#.
 **
 ***************************************************************************/
 
-#include "CTestAssert.h"
+#include "VideoFrame.h"
 
-#include "FFMPEG.h"
 
-namespace TestFFMPEG
+gul::VideoFrame::VideoFrame(const gul::Image& img)
+  : gul::Image(img),
+    presentationTime(0)
 {
-
-  int Test(void)
-  {
-    gul::FFMPEG ffmpeg(gul::String("/home/pfeuti/Code/gul/test/video/data/drop.avi"));
-    ffmpeg.OpenVideo();
-
-
-    return EXIT_FAILURE;
-  }
 }
 
+void gul::VideoFrame::SetPresentationTime(uint64_t pts)
+{
+  presentationTime = pts;
+}
+
+uint64_t gul::VideoFrame::GetPresentationTime(void) const
+{
+  return presentationTime;
+}

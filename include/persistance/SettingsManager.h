@@ -42,7 +42,6 @@ namespace gul
   class SettingsManager : public NonCopyable
   {
     public:
-      SettingsManager(void);
       explicit SettingsManager(const File& rPath);
       virtual ~SettingsManager(void);
 
