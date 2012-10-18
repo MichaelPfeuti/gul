@@ -33,7 +33,6 @@
 
 #include "File.h"
 #include "Image.h"
-#include "VideoSettings.h"
 
 class AVFormatContext;
 class AVCodecContext;
@@ -53,13 +52,12 @@ namespace gul
 
       bool OpenVideo(void);
       bool IsFrameValid(void) const;
-      void GetNext(Image &image);
-      gul::VideoSettings GetSettings(void) const;
+      void GetNext(Image& image);
 
     private:
-      bool readNextImage(Image &image);
+      bool readNextImage(Image& image);
       void setCurrentImage(gul::Image& image, const AVFrame* frame);
-      bool decodeRemaining(Image &image);
+      bool decodeRemaining(Image& image);
 
     private:
       const gul::File path;

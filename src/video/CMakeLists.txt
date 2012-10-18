@@ -12,7 +12,6 @@ add_library(video STATIC
   VideoSaver.cpp
   VideoFrame.cpp
     
-  ${INCLUDE}/video/VideoSettings.h
   ${INCLUDE}/video/VideoLoader.h
   ${INCLUDE}/video/VideoSaver.h
   ${INCLUDE}/video/VideoFrame.h

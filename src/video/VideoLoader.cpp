@@ -222,10 +222,10 @@ void gul::VideoLoader::setCurrentImage(gul::Image& image, const AVFrame* frame)
       gul::RGBA rgba;
       if(frame != nullptr)
       {
-         rgba = gul::RGBA(frame->data[0][ (x + y*width)*channels + 0],
-                          frame->data[0][ (x + y*width)*channels + 1],
-                          frame->data[0][ (x + y*width)*channels + 2],
-                          frame->data[0][ (x + y*width)*channels + 3]);
+        rgba = gul::RGBA(frame->data[0][(x + y * width) * channels + 0],
+                         frame->data[0][(x + y * width) * channels + 1],
+                         frame->data[0][(x + y * width) * channels + 2],
+                         frame->data[0][(x + y * width) * channels + 3]);
       }
       image.SetPixel(x, y, rgba);
     }
@@ -246,13 +246,4 @@ void gul::VideoLoader::GetNext(gul::Image& image)
     image = gul::Image(pCodecCtx->width, pCodecCtx->height, gul::Image::IT_RGBA);
   }
   isFrameValid = readNextImage(image);
-}
-
-gul::VideoSettings gul::VideoLoader::GetSettings(void) const
-{
-  return gul::VideoSettings(pCodecCtx->width, pCodecCtx->height,
-                            pFormatCtx->bit_rate,
-                            pFormatCtx->streams[videoStreamIndex]->time_base.num,
-                            pFormatCtx->streams[videoStreamIndex]->time_base.den,
-                            pCodecCtx->gop_size);
 }

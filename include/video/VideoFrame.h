@@ -35,17 +35,17 @@
 namespace gul
 {
 
-class VideoFrame : public gul::Image
-{
-public:
-  explicit VideoFrame(const gul::Image& img);
+  class VideoFrame : public gul::Image
+  {
+    public:
+      explicit VideoFrame(const gul::Image& img);
 
-  void SetPresentationTime(uint64_t pts);
-  uint64_t GetPresentationTime(void) const;
+      void SetPresentationTime(uint64_t pts);
+      uint64_t GetPresentationTime(void) const;
 
-private:
-  uint64_t presentationTime;
-};
+    private:
+      uint64_t presentationTime;
+  };
 
 }
 

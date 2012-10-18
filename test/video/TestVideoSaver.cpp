@@ -31,13 +31,14 @@
 #include "VideoLoader.h"
 #include "VideoSaver.h"
 #include "ImageFileHandler.h"
+#include "AnalyzerImageEquality.h"
 
 namespace TestVideoSaver
 {
-  int WriteReadAndCountFrames(const gul::File& video)
+  bool WriteVideoData(const gul::File& video)
   {
     gul::Image first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
-    gul::VideoSaver saver(video, gul::VideoSettings(first.GetWidth(), first.GetHeight()));
+    gul::VideoSaver saver(video, first.GetWidth(), first.GetHeight());
     saver.OpenVideo();
     for(int i = 0; i < 15; ++i)
     {
@@ -55,6 +56,107 @@ namespace TestVideoSaver
     }
     saver.CloseVideo();
 
+    return true;
+  }
+
+  int FirstFrame(void)
+  {
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::VideoLoader loader(video);
+    loader.OpenVideo();
+
+    gul::Image frame;
+    loader.GetNext(frame);
+    TEST_TRUE(loader.IsFrameValid());
+
+    gul::Image first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, 0.004f));
+
+    return EXIT_SUCCESS;
+  }
+
+  int MiddleFrame(void)
+  {
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::VideoLoader loader(video);
+    loader.OpenVideo();
+
+    gul::Image frame;
+    int frameCount = 1;
+
+    loader.GetNext(frame);
+    TEST_TRUE(loader.IsFrameValid());
+    while(loader.IsFrameValid() && frameCount < 30)
+    {
+      loader.GetNext(frame);
+      ++frameCount;
+      TEST_TRUE(loader.IsFrameValid());
+    }
+
+    gul::Image middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, 0.004f));
+
+    return EXIT_SUCCESS;
+  }
+
+  int LastFrame(void)
+  {
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::VideoLoader loader(video);
+    loader.OpenVideo();
+
+    gul::Image frame;
+    gul::Image framePrev;
+    loader.GetNext(frame);
+    while(loader.IsFrameValid())
+    {
+      framePrev = frame;
+      loader.GetNext(frame);
+    }
+
+    gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
+
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, framePrev, 0.004f));
+
+    return EXIT_SUCCESS;
+  }
+
+
+  int FrameCount(void)
+  {
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::VideoLoader loader(video);
+    loader.OpenVideo();
+
+    gul::Image frame;
+    int frameCount = 0;
+    loader.GetNext(frame);
+    while(loader.IsFrameValid())
+    {
+      ++frameCount;
+      loader.GetNext(frame);
+    }
+    TEST_EQUAL(frameCount, 45);
+
+    return EXIT_SUCCESS;
+  }
+
+  int WriteReadMp4(void)
+  {
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mp4"));
+
+    TEST_TRUE(WriteVideoData(video));
+
     gul::VideoLoader loader(video);
     loader.OpenVideo();
     gul::Image frame;
@@ -71,35 +173,5 @@ namespace TestVideoSaver
     return EXIT_SUCCESS;
   }
 
-  int WriteReadMp4(void)
-  {
-    return WriteReadAndCountFrames(gul::CTestData::GetTempFilePath(gul::String("frameCount.mp4")));
-  }
-
-  int WriteReadMatroska(void)
-  {
-    return WriteReadAndCountFrames(gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv")));
-  }
-
-  int CopyAndCompare(void)
-  {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
-    loader.OpenVideo();
-    gul::VideoSaver saver(gul::CTestData::GetTempFilePath(gul::String("test.mp4")), loader.GetSettings());
-    saver.OpenVideo();
-
-    gul::Image frame;
-    int i = 0;
-    loader.GetNext(frame);
-    while(loader.IsFrameValid())
-    {
-      saver.AddImage(frame);
-      ++i;
-      fprintf(stderr, "%d\n", i);
-      loader.GetNext(frame);
-    }
-
-    return EXIT_SUCCESS;
-  }
 }
 

@@ -157,7 +157,7 @@ float* gul::Image::GetData(void)
 
 int gul::Image::GetPitch(void) const
 {
-  return 4*sizeof(float)*width;
+  return 4 * sizeof(float) * width;
 }
 
 void gul::Image::allocateSharedResource(void)

@@ -30,7 +30,6 @@
 ***************************************************************************/
 
 #include "File.h"
-#include "VideoSettings.h"
 
 #include <cstdint>
 
@@ -52,7 +51,7 @@ namespace gul
   class VideoSaver
   {
     public:
-      VideoSaver(const gul::File& videoPath, const gul::VideoSettings &settings);
+      VideoSaver(const gul::File& videoPath, int width, int height, int fps = 30, int bitrate = 4000000);
       ~VideoSaver(void);
 
       bool OpenVideo(void);
@@ -65,7 +64,6 @@ namespace gul
 
     private:
       const gul::File path;
-      gul::VideoSettings videoSettings;
       AVFormatContext* pFormatCtx;
       AVCodecContext* pCodecCtx;
       SwsContext* pSWSContext;
@@ -74,6 +72,10 @@ namespace gul
       AVFrame* pFrame;
       AVFrame* pFrameRGBA;
       bool isClosed;
+      int videoWidth;
+      int videoHeight;
+      int videoFPS;
+      int videoBitrate;
 
       static bool codecsAreRegistered;
   };
