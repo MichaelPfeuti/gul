@@ -32,27 +32,28 @@
 #include "VideoSaver.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"
+#include "VideoFrame.h"
 
 namespace TestVideoSaver
 {
   bool WriteVideoData(const gul::File& video)
   {
-    gul::Image first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
+    gul::VideoFrame first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
     gul::VideoSaver saver(video, first.GetWidth(), first.GetHeight());
     saver.OpenVideo();
     for(int i = 0; i < 15; ++i)
     {
-      saver.AddImage(first);
+      saver.AddFrame(first);
     }
-    gul::Image middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
+    gul::VideoFrame middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
     for(int i = 0; i < 15; ++i)
     {
-      saver.AddImage(middle);
+      saver.AddFrame(middle);
     }
-    gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
+    gul::VideoFrame last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
     for(int i = 0; i < 15; ++i)
     {
-      saver.AddImage(last);
+      saver.AddFrame(last);
     }
     saver.CloseVideo();
 
@@ -61,13 +62,13 @@ namespace TestVideoSaver
 
   int FirstFrame(void)
   {
-    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("firstFrame.mkv"));
     TEST_TRUE(WriteVideoData(video));
 
     gul::VideoLoader loader(video);
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
 
@@ -80,13 +81,13 @@ namespace TestVideoSaver
 
   int MiddleFrame(void)
   {
-    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("middleFrame.mkv"));
     TEST_TRUE(WriteVideoData(video));
 
     gul::VideoLoader loader(video);
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 1;
 
     loader.GetNext(frame);
@@ -107,14 +108,14 @@ namespace TestVideoSaver
 
   int LastFrame(void)
   {
-    gul::File video = gul::CTestData::GetTempFilePath(gul::String("frameCount.mkv"));
+    gul::File video = gul::CTestData::GetTempFilePath(gul::String("lastFrame.mkv"));
     TEST_TRUE(WriteVideoData(video));
 
     gul::VideoLoader loader(video);
     loader.OpenVideo();
 
-    gul::Image frame;
-    gul::Image framePrev;
+    gul::VideoFrame frame;
+    gul::VideoFrame framePrev;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
     {
@@ -138,7 +139,7 @@ namespace TestVideoSaver
     gul::VideoLoader loader(video);
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 0;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
@@ -159,7 +160,7 @@ namespace TestVideoSaver
 
     gul::VideoLoader loader(video);
     loader.OpenVideo();
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 0;
     loader.GetNext(frame);
     while(loader.IsFrameValid())

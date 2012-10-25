@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_VIDEO_VIDEO_FRAME_MANIPULATOR_H_
+#define _GUL_VIDEO_VIDEO_FRAME_MANIPULATOR_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,43 +29,21 @@
 **
 ***************************************************************************/
 
-#include "VideoFrame.h"
-
-gul::VideoFrame::VideoFrame(void)
+namespace gul
 {
+  class Image;
 }
 
-gul::VideoFrame::VideoFrame(const gul::Image& img)
-  : gul::Image(img),
-    presentationTime(0)
+namespace gul
 {
+  class VideoFrameManipulator
+  {
+    public:
+      virtual ~VideoFrameManipulator(void) {}
+      virtual void Execute(const gul::Image& input, gul::Image& output) = 0;
+      virtual int GetResultWidth(int inputWidth) const = 0;
+      virtual int GetResultHeight(int inputHeight) const = 0;
+  };
 }
 
-gul::VideoFrame::VideoFrame(int w, int h, ImageType dataImageType)
-  : gul::Image(w, h, dataImageType)
-{
-
-}
-
-gul::VideoFrame::~VideoFrame(void)
-{
-}
-
-gul::VideoFrame& gul::VideoFrame::operator=(const gul::VideoFrame& other)
-{
-  gul::Image::operator =(other);
-  presentationTime = other.presentationTime;
-  return *this;
-}
-
-void gul::VideoFrame::SetPresentationTime(uint64_t pts)
-{
-  presentationTime = pts;
-}
-
-
-uint64_t gul::VideoFrame::GetPresentationTime(void) const
-{
-  return presentationTime;
-}
-
+#endif

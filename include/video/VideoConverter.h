@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_VIDEO_VIDEO_CONVERTER_H_
+#define _GUL_VIDEO_VIDEO_CONVERTER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,43 +29,31 @@
 **
 ***************************************************************************/
 
-#include "VideoFrame.h"
-
-gul::VideoFrame::VideoFrame(void)
+namespace gul
 {
+  class File;
+  class VideoFrameManipulator;
+  class VideoLoader;
+  class VideoSaver;
 }
 
-gul::VideoFrame::VideoFrame(const gul::Image& img)
-  : gul::Image(img),
-    presentationTime(0)
-{
-}
-
-gul::VideoFrame::VideoFrame(int w, int h, ImageType dataImageType)
-  : gul::Image(w, h, dataImageType)
+namespace gul
 {
 
+  // works only for mkv -> mkv conversion at the moment
+  class VideoConverter
+  {
+    public:
+      VideoConverter(const gul::File& rInputVideo);
+
+      void Init(const File &rOutputVideo, gul::VideoFrameManipulator& rManipulator);
+      void Execute(void);
+
+    private:
+      gul::VideoLoader* pVideoLoader;
+      gul::VideoSaver* pVideoSaver;
+      gul::VideoFrameManipulator* pManipulator;
+  };
 }
 
-gul::VideoFrame::~VideoFrame(void)
-{
-}
-
-gul::VideoFrame& gul::VideoFrame::operator=(const gul::VideoFrame& other)
-{
-  gul::Image::operator =(other);
-  presentationTime = other.presentationTime;
-  return *this;
-}
-
-void gul::VideoFrame::SetPresentationTime(uint64_t pts)
-{
-  presentationTime = pts;
-}
-
-
-uint64_t gul::VideoFrame::GetPresentationTime(void) const
-{
-  return presentationTime;
-}
-
+#endif

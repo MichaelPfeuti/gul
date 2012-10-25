@@ -5,9 +5,9 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012#FIRST AND LAST NAME#.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
-** Contact: #FIRST AND LAST NAME# (#EMAIL#)
+** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
 **
 ** gul is free software: you can redistribute it and/or modify it under the
@@ -25,19 +25,23 @@
 **
 **
 ** If you have questions regarding the use of this file, please contact
-** #FIRST AND LAST NAME# at #EMAIL#.
+** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
 
 #include <cstdint>
 
 #include "File.h"
-#include "Image.h"
+namespace gul
+{
+  class VideoFrame;
+  class VideoConverter;
+}
 
 class AVFormatContext;
 class AVCodecContext;
-class AVCodec;
 class AVFrame;
+class AVPacket;
 class SwsContext;
 
 
@@ -47,28 +51,41 @@ namespace gul
   class VideoLoader
   {
     public:
-      VideoLoader(const gul::File& videoPath);
+      VideoLoader(const gul::File& rVideoPath);
       ~VideoLoader(void);
 
       bool OpenVideo(void);
+      void CloseVideo(void);
       bool IsFrameValid(void) const;
-      void GetNext(Image& image);
+      void GetNext(VideoFrame& rFrame);
+      int GetWidth(void) const;
+      int GetHeight(void) const;
 
     private:
-      bool readNextImage(Image& image);
-      void setCurrentImage(gul::Image& image, const AVFrame* frame);
-      bool decodeRemaining(Image& image);
+      AVPacket* getNextPacket(void);
+      void freePacket(void);
+      bool decodeVideoPacket(AVPacket& rPacket, VideoFrame &rFrame);
+      bool isVideoPacket(const AVPacket& rPacket) const;
+      void allocateVideoFrame(VideoFrame& rFrame) const;
+      friend class gul::VideoConverter;
+
+    private:
+      bool readNextImage(VideoFrame& rFrame);
+      void setImageData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
+      bool decodeRemaining(VideoFrame& rFrame);
 
     private:
       const gul::File path;
       AVFormatContext* pFormatCtx;
-      AVCodecContext* pCodecCtx;
+      AVCodecContext* pVideoCodecCtx;
       SwsContext* pSWSContext;
-      AVCodec* pCodec;
+      AVPacket* pPacket;
       AVFrame* pFrame;
       AVFrame* pFrameRGBA;
       uint8_t* pDataBufferRGBA;
       bool isFrameValid;
+      bool isVideoOpen;
+      bool isPacketDataFreed;
       int videoStreamIndex;
       static bool codecsAreRegistered;
   };

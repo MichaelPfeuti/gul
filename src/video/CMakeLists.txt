@@ -11,10 +11,14 @@ add_library(video STATIC
   VideoLoader.cpp
   VideoSaver.cpp
   VideoFrame.cpp
+  VideoConverter.cpp
+  VideoFrameManipulator.cpp
     
   ${INCLUDE}/video/VideoLoader.h
   ${INCLUDE}/video/VideoSaver.h
   ${INCLUDE}/video/VideoFrame.h
+  ${INCLUDE}/video/VideoConverter.h
+  ${INCLUDE}/video/VideoFrameManipulator.h
 )
 
 target_link_libraries(video base image)

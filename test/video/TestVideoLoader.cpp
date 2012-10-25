@@ -31,6 +31,7 @@
 #include "VideoLoader.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"
+#include "VideoFrame.h"
 
 namespace TestVideoLoader
 {
@@ -40,7 +41,7 @@ namespace TestVideoLoader
     gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
 
@@ -56,7 +57,7 @@ namespace TestVideoLoader
     gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 1;
 
     loader.GetNext(frame);
@@ -80,8 +81,8 @@ namespace TestVideoLoader
     gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     loader.OpenVideo();
 
-    gul::Image frame;
-    gul::Image framePrev;
+    gul::VideoFrame frame;
+    gul::VideoFrame framePrev;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
     {
@@ -102,7 +103,7 @@ namespace TestVideoLoader
     gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 0;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
@@ -120,8 +121,37 @@ namespace TestVideoLoader
     gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mp4")));
     loader.OpenVideo();
 
-    gul::Image frame;
+    gul::VideoFrame frame;
     int frameCount = 0;
+    loader.GetNext(frame);
+    while(loader.IsFrameValid())
+    {
+      ++frameCount;
+      loader.GetNext(frame);
+    }
+    TEST_EQUAL(frameCount, 50);
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadTwice(void)
+  {
+    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    loader.OpenVideo();
+
+    gul::VideoFrame frame;
+    int frameCount = 0;
+    loader.GetNext(frame);
+    while(loader.IsFrameValid())
+    {
+      ++frameCount;
+      loader.GetNext(frame);
+    }
+    TEST_EQUAL(frameCount, 50);
+    loader.CloseVideo();
+
+    loader.OpenVideo();
+    frameCount = 0;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
     {

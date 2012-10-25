@@ -5,9 +5,9 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012#FIRST AND LAST NAME#.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
-** Contact: #FIRST AND LAST NAME# (#EMAIL#)
+** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
 **
 ** gul is free software: you can redistribute it and/or modify it under the
@@ -25,7 +25,7 @@
 **
 **
 ** If you have questions regarding the use of this file, please contact
-** #FIRST AND LAST NAME# at #EMAIL#.
+** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
 
@@ -38,13 +38,23 @@ namespace gul
   class VideoFrame : public gul::Image
   {
     public:
-      explicit VideoFrame(const gul::Image& img);
+      VideoFrame(void);
+      VideoFrame(const gul::Image& img);
+      VideoFrame(int w, int h, ImageType dataImageType);
+      VideoFrame(int w, int h, ImageType dataImageType, const unsigned char* data);
+      VideoFrame(const VideoFrame& rImage);
+      virtual ~VideoFrame(void);
+
+      VideoFrame& operator=(const VideoFrame& other);
 
       void SetPresentationTime(uint64_t pts);
       uint64_t GetPresentationTime(void) const;
 
+    protected:
+      using Image::operator =;
+
     private:
-      uint64_t presentationTime;
+      uint64_t presentationTime; //!< PTS in the stream time base
   };
 
 }

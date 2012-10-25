@@ -5,9 +5,9 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012#FIRST AND LAST NAME#.
+** Copyright (c) 2011-2012 Michael Pfeuti.
 **
-** Contact: #FIRST AND LAST NAME# (#EMAIL#)
+** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
 **
 ** gul is free software: you can redistribute it and/or modify it under the
@@ -25,7 +25,7 @@
 **
 **
 ** If you have questions regarding the use of this file, please contact
-** #FIRST AND LAST NAME# at #EMAIL#.
+** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
 
@@ -35,12 +35,15 @@
 
 namespace gul
 {
-  class Image;
+  class VideoFrame;
+  class VideoLoader;
+  class VideoConverter;
 }
 class AVFormatContext;
 class AVCodecContext;
-class AVCodec;
 class AVFrame;
+class AVPacket;
+class AVCodec;
 class SwsContext;
 class AVStream;
 
@@ -51,21 +54,32 @@ namespace gul
   class VideoSaver
   {
     public:
-      VideoSaver(const gul::File& videoPath, int width, int height, int fps = 30, int bitrate = 4000000);
+      VideoSaver(const gul::File& rVideoPath, int width, int height, int fps = 30, int bitrate = 4000000);
       ~VideoSaver(void);
 
       bool OpenVideo(void);
       void CloseVideo(void);
-      void AddImage(const gul::Image& image);
+      void AddFrame(const gul::VideoFrame& rFrame);
 
     private:
-      void fillFrameRGBA(const gul::Image& image);
-      bool encodeAndSave(AVFrame* pFrameToEncode);
+      VideoSaver(const gul::File& rVideoPath);
+      void setSize( int width, int height);
+      bool openVideo(const AVFormatContext &rInputFormatCtx);
+      bool writePacket(AVPacket &rPacket);
+      friend class gul::VideoConverter;
+
+    private:
+      void copyVideoEncoderCtxSettings(const AVCodecContext& ctx);
+      void setDafaultVideoEncoderCtxSettings(void);
+      void fillFrameRGBA(const gul::VideoFrame& rFrame);
+      bool encodeAndSaveVideoFrame(AVFrame* pFrameToEncode);
+      void allocateStructures(void);
+      void prepareOutputFile(void);
 
     private:
       const gul::File path;
       AVFormatContext* pFormatCtx;
-      AVCodecContext* pCodecCtx;
+      AVCodecContext* pVideoCodecCtx;
       SwsContext* pSWSContext;
       AVStream* pVideoStream;
       AVCodec* pVideoCodec;
@@ -76,6 +90,7 @@ namespace gul
       int videoHeight;
       int videoFPS;
       int videoBitrate;
+      const bool usePTSFromFrames;
 
       static bool codecsAreRegistered;
   };
