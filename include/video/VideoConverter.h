@@ -46,7 +46,7 @@ namespace gul
     public:
       VideoConverter(const gul::File& rInputVideo);
 
-      void Init(const File &rOutputVideo, gul::VideoFrameManipulator& rManipulator);
+      void Init(const File& rOutputVideo, gul::VideoFrameManipulator& rManipulator);
       void Execute(void);
 
     private:

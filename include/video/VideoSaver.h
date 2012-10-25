@@ -63,9 +63,9 @@ namespace gul
 
     private:
       VideoSaver(const gul::File& rVideoPath);
-      void setSize( int width, int height);
-      bool openVideo(const AVFormatContext &rInputFormatCtx);
-      bool writePacket(AVPacket &rPacket);
+      void setSize(int width, int height);
+      bool openVideo(const AVFormatContext& rInputFormatCtx);
+      bool writePacket(AVPacket& rPacket);
       friend class gul::VideoConverter;
 
     private:

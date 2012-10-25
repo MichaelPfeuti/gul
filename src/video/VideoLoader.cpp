@@ -171,7 +171,7 @@ bool gul::VideoLoader::OpenVideo(void)
   return true;
 }
 
-bool gul::VideoLoader::readNextImage(gul::VideoFrame &rFrame)
+bool gul::VideoLoader::readNextImage(gul::VideoFrame& rFrame)
 {
   AVPacket* pNextPacket = getNextPacket();
   while(pNextPacket != nullptr)
@@ -206,7 +206,7 @@ AVPacket* gul::VideoLoader::getNextPacket(void)
   return pPacket;
 }
 
-bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame &rFrame)
+bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
 {
   int frameFinished;
   // Decode video frame
@@ -237,7 +237,7 @@ bool gul::VideoLoader::isVideoPacket(const AVPacket& rPacket) const
   return rPacket.stream_index == videoStreamIndex;
 }
 
-bool gul::VideoLoader::decodeRemaining(VideoFrame &rFrame)
+bool gul::VideoLoader::decodeRemaining(VideoFrame& rFrame)
 {
   AVPacket packet;
   av_init_packet(&packet);
@@ -247,7 +247,7 @@ bool gul::VideoLoader::decodeRemaining(VideoFrame &rFrame)
   return decodeVideoPacket(packet, rFrame);
 }
 
-void gul::VideoLoader::setImageData(gul::VideoFrame &rTargetFrame, const AVFrame* pSourceFrame) const
+void gul::VideoLoader::setImageData(gul::VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const
 {
   const int channels = rTargetFrame.GetNumberOfChannels();
   const int width = rTargetFrame.GetWidth();
@@ -268,7 +268,7 @@ void gul::VideoLoader::setImageData(gul::VideoFrame &rTargetFrame, const AVFrame
   }
 }
 
-void gul::VideoLoader::allocateVideoFrame(VideoFrame &rFrame) const
+void gul::VideoLoader::allocateVideoFrame(VideoFrame& rFrame) const
 {
   if(rFrame.GetWidth() != pVideoCodecCtx->width ||
      rFrame.GetHeight() != pVideoCodecCtx->height ||
@@ -283,7 +283,7 @@ bool gul::VideoLoader::IsFrameValid(void) const
   return isFrameValid;
 }
 
-void gul::VideoLoader::GetNext(gul::VideoFrame &rFrame)
+void gul::VideoLoader::GetNext(gul::VideoFrame& rFrame)
 {
   ASSERT(isVideoOpen);
 

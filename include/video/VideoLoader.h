@@ -64,7 +64,7 @@ namespace gul
     private:
       AVPacket* getNextPacket(void);
       void freePacket(void);
-      bool decodeVideoPacket(AVPacket& rPacket, VideoFrame &rFrame);
+      bool decodeVideoPacket(AVPacket& rPacket, VideoFrame& rFrame);
       bool isVideoPacket(const AVPacket& rPacket) const;
       void allocateVideoFrame(VideoFrame& rFrame) const;
       friend class gul::VideoConverter;

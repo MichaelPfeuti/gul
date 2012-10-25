@@ -92,13 +92,13 @@ gul::VideoSaver::~VideoSaver(void)
     CloseVideo();
 }
 
-void gul::VideoSaver::setSize( int width, int height)
+void gul::VideoSaver::setSize(int width, int height)
 {
   videoWidth = width;
   videoHeight = height;
 }
 
-bool gul::VideoSaver::openVideo(const AVFormatContext &rInputFormatCtx)
+bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
 {
   ASSERT(isClosed);
   ASSERT(path.IsPathValid());
@@ -199,12 +199,12 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
   pVideoCodecCtx->thread_count = 2;
 
   // bitrate modifier
-  float bitrateModifier = (videoWidth*videoHeight)/static_cast<float>(ctx.width*ctx.height);
+  float bitrateModifier = (videoWidth * videoHeight) / static_cast<float>(ctx.width * ctx.height);
 
   /* initialize codec settings */
   avcodec_get_context_defaults3(pVideoCodecCtx, pVideoCodec);
   pVideoCodecCtx->codec_id = pFormatCtx->oformat->video_codec;
-  pVideoCodecCtx->bit_rate = ctx.bit_rate*bitrateModifier;
+  pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
   pVideoCodecCtx->bit_rate_tolerance = 0;
   pVideoCodecCtx->width    = videoWidth;
   pVideoCodecCtx->height   = videoHeight;
@@ -331,7 +331,7 @@ void gul::VideoSaver::CloseVideo(void)
   isClosed = true;
 }
 
-void gul::VideoSaver::fillFrameRGBA(const gul::VideoFrame &rFrame)
+void gul::VideoSaver::fillFrameRGBA(const gul::VideoFrame& rFrame)
 {
   const int channels = rFrame.GetNumberOfChannels();
   const int width = rFrame.GetWidth();

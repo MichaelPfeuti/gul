@@ -39,13 +39,19 @@ namespace TestVideoConverter
 {
   class CopyManipulator : public gul::VideoFrameManipulator
   {
-    virtual void Execute(const gul::Image& input, gul::Image& output)
-    {
-      output = input;
-    }
+      virtual void Execute(const gul::Image& input, gul::Image& output)
+      {
+        output = input;
+      }
 
-    virtual int GetResultWidth(int width) const { return width; }
-    virtual int GetResultHeight(int height) const { return height; }
+      virtual int GetResultWidth(int width) const
+      {
+        return width;
+      }
+      virtual int GetResultHeight(int height) const
+      {
+        return height;
+      }
   };
 
   int Copy(void)
