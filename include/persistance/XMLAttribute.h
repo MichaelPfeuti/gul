@@ -32,17 +32,28 @@
 namespace gul
 {
   class String;
+  class XMLNode;
 }
 
-#include "3rdParty/pugi/pugixml.hpp"
+namespace pugi
+{
+  class xml_attribute;
+}
 
 namespace gul
 {
 
   class XMLAttribute
   {
+    private:
+      explicit XMLAttribute(const pugi::xml_attribute& rAttribute);
+      friend class XMLNode;
+
     public:
-      XMLAttribute(pugi::xml_attribute a);
+      XMLAttribute(const XMLAttribute& rOther);
+      ~XMLAttribute(void);
+
+      XMLAttribute& operator=(const XMLAttribute& rOther);
 
       void SetValue(const gul::String& val);
       void SetValue(unsigned int i);
@@ -61,7 +72,7 @@ namespace gul
       bool IsValid(void) const;
 
     private:
-      pugi::xml_attribute attribute;
+      pugi::xml_attribute* pAttribute;
   };
 
 }

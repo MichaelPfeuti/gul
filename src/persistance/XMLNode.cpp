@@ -28,73 +28,98 @@
 
 #include "XMLNode.h"
 #include "String.h"
+#include "Misc.h"
 
-gul::XMLNode::XMLNode(pugi::xml_node n)
-  : node(n)
+#include "3rdParty/pugi/pugixml.hpp"
+
+gul::XMLNode::XMLNode(const pugi::xml_node& rNode)
+  : pNode(new pugi::xml_node)
 {
+  *pNode = rNode;
 }
 
-gul::XMLAttribute gul::XMLNode::AppendAttribute(const gul::String& name)
+gul::XMLNode::XMLNode(const XMLNode& rOther)
+  : pNode(new pugi::xml_node)
 {
-  return gul::XMLAttribute(this->node.append_attribute(name.GetData()));
+  *pNode = *rOther.pNode;
 }
 
-gul::XMLAttribute gul::XMLNode::GetAttribute(const gul::String& name)
+gul::XMLNode::~XMLNode(void)
 {
-  return gul::XMLAttribute(this->node.attribute(name.GetData()));
+  GUL_DELETE(pNode);
 }
 
-const gul::XMLAttribute gul::XMLNode::GetAttribute(const gul::String& name) const
+gul::XMLNode& gul::XMLNode::operator=(const XMLNode& rOther)
 {
-  return gul::XMLAttribute(this->node.attribute(name.GetData()));
+  if(&rOther != this)
+  {
+    *pNode = *rOther.pNode;
+  }
+
+  return *this;
 }
 
-void gul::XMLNode::SetName(const gul::String& name)
+gul::XMLAttribute gul::XMLNode::AppendAttribute(const gul::String& rName)
 {
-  this->node.set_name(name.GetData());
+  return gul::XMLAttribute(this->pNode->append_attribute(rName.GetData()));
+}
+
+gul::XMLAttribute gul::XMLNode::GetAttribute(const gul::String& rName)
+{
+  return gul::XMLAttribute(this->pNode->attribute(rName.GetData()));
+}
+
+const gul::XMLAttribute gul::XMLNode::GetAttribute(const gul::String& rName) const
+{
+  return gul::XMLAttribute(this->pNode->attribute(rName.GetData()));
+}
+
+void gul::XMLNode::SetName(const gul::String& rName)
+{
+  this->pNode->set_name(rName.GetData());
 }
 
 const gul::String gul::XMLNode::GetName(void) const
 {
-  return gul::String(this->node.name());
+  return gul::String(this->pNode->name());
 }
 
 gul::XMLNode gul::XMLNode::AppendChild(void)
 {
-  return gul::XMLNode(this->node.append_child());
+  return gul::XMLNode(this->pNode->append_child());
 }
 
 gul::XMLNode gul::XMLNode::GetFirstChild(void)
 {
-  return gul::XMLNode(this->node.first_child());
+  return gul::XMLNode(this->pNode->first_child());
 }
 
 const gul::XMLNode gul::XMLNode::GetFirstChild(void) const
 {
-  return gul::XMLNode(this->node.first_child());
+  return gul::XMLNode(this->pNode->first_child());
 }
 
 gul::XMLNode gul::XMLNode::GetNextSibling(void)
 {
-  return gul::XMLNode(this->node.next_sibling());
+  return gul::XMLNode(this->pNode->next_sibling());
 }
 
 const gul::XMLNode gul::XMLNode::GetNextSibling(void) const
 {
-  return gul::XMLNode(this->node.next_sibling());
+  return gul::XMLNode(this->pNode->next_sibling());
 }
 
-gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& name, const gul::String& attributName, const gul::String& attributValue)
+gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& rName, const gul::String& rAttributName, const gul::String& rAttributValue)
 {
-  return gul::XMLNode(this->node.find_child_by_attribute(name.GetData(), attributName.GetData(), attributValue.GetData()));
+  return gul::XMLNode(this->pNode->find_child_by_attribute(rName.GetData(), rAttributName.GetData(), rAttributValue.GetData()));
 }
 
-const gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& name, const gul::String& attributName, const gul::String& attributValue) const
+const gul::XMLNode gul::XMLNode::FindChildByAttribute(const gul::String& name, const gul::String& rAttributName, const gul::String& rAttributValue) const
 {
-  return gul::XMLNode(this->node.find_child_by_attribute(name.GetData(), attributName.GetData(), attributValue.GetData()));
+  return gul::XMLNode(this->pNode->find_child_by_attribute(name.GetData(), rAttributName.GetData(), rAttributValue.GetData()));
 }
 
 bool gul::XMLNode::IsValid(void) const
 {
-  return !this->node.empty();
+  return !this->pNode->empty();
 }

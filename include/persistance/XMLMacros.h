@@ -31,7 +31,6 @@
 
 #include <typeinfo>
 
-#include <3rdParty/pugi/pugixml.hpp>
 #include "Map.h"
 #include "String.h"
 #include "ClassFactory.h"

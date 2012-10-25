@@ -31,23 +31,34 @@
 
 #include "File.h"
 #include "XMLNode.h"
-#include <3rdParty/pugi/pugixml.hpp>
+#include "NonCopyable.h"
+
+namespace pugi
+{
+  class xml_document;
+}
 
 namespace gul
 {
 
-  class XMLDocument
+  class XMLDocument : public NonCopyable
   {
     public:
       XMLDocument(void);
+      ~XMLDocument(void);
 
-      bool SaveFile(const File& file);
-      void LoadFile(const File& file);
+      bool SaveFile(const File& rFile);
+      void LoadFile(const File& rFile);
       XMLNode GetRoot(void);
 
+    private:
+      const pugi::xml_document* getConstDocument(void)
+      {
+        return pDocument;
+      }
 
     private:
-      pugi::xml_document doc;
+      pugi::xml_document* pDocument;
       bool hasRootNode;
   };
 

@@ -28,19 +28,28 @@
 
 #include "XMLDocument.h"
 
+#include "Misc.h"
+#include <3rdParty/pugi/pugixml.hpp>
+
 gul::XMLDocument::XMLDocument(void)
-  : hasRootNode(false)
+  : pDocument(new pugi::xml_document),
+    hasRootNode(false)
 {
 }
 
-bool gul::XMLDocument::SaveFile(const File& file)
+gul::XMLDocument::~XMLDocument(void)
 {
-  return this->doc.save_file(file.GetPath().GetData());
+  GUL_DELETE(pDocument);
 }
 
-void gul::XMLDocument::LoadFile(const File& file)
+bool gul::XMLDocument::SaveFile(const File& rFile)
 {
-  this->doc.load_file(file.GetPath().GetData());
+  return this->pDocument->save_file(rFile.GetPath().GetData());
+}
+
+void gul::XMLDocument::LoadFile(const File& rFile)
+{
+  this->pDocument->load_file(rFile.GetPath().GetData());
   this->hasRootNode = true;
 }
 
@@ -48,10 +57,10 @@ gul::XMLNode gul::XMLDocument::GetRoot(void)
 {
   if(this->hasRootNode)
   {
-    return gul::XMLNode(this->doc.first_child());
+    return gul::XMLNode(this->pDocument->first_child());
   }
   else
   {
-    return gul::XMLNode(doc.append_child());
+    return gul::XMLNode(pDocument->append_child());
   }
 }

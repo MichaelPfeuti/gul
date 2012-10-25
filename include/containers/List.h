@@ -30,7 +30,6 @@
 ***************************************************************************/
 
 #include "RTTI.h"
-#include "3rdParty/pugi/pugixml.hpp"
 #include "ClassFactory.h"
 #include "XMLSerializable.h"
 #include "ListBasic.h"

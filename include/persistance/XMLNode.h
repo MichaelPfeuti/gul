@@ -32,9 +32,14 @@
 namespace gul
 {
   class String;
+  class XMLDocument;
 }
 
-#include "3rdParty/pugi/pugixml.hpp"
+namespace pugi
+{
+  class xml_node;
+}
+
 #include "XMLAttribute.h"
 
 namespace gul
@@ -42,14 +47,22 @@ namespace gul
 
   class XMLNode
   {
+    private:
+      explicit XMLNode(const pugi::xml_node& rNode);
+      friend class gul::XMLDocument;
+
+
     public:
-      XMLNode(pugi::xml_node n);
+      XMLNode(const XMLNode& rOther);
+      ~XMLNode(void);
 
-      XMLAttribute AppendAttribute(const gul::String& name);
-      XMLAttribute GetAttribute(const gul::String& name);
-      const XMLAttribute GetAttribute(const gul::String& name) const;
+      XMLNode& operator=(const XMLNode& rOther);
 
-      void SetName(const gul::String& name);
+      XMLAttribute AppendAttribute(const gul::String& rName);
+      XMLAttribute GetAttribute(const gul::String& rName);
+      const XMLAttribute GetAttribute(const gul::String& rName) const;
+
+      void SetName(const gul::String& rName);
       const String GetName(void) const;
 
       XMLNode AppendChild(void);
@@ -57,13 +70,13 @@ namespace gul
       const XMLNode GetFirstChild(void) const;
       XMLNode GetNextSibling(void);
       const XMLNode GetNextSibling(void) const;
-      XMLNode FindChildByAttribute(const gul::String& name, const String& attributName, const String& attributValue);
-      const XMLNode FindChildByAttribute(const gul::String& name, const String& attributName, const String& attributValue) const;
+      XMLNode FindChildByAttribute(const gul::String& rName, const String& rAttributName, const String& rAttributValue);
+      const XMLNode FindChildByAttribute(const gul::String& rName, const String& rAttributName, const String& rAttributValue) const;
 
       bool IsValid(void) const;
 
     private:
-      pugi::xml_node node;
+      pugi::xml_node* pNode;
   };
 
 }

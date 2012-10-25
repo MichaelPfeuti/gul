@@ -28,73 +28,98 @@
 
 #include "XMLAttribute.h"
 #include "String.h"
+#include "Misc.h"
 
-gul::XMLAttribute::XMLAttribute(pugi::xml_attribute a)
-  : attribute(a)
+#include "3rdParty/pugi/pugixml.hpp"
+
+gul::XMLAttribute::XMLAttribute(const pugi::xml_attribute& rAttribute)
+  : pAttribute(new pugi::xml_attribute)
 {
+  *pAttribute = rAttribute;
+}
+
+gul::XMLAttribute::XMLAttribute(const gul::XMLAttribute& rOther)
+  : pAttribute(new pugi::xml_attribute)
+{
+  *pAttribute = *rOther.pAttribute;
+}
+
+gul::XMLAttribute::~XMLAttribute(void)
+{
+  GUL_DELETE(pAttribute);
+}
+
+gul::XMLAttribute& gul::XMLAttribute::operator=(const gul::XMLAttribute& rOther)
+{
+  if(this != &rOther)
+  {
+    *pAttribute = rOther.pAttribute;
+  }
+
+  return *this;
 }
 
 void gul::XMLAttribute::SetValue(const gul::String& val)
 {
-  this->attribute.set_value(val.GetData());
+  this->pAttribute->set_value(val.GetData());
 }
 
 void gul::XMLAttribute::SetValue(unsigned int i)
 {
-  this->attribute.set_value(i);
+  this->pAttribute->set_value(i);
 }
 
 void gul::XMLAttribute::SetValue(int i)
 {
-  this->attribute.set_value(i);
+  this->pAttribute->set_value(i);
 }
 
 void gul::XMLAttribute::SetValue(float f)
 {
-  this->attribute.set_value(f);
+  this->pAttribute->set_value(f);
 }
 
 void gul::XMLAttribute::SetValue(double d)
 {
-  this->attribute.set_value(d);
+  this->pAttribute->set_value(d);
 }
 
 void gul::XMLAttribute::SetValue(bool b)
 {
-  this->attribute.set_value(b);
+  this->pAttribute->set_value(b);
 }
 
 gul::String gul::XMLAttribute::GetString(void) const
 {
-  return gul::String(this->attribute.value());
+  return gul::String(this->pAttribute->value());
 }
 
 int gul::XMLAttribute::GetInt(void) const
 {
-  return this->attribute.as_int();
+  return this->pAttribute->as_int();
 }
 
 unsigned int gul::XMLAttribute::GetUnsignedInt(void) const
 {
-  return this->attribute.as_uint();
+  return this->pAttribute->as_uint();
 }
 
 float gul::XMLAttribute::GetFloat(void) const
 {
-  return this->attribute.as_float();
+  return this->pAttribute->as_float();
 }
 
 double gul::XMLAttribute::GetDouble(void) const
 {
-  return this->attribute.as_double();
+  return this->pAttribute->as_double();
 }
 
 bool gul::XMLAttribute::GetBool(void) const
 {
-  return this->attribute.as_bool();
+  return this->pAttribute->as_bool();
 }
 
 bool gul::XMLAttribute::IsValid(void) const
 {
-  return !this->attribute.empty();
+  return !this->pAttribute->empty();
 }
