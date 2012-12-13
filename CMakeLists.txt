@@ -78,6 +78,7 @@ include_directories("${CMAKE_HOME_DIRECTORY}/include/math")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/memory")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/persistance")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/video")
+include_directories("${CMAKE_HOME_DIRECTORY}/include/video/manipulator")
 
 # source files
 if(BUILD_TESTING)

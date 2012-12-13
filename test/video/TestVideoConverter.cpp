@@ -34,6 +34,7 @@
 #include "VideoConverter.h"
 #include "VideoFrame.h"
 #include "VideoFrameManipulator.h"
+#include "VFM2DToSBSDelay.h"
 
 namespace TestVideoConverter
 {
@@ -90,6 +91,18 @@ namespace TestVideoConverter
 
     TEST_EQUAL(count, 50);
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, prevFrame, 0.005f));
+
+    return EXIT_SUCCESS;
+  }
+
+  int TwoDToSBS(void)
+  {
+    gul::File output = gul::CTestData::GetTempFilePath(gul::String("fireflySBSDelay.mkv"));
+    gul::VFM2DToSBSDelay manipulator;
+    manipulator.SetParameter(5);
+    gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    converter.Init(output, manipulator);
+    converter.Execute();
 
     return EXIT_SUCCESS;
   }

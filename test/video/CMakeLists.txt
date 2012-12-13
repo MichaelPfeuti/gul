@@ -12,7 +12,9 @@ gul_add_test(Video VideoSaver FrameCount)
 gul_add_test(Video VideoSaver WriteReadMp4)
 
 gul_add_test(Video VideoConverter Copy)
+gul_add_test(Video VideoConverter TwoDToSBS)
+
 
 gul_create_test()
 
-target_link_libraries(TestVideo video algorithms_analyzer)
+target_link_libraries(TestVideo video algorithms_analyzer algorithms_converter)
