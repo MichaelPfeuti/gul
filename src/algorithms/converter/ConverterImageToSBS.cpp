@@ -43,7 +43,7 @@ gul::ConverterImageToSBS::~ConverterImageToSBS(void)
 }
 
 void gul::ConverterImageToSBS::SetParameter(const gul::Image& leftImage,
-                                            const gul::Image& rightImage)
+    const gul::Image& rightImage)
 {
   ASSERT_MSG(leftImage.GetHeight() == rightImage.GetHeight(), "Left and right image must have the same height!");
   m_leftImage = leftImage;
@@ -73,7 +73,7 @@ gul::Image gul::ConverterImageToSBS::GetResult(void) const
 }
 
 gul::Image gul::ConverterImageToSBS::Execute(const gul::Image& leftImage,
-                                             const gul::Image& rightImage)
+    const gul::Image& rightImage)
 {
   ConverterImageToSBS converter;
   converter.SetParameter(leftImage, rightImage);

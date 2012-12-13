@@ -37,11 +37,11 @@ namespace TestImageToSBS
   int SameSize(void)
   {
     gul::Image left = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                         gul::String("avatar_left.png")));
+                      gul::String("avatar_left.png")));
     gul::Image right = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                          gul::String("avatar_right.png")));
+                       gul::String("avatar_right.png")));
     gul::Image gt = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                       gul::String("avatar_sbs.png")));
+                    gul::String("avatar_sbs.png")));
 
     gul::Image sbs = gul::ConverterImageToSBS::Execute(left, right);
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(sbs, gt));
@@ -54,11 +54,11 @@ namespace TestImageToSBS
   int DifferentSize(void)
   {
     gul::Image left = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                         gul::String("avatar_left.png")));
+                      gul::String("avatar_left.png")));
     gul::Image right = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                          gul::String("avatar_right.png")));
+                       gul::String("avatar_right.png")));
     gul::Image gt = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("algorithms"),
-                                                                                       gul::String("avatar_sbs.png")));
+                    gul::String("avatar_sbs.png")));
 
     gul::Image sbs = gul::ConverterImageToSBS::Execute(left, right);
     gul::Image sbsRight = gul::ConverterImageToSBS::Execute(sbs, right);

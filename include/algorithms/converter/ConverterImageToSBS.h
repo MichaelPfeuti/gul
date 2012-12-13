@@ -48,7 +48,7 @@ namespace gul
 
       gul::Image GetResult(void) const;
 
-      static gul::Image Execute(const gul::Image& leftImage, const Image &rightImage);
+      static gul::Image Execute(const gul::Image& leftImage, const Image& rightImage);
 
     private:
       gul::Image m_leftImage;
