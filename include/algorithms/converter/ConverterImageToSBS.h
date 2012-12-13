@@ -5,7 +5,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti.
+** Copyright (c) 2011-2013 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,34 +29,31 @@
 **
 ***************************************************************************/
 
-#include "Filter.h"
+#include "Converter.h"
 #include "Image.h"
 
 namespace gul
 {
-  class FilterImageToBW : public Filter
+  class ConverterImageToSBS : public Converter
   {
 
     public:
-      FilterImageToBW(void);
+      ConverterImageToSBS(void);
 
-      virtual ~FilterImageToBW(void);
+      virtual ~ConverterImageToSBS(void);
 
-      void SetParameter(float bwThreshold);
-
-      void SetParameter(const gul::Image& grayImage);
+      void SetParameter(const gul::Image& leftImage, const gul::Image& rightImage);
 
       virtual void Execute(void);
 
       gul::Image GetResult(void) const;
 
-      static gul::Image Execute(const gul::Image& grayImage);
+      static gul::Image Execute(const gul::Image& leftImage, const Image &rightImage);
 
     private:
-      gul::Image inputImage;
-      gul::Image outputImage;
-
-      float threshold;
+      gul::Image m_leftImage;
+      gul::Image m_rightImage;
+      gul::Image m_sbsImage;
   };
 
 }

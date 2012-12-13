@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_TEST_IMAGE_UTILS_H_
-#define _GUL_TEST_IMAGE_UTILS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti.
+** Copyright (c) 2011-2013 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -29,14 +26,19 @@
 **
 ***************************************************************************/
 
+#include "FilterImageToBW.h"
+#include "CTestAssert.h"
+#include "AnalyzerImageEquality.h"
+#include "Utils.h"
 
-#include "Image.h"
+namespace TestImageToBW
+{
+  int ColorToBW(void)
+  {
+    gul::Image bw = gul::FilterImageToBW::Execute(GetLenaGrayLightness());
 
-gul::Image GetLenaBW(void);
-gul::Image GetLenaGrayAverage(void);
-gul::Image GetLenaGrayLuminosity(void);
-gul::Image GetLenaGrayLightness(void);
-gul::Image GetLenaAlphaGT(void);
-gul::Image GetLenaGT(void);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw, 0.005f));
 
-#endif
+    return EXIT_SUCCESS;
+  }
+}

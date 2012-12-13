@@ -5,7 +5,7 @@
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2012 Michael Pfeuti
+** Copyright (c) 2011-2013 Michael Pfeuti
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
