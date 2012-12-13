@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_GRAYSCALE_H_
-#define _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_GRAYSCALE_H_
+#ifndef _GUL_ALGORITHMS_FILTER_IMAGE_TO_GRAYSCALE_H_
+#define _GUL_ALGORITHMS_FILTER_IMAGE_TO_GRAYSCALE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,16 +29,16 @@
 **
 ***************************************************************************/
 
-#include "Converter.h"
+#include "Filter.h"
 #include "Image.h"
 
 namespace gul
 {
-  class ConverterImageToGrayscale : public Converter
+  class FilterImageToGrayscale : public Filter
   {
 
     public:
-      enum GreyscaleConversionType
+      enum GreyscaleFilterType
       {
         GCT_LIGHTNESS,
         GCT_AVERAGE,
@@ -46,11 +46,11 @@ namespace gul
       };
 
     public:
-      ConverterImageToGrayscale(void);
+      FilterImageToGrayscale(void);
 
-      virtual ~ConverterImageToGrayscale(void);
+      virtual ~FilterImageToGrayscale(void);
 
-      void SetParameter(GreyscaleConversionType type);
+      void SetParameter(GreyscaleFilterType type);
 
       void SetParameter(const gul::Image& colorImage);
 
@@ -67,7 +67,7 @@ namespace gul
     private:
       gul::Image inputImage;
       gul::Image outputImage;
-      GreyscaleConversionType conversionType;
+      GreyscaleFilterType conversionType;
   };
 
 }

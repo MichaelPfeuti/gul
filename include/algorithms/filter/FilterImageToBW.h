@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_BW_H_
-#define _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_BW_H_
+#ifndef _GUL_ALGORITHMS_FILTER_IMAGE_TO_BW_H_
+#define _GUL_ALGORITHMS_FILTER_IMAGE_TO_BW_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,18 +29,18 @@
 **
 ***************************************************************************/
 
-#include "Converter.h"
+#include "Filter.h"
 #include "Image.h"
 
 namespace gul
 {
-  class ConverterImageToBW : public Converter
+  class FilterImageToBW : public Filter
   {
 
     public:
-      ConverterImageToBW(void);
+      FilterImageToBW(void);
 
-      virtual ~ConverterImageToBW(void);
+      virtual ~FilterImageToBW(void);
 
       void SetParameter(float bwThreshold);
 

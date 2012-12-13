@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_SBS_H_
+#define _GUL_ALGORITHMS_CONVERTER_IMAGE_TO_SBS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,19 +29,36 @@
 **
 ***************************************************************************/
 
-#include "FilterImageToBW.h"
-#include "CTestAssert.h"
-#include "AnalyzerImageEquality.h"
-#include "Utils.h"
+#include "Filter.h"
+#include "Image.h"
 
-namespace TestImageToBW
+namespace gul
 {
-  int ColorToBW(void)
+  class FilterImageToBW : public Filter
   {
-    gul::Image bw = gul::FilterImageToBW::Execute(GetLenaGrayLightness());
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw, 0.005f));
+    public:
+      FilterImageToBW(void);
 
-    return EXIT_SUCCESS;
-  }
+      virtual ~FilterImageToBW(void);
+
+      void SetParameter(float bwThreshold);
+
+      void SetParameter(const gul::Image& grayImage);
+
+      virtual void Execute(void);
+
+      gul::Image GetResult(void) const;
+
+      static gul::Image Execute(const gul::Image& grayImage);
+
+    private:
+      gul::Image inputImage;
+      gul::Image outputImage;
+
+      float threshold;
+  };
+
 }
+
+#endif

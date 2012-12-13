@@ -1,10 +1,8 @@
 add_library(algorithms_converter STATIC
-    ConverterImageToGrayscale.cpp
-    ConverterImageToBW.cpp
+    ConverterImageToSBS.cpp
 
     ${INCLUDE}/algorithms/converter/Converter.h
-    ${INCLUDE}/algorithms/converter/ConverterImageToBW.h
-    ${INCLUDE}/algorithms/converter/ConverterImageToGrayscale.h
+    ${INCLUDE}/algorithms/converter/ConverterImageToSBS.h
 		)
 
 #target_link_libraries(base)

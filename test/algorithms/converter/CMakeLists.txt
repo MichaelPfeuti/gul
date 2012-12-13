@@ -9,5 +9,5 @@ gul_create_test()
 target_link_libraries(TestConverter base
                                     image
                                     algorithms_analyzer
-                                    algorithms_converter)
+                                    algorithms_filter)
 

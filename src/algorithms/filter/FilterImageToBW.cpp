@@ -26,36 +26,36 @@
 **
 ***************************************************************************/
 
-#include "ConverterImageToBW.h"
+#include "FilterImageToBW.h"
 #include "Misc.h"
 #include "Assert.h"
 #include "Math.h"
 
-gul::ConverterImageToBW::ConverterImageToBW(void)
+gul::FilterImageToBW::FilterImageToBW(void)
   : inputImage(),
     outputImage(),
     threshold(0.5f)
 {
 }
 
-gul::ConverterImageToBW::~ConverterImageToBW(void)
+gul::FilterImageToBW::~FilterImageToBW(void)
 {
 }
 
-void gul::ConverterImageToBW::SetParameter(float bwThreshold)
+void gul::FilterImageToBW::SetParameter(float bwThreshold)
 {
   ASSERT_MSG(0.f <= bwThreshold, "threshold must be between 0 and 1");
   ASSERT_MSG(1.f >= bwThreshold, "threshold must be between 0 and 1");
   threshold = bwThreshold;
 }
 
-void gul::ConverterImageToBW::SetParameter(const gul::Image& grayImage)
+void gul::FilterImageToBW::SetParameter(const gul::Image& grayImage)
 {
   ASSERT_MSG(grayImage.GetImageType() == gul::Image::IT_GRAY, "Input must be a grayscale image");
   inputImage = grayImage;
 }
 
-void gul::ConverterImageToBW::Execute(void)
+void gul::FilterImageToBW::Execute(void)
 {
   outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
 
@@ -76,14 +76,14 @@ void gul::ConverterImageToBW::Execute(void)
   }
 }
 
-gul::Image gul::ConverterImageToBW::GetResult(void) const
+gul::Image gul::FilterImageToBW::GetResult(void) const
 {
   return outputImage;
 }
 
-gul::Image gul::ConverterImageToBW::Execute(const gul::Image& grayImage)
+gul::Image gul::FilterImageToBW::Execute(const gul::Image& grayImage)
 {
-  ConverterImageToBW converter;
+  FilterImageToBW converter;
   converter.SetParameter(grayImage);
   converter.Execute();
   return converter.GetResult();

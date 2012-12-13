@@ -26,23 +26,23 @@
 **
 ***************************************************************************/
 
-#include "ConverterImageToGrayscale.h"
+#include "FilterImageToGrayscale.h"
 #include "Misc.h"
 #include "Assert.h"
 #include "Math.h"
 
-gul::ConverterImageToGrayscale::ConverterImageToGrayscale(void)
+gul::FilterImageToGrayscale::FilterImageToGrayscale(void)
   : inputImage(),
     outputImage(),
     conversionType(GCT_LUMINOSITY)
 {
 }
 
-gul::ConverterImageToGrayscale::~ConverterImageToGrayscale(void)
+gul::FilterImageToGrayscale::~FilterImageToGrayscale(void)
 {
 }
 
-gul::RGBA gul::ConverterImageToGrayscale::computeGreyValue(const RGBA& rgba) const
+gul::RGBA gul::FilterImageToGrayscale::computeGreyValue(const RGBA& rgba) const
 {
   float gray = 0.f;
 
@@ -72,17 +72,17 @@ gul::RGBA gul::ConverterImageToGrayscale::computeGreyValue(const RGBA& rgba) con
   return gul::RGBA(gray, gray, gray, rgba.GetAlpha());
 }
 
-void gul::ConverterImageToGrayscale::SetParameter(GreyscaleConversionType type)
+void gul::FilterImageToGrayscale::SetParameter(GreyscaleFilterType type)
 {
   conversionType = type;
 }
 
-void gul::ConverterImageToGrayscale::SetParameter(const gul::Image& colorImage)
+void gul::FilterImageToGrayscale::SetParameter(const gul::Image& colorImage)
 {
   inputImage = colorImage;
 }
 
-void gul::ConverterImageToGrayscale::Execute(void)
+void gul::FilterImageToGrayscale::Execute(void)
 {
   outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
 
@@ -96,14 +96,14 @@ void gul::ConverterImageToGrayscale::Execute(void)
   }
 }
 
-gul::Image gul::ConverterImageToGrayscale::GetResult(void) const
+gul::Image gul::FilterImageToGrayscale::GetResult(void) const
 {
   return outputImage;
 }
 
-gul::Image gul::ConverterImageToGrayscale::Execute(const gul::Image& colorImage)
+gul::Image gul::FilterImageToGrayscale::Execute(const gul::Image& colorImage)
 {
-  ConverterImageToGrayscale converter;
+  FilterImageToGrayscale converter;
   converter.SetParameter(colorImage);
   converter.Execute();
   return converter.GetResult();

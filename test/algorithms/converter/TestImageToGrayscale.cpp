@@ -26,7 +26,7 @@
 **
 ***************************************************************************/
 
-#include "ConverterImageToGrayscale.h"
+#include "FilterImageToGrayscale.h"
 #include "AnalyzerImageEquality.h"
 #include "CTestAssert.h"
 #include "Utils.h"
@@ -36,9 +36,9 @@ namespace TestImageToGrayscale
   int Average(void)
   {
     gul::Image color = GetLenaAlphaGT();
-    gul::ConverterImageToGrayscale converter;
+    gul::FilterImageToGrayscale converter;
     converter.SetParameter(color);
-    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_AVERAGE);
+    converter.SetParameter(gul::FilterImageToGrayscale::GCT_AVERAGE);
 
     converter.Execute();
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayAverage(), converter.GetResult(), 0.0007f));
@@ -49,9 +49,9 @@ namespace TestImageToGrayscale
   int Luminosity(void)
   {
     gul::Image color = GetLenaAlphaGT();
-    gul::ConverterImageToGrayscale converter;
+    gul::FilterImageToGrayscale converter;
     converter.SetParameter(color);
-    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_LUMINOSITY);
+    converter.SetParameter(gul::FilterImageToGrayscale::GCT_LUMINOSITY);
 
     converter.Execute();
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLuminosity(), converter.GetResult(), 0.001f));
@@ -62,9 +62,9 @@ namespace TestImageToGrayscale
   int Lightness(void)
   {
     gul::Image color = GetLenaAlphaGT();
-    gul::ConverterImageToGrayscale converter;
+    gul::FilterImageToGrayscale converter;
     converter.SetParameter(color);
-    converter.SetParameter(gul::ConverterImageToGrayscale::GCT_LIGHTNESS);
+    converter.SetParameter(gul::FilterImageToGrayscale::GCT_LIGHTNESS);
 
     converter.Execute();
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLightness(), converter.GetResult(), 0.0008f));
