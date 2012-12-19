@@ -47,14 +47,18 @@ namespace gul
 
       VideoFrame& operator=(const VideoFrame& other);
 
-      void SetPresentationTime(uint64_t pts);
-      uint64_t GetPresentationTime(void) const;
+      void SetPresentationTime(float pts);
+      float GetPresentationTime(void) const;
+
+      void SetFrameIndex(uint64_t index);
+      uint64_t GetFrameIndex(void) const;
 
     protected:
       using Image::operator =;
 
     private:
-      uint64_t presentationTime; //!< PTS in the stream time base
+      float m_presentationTime; //!< PTS in seconds
+      uint64_t m_frameIndex;
   };
 
 }

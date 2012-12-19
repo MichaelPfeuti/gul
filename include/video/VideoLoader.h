@@ -87,6 +87,7 @@ namespace gul
       bool isVideoOpen;
       bool isPacketDataFreed;
       int videoStreamIndex;
+      int currentFrameIndex;
       static bool codecsAreRegistered;
   };
 

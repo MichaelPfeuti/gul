@@ -50,7 +50,8 @@ gul::VideoLoader::VideoLoader(const gul::File& rVideoPath)
     pDataBufferRGBA(nullptr),
     isFrameValid(false),
     isVideoOpen(false),
-    isPacketDataFreed(true)
+    isPacketDataFreed(true),
+    currentFrameIndex(0)
 {
   if(!codecsAreRegistered)
   {
@@ -100,6 +101,7 @@ void gul::VideoLoader::CloseVideo(void)
   isFrameValid = false;
   isVideoOpen = false;
   isPacketDataFreed = true;
+  currentFrameIndex = 0;
 }
 
 bool gul::VideoLoader::OpenVideo(void)
@@ -228,6 +230,9 @@ bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFr
     uint64_t pts = av_rescale_q(pFrame->pkt_pts, pFormatCtx->streams[videoStreamIndex]->time_base, pVideoCodecCtx->time_base);
     pts /= pFormatCtx->streams[videoStreamIndex]->codec->ticks_per_frame;
     rFrame.SetPresentationTime(pts);
+
+    rFrame.SetFrameIndex(currentFrameIndex);
+    ++currentFrameIndex;
   }
 
   return frameFinished;

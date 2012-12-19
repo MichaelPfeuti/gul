@@ -248,7 +248,7 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
   if(pVideoCodecCtx->bit_rate == 0)
   {
     // empirical bit rate guess
-    pVideoCodecCtx->bit_rate = pVideoCodecCtx->width * pVideoCodecCtx->height * 4;
+    pVideoCodecCtx->bit_rate = pVideoCodecCtx->width * pVideoCodecCtx->height * 2;
   }
   pVideoCodecCtx->time_base = ctx.time_base;
   pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
@@ -406,7 +406,7 @@ void gul::VideoSaver::AddFrame(const gul::VideoFrame& rFrame)
 
   if(usePTSFromFrames)
   {
-    pFrame->pts = rFrame.GetPresentationTime();
+    pFrame->pts = rFrame.GetFrameIndex();
     encodeAndSaveVideoFrame(pFrame);
   }
   else
@@ -434,11 +434,10 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
   if(gotPacket)
   {
     // compute pts in stream time_base
-    if(pkt.pts != AV_NOPTS_VALUE /*&& !usePTSFromFrames*/)
+    if(pkt.pts != AV_NOPTS_VALUE)
       pkt.pts = av_rescale_q(pkt.pts , pVideoCodecCtx->time_base, pVideoStream->time_base);
-    if(pkt.dts != AV_NOPTS_VALUE/* && !usePTSFromFrames*/)
+    if(pkt.dts != AV_NOPTS_VALUE)
       pkt.dts = av_rescale_q(pkt.dts, pVideoCodecCtx->time_base, pVideoStream->time_base);
-    fprintf(stderr, "%d\n", pkt.pts);
 
     /* Write the compressed frame to the media file. */
     if(!writePacket(pkt))

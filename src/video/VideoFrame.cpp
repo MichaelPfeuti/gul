@@ -34,7 +34,8 @@ gul::VideoFrame::VideoFrame(void)
 
 gul::VideoFrame::VideoFrame(const gul::Image& img)
   : gul::Image(img),
-    presentationTime(0)
+    m_presentationTime(0),
+    m_frameIndex(0)
 {
 }
 
@@ -51,18 +52,29 @@ gul::VideoFrame::~VideoFrame(void)
 gul::VideoFrame& gul::VideoFrame::operator=(const gul::VideoFrame& other)
 {
   gul::Image::operator =(other);
-  presentationTime = other.presentationTime;
+  m_presentationTime = other.m_presentationTime;
+  m_frameIndex = other.m_frameIndex;
   return *this;
 }
 
-void gul::VideoFrame::SetPresentationTime(uint64_t pts)
+void gul::VideoFrame::SetPresentationTime(float pts)
 {
-  presentationTime = pts;
+  m_presentationTime = pts;
 }
 
 
-uint64_t gul::VideoFrame::GetPresentationTime(void) const
+float gul::VideoFrame::GetPresentationTime(void) const
 {
-  return presentationTime;
+  return m_presentationTime;
+}
+
+void gul::VideoFrame::SetFrameIndex(uint64_t index)
+{
+  m_frameIndex = index;
+}
+
+uint64_t gul::VideoFrame::GetFrameIndex(void) const
+{
+  return m_frameIndex;
 }
 

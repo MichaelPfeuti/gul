@@ -71,6 +71,7 @@ void gul::VideoConverter::Execute(void)
       {
         pManipulator->Execute(input, output);
         output.SetPresentationTime(input.GetPresentationTime());
+        output.SetFrameIndex(input.GetFrameIndex());
         pVideoSaver->AddFrame(output);
       }
     }
@@ -85,6 +86,7 @@ void gul::VideoConverter::Execute(void)
   {
     pManipulator->Execute(input, output);
     output.SetPresentationTime(input.GetPresentationTime());
+    output.SetFrameIndex(input.GetFrameIndex());
     pVideoSaver->AddFrame(output);
   }
 
