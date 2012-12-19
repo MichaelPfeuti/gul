@@ -36,9 +36,9 @@
 namespace TestVideoLoader
 {
 
-  int FirstFrame(void)
+  int FirstFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -47,14 +47,14 @@ namespace TestVideoLoader
 
     gul::Image first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, threshold));
 
     return EXIT_SUCCESS;
   }
 
-  int MiddleFrame(void)
+  int MiddleFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -71,14 +71,14 @@ namespace TestVideoLoader
 
     gul::Image middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, threshold));
 
     return EXIT_SUCCESS;
   }
 
-  int LastFrame(void)
+  int LastFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -92,15 +92,15 @@ namespace TestVideoLoader
 
     gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, framePrev));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, framePrev, threshold));
 
     return EXIT_SUCCESS;
   }
 
 
-  int FrameCount(void)
+  int FrameCount(const gul::String& file, int count)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -111,27 +111,110 @@ namespace TestVideoLoader
       ++frameCount;
       loader.GetNext(frame);
     }
-    TEST_EQUAL(frameCount, 50);
+
+    TEST_EQUAL(frameCount, count);
 
     return EXIT_SUCCESS;
   }
 
-  int ReadMp4(void)
+  int FirstFrameMkv(void)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mp4")));
-    loader.OpenVideo();
+    return FirstFrame("firefly.mkv", 0.f);
+  }
 
-    gul::VideoFrame frame;
-    int frameCount = 0;
-    loader.GetNext(frame);
-    while(loader.IsFrameValid())
-    {
-      ++frameCount;
-      loader.GetNext(frame);
-    }
-    TEST_EQUAL(frameCount, 50);
+  int MiddleFrameMkv(void)
+  {
+    return MiddleFrame("firefly.mkv", 0.f);
+  }
 
-    return EXIT_SUCCESS;
+  int LastFrameMkv(void)
+  {
+    return LastFrame("firefly.mkv", 0.f);
+  }
+
+  int FrameCountMkv(void)
+  {
+    return FrameCount("firefly.mkv", 50);
+  }
+
+  int FirstFrameMp4(void)
+  {
+    return FirstFrame("firefly.mp4", 0.001f);
+  }
+
+  int MiddleFrameMp4(void)
+  {
+    return MiddleFrame("firefly.mp4", 0.0025f);
+  }
+
+  int LastFrameMp4(void)
+  {
+    return LastFrame("firefly.mp4", 0.0035f);
+  }
+
+  int FrameCountMp4(void)
+  {
+    return FrameCount("firefly.mp4", 52);
+  }
+
+  int FirstFrameAvi(void)
+  {
+    return FirstFrame("firefly.avi", 0.0025f);
+  }
+
+  int MiddleFrameAvi(void)
+  {
+    return MiddleFrame("firefly.avi", 0.005f);
+  }
+
+  int LastFrameAvi(void)
+  {
+    return LastFrame("firefly.avi", 0.006f);
+  }
+
+  int FrameCountAvi(void)
+  {
+    return FrameCount("firefly.avi", 50);
+  }
+
+  int FirstFrameMov(void)
+  {
+    return FirstFrame("firefly.mov", 0.001f);
+  }
+
+  int MiddleFrameMov(void)
+  {
+    return MiddleFrame("firefly.mov", 0.0025f);
+  }
+
+  int LastFrameMov(void)
+  {
+    return LastFrame("firefly.mov", 0.0035f);
+  }
+
+  int FrameCountMov(void)
+  {
+    return FrameCount("firefly.mov", 52);
+  }
+
+  int FirstFrameOgv(void)
+  {
+    return FirstFrame("firefly.ogv", 0.0027f);
+  }
+
+  int MiddleFrameOgv(void)
+  {
+    return MiddleFrame("firefly.ogv", 0.005f);
+  }
+
+  int LastFrameOgv(void)
+  {
+    return LastFrame("firefly.ogv", 0.0061f);
+  }
+
+  int FrameCountOgv(void)
+  {
+    return FrameCount("firefly.ogv", 52);
   }
 
   int ReadTwice(void)

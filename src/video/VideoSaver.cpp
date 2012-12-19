@@ -124,6 +124,24 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
     {
       pVideoStream = avformat_new_stream(pFormatCtx, pVideoCodec);
       copyVideoEncoderCtxSettings(*pInputStream->codec);
+
+      /*
+       * NOTE: This if statement is from ffmpeg.c
+       *
+       * Avi is a special case here because it supports variable fps but
+       * having the fps and timebase differe significantly adds quite some
+       * overhead
+       */
+      if(!strcmp(pFormatCtx->oformat->name, "avi"))
+      {
+        pVideoCodecCtx->time_base.num = pInputStream->r_frame_rate.den;
+        pVideoCodecCtx->time_base.den = pInputStream->r_frame_rate.num;
+        pVideoCodecCtx->ticks_per_frame = pInputStream->codec->ticks_per_frame;
+      }
+
+      pVideoStream->avg_frame_rate = pInputStream->avg_frame_rate;
+      pVideoStream->disposition = pInputStream->disposition;
+      pVideoStream->time_base = pInputStream->time_base;
     }
     else
     {
@@ -133,6 +151,7 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
       avcodec_copy_context(pCodecCtx, pInputStream->codec);
       if(pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
         pCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
+      pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
     }
   }
 
@@ -192,6 +211,8 @@ bool gul::VideoSaver::OpenVideo(void)
 
 void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
 {
+  // NOTE: most things are copied from the function transcode_init in ffmpeg.c
+
   // Get a pointer to the codec context for the video stream
   pVideoCodecCtx = pVideoStream->codec;
 
@@ -203,17 +224,39 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
 
   /* initialize codec settings */
   avcodec_get_context_defaults3(pVideoCodecCtx, pVideoCodec);
-  pVideoCodecCtx->codec_id = pFormatCtx->oformat->video_codec;
-  pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
-  pVideoCodecCtx->bit_rate_tolerance = 0;
+  pVideoCodecCtx->codec_id = ctx.codec_id;
+  pVideoCodecCtx->codec_type = ctx.codec_type;
+  if(!pVideoCodecCtx->codec_tag)
+  {
+    if(!pFormatCtx->oformat->codec_tag ||
+       av_codec_get_id(pFormatCtx->oformat->codec_tag, ctx.codec_tag) == pVideoCodecCtx->codec_id ||
+       av_codec_get_tag(pFormatCtx->oformat->codec_tag, ctx.codec_id) <= 0)
+      pVideoCodecCtx->codec_tag = ctx.codec_tag;
+  }
+  pVideoCodecCtx->rc_max_rate    = ctx.rc_max_rate;
+  pVideoCodecCtx->rc_buffer_size = ctx.rc_buffer_size;
+  pVideoCodecCtx->field_order    = ctx.field_order;
+  pVideoCodecCtx->extradata = static_cast<uint8_t*>(av_mallocz((uint64_t)ctx.extradata_size + FF_INPUT_BUFFER_PADDING_SIZE));
+  pVideoCodecCtx->extradata_size = ctx.extradata_size;
+  memcpy(pVideoCodecCtx->extradata, ctx.extradata, ctx.extradata_size);
+  pVideoCodecCtx->bits_per_coded_sample  = ctx.bits_per_coded_sample;
+  pVideoCodecCtx->bits_per_raw_sample    = ctx.bits_per_raw_sample;
+  pVideoCodecCtx->chroma_sample_location = ctx.chroma_sample_location;
   pVideoCodecCtx->width    = videoWidth;
   pVideoCodecCtx->height   = videoHeight;
+  pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
+  if(pVideoCodecCtx->bit_rate == 0)
+  {
+    // empirical bit rate guess
+    pVideoCodecCtx->bit_rate = pVideoCodecCtx->width * pVideoCodecCtx->height * 4;
+  }
   pVideoCodecCtx->time_base = ctx.time_base;
   pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
   pVideoCodecCtx->gop_size      = 12;
   pVideoCodecCtx->pix_fmt       = ctx.pix_fmt;
   pVideoCodecCtx->profile = ctx.profile;
-  pVideoCodecCtx->level = FF_LEVEL_UNKNOWN;//ctx.level;
+  pVideoCodecCtx->level = FF_LEVEL_UNKNOWN; //ctx.level;
+  pVideoCodecCtx->has_b_frames = ctx.has_b_frames;
   if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
     pVideoCodecCtx->max_b_frames = 2;
   if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
@@ -234,7 +277,6 @@ void gul::VideoSaver::setDafaultVideoEncoderCtxSettings(void)
   avcodec_get_context_defaults3(pVideoCodecCtx, pVideoCodec);
   pVideoCodecCtx->codec_id = pFormatCtx->oformat->video_codec;
   pVideoCodecCtx->bit_rate = videoBitrate;
-  pVideoCodecCtx->bit_rate_tolerance = 0;
   pVideoCodecCtx->width    = videoWidth;
   pVideoCodecCtx->height   = videoHeight;
   pVideoCodecCtx->time_base.num = 1;
@@ -392,8 +434,11 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
   if(gotPacket)
   {
     // compute pts in stream time_base
-    if(pkt.pts != AV_NOPTS_VALUE && !usePTSFromFrames)
+    if(pkt.pts != AV_NOPTS_VALUE /*&& !usePTSFromFrames*/)
       pkt.pts = av_rescale_q(pkt.pts , pVideoCodecCtx->time_base, pVideoStream->time_base);
+    if(pkt.dts != AV_NOPTS_VALUE/* && !usePTSFromFrames*/)
+      pkt.dts = av_rescale_q(pkt.dts, pVideoCodecCtx->time_base, pVideoStream->time_base);
+    fprintf(stderr, "%d\n", pkt.pts);
 
     /* Write the compressed frame to the media file. */
     if(!writePacket(pkt))

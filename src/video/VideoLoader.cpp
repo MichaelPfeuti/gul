@@ -225,8 +225,9 @@ bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFr
       FAIL("Image conversion failed!");
 
     setImageData(rFrame, pFrameRGBA);
-    //uint64_t pts = av_rescale_q(pFrame->pkt_pts, pFormatCtx->streams[videoStreamIndex]->time_base, pVideoCodecCtx->time_base);
-    rFrame.SetPresentationTime(pFrame->pkt_pts);
+    uint64_t pts = av_rescale_q(pFrame->pkt_pts, pFormatCtx->streams[videoStreamIndex]->time_base, pVideoCodecCtx->time_base);
+    pts /= pFormatCtx->streams[videoStreamIndex]->codec->ticks_per_frame;
+    rFrame.SetPresentationTime(pts);
   }
 
   return frameFinished;

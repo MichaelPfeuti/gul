@@ -55,11 +55,11 @@ namespace TestVideoConverter
       }
   };
 
-  int Copy(void)
+  int Copy(const gul::String& file, float threshold, int gtCount)
   {
-    gul::File output = gul::CTestData::GetTempFilePath(gul::String("converter.mkv"));
+    gul::File output = gul::CTestData::GetTempFilePath(file);
     CopyManipulator manipulator;
-    gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), file));
     converter.Init(output, manipulator);
     converter.Execute();
 
@@ -74,7 +74,7 @@ namespace TestVideoConverter
 
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, 0.005f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, threshold));
 
 
     int count = 0;
@@ -83,23 +83,49 @@ namespace TestVideoConverter
       if(++count == 32)
       {
         TEST_TRUE(loader.IsFrameValid());
-        TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, 0.005f));
+        TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, threshold));
       }
       prevFrame = frame;
       loader.GetNext(frame);
     }
 
-    TEST_EQUAL(count, 50);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, prevFrame, 0.005f));
+    TEST_EQUAL(count, gtCount);
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, prevFrame, threshold));
 
     return EXIT_SUCCESS;
   }
 
-  int TwoDToSBS(void)
+  int CopyMkv(void)
+  {
+    return Copy("firefly.mkv", 0.005, 50);
+  }
+
+  int CopyMp4(void)
+  {
+    return Copy("firefly.mp4", 0.006, 52);
+  }
+
+  int CopyAvi(void)
+  {
+    return Copy("firefly.avi", 0.007, 50);
+  }
+
+  int CopyMov(void)
+  {
+    return Copy("firefly.mov", 0.006, 52);
+  }
+
+  int CopyOgv(void)
+  {
+    return Copy("firefly.ogv", 0.0075, 52);
+  }
+
+
+  int Inane2DToSBS(void)
   {
     gul::File output = gul::CTestData::GetTempFilePath(gul::String("fireflySBSDelay.mkv"));
     gul::VFM2DToSBSDelay manipulator;
-    manipulator.SetParameter(5);
+    manipulator.SetParameter(2);
     gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     converter.Init(output, manipulator);
     converter.Execute();
