@@ -97,7 +97,7 @@ namespace TestVideoConverter
 
   int CopyMkv(void)
   {
-    return Copy("firefly.mkv", 0.005, 50);
+    return Copy("firefly.mkv", 0.006, 50);
   }
 
   int CopyMp4(void)
@@ -117,7 +117,7 @@ namespace TestVideoConverter
 
   int CopyOgv(void)
   {
-    return Copy("firefly.ogv", 0.0075, 52);
+    return Copy("firefly.ogv", 0.01, 52);
   }
 
 
