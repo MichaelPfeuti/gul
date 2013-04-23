@@ -67,22 +67,27 @@ void gul::AnalyzerImageEquality::Execute(void)
     return;
   }
 
-  gul::RGBA rgbaSAD;
+  float diffPerChannel[image1.GetNumberOfChannels()];
+  for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
+    diffPerChannel[c] = 0;
+
   for(int y = 0; y < image1.GetHeight(); ++y)
   {
     for(int x = 0; x < image1.GetWidth(); ++x)
     {
-      gul::RGBA rgbaDifference = gul::absoluteDifference(image1.GetPixel(x, y), image2.GetPixel(x, y));
-      rgbaSAD += rgbaDifference;
+      for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
+      {
+        diffPerChannel[c] += gul::absoluteDifference<float>(image1.GetColorConst(x,y,c), image2.GetColorConst(x,y,c));
+        difference += diffPerChannel[c];
+      }
     }
   }
 
-  difference = rgbaSAD.GetRed() + rgbaSAD.GetGreen() + rgbaSAD.GetBlue() + rgbaSAD.GetAlpha();
-  difference /= 4.f;
-
+  difference /= image1.GetNumberOfChannels();
   difference /= image1.GetWidth() * image1.GetHeight();
+  difference /= 255;
 
-  fprintf(stderr, "error: %f, %f, %f, %f -> %f\n", rgbaSAD.GetRed(), rgbaSAD.GetGreen(), rgbaSAD.GetBlue(), rgbaSAD.GetAlpha(), difference);
+  fprintf(stderr, "error: %f, %f, %f, %f -> %f\n", diffPerChannel[0],diffPerChannel[1],diffPerChannel[2],diffPerChannel[3], difference);
 }
 
 bool gul::AnalyzerImageEquality::Execute(const Image& image1, const Image& image2, float differenceThreshold)

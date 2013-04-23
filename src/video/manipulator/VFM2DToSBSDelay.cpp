@@ -59,7 +59,7 @@ void gul::VFM2DToSBSDelay::Execute(const gul::Image& input, gul::Image& output)
   {
     output = gul::Image(GetResultWidth(input.GetWidth()),
                         GetResultHeight(input.GetHeight()),
-                        input.GetImageType());
+                        input.GetImageFormat());
     --m_delay;
   }
 

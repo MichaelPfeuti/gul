@@ -51,26 +51,27 @@ void gul::FilterImageToBW::SetParameter(float bwThreshold)
 
 void gul::FilterImageToBW::SetParameter(const gul::Image& grayImage)
 {
-  ASSERT_MSG(grayImage.GetImageType() == gul::Image::IT_GRAY, "Input must be a grayscale image");
+  ASSERT_MSG(grayImage.GetImageFormat() == gul::Image::IF_GRAY, "Input must be a grayscale image");
   inputImage = grayImage;
 }
 
 void gul::FilterImageToBW::Execute(void)
 {
-  outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
+  outputImage = gul::Image(inputImage.GetWidth(), 
+                           inputImage.GetHeight(),
+                           gul::Image::IF_GRAY);
 
   for(int y = 0; y < inputImage.GetHeight(); ++y)
   {
     for(int x = 0; x < inputImage.GetWidth(); ++x)
     {
-      gul::RGBA in = inputImage.GetPixel(x, y);
-      if(in.GetRed() < threshold)
+      if(inputImage.GetColorConst(x,y,0) < threshold)
       {
-        outputImage.SetPixel(x, y, gul::RGBA(0.f, 0.f, 0.f, in.GetAlpha()));
+        outputImage.GetColor(x, y, 0) = 0;
       }
       else
       {
-        outputImage.SetPixel(x, y, gul::RGBA(1.f, 1.f, 1.f, in.GetAlpha()));
+        outputImage.GetColor(x, y, 0) = 255;
       }
     }
   }

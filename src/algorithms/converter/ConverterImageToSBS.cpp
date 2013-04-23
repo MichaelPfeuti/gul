@@ -53,17 +53,13 @@ void gul::ConverterImageToSBS::SetParameter(const gul::Image& leftImage,
 void gul::ConverterImageToSBS::Execute(void)
 {
   m_sbsImage = gul::Image(m_leftImage.GetWidth() + m_rightImage.GetWidth(),
-                          m_leftImage.GetHeight(), m_leftImage.GetImageType());
+                          m_leftImage.GetHeight(),
+                          m_leftImage.GetImageFormat());
 
   for(int y = 0; y < m_sbsImage.GetHeight(); ++y)
   {
-    for(int x = 0; x < m_sbsImage.GetWidth(); ++x)
-    {
-      if(x < m_leftImage.GetWidth())
-        m_sbsImage.SetPixel(x, y, m_leftImage.GetPixel(x, y));
-      else
-        m_sbsImage.SetPixel(x, y, m_rightImage.GetPixel(x  - m_leftImage.GetWidth(), y));
-    }
+    memcpy(m_sbsImage.GetScanline(y), m_leftImage.GetScanlineConst(y), m_leftImage.GetPitch());
+    memcpy(m_sbsImage.GetScanline(y) + m_leftImage.GetPitch(), m_rightImage.GetScanlineConst(y), m_rightImage.GetPitch());
   }
 }
 

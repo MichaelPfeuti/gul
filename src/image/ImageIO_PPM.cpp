@@ -63,25 +63,25 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
   fscanf(f, " %d %d ", &width, &height);
 
   // read max value when not in binary mode
-  int maxValueInt = 0;
-  float maxValue = 0;
+  int maxValue = 0;
   if(strcmp(dataMode, "P1") != 0 &&
      strcmp(dataMode, "P4") != 0)
   {
-    fscanf(f, " %d ", &maxValueInt);
-    maxValue = static_cast<float>(maxValueInt);
+    fscanf(f, " %d ", &maxValue);
   }
 
   // ignore any trailing whitespaces
   //while (fgetc(f) != '\n') ;
 
-  gul::Image image(width, height, gul::Image::IT_RGBA);
+  gul::Image image;
 
   if(strcmp(dataMode, "P1") == 0)
   {
     // b/w image
+    image = gul::Image(width, height, gul::Image::IF_GRAY);
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
         char bw = fgetc(f);
@@ -89,49 +89,47 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
         {
           bw = fgetc(f);
         }
-        float greyVal = bw = 1 - atof(&bw);
-        gul::RGBA rgba(greyVal, greyVal, greyVal, 1.f);
-        image.SetPixel(x, y, rgba);
+        pData[image.GetNumberOfChannels()*x] = 1 - bw;
       }
     }
   }
   else if(strcmp(dataMode, "P2") == 0)
   {
+    image = gul::Image(width, height, gul::Image::IF_GRAY);
     // greyscale image
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
         unsigned int bw;
         fscanf(f, " %u ", &bw);
-        gul::RGBA rgba(bw / maxValue,
-                       bw / maxValue,
-                       bw / maxValue,
-                       1.f);
-        image.SetPixel(x, y, rgba);
+        pData[image.GetNumberOfChannels()*x] = bw * 255 / maxValue;
       }
     }
   }
   else if(strcmp(dataMode, "P3") == 0)
   {
+    image = gul::Image(width, height, gul::Image::IF_RGBA);
     // rgb image
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
         unsigned int r, g, b;
         fscanf(f, " %u %u %u ", &r, &g, &b);
-        gul::RGBA rgba(r / maxValue,
-                       g / maxValue,
-                       b / maxValue,
-                       1.f);
-        image.SetPixel(x, y, rgba);
+        pData[image.GetNumberOfChannels()*x + 0] = r * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 1] = g * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 2] = b * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 3] = 255;
       }
     }
   }
   else if(strcmp(dataMode, "P4") == 0)
   {
     // b/w image 8 pixels packed in one byte.
+    image = gul::Image(width, height, gul::Image::IF_GRAY);
     unsigned char ucData[width * height];
     int byteWidth = (width + 0.5f) / 8;
     fread(ucData, sizeof(unsigned char), byteWidth * height, f);
@@ -139,11 +137,11 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
     int bitShift = 7;
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        float bw = 1.f - (ucData[x / 8 + y * byteWidth] >> bitShift & 1);
-        gul::RGBA rgba(bw, bw, bw, 1.f);
-        image.SetPixel(x, y, rgba);
+        unsigned char bw = 1 - (ucData[x / 8 + y * byteWidth] >> bitShift & 1);
+        pData[image.GetNumberOfChannels()*x] = bw;
         --bitShift;
         if(bitShift < 0)
           bitShift = 7;
@@ -154,32 +152,33 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
   else if(strcmp(dataMode, "P5") == 0)
   {
     // greyscale image
+    image = gul::Image(width, height, gul::Image::IF_GRAY);
     unsigned char ucData[width * height];
     fread(ucData, sizeof(unsigned char), width * height, f);
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        float grey = ucData[x + y * width] / maxValue;
-        gul::RGBA rgba(grey, grey, grey, 1.f);
-        image.SetPixel(x, y, rgba);
+        pData[image.GetNumberOfChannels()*x] = ucData[x + y * width] * 255 / maxValue;
       }
     }
   }
   else if(strcmp(dataMode, "P6") == 0)
   {
     // rgb image
+    image = gul::Image(width, height, gul::Image::IF_RGBA);
     unsigned char ucData[width * height * 3];
     fread(ucData, sizeof(unsigned char), 3 * width * height, f);
     for(int y = 0; y < image.GetHeight(); ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        gul::RGBA rgba(ucData[(x + y * width) * 3 + 0] / maxValue,
-                       ucData[(x + y * width) * 3 + 1] / maxValue,
-                       ucData[(x + y * width) * 3 + 2] / maxValue,
-                       1.f);
-        image.SetPixel(x, y, rgba);
+        pData[image.GetNumberOfChannels()*x + 0] = ucData[(x + y * width) * 3 + 0] * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 1] = ucData[(x + y * width) * 3 + 1] * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 2] = ucData[(x + y * width) * 3 + 2] * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 3] = 255;
       }
     }
   }
@@ -213,12 +212,12 @@ void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
 
         for(int y = 0; y < rImage.GetHeight(); ++y)
         {
+          const unsigned char* pData = rImage.GetScanline(y);
           for(int x = 0; x < rImage.GetWidth(); ++x)
           {
-            gul::RGBA rgba = rImage.GetPixel(x, y);
-            ucData[(x + y * rImage.GetWidth()) * 3 + 0] = static_cast<unsigned char>(rgba.GetRed() * 255);
-            ucData[(x + y * rImage.GetWidth()) * 3 + 1] = static_cast<unsigned char>(rgba.GetGreen() * 255);
-            ucData[(x + y * rImage.GetWidth()) * 3 + 2] = static_cast<unsigned char>(rgba.GetBlue() * 255);
+            ucData[(x + y * rImage.GetWidth()) * 3 + 0] = pData[rImage.GetNumberOfChannels()*x + 0];
+            ucData[(x + y * rImage.GetWidth()) * 3 + 1] = pData[rImage.GetNumberOfChannels()*x + 1];
+            ucData[(x + y * rImage.GetWidth()) * 3 + 2] = pData[rImage.GetNumberOfChannels()*x + 2];
           }
         }
         fwrite(ucData, sizeof(unsigned char), rImage.GetWidth()*rImage.GetHeight() * 3, f);
@@ -234,12 +233,12 @@ void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
 
         for(int y = 0; y < rImage.GetHeight(); ++y)
         {
+          const unsigned char* pData = rImage.GetScanline(y);
           for(int x = 0; x < rImage.GetWidth(); ++x)
           {
-            gul::RGBA rgba = rImage.GetPixel(x, y);
-            fprintf(f, "%u\n%u\n%u\n", static_cast<unsigned char>(rgba.GetRed() * 255),
-                    static_cast<unsigned char>(rgba.GetGreen() * 255),
-                    static_cast<unsigned char>(rgba.GetBlue() * 255));
+            fprintf(f, "%u\n%u\n%u\n", pData[rImage.GetNumberOfChannels()*x + 0],
+                                       pData[rImage.GetNumberOfChannels()*x + 1],
+                                       pData[rImage.GetNumberOfChannels()*x + 2]);
           }
           fprintf(f, "\n");
         }

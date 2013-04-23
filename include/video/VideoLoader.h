@@ -75,19 +75,19 @@ namespace gul
       bool decodeRemaining(VideoFrame& rFrame);
 
     private:
-      const gul::File path;
-      AVFormatContext* pFormatCtx;
-      AVCodecContext* pVideoCodecCtx;
-      SwsContext* pSWSContext;
-      AVPacket* pPacket;
-      AVFrame* pFrame;
-      AVFrame* pFrameRGBA;
-      uint8_t* pDataBufferRGBA;
-      bool isFrameValid;
-      bool isVideoOpen;
-      bool isPacketDataFreed;
-      int videoStreamIndex;
-      int currentFrameIndex;
+      const gul::File m_path;
+      AVFormatContext* m_pFormatCtx;
+      AVCodecContext* m_pVideoCodecCtx;
+      SwsContext* m_pSWSContext;
+      AVPacket* m_pPacket;
+      AVFrame* m_pFrame;
+      AVFrame* m_pFrameRGBA;
+      uint8_t* m_pDataBufferRGBA;
+      bool m_isFrameValid;
+      bool m_isVideoOpen;
+      bool m_isPacketDataFreed;
+      int m_videoStreamIndex;
+      int m_currentFrameIndex;
       static bool codecsAreRegistered;
   };
 

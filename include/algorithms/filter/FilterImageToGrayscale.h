@@ -62,9 +62,6 @@ namespace gul
 
 
     private:
-      gul::RGBA computeGreyValue(const RGBA& rgba) const;
-
-    private:
       gul::Image inputImage;
       gul::Image outputImage;
       GreyscaleFilterType conversionType;

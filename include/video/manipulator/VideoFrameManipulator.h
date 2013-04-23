@@ -31,7 +31,9 @@
 
 namespace gul
 {
-  class Image;
+  template<typename T>
+  class ImageT;
+  typedef ImageT<unsigned char> Image;
 }
 
 namespace gul

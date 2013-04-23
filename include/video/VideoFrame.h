@@ -40,8 +40,7 @@ namespace gul
     public:
       VideoFrame(void);
       VideoFrame(const gul::Image& img);
-      VideoFrame(int w, int h, ImageType dataImageType);
-      VideoFrame(int w, int h, ImageType dataImageType, const unsigned char* data);
+      VideoFrame(int w, int h, ImageFormat dataImageFormat);
       VideoFrame(const VideoFrame& rImage);
       virtual ~VideoFrame(void);
 

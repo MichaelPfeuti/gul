@@ -30,50 +30,55 @@
 ***************************************************************************/
 
 #include "RTTI.h"
-#include "RGBA.h"
 #include "SharedResource.h"
 
 namespace gul
 {
 
-  class Image : private SharedResource
+  template<typename T>
+  class ImageT : private SharedResource
   {
-      DECLARE_RTTI(Image)
+      DECLARE_RTTI(ImageT)
 
     public:
-      enum ImageType
+      enum ImageFormat
       {
-        IT_UNDEFINED,
-        IT_GRAY,      //!< IT_RGBA where all RGB values are the same
-        IT_RGBA,
-        IT_CMYK,
-        IT_HSL,
-        IT_HSV
+        IF_UNDEFINED,
+        IF_GRAY,
+        IF_RGBA,
+        IF_CMYKA,
+        IF_HSLA,
+        IF_HSVA,
+        IF_HSIA
       };
 
     public:
-      Image(void);
-      Image(int w, int h, ImageType dataImageType);
-      Image(int w, int h, ImageType dataImageType, const unsigned char* data);
-      Image(const Image& rImage);
-      virtual ~Image(void);
+      ImageT(void);
+      ImageT(int w, int h, ImageFormat ImageFormat = IF_RGBA);
+      ImageT(int w, int h, ImageFormat imageFormat, const T* data);
+      ImageT(const ImageT& rImage);
+      virtual ~ImageT(void);
 
-      Image& operator=(const Image& other);
-
+      ImageT& operator=(const ImageT& other);
 
       int GetWidth(void) const;
       int GetHeight(void) const;
       int GetNumberOfChannels(void) const;
-      ImageType GetImageType(void) const;
+      ImageFormat GetImageFormat(void) const;
 
       bool IsNull(void) const;
 
-      const RGBA GetPixel(int x, int y) const;
-      void SetPixel(int x, int y, const gul::RGBA& rgba);
+      const T& GetColorConst(int x, int y, int channel) const;
+      const T& GetColor(int x, int y, int channel) const;
+      T& GetColor(int x, int y, int channel);
 
-      const float* GetDataConst(void) const;
-      const float* GetData(void) const;
-      float* GetData(void);
+      const T* GetDataConst(void) const;
+      const T* GetData(void) const;
+      T* GetData(void);
+
+      const T* GetScanlineConst(int scanline) const;
+      const T* GetScanline(int scanline) const;
+      T* GetScanline(int scanline);
 
       int GetPitch(void) const;
 
@@ -83,20 +88,27 @@ namespace gul
       void allocateSharedResource(void);
       virtual void deleteSharedResource(void);
       virtual void transferSharedResourceFrom(const SharedResource& newOwner);
-      virtual gul::Image* createSharedResourceOwner(void) const;
+      virtual ImageT* createSharedResourceOwner(void) const;
 
     private:
-      Image(const Image& rImage, bool allocate);
+      ImageT(const ImageT& rImage, bool allocate);
 
     private:
-      float* pData;
-      int width;
-      int height;
-      ImageType imageType;
+      T* m_pData;
+      int m_width;
+      int m_height;
+      ImageFormat m_imageFormat;
   };
+
+  typedef ImageT<unsigned char> Image;
+  typedef ImageT<float> ImageF;
+  typedef ImageT<unsigned int> ImageI;
 }
 
-SPECIALIZE_TRAITS(gul::Image)
+SPECIALIZE_TPL_TRAITS(gul::ImageT)
+
+
+#include "impl/image/Image.hpp"
 
 
 #endif

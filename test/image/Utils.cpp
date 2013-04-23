@@ -36,23 +36,23 @@
 gul::Image GetLenaGT(void)
 {
   return gul::Image(lena.width, lena.height,
-                    gul::Image::IT_RGBA, lena.pixel_data);
+                    gul::Image::IF_RGBA, lena.pixel_data);
 }
 
 gul::Image GetLenaAlphaGT(void)
 {
   return gul::Image(lena_alpha.width, lena_alpha.height,
-                    gul::Image::IT_RGBA, lena_alpha.pixel_data);
+                    gul::Image::IF_RGBA, lena_alpha.pixel_data);
 }
 
 gul::Image GetLenaGrayscaleGT(void)
 {
   return gul::Image(lena_gray.width, lena_gray.height,
-                    gul::Image::IT_RGBA, lena_gray.pixel_data);
+                    gul::Image::IF_RGBA, lena_gray.pixel_data);
 }
 
 gul::Image GetLenaBWGT(void)
 {
   return gul::Image(lena_bw.width, lena_bw.height,
-                    gul::Image::IT_RGBA, lena_bw.pixel_data);
+                    gul::Image::IF_RGBA, lena_bw.pixel_data);
 }

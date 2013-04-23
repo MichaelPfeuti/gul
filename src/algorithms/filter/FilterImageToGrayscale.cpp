@@ -42,36 +42,6 @@ gul::FilterImageToGrayscale::~FilterImageToGrayscale(void)
 {
 }
 
-gul::RGBA gul::FilterImageToGrayscale::computeGreyValue(const RGBA& rgba) const
-{
-  float gray = 0.f;
-
-  switch(conversionType)
-  {
-    case GCT_AVERAGE:
-      gray = rgba.GetRed() + rgba.GetGreen() + rgba.GetBlue();
-      gray /= 3.f;
-      break;
-
-    case GCT_LIGHTNESS:
-      gray  = gul::min(gul::min(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
-      gray += gul::max(gul::max(rgba.GetRed(), rgba.GetGreen()), rgba.GetBlue());
-      gray /= 2.f;
-      break;
-
-    case GCT_LUMINOSITY:
-      gray  = 0.21f * rgba.GetRed();
-      gray += 0.72f * rgba.GetGreen();
-      gray += 0.07f * rgba.GetBlue();
-      break;
-
-    default:
-      FAIL("Unknown Grey Conversion Type!");
-  }
-
-  return gul::RGBA(gray, gray, gray, rgba.GetAlpha());
-}
-
 void gul::FilterImageToGrayscale::SetParameter(GreyscaleFilterType type)
 {
   conversionType = type;
@@ -79,19 +49,45 @@ void gul::FilterImageToGrayscale::SetParameter(GreyscaleFilterType type)
 
 void gul::FilterImageToGrayscale::SetParameter(const gul::Image& colorImage)
 {
+  ASSERT(colorImage.GetImageFormat() == gul::Image::IF_RGBA);
+
   inputImage = colorImage;
 }
 
 void gul::FilterImageToGrayscale::Execute(void)
 {
-  outputImage = gul::Image(inputImage.GetWidth(), inputImage.GetHeight(), inputImage.GetImageType());
+  outputImage = gul::Image(inputImage.GetWidth(), 
+                           inputImage.GetHeight(),
+                           gul::Image::IF_GRAY);
 
   for(int y = 0; y < inputImage.GetHeight(); ++y)
   {
     for(int x = 0; x < inputImage.GetWidth(); ++x)
     {
-      gul::RGBA in = inputImage.GetPixel(x, y);
-      outputImage.SetPixel(x, y, computeGreyValue(in));
+      float gray = 0;
+      switch(conversionType)
+      {
+        case GCT_AVERAGE:
+          gray = inputImage.GetColor(x,y,0) + inputImage.GetColor(x,y,1) + inputImage.GetColor(x,y,2);
+          gray /= 3.f;
+          break;
+
+        case GCT_LIGHTNESS:
+          gray  = gul::min(gul::min(inputImage.GetColor(x,y,0), inputImage.GetColor(x,y,1)), inputImage.GetColor(x,y,2));
+          gray += gul::max(gul::max(inputImage.GetColor(x,y,0), inputImage.GetColor(x,y,1)), inputImage.GetColor(x,y,2));
+          gray /= 2.f;
+          break;
+
+        case GCT_LUMINOSITY:
+          gray  = 0.21f * inputImage.GetColor(x,y,0);
+          gray += 0.72f * inputImage.GetColor(x,y,1);
+          gray += 0.07f * inputImage.GetColor(x,y,2);
+          break;
+
+        default:
+          FAIL("Unknown Grey Conversion Type!");
+      }
+      outputImage.GetColor(x,y,0) = gray * 255;
     }
   }
 }

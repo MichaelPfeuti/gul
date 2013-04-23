@@ -39,8 +39,8 @@ gul::VideoFrame::VideoFrame(const gul::Image& img)
 {
 }
 
-gul::VideoFrame::VideoFrame(int w, int h, ImageType dataImageType)
-  : gul::Image(w, h, dataImageType)
+gul::VideoFrame::VideoFrame(int w, int h, ImageFormat dataImageFormat)
+  : gul::Image(w, h, dataImageFormat)
 {
 
 }

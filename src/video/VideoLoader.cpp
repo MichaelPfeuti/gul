@@ -40,18 +40,18 @@ extern "C"
 bool gul::VideoLoader::codecsAreRegistered = false;
 
 gul::VideoLoader::VideoLoader(const gul::File& rVideoPath)
-  : path(rVideoPath),
-    pFormatCtx(nullptr),
-    pVideoCodecCtx(nullptr),
-    pSWSContext(nullptr),
-    pPacket(nullptr),
-    pFrame(nullptr),
-    pFrameRGBA(nullptr),
-    pDataBufferRGBA(nullptr),
-    isFrameValid(false),
-    isVideoOpen(false),
-    isPacketDataFreed(true),
-    currentFrameIndex(0)
+  : m_path(rVideoPath),
+    m_pFormatCtx(nullptr),
+    m_pVideoCodecCtx(nullptr),
+    m_pSWSContext(nullptr),
+    m_pPacket(nullptr),
+    m_pFrame(nullptr),
+    m_pFrameRGBA(nullptr),
+    m_pDataBufferRGBA(nullptr),
+    m_isFrameValid(false),
+    m_isVideoOpen(false),
+    m_isPacketDataFreed(true),
+    m_currentFrameIndex(0)
 {
   if(!codecsAreRegistered)
   {
@@ -63,7 +63,7 @@ gul::VideoLoader::VideoLoader(const gul::File& rVideoPath)
 
 gul::VideoLoader::~VideoLoader(void)
 {
-  if(isVideoOpen)
+  if(m_isVideoOpen)
   {
     CloseVideo();
   }
@@ -72,104 +72,104 @@ gul::VideoLoader::~VideoLoader(void)
 void gul::VideoLoader::CloseVideo(void)
 {
   // Free RGBA memory
-  av_free(pDataBufferRGBA);
-  av_free(pFrameRGBA);
-  pDataBufferRGBA = nullptr;
-  pFrameRGBA = nullptr;
+  av_free(m_pDataBufferRGBA);
+  av_free(m_pFrameRGBA);
+  m_pDataBufferRGBA = nullptr;
+  m_pFrameRGBA = nullptr;
 
   // Free the frame buffer
-  av_free(pFrame);
-  pFrame = nullptr;
+  av_free(m_pFrame);
+  m_pFrame = nullptr;
 
   // free swscale context
-  av_free(pSWSContext);
-  pSWSContext = nullptr;
+  av_free(m_pSWSContext);
+  m_pSWSContext = nullptr;
 
   // free packet
-  if(!isPacketDataFreed)
-    av_free_packet(pPacket);
-  GUL_DELETE(pPacket);
+  if(!m_isPacketDataFreed)
+    av_free_packet(m_pPacket);
+  GUL_DELETE(m_pPacket);
 
   // Close the codec
-  avcodec_close(pVideoCodecCtx);
-  pVideoCodecCtx = nullptr;
+  avcodec_close(m_pVideoCodecCtx);
+  m_pVideoCodecCtx = nullptr;
 
   // Close the video file
-  avformat_close_input(&pFormatCtx);
-  pFormatCtx = nullptr;
+  avformat_close_input(&m_pFormatCtx);
+  m_pFormatCtx = nullptr;
 
-  isFrameValid = false;
-  isVideoOpen = false;
-  isPacketDataFreed = true;
-  currentFrameIndex = 0;
+  m_isFrameValid = false;
+  m_isVideoOpen = false;
+  m_isPacketDataFreed = true;
+  m_currentFrameIndex = 0;
 }
 
 bool gul::VideoLoader::OpenVideo(void)
 {
-  ASSERT(!isVideoOpen);
-  ASSERT(path.IsPathValid());
+  ASSERT(!m_isVideoOpen);
+  ASSERT(m_path.IsPathValid());
 
   // Open video file
-  if(avformat_open_input(&pFormatCtx, path.GetPath().GetData(), nullptr, nullptr) != 0)
+  if(avformat_open_input(&m_pFormatCtx, m_path.GetPath().GetData(), nullptr, nullptr) != 0)
     FAIL("Couldn't open file");
 
   // Retrieve stream information
-  if(avformat_find_stream_info(pFormatCtx, nullptr) < 0)
+  if(avformat_find_stream_info(m_pFormatCtx, nullptr) < 0)
     FAIL("Couldn't find stream information");
 
   //av_dump_format(pFormatCtx, 0, path.GetData(), 0);
 
   // Find the best video stream
-  videoStreamIndex =  av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
-  if(videoStreamIndex == AVERROR_STREAM_NOT_FOUND)
+  m_videoStreamIndex =  av_find_best_stream(m_pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+  if(m_videoStreamIndex == AVERROR_STREAM_NOT_FOUND)
     FAIL("Didn't find a video stream");
 
   // Get a pointer to the codec context for the video stream
-  pVideoCodecCtx = pFormatCtx->streams[videoStreamIndex]->codec;
+  m_pVideoCodecCtx = m_pFormatCtx->streams[m_videoStreamIndex]->codec;
 
   // enable multithreading
-  pVideoCodecCtx->thread_count = 2;
+  m_pVideoCodecCtx->thread_count = 2;
 
   // Find the decoder for the video stream
-  AVCodec* pCodec = avcodec_find_decoder(pVideoCodecCtx->codec_id);
+  AVCodec* pCodec = avcodec_find_decoder(m_pVideoCodecCtx->codec_id);
   if(pCodec == nullptr)
     FAIL("Unsupported codec!\n");
 
   // Open codec
-  if(avcodec_open2(pVideoCodecCtx, pCodec, nullptr) < 0)
+  if(avcodec_open2(m_pVideoCodecCtx, pCodec, nullptr) < 0)
     FAIL("Could not open codec");
 
   // Allocate video frame
-  pFrame = avcodec_alloc_frame();
+  m_pFrame = avcodec_alloc_frame();
 
   // Allocate an AVFrame structure
-  pFrameRGBA = avcodec_alloc_frame();
+  m_pFrameRGBA = avcodec_alloc_frame();
 
   // Determine required buffer size and allocate buffer
   int numBytes;
-  numBytes = avpicture_get_size(PIX_FMT_RGBA, pVideoCodecCtx->width,
-                                pVideoCodecCtx->height);
-  pDataBufferRGBA = (uint8_t*)av_malloc(numBytes * sizeof(uint8_t));
+  numBytes = avpicture_get_size(PIX_FMT_RGBA, m_pVideoCodecCtx->width,
+                                m_pVideoCodecCtx->height);
+  m_pDataBufferRGBA = (uint8_t*)av_malloc(numBytes * sizeof(uint8_t));
 
   // Assign appropriate parts of buffer to image planes in pFrameRGB
   // Note that pFrameRGBA is an AVFrame, but AVFrame is a superset
   // of AVPicture
-  avpicture_fill((AVPicture*)pFrameRGBA, pDataBufferRGBA, PIX_FMT_RGBA,
-                 pVideoCodecCtx->width, pVideoCodecCtx->height);
+  avpicture_fill((AVPicture*)m_pFrameRGBA, m_pDataBufferRGBA, PIX_FMT_RGBA,
+                 m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
 
 
   // swscaler context
-  pSWSContext = sws_getCachedContext(pSWSContext,
-                                     pVideoCodecCtx->width, pVideoCodecCtx->height, pVideoCodecCtx->pix_fmt,
-                                     pVideoCodecCtx->width, pVideoCodecCtx->height, PIX_FMT_RGBA,
+  m_pSWSContext = sws_getCachedContext(m_pSWSContext,
+                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
+                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
                                      SWS_BILINEAR, nullptr, nullptr, nullptr);
 
   // packet into which to read piece
-  pPacket = new AVPacket;
-  av_init_packet(pPacket);
-  isPacketDataFreed = true;
+  m_pPacket = new AVPacket;
+  av_init_packet(m_pPacket);
+  m_isPacketDataFreed = true;
 
-  isVideoOpen = true;
+  m_isVideoOpen = true;
   return true;
 }
 
@@ -195,44 +195,38 @@ bool gul::VideoLoader::readNextImage(gul::VideoFrame& rFrame)
 
 AVPacket* gul::VideoLoader::getNextPacket(void)
 {
-  if(!isPacketDataFreed)
+  if(!m_isPacketDataFreed)
   {
-    av_free_packet(pPacket);
-    av_init_packet(pPacket);
+    av_free_packet(m_pPacket);
+    av_init_packet(m_pPacket);
   }
 
-  if(av_read_frame(pFormatCtx, pPacket) < 0)
+  if(av_read_frame(m_pFormatCtx, m_pPacket) < 0)
     return nullptr;
 
-  isPacketDataFreed = false;
-  return pPacket;
+  m_isPacketDataFreed = false;
+  return m_pPacket;
 }
 
 bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
 {
+  ASSERT_MSG(rFrame.GetImageFormat() == gul::Image::IF_RGBA, "Video Frame is not RGBA!");
+
   int frameFinished;
   // Decode video frame
-  if(avcodec_decode_video2(pVideoCodecCtx, pFrame, &frameFinished, &rPacket) < 0)
+  if(avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket) < 0)
     FAIL("Decoding failed!");
 
   // Did we get a video frame?
   if(frameFinished)
   {
-    // Convert the image from its native format to RGB
-    //Scale the raw data/convert it to our video buffer...
-    if(sws_scale(pSWSContext,
-                 pFrame->data, pFrame->linesize,
-                 0, pVideoCodecCtx->height,
-                 pFrameRGBA->data, pFrameRGBA->linesize) <  pVideoCodecCtx->height)
-      FAIL("Image conversion failed!");
-
-    setImageData(rFrame, pFrameRGBA);
-    uint64_t pts = av_rescale_q(pFrame->pkt_pts, pFormatCtx->streams[videoStreamIndex]->time_base, pVideoCodecCtx->time_base);
-    pts /= pFormatCtx->streams[videoStreamIndex]->codec->ticks_per_frame;
+    setImageData(rFrame, m_pFrame);
+    uint64_t pts = av_rescale_q(m_pFrame->pkt_pts, m_pFormatCtx->streams[m_videoStreamIndex]->time_base, m_pVideoCodecCtx->time_base);
+    pts /= m_pFormatCtx->streams[m_videoStreamIndex]->codec->ticks_per_frame;
     rFrame.SetPresentationTime(pts);
 
-    rFrame.SetFrameIndex(currentFrameIndex);
-    ++currentFrameIndex;
+    rFrame.SetFrameIndex(m_currentFrameIndex);
+    ++m_currentFrameIndex;
   }
 
   return frameFinished;
@@ -240,7 +234,7 @@ bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFr
 
 bool gul::VideoLoader::isVideoPacket(const AVPacket& rPacket) const
 {
-  return rPacket.stream_index == videoStreamIndex;
+  return rPacket.stream_index == m_videoStreamIndex;
 }
 
 bool gul::VideoLoader::decodeRemaining(VideoFrame& rFrame)
@@ -255,56 +249,48 @@ bool gul::VideoLoader::decodeRemaining(VideoFrame& rFrame)
 
 void gul::VideoLoader::setImageData(gul::VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const
 {
-  const int channels = rTargetFrame.GetNumberOfChannels();
-  const int width = rTargetFrame.GetWidth();
-  for(int y = 0; y < rTargetFrame.GetHeight(); ++y)
-  {
-    for(int x = 0; x < width; ++x)
-    {
-      gul::RGBA rgba;
-      if(pSourceFrame != nullptr)
-      {
-        rgba = gul::RGBA(pSourceFrame->data[0][(x + y * width) * channels + 0],
-                         pSourceFrame->data[0][(x + y * width) * channels + 1],
-                         pSourceFrame->data[0][(x + y * width) * channels + 2],
-                         pSourceFrame->data[0][(x + y * width) * channels + 3]);
-      }
-      rTargetFrame.SetPixel(x, y, rgba);
-    }
-  }
+    // Convert the image from its native format to RGBA
+    //Scale the raw data/convert it to our video buffer...
+    unsigned char* pData = rTargetFrame.GetData();
+    int pitch = rTargetFrame.GetPitch();
+    if(sws_scale(m_pSWSContext,
+                 m_pFrame->data, m_pFrame->linesize,
+                 0, m_pVideoCodecCtx->height,
+                 &pData, &pitch) <  m_pVideoCodecCtx->height)
+      FAIL("Image conversion failed!");
 }
 
 void gul::VideoLoader::allocateVideoFrame(VideoFrame& rFrame) const
 {
-  if(rFrame.GetWidth() != pVideoCodecCtx->width ||
-     rFrame.GetHeight() != pVideoCodecCtx->height ||
-     rFrame.GetImageType() != gul::Image::IT_RGBA)
+  if(rFrame.GetWidth() != m_pVideoCodecCtx->width ||
+     rFrame.GetHeight() != m_pVideoCodecCtx->height ||
+     rFrame.GetImageFormat() != gul::Image::IF_RGBA)
   {
-    rFrame = gul::VideoFrame(pVideoCodecCtx->width, pVideoCodecCtx->height, gul::Image::IT_RGBA);
+    rFrame = gul::VideoFrame(m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, gul::Image::IF_RGBA);
   }
 }
 
 bool gul::VideoLoader::IsFrameValid(void) const
 {
-  return isFrameValid;
+  return m_isFrameValid;
 }
 
 void gul::VideoLoader::GetNext(gul::VideoFrame& rFrame)
 {
-  ASSERT(isVideoOpen);
+  ASSERT(m_isVideoOpen);
 
   allocateVideoFrame(rFrame);
-  isFrameValid = readNextImage(rFrame);
+  m_isFrameValid = readNextImage(rFrame);
 }
 
 int gul::VideoLoader::GetWidth(void) const
 {
-  ASSERT(isVideoOpen);
-  return pVideoCodecCtx->width;
+  ASSERT(m_isVideoOpen);
+  return m_pVideoCodecCtx->width;
 }
 
 int gul::VideoLoader::GetHeight(void) const
 {
-  ASSERT(isVideoOpen);
-  return pVideoCodecCtx->height;
+  ASSERT(m_isVideoOpen);
+  return m_pVideoCodecCtx->height;
 }

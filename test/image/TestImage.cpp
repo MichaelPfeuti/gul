@@ -34,11 +34,11 @@ namespace TestImage
 
   int Constructor(void)
   {
-    gul::Image img(50, 80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IF_RGBA);
 
     TEST_EQUAL(img.GetWidth(), 50);
     TEST_EQUAL(img.GetHeight(), 80);
-    TEST_EQUAL(img.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(img.GetImageFormat(), gul::Image::IF_RGBA);
     TEST_NOT_NULL(img.GetDataConst());
 
     return EXIT_SUCCESS;
@@ -46,12 +46,12 @@ namespace TestImage
 
   int CopyConstructor(void)
   {
-    gul::Image img(50, 80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IF_RGBA);
     gul::Image copy = img;
 
     TEST_EQUAL(copy.GetWidth(), 50);
     TEST_EQUAL(copy.GetHeight(), 80);
-    TEST_EQUAL(copy.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(copy.GetImageFormat(), gul::Image::IF_RGBA);
     TEST_NOT_NULL(copy.GetDataConst());
     TEST_EQUAL(copy.GetDataConst(), img.GetDataConst());
 
@@ -60,7 +60,7 @@ namespace TestImage
 
   int Assignment(void)
   {
-    gul::Image img(50, 80, gul::Image::IT_RGBA);
+    gul::Image img(50, 80, gul::Image::IF_RGBA);
     gul::Image nullImg;
     nullImg = img;
 
@@ -68,18 +68,18 @@ namespace TestImage
     TEST_EQUAL(nullImg.GetDataConst(), img.GetDataConst());
     TEST_EQUAL(img.GetWidth(), 50);
     TEST_EQUAL(img.GetHeight(), 80);
-    TEST_EQUAL(img.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(img.GetImageFormat(), gul::Image::IF_RGBA);
     TEST_EQUAL(nullImg.GetWidth(), 50);
     TEST_EQUAL(nullImg.GetHeight(), 80);
-    TEST_EQUAL(nullImg.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(nullImg.GetImageFormat(), gul::Image::IF_RGBA);
 
     return EXIT_SUCCESS;
   }
 
   int AssignmentSelf(void)
   {
-    gul::Image first(50, 80, gul::Image::IT_RGBA);
-    const float* pData = first.GetDataConst();
+    gul::Image first(50, 80, gul::Image::IF_RGBA);
+    const unsigned char* pData = first.GetDataConst();
     gul::Image* pFirst = &first;
 
     first = *pFirst;
@@ -89,19 +89,19 @@ namespace TestImage
     TEST_EQUAL(pData, first.GetDataConst());
     TEST_EQUAL(first.GetWidth(), 50);
     TEST_EQUAL(first.GetHeight(), 80);
-    TEST_EQUAL(first.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(first.GetImageFormat(), gul::Image::IF_RGBA);
 
     return EXIT_SUCCESS;
   }
 
   int AssignmentExchange(void)
   {
-    gul::Image first(40, 80, gul::Image::IT_RGBA);
-    gul::Image second(80, 160, gul::Image::IT_RGBA);
+    gul::Image first(40, 80, gul::Image::IF_RGBA);
+    gul::Image second(80, 160, gul::Image::IF_RGBA);
     gul::Image tmp;
 
-    const float* pFirst = first.GetDataConst();
-    const float* pSecond = second.GetDataConst();
+    const unsigned char* pFirst = first.GetDataConst();
+    const unsigned char* pSecond = second.GetDataConst();
 
     tmp = first;
     TEST_EQUAL(first.GetDataConst(), tmp.GetDataConst());
@@ -126,17 +126,17 @@ namespace TestImage
 
     TEST_EQUAL(first.GetWidth(), 80);
     TEST_EQUAL(first.GetHeight(), 160);
-    TEST_EQUAL(first.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(first.GetImageFormat(), gul::Image::IF_RGBA);
     TEST_EQUAL(second.GetWidth(), 40);
     TEST_EQUAL(second.GetHeight(), 80);
-    TEST_EQUAL(second.GetImageType(), gul::Image::IT_RGBA);
+    TEST_EQUAL(second.GetImageFormat(), gul::Image::IF_RGBA);
 
     return EXIT_SUCCESS;
   }
 
   int DeleteReferee(void)
   {
-    gul::Image* ref1 = new gul::Image(50, 80, gul::Image::IT_RGBA);
+    gul::Image* ref1 = new gul::Image(50, 80, gul::Image::IF_RGBA);
     gul::Image* ref2 = new gul::Image(*ref1);
 
     TEST_NOT_NULL(ref2->GetDataConst());
@@ -153,32 +153,35 @@ namespace TestImage
     return EXIT_SUCCESS;
   }
 
-  int SetPixel(void)
+  int GetColor(void)
   {
-    gul::Image img(10, 10, gul::Image::IT_RGBA);
-    gul::RGBA old = img.GetPixel(5, 5);
-    gul::RGBA changed(0.5f, 0.5f, 0.5f, 0.5f);
+    gul::Image img(10, 10, gul::Image::IF_RGBA);
 
-    img.SetPixel(5, 5, changed);
+    unsigned char old = img.GetColor(5, 5, 0);
+    unsigned char changed = old + 128;
+    for(int i = 0; i < img.GetNumberOfChannels(); ++i)
+      img.GetColor(5, 5, i) = changed;
 
-    TEST_NOT_EQUAL(img.GetPixel(5, 5), old);
-    TEST_EQUAL(img.GetPixel(5, 5), changed);
+    for(int i = 0; i < img.GetNumberOfChannels(); ++i)
+      TEST_NOT_EQUAL(img.GetColorConst(5, 5, i), old);
+
+    for(int i = 0; i < img.GetNumberOfChannels(); ++i)
+      TEST_EQUAL(img.GetColorConst(5, 5, i), changed);
 
     return EXIT_SUCCESS;
   }
 
-  int SetPixelSharedResource(void)
+  int GetColorSharedResource(void)
   {
-    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img1(10, 10, gul::Image::IF_RGBA);
     gul::Image img2 = img1;
 
-    gul::RGBA old = img1.GetPixel(5, 5);
+    img1.GetColorConst(5, 5, 0);
     TEST_NOT_NULL(img1.GetDataConst());
     TEST_NOT_NULL(img2.GetDataConst());
     TEST_EQUAL(img1.GetDataConst(), img2.GetDataConst());
 
-    gul::RGBA changed(old.GetRed(), 0.5f, 0.5f, 0.5f);
-    img1.SetPixel(5, 5, changed);
+    img1.GetColor(5, 5, 0) = 128;
     TEST_NOT_NULL(img1.GetDataConst());
     TEST_NOT_NULL(img2.GetDataConst());
     TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
@@ -188,12 +191,12 @@ namespace TestImage
 
   int GetData(void)
   {
-    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img1(10, 10, gul::Image::IF_RGBA);
     gul::Image img2 = img1;
     const gul::Image img3 = img1;
 
-    float* pData2 = img2.GetData();
-    const float* pData3 = img3.GetData();
+    unsigned char* pData2 = img2.GetData();
+    const unsigned char* pData3 = img3.GetData();
 
     TEST_NOT_NULL(pData2);
     TEST_NOT_NULL(pData3);
@@ -207,12 +210,12 @@ namespace TestImage
 
   int GetDataConst(void)
   {
-    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img1(10, 10, gul::Image::IF_RGBA);
     gul::Image img2 = img1;
     const gul::Image img3 = img1;
 
-    const float* pData2 = img2.GetDataConst();
-    const float* pData3 = img3.GetData();
+    const unsigned char* pData2 = img2.GetDataConst();
+    const unsigned char* pData3 = img3.GetData();
 
     TEST_NOT_NULL(pData2);
     TEST_NOT_NULL(pData3);
@@ -226,18 +229,18 @@ namespace TestImage
 
   int NoCopySingleReferee(void)
   {
-    gul::Image img1(10, 10, gul::Image::IT_RGBA);
+    gul::Image img1(10, 10, gul::Image::IF_RGBA);
     gul::Image img2 = img1;
 
-    const float* pOldData1 = img1.GetDataConst();
-    const float* pOldData2 = img2.GetDataConst();
+    const unsigned char* pOldData1 = img1.GetDataConst();
+    const unsigned char* pOldData2 = img2.GetDataConst();
     TEST_EQUAL(pOldData1, pOldData2);
 
-    float* pData1 = img1.GetData();
+    unsigned char* pData1 = img1.GetData();
     TEST_NOT_NULL(pData1);
     TEST_NOT_EQUAL(pData1, pOldData1);
 
-    float* pData2 = img2.GetData();
+    unsigned char* pData2 = img2.GetData();
     TEST_NOT_NULL(pData2);
     TEST_EQUAL(pOldData2, img2.GetDataConst());
 

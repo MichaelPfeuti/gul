@@ -51,7 +51,7 @@ void gul::VideoConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameMan
   pVideoSaver = new gul::VideoSaver(rOutputVideo);
   pVideoSaver->setSize(rManipulator.GetResultWidth(pVideoLoader->GetWidth()),
                        rManipulator.GetResultHeight(pVideoLoader->GetHeight()));
-  pVideoSaver->openVideo(*pVideoLoader->pFormatCtx);
+  pVideoSaver->openVideo(*pVideoLoader->m_pFormatCtx);
 }
 
 void gul::VideoConverter::Execute(void)

@@ -86,7 +86,8 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
                &interlace_type, NULL, NULL);
 
   png_bytep* row_pointers = png_get_rows(png_ptr, info_ptr);
-  gul::Image image(width, height, gul::Image::IT_RGBA);
+  gul::Image image(width, height, gul::Image::IF_RGBA);
+  unsigned char* imageData = image.GetData();
   switch(color_type)
   {
     case PNG_COLOR_TYPE_GRAY:
@@ -94,8 +95,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          float grey = row_pointers[y][x] / 255.f;
-          image.SetPixel(x, y, gul::RGBA(grey, grey, grey, 1.f));
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = 255;
         }
       }
       break;
@@ -109,10 +112,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          image.SetPixel(x, y, gul::RGBA(row_pointers[y][x * 3 + 0] / 255.f,
-                                         row_pointers[y][x * 3 + 1] / 255.f,
-                                         row_pointers[y][x * 3 + 2] / 255.f,
-                                         1.f));
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x * 3 + 0];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x * 3 + 1];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x * 3 + 2];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = 255;
         }
       }
       break;
@@ -120,13 +123,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
     case PNG_COLOR_TYPE_RGB_ALPHA:
       for(png_uint_32 y = 0; y < height; ++y)
       {
-        for(png_uint_32 x = 0; x < width; ++x)
-        {
-          image.SetPixel(x, y, gul::RGBA(row_pointers[y][x * 4 + 0] / 255.f,
-                                         row_pointers[y][x * 4 + 1] / 255.f,
-                                         row_pointers[y][x * 4 + 2] / 255.f,
-                                         row_pointers[y][x * 4 + 3] / 255.f));
-        }
+        memcpy(image.GetScanline(y), row_pointers[y], width*4*sizeof(png_byte));
       }
       break;
 
@@ -135,9 +132,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          float grey  = row_pointers[y][x * 2 + 0] / 255.f;
-          float alpha = row_pointers[y][x * 2 + 1] / 255.f;
-          image.SetPixel(x, y, gul::RGBA(grey, grey, grey, alpha));
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x * 2 + 0];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x * 2 + 0];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x * 2 + 0];
+          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = row_pointers[y][x * 2 + 1];
         }
       }
       break;
@@ -211,14 +209,7 @@ void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
   for(int y = 0; y < rImage.GetHeight(); ++y)
   {
     row_pointers[y] = static_cast<png_bytep>(png_malloc(png_ptr, sizeof(png_byte) * rImage.GetWidth() * rImage.GetNumberOfChannels()));
-    for(int x = 0; x < rImage.GetWidth(); ++x)
-    {
-      gul::RGBA rgba = rImage.GetPixel(x, y);
-      row_pointers[y][x * rImage.GetNumberOfChannels() + 0] = rgba.GetRed() * 255;
-      row_pointers[y][x * rImage.GetNumberOfChannels() + 1] = rgba.GetGreen() * 255;
-      row_pointers[y][x * rImage.GetNumberOfChannels() + 2] = rgba.GetBlue() * 255;
-      row_pointers[y][x * rImage.GetNumberOfChannels() + 3] = rgba.GetAlpha() * 255;
-    }
+    memcpy(row_pointers[y], rImage.GetScanline(y), rImage.GetPitch());
   }
   png_set_rows(png_ptr, info_ptr, row_pointers);
 

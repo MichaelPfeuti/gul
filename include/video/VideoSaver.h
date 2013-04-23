@@ -77,19 +77,19 @@ namespace gul
       void prepareOutputFile(void);
 
     private:
-      const gul::File path;
-      AVFormatContext* pFormatCtx;
-      AVCodecContext* pVideoCodecCtx;
-      SwsContext* pSWSContext;
-      AVStream* pVideoStream;
-      AVCodec* pVideoCodec;
-      AVFrame* pFrame;
-      AVFrame* pFrameRGBA;
-      bool isClosed;
-      int videoWidth;
-      int videoHeight;
-      int videoFPS;
-      int videoBitrate;
+      const gul::File m_path;
+      AVFormatContext* m_pFormatCtx;
+      AVCodecContext* m_pVideoCodecCtx;
+      SwsContext* m_pSWSContext;
+      AVStream* m_pVideoStream;
+      AVCodec* m_pVideoCodec;
+      AVFrame* m_pFrame;
+      AVFrame* m_pFrameRGBA;
+      bool m_isClosed;
+      int m_videoWidth;
+      int m_videoHeight;
+      int m_videoFPS;
+      int m_videoBitrate;
       const bool usePTSFromFrames;
 
       static bool codecsAreRegistered;

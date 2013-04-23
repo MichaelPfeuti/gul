@@ -45,24 +45,25 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
   TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
   TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
 
-  gul::Image image(width, height, gul::Image::IT_RGBA);
+  gul::Image image(width, height, gul::Image::IF_RGBA);
 
   uint32 npixels = width * height;
   uint32* raster = static_cast<uint32*>(_TIFFmalloc(npixels * sizeof(uint32)));
   if(TIFFReadRGBAImageOriented(tif, width, height, raster, ORIENTATION_TOPLEFT, 0))
   {
-    float alpha;
+    unsigned char alpha;
     for(uint32 y = 0; y < height; ++y)
     {
+      unsigned char* pData = image.GetScanline(y);
       for(uint32 x = 0; x < width; ++x)
       {
         //TODO: this is premuptiplied by the ReadRGBA function. use ReadEncodedStrip
         //      to prevent the small rounding error due to the premultiplication!
-        alpha = TIFFGetA(raster[x + y * width]) / 255.f;
-        image.SetPixel(x, y, gul::RGBA(TIFFGetR(raster[x + y * width]) / (255.f * alpha),
-                                       TIFFGetG(raster[x + y * width]) / (255.f * alpha),
-                                       TIFFGetB(raster[x + y * width]) / (255.f * alpha),
-                                       alpha));
+        alpha = TIFFGetA(raster[x + y * width]);
+        pData[image.GetNumberOfChannels()*x + 0] = TIFFGetR(raster[x + y * width]) / alpha;
+        pData[image.GetNumberOfChannels()*x + 1] = TIFFGetG(raster[x + y * width]) / alpha;
+        pData[image.GetNumberOfChannels()*x + 2] = TIFFGetB(raster[x + y * width]) / alpha;
+        pData[image.GetNumberOfChannels()*x + 3] = alpha;
       }
     }
   }
@@ -106,15 +107,7 @@ void gul::ImageIO_TIFF::Save(const gul::File& rPath, const gul::Image& rImage)
   //Now writing image to the file one strip at a time
   for(int row = 0; row < rImage.GetHeight(); ++row)
   {
-    for(int x = 0; x < rImage.GetWidth(); ++x)
-    {
-      gul::RGBA rgba = rImage.GetPixel(x, row);
-      buf[x * 4 + 0] = rgba.GetRed() * 255;
-      buf[x * 4 + 1] = rgba.GetGreen() * 255;
-      buf[x * 4 + 2] = rgba.GetBlue() * 255;
-      buf[x * 4 + 3] = rgba.GetAlpha() * 255;
-    }
-
+    memcpy(buf, rImage.GetScanline(row), rImage.GetPitch());
     if(TIFFWriteScanline(out, buf, row, 0) < 0)
     {
       FAIL("TIFF file could no be written!");

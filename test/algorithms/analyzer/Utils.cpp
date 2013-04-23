@@ -33,5 +33,5 @@
 gul::Image GetLenaAlphaGT(void)
 {
   return gul::Image(lena_alpha.width, lena_alpha.height,
-                    gul::Image::IT_RGBA, lena_alpha.pixel_data);
+                    gul::Image::IF_RGBA, lena_alpha.pixel_data);
 }

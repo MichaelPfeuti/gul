@@ -43,18 +43,18 @@ bool gul::VideoSaver::codecsAreRegistered = false;
 gul::VideoSaver::VideoSaver(const gul::File& rVideoPath,
                             int width, int height,
                             int fps, int bitrate)
-  : path(rVideoPath),
-    pFormatCtx(nullptr),
-    pVideoCodecCtx(nullptr),
-    pSWSContext(nullptr),
-    pVideoStream(nullptr),
-    pFrame(nullptr),
-    pFrameRGBA(nullptr),
-    isClosed(true),
-    videoWidth(width),
-    videoHeight(height),
-    videoFPS(fps),
-    videoBitrate(bitrate),
+  : m_path(rVideoPath),
+    m_pFormatCtx(nullptr),
+    m_pVideoCodecCtx(nullptr),
+    m_pSWSContext(nullptr),
+    m_pVideoStream(nullptr),
+    m_pFrame(nullptr),
+    m_pFrameRGBA(nullptr),
+    m_isClosed(true),
+    m_videoWidth(width),
+    m_videoHeight(height),
+    m_videoFPS(fps),
+    m_videoBitrate(bitrate),
     usePTSFromFrames(false)
 {
   if(!codecsAreRegistered)
@@ -65,18 +65,18 @@ gul::VideoSaver::VideoSaver(const gul::File& rVideoPath,
 }
 
 gul::VideoSaver::VideoSaver(const gul::File& rVideoPath)
-  : path(rVideoPath),
-    pFormatCtx(nullptr),
-    pVideoCodecCtx(nullptr),
-    pSWSContext(nullptr),
-    pVideoStream(nullptr),
-    pFrame(nullptr),
-    pFrameRGBA(nullptr),
-    isClosed(true),
-    videoWidth(0),
-    videoHeight(0),
-    videoFPS(0),
-    videoBitrate(0),
+  : m_path(rVideoPath),
+    m_pFormatCtx(nullptr),
+    m_pVideoCodecCtx(nullptr),
+    m_pSWSContext(nullptr),
+    m_pVideoStream(nullptr),
+    m_pFrame(nullptr),
+    m_pFrameRGBA(nullptr),
+    m_isClosed(true),
+    m_videoWidth(0),
+    m_videoHeight(0),
+    m_videoFPS(0),
+    m_videoBitrate(0),
     usePTSFromFrames(true)
 {
   if(!codecsAreRegistered)
@@ -88,41 +88,41 @@ gul::VideoSaver::VideoSaver(const gul::File& rVideoPath)
 
 gul::VideoSaver::~VideoSaver(void)
 {
-  if(!isClosed)
+  if(!m_isClosed)
     CloseVideo();
 }
 
 void gul::VideoSaver::setSize(int width, int height)
 {
-  videoWidth = width;
-  videoHeight = height;
+  m_videoWidth = width;
+  m_videoHeight = height;
 }
 
 bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
 {
-  ASSERT(isClosed);
-  ASSERT(path.IsPathValid());
-  ASSERT(videoWidth % 2 == 0);
-  ASSERT(videoHeight % 2 == 0);
+  ASSERT(m_isClosed);
+  ASSERT(m_path.IsPathValid());
+  ASSERT(m_videoWidth % 2 == 0);
+  ASSERT(m_videoHeight % 2 == 0);
 
   /* allocate the output media context */
-  avformat_alloc_output_context2(&pFormatCtx, nullptr, nullptr, path.GetPath().GetData());
-  if(pFormatCtx == nullptr)
+  avformat_alloc_output_context2(&m_pFormatCtx, nullptr, nullptr, m_path.GetPath().GetData());
+  if(m_pFormatCtx == nullptr)
     FAIL("Format Output Context cannot be allocated!");
 
   /* find the video encoder */
-  ASSERT_MSG(pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
-  pVideoCodec = avcodec_find_encoder(pFormatCtx->oformat->video_codec);
-  if(pVideoCodec == nullptr)
+  ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+  m_pVideoCodec = avcodec_find_encoder(m_pFormatCtx->oformat->video_codec);
+  if(m_pVideoCodec == nullptr)
     FAIL("Codec not found!");
 
   /* create the streams */
   for(unsigned int i = 0; i < rInputFormatCtx.nb_streams; ++i)
   {
     AVStream* pInputStream = rInputFormatCtx.streams[i];
-    if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && pVideoStream == nullptr)
+    if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
     {
-      pVideoStream = avformat_new_stream(pFormatCtx, pVideoCodec);
+      m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
       copyVideoEncoderCtxSettings(*pInputStream->codec);
 
       /*
@@ -132,79 +132,79 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
        * having the fps and timebase differe significantly adds quite some
        * overhead
        */
-      if(!strcmp(pFormatCtx->oformat->name, "avi"))
+      if(!strcmp(m_pFormatCtx->oformat->name, "avi"))
       {
-        pVideoCodecCtx->time_base.num = pInputStream->r_frame_rate.den;
-        pVideoCodecCtx->time_base.den = pInputStream->r_frame_rate.num;
-        pVideoCodecCtx->ticks_per_frame = pInputStream->codec->ticks_per_frame;
+        m_pVideoCodecCtx->time_base.num = pInputStream->r_frame_rate.den;
+        m_pVideoCodecCtx->time_base.den = pInputStream->r_frame_rate.num;
+        m_pVideoCodecCtx->ticks_per_frame = pInputStream->codec->ticks_per_frame;
       }
 
-      pVideoStream->avg_frame_rate = pInputStream->avg_frame_rate;
-      pVideoStream->disposition = pInputStream->disposition;
-      pVideoStream->time_base = pInputStream->time_base;
+      m_pVideoStream->avg_frame_rate = pInputStream->avg_frame_rate;
+      m_pVideoStream->disposition = pInputStream->disposition;
+      m_pVideoStream->time_base = pInputStream->time_base;
     }
     else
     {
       AVCodec* pCodec = avcodec_find_decoder(pInputStream->codec->codec_id);
-      AVStream* pStream = avformat_new_stream(pFormatCtx, pCodec);
+      AVStream* pStream = avformat_new_stream(m_pFormatCtx, pCodec);
       AVCodecContext* pCodecCtx = pStream->codec;
       avcodec_copy_context(pCodecCtx, pInputStream->codec);
-      if(pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
+      if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
         pCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
       pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
     }
   }
 
-  if(pVideoStream == nullptr)
+  if(m_pVideoStream == nullptr)
     FAIL("Video Stream could not be created!");
 
   /* open the codec */
-  if(avcodec_open2(pVideoCodecCtx, pVideoCodec, nullptr) < 0)
+  if(avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr) < 0)
     FAIL("Could not open codec!");
 
   allocateStructures();
   prepareOutputFile();
 
-  isClosed = false;
+  m_isClosed = false;
 
   return true;
 }
 
 bool gul::VideoSaver::OpenVideo(void)
 {
-  ASSERT(isClosed);
-  ASSERT(path.IsPathValid());
-  ASSERT(videoWidth % 2 == 0);
-  ASSERT(videoHeight % 2 == 0);
-  ASSERT(videoFPS > 0);
+  ASSERT(m_isClosed);
+  ASSERT(m_path.IsPathValid());
+  ASSERT(m_videoWidth % 2 == 0);
+  ASSERT(m_videoHeight % 2 == 0);
+  ASSERT(m_videoFPS > 0);
 
 
   /* allocate the output media context */
-  avformat_alloc_output_context2(&pFormatCtx, nullptr, nullptr, path.GetPath().GetData());
-  if(pFormatCtx == nullptr)
+  avformat_alloc_output_context2(&m_pFormatCtx, nullptr, nullptr, m_path.GetPath().GetData());
+  if(m_pFormatCtx == nullptr)
     FAIL("Format Output Context cannot be allocated!");
 
   /* find the video encoder */
-  ASSERT_MSG(pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
-  pVideoCodec = avcodec_find_encoder(pFormatCtx->oformat->video_codec);
-  if(pVideoCodec == nullptr)
+  ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+  m_pVideoCodec = avcodec_find_encoder(m_pFormatCtx->oformat->video_codec);
+  if(m_pVideoCodec == nullptr)
     FAIL("Codec not found!");
 
   /* create the video stream */
-  pVideoStream = avformat_new_stream(pFormatCtx, pVideoCodec);
-  if(pVideoStream == nullptr)
+  m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
+  if(m_pVideoStream == nullptr)
     FAIL("Video Stream could not be created!");
 
   setDafaultVideoEncoderCtxSettings();
 
   /* open the codec */
-  if(avcodec_open2(pVideoCodecCtx, pVideoCodec, nullptr) < 0)
+  if(avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr) < 0)
     FAIL("Could not open codec!");
 
   allocateStructures();
   prepareOutputFile();
 
-  isClosed = false;
+  m_isClosed = false;
 
   return true;
 }
@@ -214,111 +214,111 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
   // NOTE: most things are copied from the function transcode_init in ffmpeg.c
 
   // Get a pointer to the codec context for the video stream
-  pVideoCodecCtx = pVideoStream->codec;
+  m_pVideoCodecCtx = m_pVideoStream->codec;
 
   // enable multithreading
-  pVideoCodecCtx->thread_count = 2;
+  m_pVideoCodecCtx->thread_count = 2;
 
   // bitrate modifier
-  float bitrateModifier = (videoWidth * videoHeight) / static_cast<float>(ctx.width * ctx.height);
+  float bitrateModifier = (m_videoWidth * m_videoHeight) / static_cast<float>(ctx.width * ctx.height);
 
   /* initialize codec settings */
-  avcodec_get_context_defaults3(pVideoCodecCtx, pVideoCodec);
-  pVideoCodecCtx->codec_id = ctx.codec_id;
-  pVideoCodecCtx->codec_type = ctx.codec_type;
-  if(!pVideoCodecCtx->codec_tag)
+  avcodec_get_context_defaults3(m_pVideoCodecCtx, m_pVideoCodec);
+  m_pVideoCodecCtx->codec_id = ctx.codec_id;
+  m_pVideoCodecCtx->codec_type = ctx.codec_type;
+  if(!m_pVideoCodecCtx->codec_tag)
   {
-    if(!pFormatCtx->oformat->codec_tag ||
-       av_codec_get_id(pFormatCtx->oformat->codec_tag, ctx.codec_tag) == pVideoCodecCtx->codec_id ||
-       av_codec_get_tag(pFormatCtx->oformat->codec_tag, ctx.codec_id) <= 0)
-      pVideoCodecCtx->codec_tag = ctx.codec_tag;
+    if(!m_pFormatCtx->oformat->codec_tag ||
+       av_codec_get_id(m_pFormatCtx->oformat->codec_tag, ctx.codec_tag) == m_pVideoCodecCtx->codec_id ||
+       av_codec_get_tag(m_pFormatCtx->oformat->codec_tag, ctx.codec_id) <= 0)
+      m_pVideoCodecCtx->codec_tag = ctx.codec_tag;
   }
-  pVideoCodecCtx->rc_max_rate    = ctx.rc_max_rate;
-  pVideoCodecCtx->rc_buffer_size = ctx.rc_buffer_size;
-  pVideoCodecCtx->field_order    = ctx.field_order;
-  pVideoCodecCtx->extradata = static_cast<uint8_t*>(av_mallocz((uint64_t)ctx.extradata_size + FF_INPUT_BUFFER_PADDING_SIZE));
-  pVideoCodecCtx->extradata_size = ctx.extradata_size;
-  memcpy(pVideoCodecCtx->extradata, ctx.extradata, ctx.extradata_size);
-  pVideoCodecCtx->bits_per_coded_sample  = ctx.bits_per_coded_sample;
-  pVideoCodecCtx->bits_per_raw_sample    = ctx.bits_per_raw_sample;
-  pVideoCodecCtx->chroma_sample_location = ctx.chroma_sample_location;
-  pVideoCodecCtx->width    = videoWidth;
-  pVideoCodecCtx->height   = videoHeight;
-  pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
-  if(pVideoCodecCtx->bit_rate == 0)
+  m_pVideoCodecCtx->rc_max_rate    = ctx.rc_max_rate;
+  m_pVideoCodecCtx->rc_buffer_size = ctx.rc_buffer_size;
+  m_pVideoCodecCtx->field_order    = ctx.field_order;
+  m_pVideoCodecCtx->extradata = static_cast<uint8_t*>(av_mallocz((uint64_t)ctx.extradata_size + FF_INPUT_BUFFER_PADDING_SIZE));
+  m_pVideoCodecCtx->extradata_size = ctx.extradata_size;
+  memcpy(m_pVideoCodecCtx->extradata, ctx.extradata, ctx.extradata_size);
+  m_pVideoCodecCtx->bits_per_coded_sample  = ctx.bits_per_coded_sample;
+  m_pVideoCodecCtx->bits_per_raw_sample    = ctx.bits_per_raw_sample;
+  m_pVideoCodecCtx->chroma_sample_location = ctx.chroma_sample_location;
+  m_pVideoCodecCtx->width    = m_videoWidth;
+  m_pVideoCodecCtx->height   = m_videoHeight;
+  m_pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
+  if(m_pVideoCodecCtx->bit_rate == 0)
   {
     // empirical bit rate guess
-    pVideoCodecCtx->bit_rate = pVideoCodecCtx->width * pVideoCodecCtx->height * 2;
+    m_pVideoCodecCtx->bit_rate = m_pVideoCodecCtx->width * m_pVideoCodecCtx->height * 2;
   }
-  pVideoCodecCtx->time_base = ctx.time_base;
-  pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
-  pVideoCodecCtx->gop_size      = 12;
-  pVideoCodecCtx->pix_fmt       = ctx.pix_fmt;
-  pVideoCodecCtx->profile = ctx.profile;
-  pVideoCodecCtx->level = FF_LEVEL_UNKNOWN; //ctx.level;
-  pVideoCodecCtx->has_b_frames = ctx.has_b_frames;
-  if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
-    pVideoCodecCtx->max_b_frames = 2;
-  if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
-    pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
-  if(pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-    pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
+  m_pVideoCodecCtx->time_base = ctx.time_base;
+  m_pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
+  m_pVideoCodecCtx->gop_size      = 12;
+  m_pVideoCodecCtx->pix_fmt       = ctx.pix_fmt;
+  m_pVideoCodecCtx->profile = ctx.profile;
+  m_pVideoCodecCtx->level = FF_LEVEL_UNKNOWN; //ctx.level;
+  m_pVideoCodecCtx->has_b_frames = ctx.has_b_frames;
+  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
+    m_pVideoCodecCtx->max_b_frames = 2;
+  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
+    m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
+  if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
+    m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
 }
 
 void gul::VideoSaver::setDafaultVideoEncoderCtxSettings(void)
 {
   // Get a pointer to the codec context for the video stream
-  pVideoCodecCtx = pVideoStream->codec;
+  m_pVideoCodecCtx = m_pVideoStream->codec;
 
   // enable multithreading
-  pVideoCodecCtx->thread_count = 2;
+  m_pVideoCodecCtx->thread_count = 2;
 
   /* initialize codec settings */
-  avcodec_get_context_defaults3(pVideoCodecCtx, pVideoCodec);
-  pVideoCodecCtx->codec_id = pFormatCtx->oformat->video_codec;
-  pVideoCodecCtx->bit_rate = videoBitrate;
-  pVideoCodecCtx->width    = videoWidth;
-  pVideoCodecCtx->height   = videoHeight;
-  pVideoCodecCtx->time_base.num = 1;
-  pVideoCodecCtx->time_base.den = videoFPS;
-  pVideoCodecCtx->gop_size      = 12;
-  pVideoCodecCtx->pix_fmt       = PIX_FMT_YUV420P;
-  if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
-    pVideoCodecCtx->max_b_frames = 2;
-  if(pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
-    pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
-  if(pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-    pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
+  avcodec_get_context_defaults3(m_pVideoCodecCtx, m_pVideoCodec);
+  m_pVideoCodecCtx->codec_id = m_pFormatCtx->oformat->video_codec;
+  m_pVideoCodecCtx->bit_rate = m_videoBitrate;
+  m_pVideoCodecCtx->width    = m_videoWidth;
+  m_pVideoCodecCtx->height   = m_videoHeight;
+  m_pVideoCodecCtx->time_base.num = 1;
+  m_pVideoCodecCtx->time_base.den = m_videoFPS;
+  m_pVideoCodecCtx->gop_size      = 12;
+  m_pVideoCodecCtx->pix_fmt       = PIX_FMT_YUV420P;
+  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
+    m_pVideoCodecCtx->max_b_frames = 2;
+  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
+    m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
+  if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
+    m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
 }
 
 void gul::VideoSaver::allocateStructures(void)
 {
   // Allocate video frame
-  pFrame = avcodec_alloc_frame();
-  pFrame->pts = 0;
-  avpicture_alloc((AVPicture*)pFrame, pVideoCodecCtx->pix_fmt,
-                  pVideoCodecCtx->width, pVideoCodecCtx->height);
+  m_pFrame = avcodec_alloc_frame();
+  m_pFrame->pts = 0;
+  avpicture_alloc((AVPicture*)m_pFrame, m_pVideoCodecCtx->pix_fmt,
+                  m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
 
   // Allocate an AVFrame structure
-  pFrameRGBA = avcodec_alloc_frame();
-  avpicture_alloc((AVPicture*)pFrameRGBA, PIX_FMT_RGBA,
-                  pVideoCodecCtx->width, pVideoCodecCtx->height);
+  m_pFrameRGBA = avcodec_alloc_frame();
+  avpicture_alloc((AVPicture*)m_pFrameRGBA, PIX_FMT_RGBA,
+                  m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
 
   // swscaler context
-  pSWSContext = sws_getCachedContext(pSWSContext,
-                                     pVideoCodecCtx->width, pVideoCodecCtx->height, PIX_FMT_RGBA,
-                                     pVideoCodecCtx->width, pVideoCodecCtx->height, pVideoCodecCtx->pix_fmt,
+  m_pSWSContext = sws_getCachedContext(m_pSWSContext,
+                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
+                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
                                      SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
 void gul::VideoSaver::prepareOutputFile(void)
 {
   /* open the output file*/
-  if(avio_open(&pFormatCtx->pb, path.GetPath().GetData(), AVIO_FLAG_WRITE) < 0)
+  if(avio_open(&m_pFormatCtx->pb, m_path.GetPath().GetData(), AVIO_FLAG_WRITE) < 0)
     FAIL("Video file could not be opened");
 
   /* Write the stream header, if any. */
-  if(avformat_write_header(pFormatCtx, nullptr) < 0)
+  if(avformat_write_header(m_pFormatCtx, nullptr) < 0)
   {
     FAIL("Error occurred when opening output file!");
   }
@@ -326,7 +326,7 @@ void gul::VideoSaver::prepareOutputFile(void)
 
 void gul::VideoSaver::CloseVideo(void)
 {
-  ASSERT(!isClosed);
+  ASSERT(!m_isClosed);
 
   // flush encoder
   while(encodeAndSaveVideoFrame(nullptr));
@@ -336,25 +336,25 @@ void gul::VideoSaver::CloseVideo(void)
    * close the CodecContexts open when you wrote the header; otherwise
    * av_write_trailer() may try to use memory that was freed on
    * av_codec_close(). */
-  av_write_trailer(pFormatCtx);
+  av_write_trailer(m_pFormatCtx);
 
   // Free RGBA memory
-  avpicture_free((AVPicture*)pFrameRGBA);
-  av_free(pFrameRGBA);
-  pFrameRGBA = nullptr;
+  avpicture_free((AVPicture*)m_pFrameRGBA);
+  av_free(m_pFrameRGBA);
+  m_pFrameRGBA = nullptr;
 
   // Free the frame buffer
-  avpicture_free((AVPicture*)pFrame);
-  av_free(pFrame);
-  pFrame = nullptr;
+  avpicture_free((AVPicture*)m_pFrame);
+  av_free(m_pFrame);
+  m_pFrame = nullptr;
 
   // free swscale context
-  sws_freeContext(pSWSContext);
-  pSWSContext = nullptr;
+  sws_freeContext(m_pSWSContext);
+  m_pSWSContext = nullptr;
 
   // Close the codec
-  avcodec_close(pVideoCodecCtx);
-  pVideoCodecCtx = nullptr;
+  avcodec_close(m_pVideoCodecCtx);
+  m_pVideoCodecCtx = nullptr;
 
   /* Free the streams. */
 //  for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
@@ -363,56 +363,40 @@ void gul::VideoSaver::CloseVideo(void)
 //  }
 
   /* Close the output file. */
-  avio_flush(pFormatCtx->pb);
-  avio_close(pFormatCtx->pb);
+  avio_flush(m_pFormatCtx->pb);
+  avio_close(m_pFormatCtx->pb);
 
   /* free the stream */
-  avformat_free_context(pFormatCtx);
-  pFormatCtx = nullptr;
+  avformat_free_context(m_pFormatCtx);
+  m_pFormatCtx = nullptr;
 
-  isClosed = true;
-}
-
-void gul::VideoSaver::fillFrameRGBA(const gul::VideoFrame& rFrame)
-{
-  const int channels = rFrame.GetNumberOfChannels();
-  const int width = rFrame.GetWidth();
-  for(int y = 0; y < rFrame.GetHeight(); ++y)
-  {
-    for(int x = 0; x < width; ++x)
-    {
-      gul::RGBA rgba = rFrame.GetPixel(x, y);
-      pFrameRGBA->data[0][(x + y * width)*channels + 0] = rgba.GetRed() * 255;
-      pFrameRGBA->data[0][(x + y * width)*channels + 1] = rgba.GetGreen() * 255;
-      pFrameRGBA->data[0][(x + y * width)*channels + 2] = rgba.GetBlue() * 255;
-      pFrameRGBA->data[0][(x + y * width)*channels + 3] = rgba.GetAlpha() * 255;
-    }
-  }
+  m_isClosed = true;
 }
 
 void gul::VideoSaver::AddFrame(const gul::VideoFrame& rFrame)
 {
-  ASSERT_MSG(rFrame.GetHeight() == pVideoCodecCtx->height, "Image height does not match video height!");
-  ASSERT_MSG(rFrame.GetWidth() == pVideoCodecCtx->width, "Image width does not match video width!");
+  ASSERT_MSG(rFrame.GetHeight() == m_pVideoCodecCtx->height, "Image height does not match video height!");
+  ASSERT_MSG(rFrame.GetWidth() == m_pVideoCodecCtx->width, "Image width does not match video width!");
 
-  fillFrameRGBA(rFrame);
+  const unsigned char* pData = rFrame.GetData();
+  int pitch = rFrame.GetPitch();
   // Convert the image from RGBA to its native format
   //Scale the raw data/convert it to our video buffer...
-  if(sws_scale(pSWSContext,
-               pFrameRGBA->data, pFrameRGBA->linesize,
-               0, pVideoCodecCtx->height,
-               pFrame->data, pFrame->linesize) < pVideoCodecCtx->height)
+  if(sws_scale(m_pSWSContext,
+               &pData, &pitch,
+               0, m_pVideoCodecCtx->height,
+               m_pFrame->data, m_pFrame->linesize) < m_pVideoCodecCtx->height)
     FAIL("Image conversion failed!");
 
   if(usePTSFromFrames)
   {
-    pFrame->pts = rFrame.GetFrameIndex();
-    encodeAndSaveVideoFrame(pFrame);
+    m_pFrame->pts = rFrame.GetFrameIndex();
+    encodeAndSaveVideoFrame(m_pFrame);
   }
   else
   {
-    encodeAndSaveVideoFrame(pFrame);
-    pFrame->pts++;
+    encodeAndSaveVideoFrame(m_pFrame);
+    m_pFrame->pts++;
   }
 }
 
@@ -424,20 +408,20 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
   av_init_packet(&pkt);
   pkt.data = nullptr;    // packet data will be allocated by the encoder
   pkt.size = 0;
-  pkt.stream_index = pVideoStream->index;
+  pkt.stream_index = m_pVideoStream->index;
   pkt.flags |= AV_PKT_FLAG_KEY;
 
   int gotPacket;
-  if(avcodec_encode_video2(pVideoCodecCtx, &pkt, pFrameToEncode, &gotPacket) < 0)
+  if(avcodec_encode_video2(m_pVideoCodecCtx, &pkt, pFrameToEncode, &gotPacket) < 0)
     FAIL("Frame could not be encoded!");
 
   if(gotPacket)
   {
     // compute pts in stream time_base
     if(pkt.pts != AV_NOPTS_VALUE)
-      pkt.pts = av_rescale_q(pkt.pts , pVideoCodecCtx->time_base, pVideoStream->time_base);
+      pkt.pts = av_rescale_q(pkt.pts , m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
     if(pkt.dts != AV_NOPTS_VALUE)
-      pkt.dts = av_rescale_q(pkt.dts, pVideoCodecCtx->time_base, pVideoStream->time_base);
+      pkt.dts = av_rescale_q(pkt.dts, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
 
     /* Write the compressed frame to the media file. */
     if(!writePacket(pkt))
@@ -452,5 +436,5 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
 
 bool gul::VideoSaver::writePacket(AVPacket& rPacket)
 {
-  return av_interleaved_write_frame(pFormatCtx, &rPacket) >= 0;
+  return av_interleaved_write_frame(m_pFormatCtx, &rPacket) >= 0;
 }

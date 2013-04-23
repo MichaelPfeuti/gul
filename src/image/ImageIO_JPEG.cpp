@@ -88,20 +88,19 @@ gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
   row_stride = cinfo.output_width * cinfo.output_components;
   buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-  gulImage = gul::Image(cinfo.output_width, cinfo.output_height, gul::Image::IT_RGBA);
+  gulImage = gul::Image(cinfo.output_width, cinfo.output_height, gul::Image::IF_RGBA);
 
   int y = 0;
   while(cinfo.output_scanline < cinfo.output_height)
   {
     (void) jpeg_read_scanlines(&cinfo, buffer, 1);
-
+    unsigned char* pImageData = gulImage.GetScanline(y);
     for(unsigned int x = 0; x < cinfo.output_width; ++x)
     {
-      gulImage.SetPixel(x, y, gul::RGBA(buffer[0][x * cinfo.output_components + 0] / 255.f,
-                                        buffer[0][x * cinfo.output_components + 1] / 255.f,
-                                        buffer[0][x * cinfo.output_components + 2] / 255.f,
-                                        1.f));
-
+      pImageData[gulImage.GetNumberOfChannels()*x + 0] = buffer[0][x * cinfo.output_components + 0];
+      pImageData[gulImage.GetNumberOfChannels()*x + 1] = buffer[0][x * cinfo.output_components + 1];
+      pImageData[gulImage.GetNumberOfChannels()*x + 2] = buffer[0][x * cinfo.output_components + 2];
+      pImageData[gulImage.GetNumberOfChannels()*x + 3] = 255;
     }
     ++y;
   }
@@ -123,11 +122,12 @@ void gul::ImageIO_JPEG::Save(const gul::File& rPath, const gul::Image& rImage)
   unsigned char image_buffer[rImage.GetHeight()*rImage.GetWidth() * 3];
   for(int y = 0; y < rImage.GetHeight(); ++y)
   {
+    const unsigned char* pImageData = rImage.GetScanline(y);
     for(int x = 0; x < rImage.GetWidth(); ++x)
     {
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 0] = rImage.GetPixel(x, y).GetRed()  * 255.f;
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 1] = rImage.GetPixel(x, y).GetGreen() * 255.f;
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 2] = rImage.GetPixel(x, y).GetBlue() * 255.f;
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 0] = pImageData[x*rImage.GetNumberOfChannels() + 0];
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 1] = pImageData[x*rImage.GetNumberOfChannels() + 1];
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 2] = pImageData[x*rImage.GetNumberOfChannels() + 2];
     }
   }
 

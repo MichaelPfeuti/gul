@@ -1,16 +1,15 @@
 
 set(image_sources
-    Image.cpp
     ImageFileHandler.cpp
     ImageIO.cpp
     ImageIO_PPM.cpp
-    RGBA.cpp
+
+    ${INCLUDE_TPL}/image/Image.hpp
 
     ${INCLUDE}/image/Image.h
     ${INCLUDE}/image/ImageFileHandler.h
     ${INCLUDE}/image/ImageIO.h
     ${INCLUDE}/image/ImageIO_PPM.h
-    ${INCLUDE}/image/RGBA.h
     )
 
 find_package(PNG)
