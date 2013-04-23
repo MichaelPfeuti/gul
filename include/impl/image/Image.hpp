@@ -59,7 +59,7 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
     m_imageFormat(imageFormat)
 {
   initConstructor();
-  memcpy(m_pData, data, sizeof(T)*w*h*4);
+  memcpy(m_pData, data, sizeof(T)*w*h*GetNumberOfChannels());
 }
 
 template<typename T>
@@ -106,7 +106,7 @@ int gul::ImageT<T>::GetHeight(void) const
 template<typename T>
 int gul::ImageT<T>::GetNumberOfChannels(void) const
 {
-  return GetImageFormat() == IF_GRAY ? 1 : 4;
+  return 4;
 }
 
 template<typename T>
