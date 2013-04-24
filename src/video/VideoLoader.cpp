@@ -249,15 +249,23 @@ bool gul::VideoLoader::decodeRemaining(VideoFrame& rFrame)
 
 void gul::VideoLoader::setImageData(gul::VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const
 {
+  uint8_t* pData = rTargetFrame.GetData();
+  int pitch = rTargetFrame.GetPitch();
+
+  if(pSourceFrame != nullptr)
+  {
     // Convert the image from its native format to RGBA
     //Scale the raw data/convert it to our video buffer...
-    unsigned char* pData = rTargetFrame.GetData();
-    int pitch = rTargetFrame.GetPitch();
     if(sws_scale(m_pSWSContext,
-                 m_pFrame->data, m_pFrame->linesize,
+                 pSourceFrame->data, pSourceFrame->linesize,
                  0, m_pVideoCodecCtx->height,
                  &pData, &pitch) <  m_pVideoCodecCtx->height)
       FAIL("Image conversion failed!");
+  }
+  else
+  {
+    memset(pData, 0, pitch*rTargetFrame.GetHeight());
+  }
 }
 
 void gul::VideoLoader::allocateVideoFrame(VideoFrame& rFrame) const
