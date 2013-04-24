@@ -26,16 +26,16 @@
 ##
 ############################################################################
 
-set(_gul_version_path ${CMAKE_CURRENT_LIST_DIR})
+set(_gul_astyle_path ${CMAKE_CURRENT_LIST_DIR})
 
 function(gul_create_astyle_target)
 	find_package(AStyle)
 	if(ASTYLE_FOUND)
 		add_custom_target(CodingConventions 
 		  COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE}
-		                -P ${CMAKE_HOME_DIRECTORY}/tools/CTest/AStyle.cmake
+		                -P ${_gul_astyle_path}/AStyle.cmake
 		  COMMENT "AStyle"
-		  WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
+		  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 		  )
 	endif(ASTYLE_FOUND)
 endfunction()

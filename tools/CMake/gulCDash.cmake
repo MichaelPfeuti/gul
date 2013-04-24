@@ -26,6 +26,8 @@
 ##
 ############################################################################
 
-function(gul_create_cdash_target)
-	include(CDash/ConfigCDash.cmake)
-endfunction()
+set(_gul_cdash_path ${CMAKE_CURRENT_LIST_DIR})
+
+macro(gul_create_cdash_target)
+	include(${_gul_cdash_path}/CDash/ConfigCDash.cmake)
+endmacro()

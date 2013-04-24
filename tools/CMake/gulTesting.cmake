@@ -28,8 +28,8 @@
 
 set(_gul_testing_path ${CMAKE_CURRENT_LIST_DIR})
 
-function(gul_setup_testing)
-	include(CTest)
+macro(gul_setup_testing)
+  include(CTest)
   include_directories(${_gul_testing_path})
-  include(${_gul_testing_path}/CTestMacros)
-endfunction()
+  include(CTestMacros)
+endmacro()

@@ -5,9 +5,9 @@ include(tools/CMake/gulProject.cmake)
 
 gul_setup_project()
 gul_setup_testing()
-#gul_create_version()
-#gul_create_astyle_target()
-#gul_create_doxygen_target()
+gul_create_version()
+gul_create_astyle_target()
+gul_create_doxygen_target()
 
 
 # include files
@@ -30,7 +30,7 @@ include_directories("${CMAKE_HOME_DIRECTORY}/include/video/manipulator")
 
 # source files
 if(BUILD_TESTING)
-  add_flags(CMAKE_CXX_FLAGS "-DBUILD_TESTING")
+  add_definitions("-DBUILD_TESTING")
   add_subdirectory(test)
 endif(BUILD_TESTING)
 

@@ -26,8 +26,6 @@
 ##
 ############################################################################
 
-set(_gul_version_path ${CMAKE_CURRENT_LIST_DIR})
-
 function(gul_create_doxygen_target)
 	find_package(Doxygen)
 
@@ -35,7 +33,7 @@ function(gul_create_doxygen_target)
 		add_custom_target(Doxygen 
 		  COMMAND ${DOXYGEN_EXECUTABLE}
 		  COMMENT "Doxygen"
-		  WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/doc"
+		  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
 		  )
 	endif(DOXYGEN_FOUND)
 endfunction()
