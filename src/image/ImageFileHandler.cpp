@@ -100,7 +100,6 @@ gul::Image gul::ImageFileHandler::Load(const gul::File& file) const
 void gul::ImageFileHandler::Save(const gul::File& file, const gul::Image& image) const
 {
   ASSERT_MSG(file.IsPathValid(), "Invalid Path!");
-  file.GetPath();
 
   gul::ImageIO* io = endingsMap.Get(file.GetSuffix().LowerCase());
   ASSERT_MSG(io != nullptr, "Unknown Image Output Format!");

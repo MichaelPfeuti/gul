@@ -42,7 +42,7 @@ namespace gul
 
       virtual ~FilterImageToBW(void);
 
-      void SetParameter(float bwThreshold);
+      void SetParameter(unsigned char bwThreshold);
 
       void SetParameter(const gul::Image& grayImage);
 
@@ -56,7 +56,7 @@ namespace gul
       gul::Image inputImage;
       gul::Image outputImage;
 
-      float threshold;
+      unsigned char threshold;
   };
 
 }

@@ -174,17 +174,22 @@ namespace TestImage
   int GetColorSharedResource(void)
   {
     gul::Image img1(10, 10, gul::Image::IF_RGBA);
+    img1.GetColor(5,5,2) = 50;
     gul::Image img2 = img1;
 
     img1.GetColorConst(5, 5, 0);
     TEST_NOT_NULL(img1.GetDataConst());
     TEST_NOT_NULL(img2.GetDataConst());
     TEST_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+    TEST_EQUAL(img1.GetColor(5, 5, 0), img2.GetColor(5, 5, 0));
+    TEST_EQUAL(img1.GetColor(5, 5, 2), img2.GetColor(5, 5, 2));
 
     img1.GetColor(5, 5, 0) = 128;
     TEST_NOT_NULL(img1.GetDataConst());
     TEST_NOT_NULL(img2.GetDataConst());
     TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+    TEST_NOT_EQUAL(img1.GetColor(5, 5, 0), img2.GetColor(5, 5, 0));
+    TEST_EQUAL(img1.GetColor(5, 5, 2), img2.GetColor(5, 5, 2));
 
     return EXIT_SUCCESS;
   }

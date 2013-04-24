@@ -34,7 +34,7 @@
 gul::FilterImageToBW::FilterImageToBW(void)
   : inputImage(),
     outputImage(),
-    threshold(0.5f)
+    threshold(127)
 {
 }
 
@@ -42,10 +42,8 @@ gul::FilterImageToBW::~FilterImageToBW(void)
 {
 }
 
-void gul::FilterImageToBW::SetParameter(float bwThreshold)
+void gul::FilterImageToBW::SetParameter(unsigned char bwThreshold)
 {
-  ASSERT_MSG(0.f <= bwThreshold, "threshold must be between 0 and 1");
-  ASSERT_MSG(1.f >= bwThreshold, "threshold must be between 0 and 1");
   threshold = bwThreshold;
 }
 
@@ -68,10 +66,16 @@ void gul::FilterImageToBW::Execute(void)
       if(inputImage.GetColorConst(x,y,0) < threshold)
       {
         outputImage.GetColor(x, y, 0) = 0;
+        outputImage.GetColor(x, y, 1) = 0;
+        outputImage.GetColor(x, y, 2) = 0;
+        outputImage.GetColor(x, y, 3) = 255;
       }
       else
       {
         outputImage.GetColor(x, y, 0) = 255;
+        outputImage.GetColor(x, y, 1) = 255;
+        outputImage.GetColor(x, y, 2) = 255;
+        outputImage.GetColor(x, y, 3) = 255;
       }
     }
   }
