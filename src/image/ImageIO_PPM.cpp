@@ -89,10 +89,11 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
         {
           bw = fgetc(f);
         }
-        pData[image.GetNumberOfChannels()*x + 0] = 1 - bw;
-        pData[image.GetNumberOfChannels()*x + 1] = 1 - bw;
-        pData[image.GetNumberOfChannels()*x + 2] = 1 - bw;
-        pData[image.GetNumberOfChannels()*x + 3] = 1 - bw;
+        bw = 255*(1-atoi(&bw)) ;
+        pData[image.GetNumberOfChannels()*x + 0] = bw;
+        pData[image.GetNumberOfChannels()*x + 1] = bw;
+        pData[image.GetNumberOfChannels()*x + 2] = bw;
+        pData[image.GetNumberOfChannels()*x + 3] = 255;
       }
     }
   }
@@ -110,7 +111,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
         pData[image.GetNumberOfChannels()*x + 0] = bw * 255 / maxValue;
         pData[image.GetNumberOfChannels()*x + 1] = bw * 255 / maxValue;
         pData[image.GetNumberOfChannels()*x + 2] = bw * 255 / maxValue;
-        pData[image.GetNumberOfChannels()*x + 3] = bw * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 3] = 255;
       }
     }
   }
@@ -146,11 +147,11 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
       unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        unsigned char bw = 1 - (ucData[x / 8 + y * byteWidth] >> bitShift & 1);
+        unsigned char bw = 255*(1 - (ucData[x / 8 + y * byteWidth] >> bitShift & 1));
         pData[image.GetNumberOfChannels()*x + 0] = bw;
         pData[image.GetNumberOfChannels()*x + 1] = bw;
         pData[image.GetNumberOfChannels()*x + 2] = bw;
-        pData[image.GetNumberOfChannels()*x + 3] = bw;
+        pData[image.GetNumberOfChannels()*x + 3] = 255;
         --bitShift;
         if(bitShift < 0)
           bitShift = 7;
@@ -172,7 +173,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
         pData[image.GetNumberOfChannels()*x + 0] = ucData[x + y * width] * 255 / maxValue;
         pData[image.GetNumberOfChannels()*x + 1] = ucData[x + y * width] * 255 / maxValue;
         pData[image.GetNumberOfChannels()*x + 2] = ucData[x + y * width] * 255 / maxValue;
-        pData[image.GetNumberOfChannels()*x + 3] = ucData[x + y * width] * 255 / maxValue;
+        pData[image.GetNumberOfChannels()*x + 3] = 255 ;
       }
     }
   }
