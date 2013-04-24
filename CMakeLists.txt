@@ -7,6 +7,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
                       ${CMAKE_HOME_DIRECTORY}/tools/CTest
                       ${CMAKE_HOME_DIRECTORY}/tools/CMake)
 
+include(gulVersion)
+gul_create_version()
+
 macro(add_flags var)
   string(REPLACE "\n" " " _flags "${ARGN}")
   set(${var} "${${var}} ${_flags}")
@@ -79,8 +82,6 @@ include_directories("${CMAKE_HOME_DIRECTORY}/include/memory")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/persistance")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/video")
 include_directories("${CMAKE_HOME_DIRECTORY}/include/video/manipulator")
-
-include(tools/CMake/gulVersion.cmake)
 
 # source files
 if(BUILD_TESTING)
