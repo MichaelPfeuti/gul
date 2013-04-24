@@ -78,15 +78,17 @@ void gul::AnalyzerImageEquality::Execute(void)
       for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
       {
         diffPerChannel[c] += gul::absoluteDifference<float>(image1.GetColorConst(x,y,c), image2.GetColorConst(x,y,c));
-        difference += diffPerChannel[c];
       }
     }
   }
 
+  for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
+  {
+      difference += diffPerChannel[c];
+  }
   difference /= image1.GetNumberOfChannels();
   difference /= image1.GetWidth() * image1.GetHeight();
   difference /= 255;
-
   fprintf(stderr, "error: %f, %f, %f, %f -> %f\n", diffPerChannel[0],diffPerChannel[1],diffPerChannel[2],diffPerChannel[3], difference);
 }
 
