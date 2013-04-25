@@ -85,13 +85,9 @@ namespace gul
 
     protected:
       using SharedResource::operator =;
-      void allocateSharedResource(void);
       virtual void deleteSharedResource(void);
       virtual void transferSharedResourceFrom(const SharedResource& newOwner);
       virtual ImageT* createSharedResourceOwner(void) const;
-
-    private:
-      ImageT(const ImageT& rImage, bool allocate);
 
     private:
       T* m_pData;

@@ -206,43 +206,33 @@ int gul::ImageT<T>::GetPitch(void) const
 }
 
 template<typename T>
-void gul::ImageT<T>::allocateSharedResource(void)
-{
-  ASSERT(m_pData == nullptr);
-  ASSERT(GetWidth()*GetHeight()*GetNumberOfChannels() > 0);
-
-  int size = GetWidth() * GetHeight() * GetNumberOfChannels();
-  m_pData = new T[size];
-  memset(m_pData, 0, sizeof(T)*size);
-}
-
-template<typename T>
 void gul::ImageT<T>::deleteSharedResource(void)
 {
   GUL_DELETE_ARRAY(m_pData);
 }
 
- template<typename T>
+template<typename T>
 void gul::ImageT<T>::transferSharedResourceFrom(const SharedResource& newOwner)
 {
   m_pData = static_cast<const ImageT<T>&>(newOwner).m_pData;
 }
 
 template<typename T>
-gul::ImageT<T>::ImageT(const ImageT& rImage, bool allocate)
-  : m_pData(nullptr),
-    m_width(rImage.m_width),
-    m_height(rImage.m_height),
-    m_imageFormat(rImage.m_imageFormat)
-{
-  if(allocate)
-  {
-    allocateSharedResource();
-  }
-}
-
-template<typename T>
 gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
 {
-  return new gul::ImageT<T>(*this, true);
+  gul::ImageT<T>* newImage = new gul::ImageT<T>();
+  newImage->m_width = m_width;
+  newImage->m_height = m_height;
+  newImage->m_imageFormat = m_imageFormat;
+  int size = GetWidth() * GetHeight() * GetNumberOfChannels();
+  newImage->m_pData = new T[size];
+  if(m_pData == NULL)
+  {
+    memset(newImage->m_pData, 0, sizeof(T)*size);
+  }
+  else
+  {
+    memcpy(newImage->m_pData, m_pData, sizeof(T)*size);
+  }
+  return newImage;
 }

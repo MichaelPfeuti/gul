@@ -28,97 +28,171 @@
 
 #include "SharedResource.h"
 
+/**
+ * @brief Default constructor does not setup or do anything
+ *
+ * You should call initConstructor in your subclass constructors when
+ * you need data allocation.
+ */
 gul::SharedResource::SharedResource(void)
-  : pOwner(nullptr),
-    pReferees(nullptr)
+  : m_pOwner(nullptr),
+    m_pReferencees(nullptr)
 {
 }
 
+/**
+ * @brief Detaches itself from the owner
+ * Destroys also the referee list if this instance is an owner.
+ */
 gul::SharedResource::~SharedResource(void)
 {
-  detachFromResource();
-  GUL_DELETE(this->pOwner);
-  GUL_DELETE(this->pReferees);
+  detachFromOwner();
+  ASSERT(this->m_pOwner == nullptr);
+  GUL_DELETE(this->m_pReferencees);
 }
 
+/**
+ * @brief Remove yourself from you owner and assign yourself the other's owner.
+ * @param other A referee that has an owner.
+ * @return *this
+ */
 gul::SharedResource& gul::SharedResource::operator=(const SharedResource& other)
 {
-  ASSERT(other.pOwner != nullptr);
-  ASSERT(other.pReferees == nullptr);
-  ASSERT(other.pOwner->pReferees != nullptr);
-  ASSERT(other.pOwner->pReferees->Size() > 0);
+  ASSERT(other.m_pOwner != nullptr);
+  ASSERT(other.m_pReferencees == nullptr);
+  ASSERT(other.m_pOwner->m_pReferencees != nullptr);
+  ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
 
   if(this != &other)
   {
-    detachFromResource();
+    detachFromOwner();
     attachToResource(other);
   }
 
   return *this;
 }
 
+/**
+ * @brief Create your owner for the shared data.
+ *
+ * Call this method in all your constructors that need to allocate
+ * data.
+ *
+ * Note: data allocation is done only through the callbacks of this class.
+ *
+ * Note: the true constructor is disabled because pure virtual
+ *       methods need to be called. This would no be allowed by the
+ *       C++ from the constructor of this class.
+ */
 void gul::SharedResource::initConstructor(void)
 {
-  attachToNewResource(*this->createSharedResourceOwner());
+  attachToNewOwner(*this->createSharedResourceOwner());
 }
 
+/**
+ * @brief Attach yourself to the other shared resource
+ * @param other A referee that has an owner.
+ *
+ * Call this method in all copy constructor.
+ *
+ * Note: the true copy constructor is disabled because pure virtual
+ *       methods need to be called. This would no be allowed by the
+ *       C++ from the copy constructor of this class.
+ */
 void gul::SharedResource::initCopyConstructor(const gul::SharedResource& other)
 {
-  ASSERT(other.pOwner != nullptr);
-  ASSERT(other.pReferees == nullptr);
-  ASSERT(other.pOwner->pReferees != nullptr);
-  ASSERT(other.pOwner->pReferees->Size() > 0);
+  ASSERT(other.m_pOwner != nullptr);
+  ASSERT(other.m_pReferencees == nullptr);
+  ASSERT(other.m_pOwner->m_pReferencees != nullptr);
+  ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
 
   attachToResource(other);
 }
 
+/**
+ * @brief Detach yourself from your shared owner and create your own.
+ *
+ * Here it is important to understand the mechanism of the SharedResource.
+ *
+ * If this instance is the only referee then no further action is needed.
+ * In other words no data is shared.
+ *
+ * If the data is shared then a new owner for this instance is created
+ * and assigned to it. The data is copied from the previous owner by calling
+ * createSharedResourceOwner().
+ */
 void gul::SharedResource::detach(void)
 {
-  if(pOwner->pReferees->Size() > 1)
+  if(!isOnlyReferencee())
   {
-    SharedResource* newOwner = pOwner->createSharedResourceOwner();
-    detachFromResource();
-    pOwner = newOwner;
-    attachToNewResource(*newOwner);
+    SharedResource* newOwner = m_pOwner->createSharedResourceOwner();
+    detachFromOwner();
+    m_pOwner = newOwner;
+    attachToNewOwner(*newOwner);
   }
 }
 
-void gul::SharedResource::attachToNewResource(SharedResource& owner)
+/**
+ * @brief Initialize owner and attache yourself to the owner.
+ * @param owner new and uninitialized resource owner
+ *
+ * The resource owner has not a referee list. This list is allocated here.
+ * After initializing the transferSharedResourceFrom() hook is called for
+ * the subclass to react to the new owner and get the data pointers from
+ * the owner.
+ */
+void gul::SharedResource::attachToNewOwner(SharedResource& owner)
 {
-  this->pOwner = &owner;
-  this->pOwner->pReferees = new gul::ArrayBasic<const gul::SharedResource*>();
-  this->pOwner->pReferees->Add(this);
-  transferSharedResourceFrom(*pOwner);
+  this->m_pOwner = &owner;
+  this->m_pOwner->m_pReferencees = new gul::ArrayBasic<const gul::SharedResource*>();
+  this->m_pOwner->m_pReferencees->Add(this);
+  transferSharedResourceFrom(*m_pOwner);
 }
 
-void gul::SharedResource::attachToResource(const SharedResource& otherReferee)
+/**
+ * @brief Attach yourself to the otherReferee's owner
+ * @param otherReferee
+ *
+ * Copy the owner data and add yourself to the referee list of the new owner.
+ * Afterwards the transferSharedResourceFrom() hook is called for
+ * the subclass to react to the new owner and get the data pointers from
+ * the owner.
+ */
+void gul::SharedResource::attachToResource(const SharedResource& otherReferencee)
 {
-  this->pOwner = otherReferee.pOwner;
-  this->pOwner->pReferees->Add(this);
-  transferSharedResourceFrom(*pOwner);
+  this->m_pOwner = otherReferencee.m_pOwner;
+  this->m_pOwner->m_pReferencees->Add(this);
+  transferSharedResourceFrom(*m_pOwner);
 }
 
-void gul::SharedResource::detachFromResource(void)
+/**
+ * @brief Detach yourself from the owner and delete it if you were the only referee.
+ */
+void gul::SharedResource::detachFromOwner(void)
 {
   if(!isOwner())
   {
-    this->pOwner->pReferees->RemoveElement(this);
-
-    if(isLastReferee())
+    if(isOnlyReferencee())
     {
-      this->pOwner->deleteSharedResource();
-      GUL_DELETE(this->pOwner);
+      this->m_pOwner->m_pReferencees->RemoveElement(this);
+
+      this->m_pOwner->deleteSharedResource();
+      GUL_DELETE(this->m_pOwner);
     }
-    this->pOwner = nullptr;
+    else
+    {
+      this->m_pOwner->m_pReferencees->RemoveElement(this);
+    }
+    this->m_pOwner = nullptr;
   }
 }
 
-bool gul::SharedResource::isLastReferee(void) const
+bool gul::SharedResource::isOnlyReferencee(void) const
 {
-  return this->pOwner->pReferees->Size() == 0;
+  return this->m_pOwner->m_pReferencees->Size() == 1;
 }
 
 bool gul::SharedResource::isOwner(void) const
 {
-  return this->pOwner == nullptr;
+  return this->m_pOwner == nullptr;
 }

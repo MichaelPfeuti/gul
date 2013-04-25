@@ -34,12 +34,98 @@
 
 namespace gul
 {
-
+  /**
+   * @brief The SharedResource class
+   *
+   * This is the base class for managing shared resources. An existing
+   * example that uses shared resources is the gul::Image class.
+   *
+   * The general idea behind the shared resources implementation is that
+   * two kinds of SharedResource instances exist. One are the owners and
+   * the others the referencees.\n
+   * The owners are hidden from the outside (outside the SharedResource).
+   * Their goal is to be the actual data owner. They hold a list of
+   * referencees. Each referencee has one and only one owner. \n
+   * NOTE: A referencee has ALWAYS an owner. \n
+   * The situation for a one instance situation would be that we have
+   * the referencee which is the class that the developer passes
+   * around and uses in the code. Its owner is hidden inside the
+   * referencee. When the referencee is deleted then is also deletes
+   * the owner (of course only when it is the only referencee).
+   * When there are more than one instanst of a class that share data
+   * then they reference the same owner. When one detaches itself it
+   * creates again a new owner for itself. \n
+   * To sum up we have the referencee which we work with in the code
+   * and a hidden owner that floats around behind the curtain.
+   *
+   * For a class the become a shared resource you must inherit from
+   * the SharedResource class. All you need to do is implement
+   * the three pure virtual methods createSharedResourceOwner()
+   * deleteSharedResource() and transferSharedResourceFrom()
+   *
+   * createSharedResourceOwner():
+   * Here the class usually creates a copy of itself with freshly
+   * allocated memory. This memory is either filled with a default
+   * value of copied from the class that called this function.
+   *
+   * deleteSharedResource():
+   * This deletes the memory that was allocated in
+   * createSharedResourceOwner() for the owner.
+   *
+   * transferSharedResourceFrom():
+   * This basically copies pointers around from the owner to itself
+   * the referencee.
+   *
+   * example from gul::Image:
+   *
+   * @code{.cpp}
+   * template<typename T>
+   * void gul::ImageT<T>::deleteSharedResource(void)
+   * {
+   *   GUL_DELETE_ARRAY(m_pData);
+   * }
+   *
+   * template<typename T>
+   * void gul::ImageT<T>::transferSharedResourceFrom(const SharedResource& newOwner)
+   * {
+   *   m_pData = static_cast<const ImageT<T>&>(newOwner).m_pData;
+   * }
+   *
+   * template<typename T>
+   * gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
+   * {
+   *   gul::ImageT<T>* newImage = new gul::ImageT<T>();
+   *   newImage->m_width = m_width;
+   *   newImage->m_height = m_height;
+   *   newImage->m_imageFormat = m_imageFormat;
+   *   int size = GetWidth() * GetHeight() * GetNumberOfChannels();
+   *   newImage->m_pData = new T[size];
+   *   if(m_pData == NULL)
+   *   {
+   *     memset(newImage->m_pData, 0, sizeof(T)*size);
+   *   }
+   *   else
+   *   {
+   *     memcpy(newImage->m_pData, m_pData, sizeof(T)*size);
+   *   }
+   *   return newImage;
+   * }
+   * @endcode
+   */
   class SharedResource
   {
     protected:
       SharedResource(void);
-      SharedResource(const SharedResource& other) = delete;
+      /**
+       * @brief Copy constructor is disabled on purpose.
+       *
+       * Copy constructor is disabled because pure virtual methods
+       * need to be called. This would no be allowed by the C++ from
+       * the copy constructor of this class.
+       *
+       * You should call initCopyConstructor in your subclass copy constructor.
+       */
+      SharedResource(const SharedResource&) = delete;
       virtual ~SharedResource(void);
       virtual SharedResource& operator=(const SharedResource& other);
 
@@ -52,15 +138,22 @@ namespace gul
       virtual void transferSharedResourceFrom(const SharedResource& newOwner) = 0;
 
     private:
-      void attachToNewResource(SharedResource& owner);
-      void attachToResource(const SharedResource& otherReferee);
-      void detachFromResource(void);
-      bool isLastReferee(void) const;
+      void attachToNewOwner(SharedResource& owner);
+      void attachToResource(const SharedResource& otherReferencee);
+      void detachFromOwner(void);
+      bool isOnlyReferencee(void) const;
       bool isOwner(void) const;
 
     private:
-      SharedResource* pOwner;
-      gul::ArrayBasic<const SharedResource*>* pReferees;
+      /**
+       * @brief This is empty for owners, but valid for referencees
+       */
+      SharedResource* m_pOwner;
+
+      /**
+       * @brief This is empty for referencees but filled for owners
+       */
+      gul::ArrayBasic<const SharedResource*>* m_pReferencees;
 
   };
 

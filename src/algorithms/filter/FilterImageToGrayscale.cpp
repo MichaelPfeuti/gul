@@ -90,7 +90,7 @@ void gul::FilterImageToGrayscale::Execute(void)
       outputImage.GetColor(x,y,0) = gray;
       outputImage.GetColor(x,y,1) = gray;
       outputImage.GetColor(x,y,2) = gray;
-      outputImage.GetColor(x,y,3) = 255;
+      outputImage.GetColor(x,y,3) = inputImage.GetColor(x,y,3);
     }
   }
 }
