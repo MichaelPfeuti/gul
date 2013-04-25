@@ -37,7 +37,7 @@ namespace TestImageToBW
   {
     gul::Image bw = gul::FilterImageToBW::Execute(GetLenaGrayLightness());
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw, 0.005f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw));
 
     return EXIT_SUCCESS;
   }

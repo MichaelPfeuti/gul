@@ -70,6 +70,7 @@ void gul::FilterImageToGrayscale::Execute(void)
         case GCT_AVERAGE:
           gray = inputImage.GetColor(x,y,0) + inputImage.GetColor(x,y,1) + inputImage.GetColor(x,y,2);
           gray /= 3.f;
+          gray += 0.5f;
           break;
 
         case GCT_LIGHTNESS:
@@ -82,6 +83,7 @@ void gul::FilterImageToGrayscale::Execute(void)
           gray  = 0.21f * inputImage.GetColor(x,y,0);
           gray += 0.72f * inputImage.GetColor(x,y,1);
           gray += 0.07f * inputImage.GetColor(x,y,2);
+          gray += 0.5f;
           break;
 
         default:

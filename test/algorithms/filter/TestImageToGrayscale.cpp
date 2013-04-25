@@ -41,7 +41,7 @@ namespace TestImageToGrayscale
     converter.SetParameter(gul::FilterImageToGrayscale::GCT_AVERAGE);
 
     converter.Execute();
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayAverage(), converter.GetResult(), 0.0007f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayAverage(), converter.GetResult()));
 
     return EXIT_SUCCESS;
   }
@@ -54,7 +54,7 @@ namespace TestImageToGrayscale
     converter.SetParameter(gul::FilterImageToGrayscale::GCT_LUMINOSITY);
 
     converter.Execute();
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLuminosity(), converter.GetResult(), 0.001f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLuminosity(), converter.GetResult(), 0.0007f));
 
     return EXIT_SUCCESS;
   }
@@ -67,7 +67,7 @@ namespace TestImageToGrayscale
     converter.SetParameter(gul::FilterImageToGrayscale::GCT_LIGHTNESS);
 
     converter.Execute();
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLightness(), converter.GetResult(), 0.0008f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaGrayLightness(), converter.GetResult()));
 
     return EXIT_SUCCESS;
   }
