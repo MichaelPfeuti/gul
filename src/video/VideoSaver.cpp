@@ -110,11 +110,6 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
   if(m_pFormatCtx == nullptr)
     FAIL("Format Output Context cannot be allocated!");
 
-  /* find the video encoder */
-  ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
-  m_pVideoCodec = avcodec_find_encoder(m_pFormatCtx->oformat->video_codec);
-  if(m_pVideoCodec == nullptr)
-    FAIL("Codec not found!");
 
   /* create the streams */
   for(unsigned int i = 0; i < rInputFormatCtx.nb_streams; ++i)
@@ -122,6 +117,13 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
     AVStream* pInputStream = rInputFormatCtx.streams[i];
     if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
     {
+      /* find the video encoder */
+      ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+      m_pVideoCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
+      if(m_pVideoCodec == nullptr)
+        FAIL("Codec not found!");
+
+      /* Create new stream and copy settings from input */
       m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
       copyVideoEncoderCtxSettings(*pInputStream->codec);
 
@@ -145,13 +147,25 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
     }
     else
     {
-      AVCodec* pCodec = avcodec_find_decoder(pInputStream->codec->codec_id);
+      AVCodec* pCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
       AVStream* pStream = avformat_new_stream(m_pFormatCtx, pCodec);
       AVCodecContext* pCodecCtx = pStream->codec;
       avcodec_copy_context(pCodecCtx, pInputStream->codec);
+
+      /*
+       * NOTE: This if statement is from ffmpeg.c
+       */
+      if((pCodecCtx->block_align == 1 ||
+          pCodecCtx->block_align == 1152 ||
+          pCodecCtx->block_align == 576) && pCodecCtx->codec_id == AV_CODEC_ID_MP3)
+         pCodecCtx->block_align= 0;
+      if(pCodecCtx->codec_id == AV_CODEC_ID_AC3)
+         pCodecCtx->block_align= 0;
+
       if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
         pCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
-      pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
+      if(!strcmp(m_pFormatCtx->oformat->name, "mp4"))
+        pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
     }
   }
 
@@ -159,8 +173,13 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
     FAIL("Video Stream could not be created!");
 
   /* open the codec */
-  if(avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr) < 0)
-    FAIL("Could not open codec!");
+  int err = avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr);
+  if(err < 0)
+  {
+    char a[255];
+    av_strerror(err, a, 255);
+    FAIL(a);
+  }
 
   allocateStructures();
   prepareOutputFile();
@@ -248,7 +267,7 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
   if(m_pVideoCodecCtx->bit_rate == 0)
   {
     // empirical bit rate guess
-    m_pVideoCodecCtx->bit_rate = m_pVideoCodecCtx->width * m_pVideoCodecCtx->height * 2;
+    m_pVideoCodecCtx->bit_rate = m_pVideoCodecCtx->width * m_pVideoCodecCtx->height * 8;
   }
   m_pVideoCodecCtx->time_base = ctx.time_base;
   m_pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
@@ -318,9 +337,12 @@ void gul::VideoSaver::prepareOutputFile(void)
     FAIL("Video file could not be opened");
 
   /* Write the stream header, if any. */
-  if(avformat_write_header(m_pFormatCtx, nullptr) < 0)
+  int err = avformat_write_header(m_pFormatCtx, nullptr);
+  if(err < 0)
   {
-    FAIL("Error occurred when opening output file!");
+      char a[255];
+      av_strerror(err, a, 255);
+      FAIL(a);
   }
 }
 
@@ -408,8 +430,7 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
   av_init_packet(&pkt);
   pkt.data = nullptr;    // packet data will be allocated by the encoder
   pkt.size = 0;
-  pkt.stream_index = m_pVideoStream->index;
-  pkt.flags |= AV_PKT_FLAG_KEY;
+//  pkt.flags |= AV_PKT_FLAG_KEY;
 
   int gotPacket;
   if(avcodec_encode_video2(m_pVideoCodecCtx, &pkt, pFrameToEncode, &gotPacket) < 0)
@@ -422,6 +443,8 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
       pkt.pts = av_rescale_q(pkt.pts , m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
     if(pkt.dts != AV_NOPTS_VALUE)
       pkt.dts = av_rescale_q(pkt.dts, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
+
+    pkt.stream_index = m_pVideoStream->index;
 
     /* Write the compressed frame to the media file. */
     if(!writePacket(pkt))
