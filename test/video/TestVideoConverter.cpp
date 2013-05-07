@@ -76,7 +76,6 @@ namespace TestVideoConverter
     TEST_TRUE(loader.IsFrameValid());
     TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, threshold));
 
-
     int count = 0;
     while(loader.IsFrameValid())
     {

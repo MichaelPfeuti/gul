@@ -21,4 +21,5 @@ add_library(base OBJECT
     ${INCLUDE}/base/File.h
     ${INCLUDE}/base/RTTI.h
     ${INCLUDE}/base/Traits.h
+    ${INCLUDE}/base/Timing.h
 		)
