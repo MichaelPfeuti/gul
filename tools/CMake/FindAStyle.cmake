@@ -31,6 +31,7 @@ find_program(ASTYLE_EXECUTABLE astyle
              DOC "AStyle A Free, Fast and Small Automatic Formatter (http://astyle.sourceforge.net/)"
              )
 
+INCLUDE (FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(AStyle DEFAULT_MSG ASTYLE_EXECUTABLE)
 
 if(ASTYLE_EXECUTABLE)
