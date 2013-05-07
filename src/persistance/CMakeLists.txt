@@ -1,7 +1,7 @@
 #######################
 ####### PUGIXML #######
 #######################
-set(XMLLIB_PATH "${CMAKE_HOME_DIRECTORY}/libs/pugixml/src")
+set(XMLLIB_PATH "${LIBS_DIR}/pugixml/src")
 
 include_directories("${XMLLIB_PATH}")
 

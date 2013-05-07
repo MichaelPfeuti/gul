@@ -36,6 +36,7 @@ endif(TIFF_FOUND)
 
 
 # include files
+set(LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 set(INCLUDE_TPL "${CMAKE_CURRENT_SOURCE_DIR}/include/impl")
 set(INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 include_directories("${INCLUDE}")
