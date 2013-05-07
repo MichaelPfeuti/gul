@@ -82,6 +82,7 @@ void gul::AnalyzerImageEquality::Execute(void)
     }
   }
 
+  difference = 0;
   for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
   {
       difference += diffPerChannel[c];
