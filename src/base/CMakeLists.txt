@@ -6,6 +6,7 @@ add_library(base OBJECT
     File.cpp
     RTTI.cpp
     Traits.cpp
+    Timing.cpp
 
     ${INCLUDE_TPL}/base/ClassFactory.hpp
 

@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_BASE_TIMING_H_
-#define _GUL_BASE_TIMING_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,21 +26,46 @@
 **
 ***************************************************************************/
 
-#include "gul_export.h"
+#include "Timing.h"
+#include <ctime>
+#include <cstdio>
+#include "StackBasic.h"
+#include "String.h"
 
 namespace gul
 {
-  class String;
+  struct TimineOutput
+  {
+    String text;
+    int depth;
+  };
+
+  StackBasic<clock_t> gTimingHandleStack;
+  StackBasic<TimineOutput> gTimingOutputStack;
 }
 
-namespace gul
+void gul::TimingStart(void)
 {
-  GUL_EXPORT void TimingStart(void);
-  GUL_EXPORT void TimingStop(const gul::String& rText);
+  gTimingHandleStack.Push(clock());
 }
 
-#define GUL_TIMING_START()    gul::TimingStart()
-#define GUL_TIMING_STOP(text) gul::TimingStop(text)
+void gul::TimingStop(const gul::String& rText)
+{
+  float elapsed = 1000.0f*(float)(clock() - gTimingHandleStack.Pop())/CLOCKS_PER_SEC;
+  TimineOutput output;
+  output.text = gul::String("%: % ms").Arg(rText).Arg(elapsed);
+  output.depth = gTimingHandleStack.Size();
+  gTimingOutputStack.Push(output);
 
+  while(gTimingHandleStack.IsEmpty() && !gTimingOutputStack.IsEmpty())
+  {
+    output = gTimingOutputStack.Pop();
 
-#endif
+    gul::String outString = gul::String("%") + output.text;
+    for(int i = 0; i < output.depth; ++i)
+      outString = outString.Arg(gul::String(" %"));
+
+    outString = outString.Arg(gul::String("|-"));
+    printf("%s\n", outString.GetData());
+  }
+}
