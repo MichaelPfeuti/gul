@@ -33,7 +33,7 @@
 
 namespace gul
 {
-  class File
+  class GUL_EXPORT File
   {
     public:
       File(void);

@@ -36,7 +36,7 @@
 namespace gul
 {
 
-  class RTTI
+  class GUL_EXPORT RTTI
   {
     public:
       RTTI(const gul::String& classname) : name(classname) {}

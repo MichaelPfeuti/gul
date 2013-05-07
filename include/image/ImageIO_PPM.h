@@ -34,7 +34,7 @@
 namespace gul
 {
 
-  class ImageIO_PPM : public ImageIO
+  class GUL_EXPORT ImageIO_PPM : public ImageIO
   {
     public:
       enum PPMMode

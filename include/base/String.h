@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "gul_export.h"
+
 namespace gul
 {
   class RTTI;
@@ -40,7 +42,7 @@ namespace gul
   /**
     *
     */
-  class String
+  class GUL_EXPORT String
   {
     private:
       static const gul::RTTI RTTI;
@@ -107,9 +109,9 @@ namespace gul
   };
 
 
-  String operator+(const String& rLeft, const String& rRight);
-  bool operator!=(const String& rLeft, const String& rRight);
-  bool operator==(const String& rLeft, const String& rRight);
+  GUL_EXPORT String operator+(const String& rLeft, const String& rRight);
+  GUL_EXPORT bool operator!=(const String& rLeft, const String& rRight);
+  GUL_EXPORT bool operator==(const String& rLeft, const String& rRight);
 
 }
 

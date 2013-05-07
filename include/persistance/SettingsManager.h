@@ -39,7 +39,7 @@
 namespace gul
 {
 
-  class SettingsManager : public NonCopyable
+  class GUL_EXPORT SettingsManager : public NonCopyable
   {
     public:
       explicit SettingsManager(const File& rPath);

@@ -1,13 +1,4 @@
-###########################
-##### FFMPEG Lib #####
-###########################
-find_package(FFMPEG)
-include_directories(${FFMPEG_INCLUDE_DIR})
-
-###########################
-##### Video Lib #####
-###########################
-add_library(video STATIC
+add_library(video OBJECT
   VideoLoader.cpp
   VideoSaver.cpp
   VideoFrame.cpp
@@ -22,6 +13,3 @@ add_library(video STATIC
   ${INCLUDE}/video/manipulator/VideoFrameManipulator.h
   ${INCLUDE}/video/manipulator/VFM2DToSBSDelay.h
 )
-
-target_link_libraries(video base image)
-target_link_libraries(video ${FFMPEG_LIBRARIES})

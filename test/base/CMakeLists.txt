@@ -42,7 +42,7 @@ gul_add_test(Base RTTI DualTemplates)
 gul_add_test(Base File GetSuffix)
 
 gul_create_test()
-target_link_libraries(TestBase base)
+target_link_libraries(TestBase gul)
 
 
 

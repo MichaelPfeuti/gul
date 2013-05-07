@@ -94,4 +94,4 @@ gul_add_test(Containers Stack RTTI)
 
 gul_create_test()
 
-target_link_libraries(TestContainers containers base)
+target_link_libraries(TestContainers gul)

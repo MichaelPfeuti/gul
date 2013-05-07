@@ -11,4 +11,4 @@ gul_add_test(Persistance XMLManager SaveAndLoadPointerClass)
 gul_add_test(Persistance XMLManager SaveAndLoadSamePointers)
 
 gul_create_test()
-target_link_libraries(TestPersistance persistance)
+target_link_libraries(TestPersistance gul)

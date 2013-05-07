@@ -34,7 +34,7 @@
 
 namespace gul
 {
-  class FilterImageToGrayscale : public Filter
+  class GUL_EXPORT FilterImageToGrayscale : public Filter
   {
 
     public:

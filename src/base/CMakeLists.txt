@@ -1,4 +1,4 @@
-add_library(base STATIC
+add_library(base OBJECT
     Assert.cpp
     ClassFactoryBase.cpp
     String.cpp
@@ -22,5 +22,3 @@ add_library(base STATIC
     ${INCLUDE}/base/RTTI.h
     ${INCLUDE}/base/Traits.h
 		)
-
-target_link_libraries(base memory persistance)

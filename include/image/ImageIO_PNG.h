@@ -34,7 +34,7 @@
 namespace gul
 {
 
-  class ImageIO_PNG : public ImageIO
+  class GUL_EXPORT ImageIO_PNG : public ImageIO
   {
     public:
       virtual Image Load(const File& rPath);

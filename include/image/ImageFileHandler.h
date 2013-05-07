@@ -29,10 +29,7 @@
 **
 ***************************************************************************/
 
-namespace gul
-{
-  class ImageIO;
-}
+#include "gul_export.h"
 
 #include "File.h"
 #include "MapBasic.h"
@@ -41,8 +38,14 @@ namespace gul
 
 namespace gul
 {
+  class ImageIO;
+}
 
-  class ImageFileHandler
+
+namespace gul
+{
+
+  class GUL_EXPORT ImageFileHandler
   {
     public:
       static ImageFileHandler& Instance(void);

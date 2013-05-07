@@ -34,7 +34,7 @@
 namespace gul
 {
 
-  class ImageIO_JPEG : public ImageIO
+  class GUL_EXPORT ImageIO_JPEG : public ImageIO
   {
     public:
       void SetQuality(int qual);

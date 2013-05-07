@@ -63,4 +63,4 @@ gul_add_test(Video VideoConverter Inane2DToSBS)
 
 gul_create_test()
 
-target_link_libraries(TestVideo video algorithms_analyzer algorithms_converter)
+target_link_libraries(TestVideo gul)

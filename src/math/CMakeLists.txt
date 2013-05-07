@@ -1,4 +1,4 @@
-add_library(math STATIC
+add_library(math OBJECT
     MathConstants.cpp
     Math.cpp
 

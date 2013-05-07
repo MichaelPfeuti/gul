@@ -35,7 +35,7 @@
 namespace gul
 {
 
-  class VideoFrame : public gul::Image
+  class GUL_EXPORT VideoFrame : public gul::Image
   {
     public:
       VideoFrame(void);

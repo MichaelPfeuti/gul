@@ -37,7 +37,7 @@
 namespace gul
 {
 
-  class ClassFactoryBase
+  class GUL_EXPORT ClassFactoryBase
   {
     public:
       virtual ~ClassFactoryBase();

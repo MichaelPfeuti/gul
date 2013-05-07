@@ -34,7 +34,7 @@
 
 namespace gul
 {
-  class ConverterImageToSBS : public Converter
+  class GUL_EXPORT ConverterImageToSBS : public Converter
   {
 
     public:

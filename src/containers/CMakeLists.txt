@@ -1,4 +1,4 @@
-add_library(containers STATIC
+add_library(containers OBJECT
     Array.cpp
     ArrayBasic.cpp
     ContainerConstants.cpp

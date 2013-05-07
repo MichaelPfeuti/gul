@@ -32,18 +32,19 @@
 
 #if !defined(NDEBUG) || defined(BUILD_TESTING)
 
+#include "gul_export.h"
 #include <cassert>
 
 namespace gul
 {
-  enum AssertionMode { ABORT, EXCEPTION, GUI };
-  class ExceptionAssertionViolated {};
-  void Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  enum GUL_EXPORT AssertionMode { ABORT, EXCEPTION, GUI };
+  class GUL_EXPORT  ExceptionAssertionViolated {};
+  GUL_EXPORT void Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  GUL_EXPORT void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  GUL_EXPORT void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
+  GUL_EXPORT void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
 
-  extern AssertionMode AssertionModeInUse;
+  GUL_EXPORT extern AssertionMode AssertionModeInUse;
 }
 
 #define ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__);

@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "gul_export.h"
+
 namespace gul
 {
   class String;
@@ -43,7 +45,7 @@ namespace pugi
 namespace gul
 {
 
-  class XMLAttribute
+  class GUL_EXPORT XMLAttribute
   {
     private:
       explicit XMLAttribute(const pugi::xml_attribute& rAttribute);

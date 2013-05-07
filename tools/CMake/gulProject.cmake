@@ -37,6 +37,8 @@ macro(gul_setup_project)
   include(gulAStyle)
   include(gulTesting)
   include(gulCDash)
+  include(GenerateExportHeader)
+  add_compiler_export_flags()
 
   # Default Build Type
   if(NOT CMAKE_BUILD_TYPE)

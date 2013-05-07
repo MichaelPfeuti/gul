@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "XMLAttribute.h"
+
 namespace gul
 {
   class String;
@@ -40,12 +42,10 @@ namespace pugi
   class xml_node;
 }
 
-#include "XMLAttribute.h"
-
 namespace gul
 {
 
-  class XMLNode
+  class GUL_EXPORT XMLNode
   {
     private:
       explicit XMLNode(const pugi::xml_node& rNode);

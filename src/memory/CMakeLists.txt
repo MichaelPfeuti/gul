@@ -1,4 +1,4 @@
-add_library(memory STATIC
+add_library(memory OBJECT
 		ScopedPtr.cpp
 		SharedPtr.cpp
 		UniquePtr.cpp

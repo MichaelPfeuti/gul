@@ -34,7 +34,7 @@
 
 namespace gul
 {
-  class AnalyzerImageEquality : public Analyzer
+  class GUL_EXPORT AnalyzerImageEquality : public Analyzer
   {
 
     public:

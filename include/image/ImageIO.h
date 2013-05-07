@@ -39,7 +39,7 @@ namespace gul
 namespace gul
 {
 
-  class ImageIO
+  class GUL_EXPORT ImageIO
   {
     public:
       virtual Image Load(const File& path) = 0;

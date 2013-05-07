@@ -35,7 +35,7 @@
 
 namespace gul
 {
-  class VFM2DToSBSDelay : public VideoFrameManipulator
+  class GUL_EXPORT VFM2DToSBSDelay : public VideoFrameManipulator
   {
     public:
       VFM2DToSBSDelay(void);

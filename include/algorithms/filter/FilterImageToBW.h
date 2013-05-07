@@ -34,7 +34,7 @@
 
 namespace gul
 {
-  class FilterImageToBW : public Filter
+  class GUL_EXPORT FilterImageToBW : public Filter
   {
 
     public:

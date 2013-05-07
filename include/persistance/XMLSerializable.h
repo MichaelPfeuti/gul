@@ -81,7 +81,7 @@ namespace gul
     *          but this values won't be saved because it has the same address
     *          and is regarded as the same, hence we store the reference for later calls.
     */
-  class XMLSerializable
+  class GUL_EXPORT XMLSerializable
   {
     protected:
 

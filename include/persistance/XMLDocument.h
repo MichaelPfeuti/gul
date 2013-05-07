@@ -41,7 +41,7 @@ namespace pugi
 namespace gul
 {
 
-  class XMLDocument : public NonCopyable
+  class GUL_EXPORT XMLDocument : public NonCopyable
   {
     public:
       XMLDocument(void);

@@ -29,6 +29,8 @@
 **
 ***************************************************************************/
 
+#include "gul_export.h"
+
 namespace gul
 {
   class File;
@@ -40,8 +42,7 @@ namespace gul
 namespace gul
 {
 
-  // works only for mkv -> mkv conversion at the moment
-  class VideoConverter
+  class GUL_EXPORT VideoConverter
   {
     public:
       VideoConverter(const gul::File& rInputVideo);

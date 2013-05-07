@@ -48,7 +48,7 @@ class SwsContext;
 namespace gul
 {
 
-  class VideoLoader
+  class GUL_EXPORT VideoLoader
   {
     public:
       VideoLoader(const gul::File& rVideoPath);

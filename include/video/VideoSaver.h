@@ -51,7 +51,7 @@ class AVStream;
 namespace gul
 {
 
-  class VideoSaver
+  class GUL_EXPORT VideoSaver
   {
     public:
       VideoSaver(const gul::File& rVideoPath, int width, int height, int fps = 30, int bitrate = 4000000);

@@ -29,6 +29,7 @@
 **
 ***************************************************************************/
 
+#include "gul_export.h"
 #include "ArrayBasic.h"
 #include "Cloneable.h"
 
@@ -112,7 +113,7 @@ namespace gul
    * }
    * @endcode
    */
-  class SharedResource
+  class GUL_EXPORT SharedResource
   {
     protected:
       SharedResource(void);
