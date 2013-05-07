@@ -32,7 +32,7 @@ function(gul_create_version)
 	find_package(Git)
 
 	execute_process(COMMAND "${GIT_EXECUTABLE}"	describe --dirty 
-		              WORKING_DIRECTORY	"${CMAKE_SOURCE_DIR}"
+		              WORKING_DIRECTORY	"${PROJECT_SOURCE_DIR}"
 		              OUTPUT_VARIABLE	VERSION_STRING
 		              OUTPUT_STRIP_TRAILING_WHITESPACE)
 
