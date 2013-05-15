@@ -43,7 +43,7 @@ if(ASTYLE_EXECUTABLE)
   list(APPEND FILES_TO_SYTLE_CHECK ${FILES_FOUND_TO_CHECK})
  
   # loop over all found file and check them
-  set(ASTYLE_ARG "--options=tools/astyle.conf")
+  set(ASTYLE_ARG "--options=${ASTYLE_CONFIG}")
   foreach(CHECK_FILE IN LISTS FILES_TO_SYTLE_CHECK)
     
     # if a file matches any regex in the ASTYLE_EXCLUDE variable
@@ -64,7 +64,7 @@ if(ASTYLE_EXECUTABLE)
                       RESULT_VARIABLE RETVAL)
                   
       if(${RETVAL})
-        message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=tools/astyle.conf < ${CHECK_FILE}")
+        message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=${ASTYLE_CONFIG} < ${CHECK_FILE}")
       endif(${RETVAL})
 
       file(READ ${CHECK_FILE} CHECK_FILE_CONTENT)

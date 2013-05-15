@@ -30,12 +30,18 @@ set(_gul_astyle_path ${CMAKE_CURRENT_LIST_DIR})
 
 function(gul_create_astyle_target)
 	find_package(AStyle)
-	if(ASTYLE_FOUND)
-		add_custom_target(CodingConventions 
-		  COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE}
-		                -P ${_gul_astyle_path}/AStyle.cmake
-		  COMMENT "AStyle"
-		  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-		  )
-	endif(ASTYLE_FOUND)
+	if(NOT TARGET CodingConventions AND  ASTYLE_FOUND)
+     if(ARGV1)
+       set(ASTYLE_CONFIG ${ARGV1})
+     else()
+       set(ASTYLE_CONFIG "${_gul_astyle_path}/../astyle.conf")
+     endif()
+       add_custom_target(CodingConventions 
+                   COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE}
+                   -DASTYLE_CONFIG=${ASTYLE_CONFIG}
+                   -P ${_gul_astyle_path}/AStyle.cmake
+                   COMMENT "AStyle"
+                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                   )
+	endif()
 endfunction()

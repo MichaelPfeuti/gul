@@ -29,11 +29,11 @@
 function(gul_create_doxygen_target)
 	find_package(Doxygen)
 
-	if(DOXYGEN_FOUND)
+	if(NOT TARGET Doxygen AND DOXYGEN_FOUND)
 		add_custom_target(Doxygen 
 		  COMMAND ${DOXYGEN_EXECUTABLE}
 		  COMMENT "Doxygen"
 		  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
 		  )
-	endif(DOXYGEN_FOUND)
+	endif()
 endfunction()
