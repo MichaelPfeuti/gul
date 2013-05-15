@@ -1,5 +1,5 @@
-include_directories("${CMAKE_BINARY_DIR}/test/data")
-include_directories("${CMAKE_SOURCE_DIR}/test/data")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/data")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 add_subdirectory(algorithms)
 add_subdirectory(base)
