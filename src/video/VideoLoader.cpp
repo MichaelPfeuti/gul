@@ -82,7 +82,7 @@ void gul::VideoLoader::CloseVideo(void)
   m_pFrame = nullptr;
 
   // free swscale context
-  av_free(m_pSWSContext);
+  sws_freeContext(m_pSWSContext);
   m_pSWSContext = nullptr;
 
   // free packet
@@ -128,7 +128,7 @@ bool gul::VideoLoader::OpenVideo(void)
   m_pVideoCodecCtx = m_pFormatCtx->streams[m_videoStreamIndex]->codec;
 
   // enable multithreading
-  m_pVideoCodecCtx->thread_count = 2;
+  m_pVideoCodecCtx->thread_count = 4;
 
   // Find the decoder for the video stream
   AVCodec* pCodec = avcodec_find_decoder(m_pVideoCodecCtx->codec_id);
@@ -221,9 +221,9 @@ bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFr
   if(frameFinished)
   {
     setImageData(rFrame, m_pFrame);
-    uint64_t pts = av_rescale_q(m_pFrame->pkt_pts, m_pFormatCtx->streams[m_videoStreamIndex]->time_base, m_pVideoCodecCtx->time_base);
-    pts /= m_pFormatCtx->streams[m_videoStreamIndex]->codec->ticks_per_frame;
-    rFrame.SetPresentationTime(pts);
+    AVRational timeBase = m_pFormatCtx->streams[m_videoStreamIndex]->time_base;
+    float pts = m_pFrame->pkt_pts;
+    rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
 
     rFrame.SetFrameIndex(m_currentFrameIndex);
     ++m_currentFrameIndex;

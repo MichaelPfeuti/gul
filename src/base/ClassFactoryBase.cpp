@@ -39,6 +39,11 @@ gul::ClassFactoryBase::~ClassFactoryBase()
 {
   if(ClassFactoryBase::pNameToFactoryMap != nullptr)
   {
+    ClassNameToFactoryMap::Iterator it = ClassFactoryBase::pNameToFactoryMap->GetIterator();
+    while(it.HasNext())
+    {
+      delete it.Next().GetValue();
+    }
     GUL_DELETE(ClassFactoryBase::pNameToFactoryMap);
   }
 }

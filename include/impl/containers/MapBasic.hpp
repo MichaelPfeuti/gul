@@ -117,6 +117,7 @@ typename gul::MapBasic<K, V>::Iterator gul::MapBasic<K, V>::GetIterator(void)
 {
   return Iterator(*this);
 }
+
 template<typename K, typename V>
 const typename gul::MapBasic<K, V>::Iterator gul::MapBasic<K, V>::GetIterator(void) const
 {
