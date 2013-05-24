@@ -28,7 +28,7 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 #include "ImageFileHandler.h"
 
 namespace TestImageFileHandler
@@ -53,7 +53,7 @@ namespace TestImageFileHandler
 
   int SaveJPEG(void)
   {
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
 
     gul::File jpegFile = gul::CTestData::GetTempFilePath(gul::String("lena.jpeg"));
     gul::File jpgFile = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
@@ -83,7 +83,7 @@ namespace TestImageFileHandler
 
   int SavePNG(void)
   {
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
 
     gul::File pngFile = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
 
@@ -113,7 +113,7 @@ namespace TestImageFileHandler
 
   int SavePPM(void)
   {
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
 
     gul::File ppmFile = gul::CTestData::GetTempFilePath(gul::String("lena.ppm"));
     gul::File pgmFile = gul::CTestData::GetTempFilePath(gul::String("lena.pgm"));
@@ -147,7 +147,7 @@ namespace TestImageFileHandler
 
   int SaveTIFF(void)
   {
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
 
     gul::File tifFile = gul::CTestData::GetTempFilePath(gul::String("lena.tif"));
     gul::File tiffFile = gul::CTestData::GetTempFilePath(gul::String("lena.tiff"));

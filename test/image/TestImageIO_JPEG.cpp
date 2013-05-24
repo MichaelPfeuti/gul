@@ -29,7 +29,7 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "ImageIO_JPEG.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 #include "AnalyzerImageEquality.h"
 
 namespace TestImageIO_JPEG
@@ -40,7 +40,7 @@ namespace TestImageIO_JPEG
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.jpg"));
     gul::Image lenaImage = jpegIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT(), 0.0015f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLena(), 0.0015f));
 
     return EXIT_SUCCESS;
   }
@@ -48,12 +48,12 @@ namespace TestImageIO_JPEG
   int WriteRead(void)
   {
     gul::ImageIO_JPEG jpegIO;
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.jpg"));
     jpegIO.Save(lenaPath, image);
 
     image = jpegIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT(), 0.0015f));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, gul::GetLena(), 0.0015f));
 
     return EXIT_SUCCESS;
   }

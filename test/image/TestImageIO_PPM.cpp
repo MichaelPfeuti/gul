@@ -29,7 +29,7 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "ImageIO_PPM.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 #include "AnalyzerImageEquality.h"
 
 namespace TestImageIO_PPM
@@ -40,20 +40,20 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.ppm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLena()));
     return EXIT_SUCCESS;
   }
 
   int WriteReadRGBASCII(void)
   {
     gul::ImageIO_PPM ppmIO;
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.ppm"));
     ppmIO.SetMode(gul::ImageIO_PPM::PPM_ASCII);
     ppmIO.Save(lenaPath, image);
 
     image = ppmIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, gul::GetLena()));
 
     return EXIT_SUCCESS;
   }
@@ -61,24 +61,24 @@ namespace TestImageIO_PPM
   int ReadRGBBinary(void)
   {
     gul::ImageIO_PPM ppmIO;
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.ppm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLena()));
     return EXIT_SUCCESS;
   }
 
   int WriteReadRGBBinary(void)
   {
     gul::ImageIO_PPM ppmIO;
-    gul::Image image = GetLenaGT();
+    gul::Image image = gul::GetLena();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.ppm"));
     ppmIO.SetMode(gul::ImageIO_PPM::PPM_BINARY);
     ppmIO.Save(lenaPath, image);
 
     image = ppmIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, gul::GetLena()));
 
     return EXIT_SUCCESS;
   }
@@ -89,7 +89,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.pgm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGrayscaleGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaGrayscale()));
     return EXIT_SUCCESS;
   }
 
@@ -99,7 +99,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pgm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaGrayscaleGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaGrayscale()));
     return EXIT_SUCCESS;
   }
 
@@ -109,7 +109,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaBWGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBW()));
     return EXIT_SUCCESS;
   }
 
@@ -119,7 +119,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaBWGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBW()));
     return EXIT_SUCCESS;
   }
 }

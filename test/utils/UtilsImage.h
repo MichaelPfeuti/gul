@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_TEST_IMAGE_UTILS_H_
-#define _GUL_TEST_IMAGE_UTILS_H_
+#ifndef _GUL_TEST_UTILS_IMAGE_H_
+#define _GUL_TEST_UTILS_IMAGE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -31,7 +31,16 @@
 
 
 #include "Image.h"
+#include "gul_export.h"
 
-gul::Image GetLenaAlphaGT(void);
+namespace gul {
+  gul::Image GUL_EXPORT GetLena(void);
+  gul::Image GUL_EXPORT GetLenaAlpha(void);
+  gul::Image GUL_EXPORT GetLenaGrayscale(void);
+  gul::Image GUL_EXPORT GetLenaBW(void);
+  gul::Image GUL_EXPORT GetLenaGrayAverage(void);
+  gul::Image GUL_EXPORT GetLenaGrayLuminosity(void);
+  gul::Image GUL_EXPORT GetLenaGrayLightness(void);
+}
 
 #endif

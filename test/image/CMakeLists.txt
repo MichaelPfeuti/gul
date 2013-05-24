@@ -42,6 +42,5 @@ gul_add_test(Image Image GetData)
 gul_add_test(Image Image GetDataConst)
 gul_add_test(Image Image NoCopySingleReferee)
 
-gul_add_util_sources(Utils.h Utils.cpp)
 gul_create_test()
-target_link_libraries(TestImage gul)
+target_link_libraries(TestImage gul gulTestUtils)

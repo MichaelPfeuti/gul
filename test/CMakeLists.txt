@@ -1,6 +1,8 @@
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/data")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/data")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/utils")
 
+add_subdirectory(utils)
 add_subdirectory(algorithms)
 add_subdirectory(base)
 add_subdirectory(containers)

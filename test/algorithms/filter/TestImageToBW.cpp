@@ -29,15 +29,15 @@
 #include "FilterImageToBW.h"
 #include "CTestAssert.h"
 #include "AnalyzerImageEquality.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 
 namespace TestImageToBW
 {
   int ColorToBW(void)
   {
-    gul::Image bw = gul::FilterImageToBW::Execute(GetLenaGrayLightness());
+    gul::Image bw = gul::FilterImageToBW::Execute(gul::GetLenaGrayLightness());
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaBW(), bw));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(gul::GetLenaBW(), bw));
 
     return EXIT_SUCCESS;
   }

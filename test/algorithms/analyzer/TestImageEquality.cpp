@@ -28,25 +28,25 @@
 
 #include "AnalyzerImageEquality.h"
 #include "CTestAssert.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 
 namespace TestImageEquality
 {
   int Equality(void)
   {
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(GetLenaAlphaGT(), GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(gul::GetLenaAlpha(), gul::GetLenaAlpha()));
 
     return EXIT_SUCCESS;
   }
 
   int Inequality(void)
   {
-    gul::Image img = GetLenaAlphaGT();
+    gul::Image img = gul::GetLenaAlpha();
     img.GetData()[1] = 250;
     img.GetData()[3] = 0;
     img.GetData()[5] = 20;
     img.GetData()[6] = 250;
-    TEST_FALSE(gul::AnalyzerImageEquality::Execute(GetLenaAlphaGT(), img));
+    TEST_FALSE(gul::AnalyzerImageEquality::Execute(gul::GetLenaAlpha(), img));
 
     return EXIT_SUCCESS;
   }

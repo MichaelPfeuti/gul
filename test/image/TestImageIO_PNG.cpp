@@ -29,7 +29,7 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "ImageIO_PNG.h"
-#include "Utils.h"
+#include "UtilsImage.h"
 #include "AnalyzerImageEquality.h"
 
 namespace TestImageIO_PNG
@@ -40,7 +40,7 @@ namespace TestImageIO_PNG
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaAlpha()));
 
     return EXIT_SUCCESS;
   }
@@ -48,12 +48,12 @@ namespace TestImageIO_PNG
   int WriteRead(void)
   {
     gul::ImageIO_PNG pngIO;
-    gul::Image image = GetLenaAlphaGT();
+    gul::Image image = gul::GetLenaAlpha();
     gul::File lenaPath = gul::CTestData::GetTempFilePath(gul::String("lena.png"));
     pngIO.Save(lenaPath, image);
 
     image = pngIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, gul::GetLenaAlpha()));
 
     return EXIT_SUCCESS;
   }
@@ -64,7 +64,7 @@ namespace TestImageIO_PNG
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_interlaced.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, GetLenaAlphaGT()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaAlpha()));
 
     return EXIT_SUCCESS;
   }

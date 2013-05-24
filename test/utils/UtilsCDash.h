@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_TEST_IMAGE_UTILS_H_
-#define _GUL_TEST_IMAGE_UTILS_H_
+#ifndef _GUL_TEST_UTILS_CDASH_H_
+#define _GUL_TEST_UTILS_CDAHS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,12 +29,23 @@
 **
 ***************************************************************************/
 
+#include "gul_export.h"
+#include <String.h>
+#include <File.h>
 
-#include "Image.h"
+namespace gul {
 
-gul::Image GetLenaGT(void);
-gul::Image GetLenaAlphaGT(void);
-gul::Image GetLenaGrayscaleGT(void);
-gul::Image GetLenaBWGT(void);
+  void GUL_EXPORT UploadCDashImage(const gul::String& label,
+                                   const gul::File& path);
+
+  void GUL_EXPORT UploadCDashMeasurement(const gul::String& label,
+                                         int value);
+
+  void GUL_EXPORT UploadCDashMeasurement(const gul::String& label,
+                                         double value);
+
+  void GUL_EXPORT UploadCDashMeasurement(const gul::String& label,
+                                         bool value);
+}
 
 #endif
