@@ -42,6 +42,10 @@ gul_add_test(Base RTTI DualTemplates)
 gul_add_test(Base File GetSuffix)
 gul_add_test(Base File GetBasename)
 
+gul_add_test(Base Dir Create)
+gul_add_test(Base Dir Delete)
+gul_add_test(Base Dir DeleteContent)
+
 gul_create_test()
 target_link_libraries(TestBase gul)
 

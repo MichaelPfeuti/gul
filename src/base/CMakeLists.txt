@@ -1,6 +1,7 @@
 add_library(base OBJECT
     Assert.cpp
     ClassFactoryBase.cpp
+    Dir.cpp
     String.cpp
     SharedResource.cpp
     File.cpp
@@ -14,6 +15,7 @@ add_library(base OBJECT
     ${INCLUDE}/base/Cloneable.h
     ${INCLUDE}/base/ClassFactory.h
     ${INCLUDE}/base/ClassFactoryBase.h
+    ${INCLUDE}/base/Dir.h
     ${INCLUDE}/base/String.h
     ${INCLUDE}/base/Misc.h
     ${INCLUDE}/base/NonCopyable.h
@@ -23,4 +25,4 @@ add_library(base OBJECT
     ${INCLUDE}/base/RTTI.h
     ${INCLUDE}/base/Traits.h
     ${INCLUDE}/base/Timing.h
-		)
+    )

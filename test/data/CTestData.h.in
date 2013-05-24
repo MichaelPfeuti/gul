@@ -31,6 +31,7 @@
 
 #include "File.h"
 #include "String.h"
+#include "Dir.h"
 
 namespace gul
 {
@@ -62,6 +63,17 @@ namespace gul
           file = gul::File(gul::String("%%_%.%").Arg(folder).Arg(basename).Arg(++i).Arg(suffix));
         }
         return file.GetPath();
+      }
+
+      static gul::String GetTempDirPath(const gul::String& dir)
+      {
+        return gul::String("@GUL_TEST_TEMP_FOLDER@/") + dir;
+      }
+
+      static void Clear(void)
+      {
+        gul::Dir tempDir(gul::String("@GUL_TEST_TEMP_FOLDER@"));
+        tempDir.DeleteContent();
       }
   };
 

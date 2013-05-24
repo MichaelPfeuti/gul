@@ -35,8 +35,9 @@
 #include <cstdlib>
 #include <cstdio>
 
-// see first comment in main() to see why we include this
+// see comments in main() to see why we include this
 #include "Assert.h"
+#include "CTestData.h"
 
 // Function pointer to a testing function
 // the argument selects the tests to execute
@@ -68,6 +69,8 @@ int main(int argc, char* argv[])
   // We switch the assertion mode to exception to detect
   // assertion with an exception in the tests.
   gul::AssertionModeInUse = gul::EXCEPTION;
+  // We clear the previous ouputs so the we do not clutter the memroy.
+  gul::CTestData::Clear();
 
   RegisterTests();
 
