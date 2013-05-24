@@ -66,7 +66,7 @@ namespace gul
       }
       int Size(void) const
       {
-        return size;
+        return m_size;
       }
       char CharAt(int index) const;
 
@@ -92,7 +92,7 @@ namespace gul
 
       const char* GetData(void) const
       {
-        return pString;
+        return m_pString;
       }
 
       long ToLong(void) const;
@@ -100,8 +100,8 @@ namespace gul
       bool ToBool(void) const;
 
     private:
-      const char* pString;
-      int size;
+      const char* m_pString;
+      int m_size;
 
       friend String operator+(const String&, const String&);
       friend bool operator!=(const String& rLeft, const String& rRight);

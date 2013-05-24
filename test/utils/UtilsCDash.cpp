@@ -45,6 +45,7 @@ void gul::UploadCDashImage(const gul::String& label,
   std::cerr << "\">";
   std::cerr << path.GetPath().GetData();
   std::cerr << "</DartMeasurementFile>";
+  std::cerr << std::endl;
 }
 
 void gul::UploadCDashMeasurement(const gul::String &label, int value)
@@ -54,6 +55,7 @@ void gul::UploadCDashMeasurement(const gul::String &label, int value)
   std::cerr << "\" type=\"numeric/integer\">";
   std::cerr << value;
   std::cerr << "</DartMeasrement>";
+  std::cerr << std::endl;
 }
 
 void gul::UploadCDashMeasurement(const gul::String &label, double value)

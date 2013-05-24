@@ -29,7 +29,7 @@
 #include "FilterImageToBW.h"
 #include "CTestAssert.h"
 #include "AnalyzerImageEquality.h"
-#include "UtilsImage.h"
+
 
 namespace TestImageToBW
 {
@@ -37,7 +37,7 @@ namespace TestImageToBW
   {
     gul::Image bw = gul::FilterImageToBW::Execute(gul::GetLenaGrayLightness());
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(gul::GetLenaBW(), bw));
+    TEST_EQUAL_IMAGE(gul::GetLenaBW(), bw, 0.f);
 
     return EXIT_SUCCESS;
   }

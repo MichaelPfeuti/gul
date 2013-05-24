@@ -33,12 +33,12 @@
 
 
 gul::File::File(void)
-  : pPath()
+  : m_path()
 {
 }
 
 gul::File::File(const String& rPath)
-  : pPath(rPath)
+  : m_path(rPath)
 {
 
 }
@@ -47,27 +47,45 @@ gul::File::~File(void)
 {
 }
 
+gul::String gul::File::GetBasename(void) const
+{
+  int start = m_path.FindBackward(gul::String("/"));
+  // try windows splitter
+  if(start < 0)
+    start = m_path.FindBackward(gul::String("\\"));
+
+  int end = m_path.FindBackward(gul::String("."));
+
+  if(start < 0 && end < 0)
+    return m_path;
+
+  if(end < 0)
+    end = m_path.Size();
+
+  return m_path.Substring(start+1, end);
+}
+
 gul::String gul::File::GetSuffix(void) const
 {
-  int idx = pPath.FindBackward(gul::String("."));
+  int idx = m_path.FindBackward(gul::String("."));
   if(idx < 0)
     return gul::String();
 
-  return pPath.Substring(idx + 1, pPath.Size());
+  return m_path.Substring(idx + 1, m_path.Size());
 }
 
 gul::String gul::File::GetPath(void) const
 {
-  return this->pPath;
+  return m_path;
 }
 
 bool gul::File::IsPathValid(void) const
 {
-  return !pPath.IsEmpty();
+  return !m_path.IsEmpty();
 }
 
 bool gul::File::Exists(void) const
 {
   return IsPathValid() &&
-         access(pPath.GetData(), F_OK) == 0;
+         access(m_path.GetData(), F_OK) == 0;
 }

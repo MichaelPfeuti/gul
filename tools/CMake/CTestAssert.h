@@ -33,6 +33,10 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include "UtilsImage.h"
+#include "UtilsCDash.h"
+#include "CTestData.h"
+#include "ImageFileHandler.h"
 
 #define TEST_ASSERTION(test) \
   try { \
@@ -48,7 +52,6 @@
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
   }
-
 
 #define TEST_NOT_EQUAL(test, groundTruth) \
   if(test == groundTruth) \
@@ -82,6 +85,20 @@
   if(test == nullptr) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    return EXIT_FAILURE; \
+  }
+
+#define TEST_EQUAL_IMAGE(test, groundTruth, epsilon) \
+  if(!gul::AnalyzerImageEquality::Execute(test, groundTruth, epsilon)) \
+  { \
+    gul::String testPath = gul::CTestData::GetTempFilePathUnique(gul::String("toTest.png")); \
+    gul::String gtPath = gul::CTestData::GetTempFilePathUnique(gul::String("groundTruth.png")); \
+    gul::ImageFileHandler::Instance().Save(testPath, test); \
+    gul::ImageFileHandler::Instance().Save(gtPath, groundTruth); \
+    fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
+    fprintf(stderr, "\tImages are not equal up to %f!\n", epsilon); \
+    UploadCDashImage("Output", testPath); \
+    UploadCDashImage("Ground Truth", gtPath); \
     return EXIT_FAILURE; \
   }
 

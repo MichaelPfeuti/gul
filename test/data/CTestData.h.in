@@ -38,7 +38,7 @@ namespace gul
   class CTestData
   {
     public:
-      static gul::String GetFilePath(const gul::String& folder, 
+      static gul::String GetFilePath(const gul::String& folder,
                                      const gul::String& filename)
       {
         return gul::String("@GUL_TEST_DATA_SET_FOLDER@/") +
@@ -48,6 +48,20 @@ namespace gul
       static gul::String GetTempFilePath(const gul::String& filename)
       {
         return gul::String("@GUL_TEST_TEMP_FOLDER@/") + filename;
+      }
+
+      static gul::String GetTempFilePathUnique(const gul::String& filename)
+      {
+        gul::String folder("@GUL_TEST_TEMP_FOLDER@/");
+        gul::File file(folder + filename);
+        gul::String suffix = file.GetSuffix();
+        gul::String basename = file.GetBasename();
+        int i = 0;
+        while(file.Exists())
+        {
+          file = gul::File(gul::String("%%_%.%").Arg(folder).Arg(basename).Arg(++i).Arg(suffix));
+        }
+        return file.GetPath();
       }
   };
 

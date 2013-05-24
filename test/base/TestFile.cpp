@@ -45,4 +45,33 @@ namespace TestFile
     return EXIT_SUCCESS;
   }
 
+  int GetBasename(void)
+  {
+    gul::File fileNoSuffix("test");
+    TEST_EQUAL(fileNoSuffix.GetBasename(), "test");
+
+    gul::File fileSuffix("test.file");
+    TEST_EQUAL(fileSuffix.GetBasename(), "test");
+
+    gul::File fileNoSuffixDirLinux("/linuxDir/test");
+    TEST_EQUAL(fileNoSuffixDirLinux.GetBasename(), "test");
+
+    gul::File fileSuffixDirLinux("/linuxDir/test.file");
+    TEST_EQUAL(fileSuffixDirLinux.GetBasename(), "test");
+
+    gul::File fileNoSuffixDirWin("C:\\WinDir\\test");
+    TEST_EQUAL(fileNoSuffixDirWin.GetBasename(), "test");
+
+    gul::File fileSuffixDirWin("C:\\WinDir\\test.file");
+    TEST_EQUAL(fileSuffixDirWin.GetBasename(), "test");
+
+    gul::File fileNoSuffixDirRootWin("C:\\test.file");
+    TEST_EQUAL(fileNoSuffixDirRootWin.GetBasename(), "test");
+
+    gul::File fileSuffixDirRootWin("C:\\test.file");
+    TEST_EQUAL(fileSuffixDirRootWin.GetBasename(), "test");
+
+    return EXIT_SUCCESS;
+  }
+
 }

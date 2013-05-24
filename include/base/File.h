@@ -40,14 +40,38 @@ namespace gul
       File(const String& rPath);
       virtual ~File(void);
 
+      /**
+       * @brief GetBasename
+       * @return the name of the file without suffix.
+       */
+      String GetBasename(void) const;
+
+      /**
+       * @brief GetSuffix
+       * @return the file ending of the file.
+       */
       String GetSuffix(void) const;
+
+      /**
+       * @brief GetPath
+       * @return the entire path the was passed in the constructor.
+       */
       String GetPath(void) const;
 
+      /**
+       * @brief IsPathValid
+       * @return true if path is not empty, false otherwise
+       */
       bool IsPathValid(void) const;
+
+      /**
+       * @brief Test the file exists. It does not check permissions.
+       * @return true if the file exists, false otherwise
+       */
       bool Exists(void) const;
 
     private:
-      String pPath;
+      String m_path;
   };
 }
 
