@@ -214,17 +214,28 @@ bool gul::VideoLoader::decodeVideoPacket(AVPacket& rPacket, gul::VideoFrame& rFr
 
   int frameFinished;
   // Decode video frame
-  if(avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket) < 0)
+  int len;
+  if((len = avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
     FAIL("Decoding failed!");
+
+  fprintf(stderr, "%d %d\n", len, rPacket.size);
 
   // Did we get a video frame?
   if(frameFinished)
   {
     setImageData(rFrame, m_pFrame);
-    AVRational timeBase = m_pFormatCtx->streams[m_videoStreamIndex]->time_base;
-    float pts = m_pFrame->pkt_pts;
-    rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
 
+    AVRational timeBase = m_pFormatCtx->streams[m_videoStreamIndex]->time_base;
+    double pts;
+    if(AV_NOPTS_VALUE == m_pFrame->pkt_pts)
+    {
+      pts = m_currentFrameIndex;
+    }
+    else
+    {
+      pts = m_pFrame->pkt_pts;
+    }
+    rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
     rFrame.SetFrameIndex(m_currentFrameIndex);
     ++m_currentFrameIndex;
   }
