@@ -41,8 +41,8 @@ extern "C"
 
 bool gul::MediaReader::codecsAreRegistered = false;
 
-gul::MediaReader::MediaReader(const gul::File& rVideoPath)
-  : m_path(rVideoPath),
+gul::MediaReader::MediaReader(const gul::File& rPath)
+  : m_path(rPath),
     m_pFormatCtx(nullptr),
     m_pSWSContext(nullptr),
     m_pPacket(nullptr),
@@ -69,7 +69,7 @@ gul::MediaReader::~MediaReader(void)
 {
   if(m_isOpen)
   {
-    CloseVideo();
+    Close();
   }
 }
 
@@ -89,12 +89,15 @@ void gul::MediaReader::deleteVideoStructures(void)
   m_pSWSContext = nullptr;
 }
 
-void gul::MediaReader::CloseVideo(void)
+void gul::MediaReader::Close(void)
 {
   // free packet
-  if(!m_isPacketDataFreed)
-    av_free_packet(m_pPacket);
-  GUL_DELETE(m_pPacket);
+  if(m_isOpen)
+  {
+    if(!m_isPacketDataFreed)
+      av_free_packet(m_pPacket);
+    GUL_DELETE(m_pPacket);
+  }
 
   // Close the codecs
   if(HasVideo())
@@ -149,7 +152,7 @@ void gul::MediaReader::allocateVideoStructures(void)
                                      SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
-bool gul::MediaReader::OpenVideo(void)
+bool gul::MediaReader::Open(void)
 {
   ASSERT(!m_isOpen);
   ASSERT(m_path.IsPathValid());
@@ -166,19 +169,30 @@ bool gul::MediaReader::OpenVideo(void)
 
   m_videoStreamIndex = openCodec(AVMEDIA_TYPE_VIDEO, m_pVideoCodecCtx);
   m_audioStreamIndex = openCodec(AVMEDIA_TYPE_AUDIO, m_pAudioCodecCtx);
-  m_isOpen = true;
 
-  if(HasVideo())
+  if(m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND )
   {
     allocateVideoStructures();
   }
 
-  // packet into which to read piece
-  m_pPacket = new AVPacket;
-  av_init_packet(m_pPacket);
-  m_isPacketDataFreed = true;
+  if(m_audioStreamIndex != AVERROR_STREAM_NOT_FOUND)
+  {
+    m_pAudioCodecCtx->request_sample_fmt = AV_SAMPLE_FMT_S16;
+  }
 
-  return true;
+  m_isOpen = m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND ||
+             m_audioStreamIndex != AVERROR_STREAM_NOT_FOUND;
+
+
+  if(m_isOpen)
+  {
+    // packet into which to read piece
+    m_pPacket = new AVPacket;
+    av_init_packet(m_pPacket);
+    m_isPacketDataFreed = true;
+  }
+
+  return m_isOpen;
 }
 
 int gul::MediaReader::openCodec(int type, AVCodecContext*& pContext)
@@ -249,12 +263,12 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::AudioFrame& rFrame)
   if((len = avcodec_decode_audio4(m_pAudioCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
     FAIL("Audio decoding failed!");
 
-  fprintf(stderr, "%d %d\n", len, rPacket.size);
+  fprintf(stderr, "%d: %d %d\n", m_pAudioCodecCtx->frame_number, len, rPacket.size);
 
   // Did we get a frame?
   if(frameFinished)
   {
-    //setData(rFrame, m_pFrame);
+    setData(rFrame, m_pFrame);
 
     AVRational timeBase = m_pFormatCtx->streams[m_audioStreamIndex]->time_base;
     double pts = AV_NOPTS_VALUE == m_pFrame->pkt_pts ? m_pAudioCodecCtx->frame_number : m_pFrame->pkt_pts;
@@ -306,6 +320,17 @@ void gul::MediaReader::setData(gul::VideoFrame& rTargetFrame, const AVFrame* pSo
   }
 }
 
+void gul::MediaReader::setData(gul::AudioFrame& rTargetFrame, const AVFrame* pSourceFrame) const
+{
+  int16_t* s16Data = reinterpret_cast<int16_t*>(pSourceFrame->data[0]);
+  rTargetFrame.SetData(s16Data, pSourceFrame->nb_samples);
+  int frameSize = av_samples_get_buffer_size(NULL, GetChannels(),
+                                             pSourceFrame->nb_samples,
+                                             AV_SAMPLE_FMT_S16, 1);
+  fprintf(stderr, "%d %d\n", frameSize, pSourceFrame->nb_samples);
+}
+
+
 void gul::MediaReader::allocateFrame(VideoFrame& rFrame) const
 {
   if(rFrame.GetWidth() != m_pVideoCodecCtx->width ||
@@ -313,6 +338,15 @@ void gul::MediaReader::allocateFrame(VideoFrame& rFrame) const
      rFrame.GetImageFormat() != gul::Image::IF_RGBA)
   {
     rFrame = gul::VideoFrame(m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, gul::Image::IF_RGBA);
+  }
+}
+
+void gul::MediaReader::allocateFrame(AudioFrame& rFrame) const
+{
+  if(rFrame.GetChannels() != m_pAudioCodecCtx->channels ||
+     rFrame.GetSampleRate() != m_pAudioCodecCtx->sample_rate)
+  {
+    rFrame = gul::AudioFrame(m_pAudioCodecCtx->channels, m_pAudioCodecCtx->sample_rate);
   }
 }
 
@@ -350,6 +384,8 @@ void gul::MediaReader::GetNext(gul::VideoFrame& rFrame)
 void gul::MediaReader::GetNext(AudioFrame& rFrame)
 {
   ASSERT(HasAudio());
+
+  allocateFrame(rFrame);
 
   AVPacket* pNextPacket = getNextPacket();
   while(pNextPacket != nullptr)
@@ -394,13 +430,13 @@ void gul::MediaReader::GetNext(MediaFrame& rFrame)
 
 int gul::MediaReader::GetWidth(void) const
 {
-  ASSERT(m_isOpen);
+  ASSERT(HasVideo());
   return m_pVideoCodecCtx->width;
 }
 
 int gul::MediaReader::GetHeight(void) const
 {
-  ASSERT(m_isOpen);
+  ASSERT(HasVideo());
   return m_pVideoCodecCtx->height;
 }
 
@@ -414,4 +450,16 @@ bool gul::MediaReader::HasVideo(void) const
 {
   ASSERT(m_isOpen);
   return m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND;
+}
+
+int gul::MediaReader::GetChannels(void) const
+{
+  ASSERT(HasAudio());
+  return m_pAudioCodecCtx->channels;
+}
+
+int gul::MediaReader::GetSampleRate(void) const
+{
+  ASSERT(HasAudio());
+  return m_pAudioCodecCtx->sample_rate;
 }

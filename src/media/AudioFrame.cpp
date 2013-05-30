@@ -27,41 +27,41 @@
 ***************************************************************************/
 
 #include "AudioFrame.h"
+#include "Misc.h"
+#include <cstring>
 
 gul::AudioFrame::AudioFrame(void)
+  : m_channels(0),
+    m_sampleRate(0),
+    m_presentationTime(0),
+    m_frameIndex(0),
+    m_sampleCount(0),
+    m_data(nullptr),
+    m_dataSize(0)
 {
 }
 
-//gul::AudioFrame::AudioFrame(const gul::Image& img)
-//  : gul::Image(img),
-//    m_presentationTime(0),
-//    m_frameIndex(0)
-//{
-//}
+gul::AudioFrame::AudioFrame(int channels, int sampleRate)
+  : m_channels(channels),
+    m_sampleRate(sampleRate),
+    m_presentationTime(0),
+    m_frameIndex(0),
+    m_sampleCount(0),
+    m_data(nullptr),
+    m_dataSize(0)
+{
 
-//gul::AudioFrame::AudioFrame(int w, int h, ImageFormat dataImageFormat)
-//  : gul::Image(w, h, dataImageFormat)
-//{
-
-//}
+}
 
 gul::AudioFrame::~AudioFrame(void)
 {
+  GUL_DELETE_ARRAY(m_data);
 }
-
-//gul::AudioFrame& gul::AudioFrame::operator=(const gul::AudioFrame& other)
-//{
-//  gul::Image::operator =(other);
-//  m_presentationTime = other.m_presentationTime;
-//  m_frameIndex = other.m_frameIndex;
-//  return *this;
-//}
 
 void gul::AudioFrame::SetPresentationTime(float pts)
 {
   m_presentationTime = pts;
 }
-
 
 float gul::AudioFrame::GetPresentationTime(void) const
 {
@@ -78,3 +78,45 @@ uint64_t gul::AudioFrame::GetFrameIndex(void) const
   return m_frameIndex;
 }
 
+int gul::AudioFrame::GetChannels(void) const
+{
+  return m_channels;
+}
+
+int gul::AudioFrame::GetSampleRate(void) const
+{
+  return m_sampleRate;
+}
+
+void gul::AudioFrame::SetData(const int16_t* pData, int sampleCount)
+{
+  int dataSize = sizeof(int16_t)*m_channels*sampleCount;
+  if(dataSize != m_dataSize)
+  {
+    GUL_DELETE_ARRAY(m_data);
+    m_data = new int16_t[m_channels*sampleCount];
+  }
+  memcpy(m_data, pData, dataSize);
+  m_sampleCount = sampleCount;
+  m_dataSize = dataSize;
+}
+
+int gul::AudioFrame::GetDataSize(void) const
+{
+  return m_dataSize;
+}
+
+int gul::AudioFrame::GetSampleCount(void) const
+{
+  return m_sampleCount;
+}
+
+int16_t* gul::AudioFrame::GetData(void)
+{
+  return m_data;
+}
+
+const int16_t* gul::AudioFrame::GetData(void) const
+{
+  return m_data;
+}

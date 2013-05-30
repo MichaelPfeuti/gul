@@ -25,6 +25,8 @@ gul_add_test(Media MediaReader FrameCountOgv)
 
 gul_add_test(Media MediaReader ReadTwice)
 
+gul_add_test(Media MediaReader ReadMp3)
+
 
 gul_add_test(Media MediaWriter FirstFrameMkv)
 gul_add_test(Media MediaWriter LastFrameMkv)

@@ -52,11 +52,11 @@ namespace gul
   class GUL_EXPORT MediaReader
   {
     public:
-      MediaReader(const gul::File& rVideoPath);
+      MediaReader(const gul::File& rPath);
       ~MediaReader(void);
 
-      bool OpenVideo(void);
-      void CloseVideo(void);
+      bool Open(void);
+      void Close(void);
 
       bool IsFrameValid(void) const;
 
@@ -69,6 +69,8 @@ namespace gul
       // Audio
       void GetNext(AudioFrame& rFrame);
       bool HasAudio(void) const;
+      int GetChannels(void) const;
+      int GetSampleRate(void) const;
 
       // Media
       void GetNext(MediaFrame& rFrame);
@@ -85,6 +87,7 @@ namespace gul
       bool isAudioPacket(const AVPacket& rPacket) const;
 
       void allocateFrame(VideoFrame& rFrame) const;
+      void allocateFrame(AudioFrame& rFrame) const;
 
       friend class gul::MediaConverter;
 
@@ -93,6 +96,7 @@ namespace gul
       void allocateVideoStructures(void);
       void deleteVideoStructures(void);
       void setData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
+      void setData(AudioFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
       bool decodeRemaining(VideoFrame& rFrame);
       int openCodec(int type, AVCodecContext *&pContext);
 

@@ -66,7 +66,7 @@ namespace TestMediaWriter
     TEST_TRUE(WriteVideoData(video));
 
     gul::MediaReader loader(video);
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     loader.GetNext(frame);
@@ -85,7 +85,7 @@ namespace TestMediaWriter
     TEST_TRUE(WriteVideoData(video));
 
     gul::MediaReader loader(video);
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     int frameCount = 1;
@@ -112,7 +112,7 @@ namespace TestMediaWriter
     TEST_TRUE(WriteVideoData(video));
 
     gul::MediaReader loader(video);
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     gul::VideoFrame framePrev;
@@ -137,7 +137,7 @@ namespace TestMediaWriter
     TEST_TRUE(WriteVideoData(video));
 
     gul::MediaReader loader(video);
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     int frameCount = 0;

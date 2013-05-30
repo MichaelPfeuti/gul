@@ -39,12 +39,17 @@ namespace gul
   {
     public:
       AudioFrame(void);
-      //AudioFrame(const gul::Image& img);
-      //AudioFrame(int w, int h, ImageFormat dataImageFormat);
-      //AudioFrame(const AudioFrame& rImage);
-      virtual ~AudioFrame(void);
+      AudioFrame(int channels, int sampleRate);
+      ~AudioFrame(void);
 
-      AudioFrame& operator=(const AudioFrame& other);
+      void SetData(const int16_t *pData, int sampleCount);
+      int16_t* GetData(void);
+      const int16_t* GetData(void) const;
+      int GetDataSize(void) const ;
+
+      int GetChannels(void) const;
+      int GetSampleRate(void) const;
+      int GetSampleCount(void) const;
 
       void SetPresentationTime(float pts);
       float GetPresentationTime(void) const;
@@ -56,8 +61,13 @@ namespace gul
       //using Image::operator =;
 
     private:
+      int m_channels;
+      int m_sampleRate;
       float m_presentationTime; //!< PTS in seconds
       uint64_t m_frameIndex;
+      int m_sampleCount;
+      int16_t* m_data;
+      int m_dataSize;
   };
 
 }

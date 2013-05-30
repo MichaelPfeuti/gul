@@ -46,7 +46,7 @@ void gul::MediaConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameMan
   GUL_DELETE(pManipulator);
   pManipulator = &rManipulator;
 
-  pMediaReader->OpenVideo();
+  pMediaReader->Open();
   GUL_DELETE(pMediaWriter);
   pMediaWriter = new gul::MediaWriter(rOutputVideo);
   pMediaWriter->setSize(rManipulator.GetResultWidth(pMediaReader->GetWidth()),
@@ -90,6 +90,6 @@ void gul::MediaConverter::Execute(void)
     pMediaWriter->AddFrame(output);
   }
 
-  pMediaReader->CloseVideo();
+  pMediaReader->Close();
   pMediaWriter->CloseVideo();
 }

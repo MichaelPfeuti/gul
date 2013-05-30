@@ -68,7 +68,7 @@ namespace TestMediaConverter
     gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
 
     gul::MediaReader loader(output);
-    loader.OpenVideo();
+    loader.Open();
     gul::VideoFrame frame;
     gul::VideoFrame prevFrame;
 

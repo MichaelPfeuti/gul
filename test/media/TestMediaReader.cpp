@@ -31,6 +31,7 @@
 #include "MediaReader.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"
+#include "AudioFrame.h"
 #include "VideoFrame.h"
 
 namespace TestMediaReader
@@ -39,7 +40,7 @@ namespace TestMediaReader
   int FirstFrame(const gul::String& file, float threshold)
   {
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     loader.GetNext(frame);
@@ -55,7 +56,7 @@ namespace TestMediaReader
   int MiddleFrame(const gul::String& file, float threshold)
   {
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     int frameCount = 1;
@@ -79,7 +80,7 @@ namespace TestMediaReader
   int LastFrame(const gul::String& file, float threshold)
   {
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     gul::VideoFrame framePrev;
@@ -101,7 +102,7 @@ namespace TestMediaReader
   int FrameCount(const gul::String& file, int count)
   {
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     int frameCount = 0;
@@ -220,7 +221,7 @@ namespace TestMediaReader
   int ReadTwice(void)
   {
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
-    loader.OpenVideo();
+    loader.Open();
 
     gul::VideoFrame frame;
     int frameCount = 0;
@@ -231,9 +232,9 @@ namespace TestMediaReader
       loader.GetNext(frame);
     }
     TEST_EQUAL(frameCount, 50);
-    loader.CloseVideo();
+    loader.Close();
 
-    loader.OpenVideo();
+    loader.Open();
     frameCount = 0;
     loader.GetNext(frame);
     while(loader.IsFrameValid())
@@ -242,6 +243,28 @@ namespace TestMediaReader
       loader.GetNext(frame);
     }
     TEST_EQUAL(frameCount, 50);
+
+    return EXIT_SUCCESS;
+  }
+
+  int ReadMp3(void)
+  {
+
+    gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("audio"), gul::String("acdc.mp3")));
+    loader.Open();
+
+    gul::AudioFrame frame;
+    int frameCount = 0;
+    loader.GetNext(frame);
+    while(loader.IsFrameValid())
+    {
+      TEST_TRUE(loader.IsFrameValid());
+      ++frameCount;
+      loader.GetNext(frame);
+    }
+    //gul::ImageFileHandler::Instance().Save(gul::File("test.png"), frame);
+
+    loader.Close();
 
     return EXIT_SUCCESS;
   }
