@@ -5,7 +5,7 @@ add_subdirectory(image)
 add_subdirectory(math)
 add_subdirectory(memory)
 add_subdirectory(persistance)
-add_subdirectory(video)
+add_subdirectory(media)
 
 set_target_properties(algorithms  PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(base        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
@@ -14,7 +14,7 @@ set_target_properties(image       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(math        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(memory      PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(persistance PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(video       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(media       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 add_library(gul SHARED $<TARGET_OBJECTS:algorithms>
                        $<TARGET_OBJECTS:base>
@@ -23,7 +23,7 @@ add_library(gul SHARED $<TARGET_OBJECTS:algorithms>
                        $<TARGET_OBJECTS:math>
                        $<TARGET_OBJECTS:memory>
                        $<TARGET_OBJECTS:persistance>
-                       $<TARGET_OBJECTS:video>)
+                       $<TARGET_OBJECTS:media>)
 generate_export_header(gul)
 
 if(FFMPEG_FOUND)

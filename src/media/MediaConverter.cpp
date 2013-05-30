@@ -26,70 +26,70 @@
 **
 ***************************************************************************/
 
-#include "VideoConverter.h"
+#include "MediaConverter.h"
 #include "VideoFrameManipulator.h"
-#include "VideoLoader.h"
-#include "VideoSaver.h"
+#include "MediaReader.h"
+#include "MediaWriter.h"
 #include "VideoFrame.h"
 #include "Misc.h"
 
-gul::VideoConverter::VideoConverter(const gul::File& rInputVideo)
-  : pVideoLoader(new gul::VideoLoader(rInputVideo)),
-    pVideoSaver(nullptr),
+gul::MediaConverter::MediaConverter(const gul::File& rInputVideo)
+  : pMediaReader(new gul::MediaReader(rInputVideo)),
+    pMediaWriter(nullptr),
     pManipulator(nullptr)
 {
 
 }
 
-void gul::VideoConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameManipulator& rManipulator)
+void gul::MediaConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameManipulator& rManipulator)
 {
   GUL_DELETE(pManipulator);
   pManipulator = &rManipulator;
 
-  pVideoLoader->OpenVideo();
-  GUL_DELETE(pVideoSaver);
-  pVideoSaver = new gul::VideoSaver(rOutputVideo);
-  pVideoSaver->setSize(rManipulator.GetResultWidth(pVideoLoader->GetWidth()),
-                       rManipulator.GetResultHeight(pVideoLoader->GetHeight()));
-  pVideoSaver->openVideo(*pVideoLoader->m_pFormatCtx);
+  pMediaReader->OpenVideo();
+  GUL_DELETE(pMediaWriter);
+  pMediaWriter = new gul::MediaWriter(rOutputVideo);
+  pMediaWriter->setSize(rManipulator.GetResultWidth(pMediaReader->GetWidth()),
+                       rManipulator.GetResultHeight(pMediaReader->GetHeight()));
+  pMediaWriter->openVideo(*pMediaReader->m_pFormatCtx);
 }
 
-void gul::VideoConverter::Execute(void)
+void gul::MediaConverter::Execute(void)
 {
   gul::VideoFrame input;
   gul::VideoFrame output;
 
-  pVideoLoader->allocateVideoFrame(input);
+  pMediaReader->allocateFrame(input);
 
   // copy video
-  AVPacket* pPacket = pVideoLoader->getNextPacket();
+  AVPacket* pPacket = pMediaReader->getNextPacket();
   while(pPacket != nullptr)
   {
-    if(pVideoLoader->isVideoPacket(*pPacket))
+    if(pMediaReader->isVideoPacket(*pPacket))
     {
-      if(pVideoLoader->decodeVideoPacket(*pPacket, input))
+      if(pMediaReader->decodePacket(*pPacket, input))
       {
         pManipulator->Execute(input, output);
         output.SetPresentationTime(input.GetPresentationTime());
         output.SetFrameIndex(input.GetFrameIndex());
-        pVideoSaver->AddFrame(output);
+        pMediaWriter->AddFrame(output);
       }
     }
     else
     {
-      pVideoSaver->writePacket(*pPacket);
+      pMediaWriter->writePacket(*pPacket);
     }
-    pPacket = pVideoLoader->getNextPacket();
+    pPacket = pMediaReader->getNextPacket();
   }
 
-  while(pVideoLoader->decodeRemaining(input))
+  while(pMediaReader->decodeRemaining(input))
   {
     pManipulator->Execute(input, output);
     output.SetPresentationTime(input.GetPresentationTime());
     output.SetFrameIndex(input.GetFrameIndex());
-    pVideoSaver->AddFrame(output);
+    pMediaWriter->AddFrame(output);
   }
 
-  pVideoLoader->CloseVideo();
-  pVideoSaver->CloseVideo();
+  pMediaReader->CloseVideo();
+  pMediaWriter->CloseVideo();
 }

@@ -28,17 +28,44 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "VideoLoader.h"
+#include "MediaReader.h"
+#include "MediaWriter.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"
 #include "VideoFrame.h"
 
-namespace TestVideoLoader
+namespace TestMediaWriter
 {
+  bool WriteVideoData(const gul::File& video)
+  {
+    gul::VideoFrame first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
+    gul::MediaWriter saver(video, first.GetWidth(), first.GetHeight());
+    saver.OpenVideo();
+    for(int i = 0; i < 15; ++i)
+    {
+      saver.AddFrame(first);
+    }
+    gul::VideoFrame middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
+    for(int i = 0; i < 15; ++i)
+    {
+      saver.AddFrame(middle);
+    }
+    gul::VideoFrame last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
+    for(int i = 0; i < 15; ++i)
+    {
+      saver.AddFrame(last);
+    }
+    saver.CloseVideo();
+
+    return true;
+  }
 
   int FirstFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
+    gul::File video = gul::CTestData::GetTempFilePath(file);
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::MediaReader loader(video);
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -54,7 +81,10 @@ namespace TestVideoLoader
 
   int MiddleFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
+    gul::File video = gul::CTestData::GetTempFilePath(file);
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::MediaReader loader(video);
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -62,7 +92,7 @@ namespace TestVideoLoader
 
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
-    while(loader.IsFrameValid() && frameCount < 32)
+    while(loader.IsFrameValid() && frameCount < 30)
     {
       loader.GetNext(frame);
       ++frameCount;
@@ -78,7 +108,10 @@ namespace TestVideoLoader
 
   int LastFrame(const gul::String& file, float threshold)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
+    gul::File video = gul::CTestData::GetTempFilePath(file);
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::MediaReader loader(video);
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -100,7 +133,10 @@ namespace TestVideoLoader
 
   int FrameCount(const gul::String& file, int count)
   {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), file));
+    gul::File video = gul::CTestData::GetTempFilePath(file);
+    TEST_TRUE(WriteVideoData(video));
+
+    gul::MediaReader loader(video);
     loader.OpenVideo();
 
     gul::VideoFrame frame;
@@ -119,131 +155,102 @@ namespace TestVideoLoader
 
   int FirstFrameMkv(void)
   {
-    return FirstFrame("firefly.mkv", 0.f);
+    return FirstFrame("firstFrame.mkv", 0.004f);
   }
 
   int MiddleFrameMkv(void)
   {
-    return MiddleFrame("firefly.mkv", 0.f);
+    return MiddleFrame("middleFrame.mkv", 0.003f);
   }
 
   int LastFrameMkv(void)
   {
-    return LastFrame("firefly.mkv", 0.f);
+    return LastFrame("lastFrame.mkv", 0.004f);
   }
 
   int FrameCountMkv(void)
   {
-    return FrameCount("firefly.mkv", 50);
+    return FrameCount("frameCount.mkv", 45);
   }
 
   int FirstFrameMp4(void)
   {
-    return FirstFrame("firefly.mp4", 0.001f);
+    return FirstFrame("firstFrame.mp4", 0.004f);
   }
 
   int MiddleFrameMp4(void)
   {
-    return MiddleFrame("firefly.mp4", 0.0025f);
+    return MiddleFrame("middleFrame.mp4", 0.003f);
   }
 
   int LastFrameMp4(void)
   {
-    return LastFrame("firefly.mp4", 0.0035f);
+    return LastFrame("lastFrame.mp4", 0.004f);
   }
 
   int FrameCountMp4(void)
   {
-    return FrameCount("firefly.mp4", 52);
+    return FrameCount("frameCount.mp4", 45);
   }
 
   int FirstFrameAvi(void)
   {
-    return FirstFrame("firefly.avi", 0.0025f);
+    return FirstFrame("firstFrame.avi", 0.0041f);
   }
 
   int MiddleFrameAvi(void)
   {
-    return MiddleFrame("firefly.avi", 0.005f);
+    return MiddleFrame("middleFrame.avi", 0.0041f);
   }
 
   int LastFrameAvi(void)
   {
-    return LastFrame("firefly.avi", 0.006f);
+    return LastFrame("lastFrame.avi", 0.0046f);
   }
 
   int FrameCountAvi(void)
   {
-    return FrameCount("firefly.avi", 50);
+    return FrameCount("frameCount.avi", 45);
   }
 
   int FirstFrameMov(void)
   {
-    return FirstFrame("firefly.mov", 0.001f);
+    return FirstFrame("firstFrame.mov", 0.004f);
   }
 
   int MiddleFrameMov(void)
   {
-    return MiddleFrame("firefly.mov", 0.0025f);
+    return MiddleFrame("middleFrame.mov", 0.003f);
   }
 
   int LastFrameMov(void)
   {
-    return LastFrame("firefly.mov", 0.0035f);
+    return LastFrame("lastFrame.mov", 0.004f);
   }
 
   int FrameCountMov(void)
   {
-    return FrameCount("firefly.mov", 52);
+    return FrameCount("frameCount.mov", 45);
   }
 
   int FirstFrameOgv(void)
   {
-    return FirstFrame("firefly.ogv", 0.0027f);
+    return FirstFrame("firstFrame.ogv", 0.0045f);
   }
 
   int MiddleFrameOgv(void)
   {
-    return MiddleFrame("firefly.ogv", 0.005f);
+    return MiddleFrame("middleFrame.ogv", 0.f);
   }
 
   int LastFrameOgv(void)
   {
-    return LastFrame("firefly.ogv", 0.0061f);
+    return LastFrame("lastFrame.ogv", 0.0045f);
   }
 
   int FrameCountOgv(void)
   {
-    return FrameCount("firefly.ogv", 52);
-  }
-
-  int ReadTwice(void)
-  {
-    gul::VideoLoader loader(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
-    loader.OpenVideo();
-
-    gul::VideoFrame frame;
-    int frameCount = 0;
-    loader.GetNext(frame);
-    while(loader.IsFrameValid())
-    {
-      ++frameCount;
-      loader.GetNext(frame);
-    }
-    TEST_EQUAL(frameCount, 50);
-    loader.CloseVideo();
-
-    loader.OpenVideo();
-    frameCount = 0;
-    loader.GetNext(frame);
-    while(loader.IsFrameValid())
-    {
-      ++frameCount;
-      loader.GetNext(frame);
-    }
-    TEST_EQUAL(frameCount, 50);
-
-    return EXIT_SUCCESS;
+    return FrameCount("frameCount.ogv", 45);
   }
 }
 

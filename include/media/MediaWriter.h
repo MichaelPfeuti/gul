@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_VIDEO_VIDEO_LOADER_H_
-#define _GUL_VIDEO_VIDEO_LOADER_H_
+#ifndef _GUL_MEDIA_MEDIA_WRITER_H_
+#define _GUL_MEDIA_MEDIA_WRITER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,65 +29,69 @@
 **
 ***************************************************************************/
 
+#include "File.h"
+
 #include <cstdint>
 
-#include "File.h"
 namespace gul
 {
   class VideoFrame;
-  class VideoConverter;
+  class MediaReader;
+  class MediaConverter;
 }
-
 class AVFormatContext;
 class AVCodecContext;
 class AVFrame;
 class AVPacket;
+class AVCodec;
 class SwsContext;
+class AVStream;
 
 
 namespace gul
 {
 
-  class GUL_EXPORT VideoLoader
+  class GUL_EXPORT MediaWriter
   {
     public:
-      VideoLoader(const gul::File& rVideoPath);
-      ~VideoLoader(void);
+      MediaWriter(const gul::File& rVideoPath, int width, int height, int fps = 30, int bitrate = 4000000);
+      ~MediaWriter(void);
 
       bool OpenVideo(void);
       void CloseVideo(void);
-      bool IsFrameValid(void) const;
-      void GetNext(VideoFrame& rFrame);
-      int GetWidth(void) const;
-      int GetHeight(void) const;
+      void AddFrame(const gul::VideoFrame& rFrame);
 
     private:
-      AVPacket* getNextPacket(void);
-      void freePacket(void);
-      bool decodeVideoPacket(AVPacket& rPacket, VideoFrame& rFrame);
-      bool isVideoPacket(const AVPacket& rPacket) const;
-      void allocateVideoFrame(VideoFrame& rFrame) const;
-      friend class gul::VideoConverter;
+      MediaWriter(const gul::File& rVideoPath);
+      void setSize(int width, int height);
+      bool openVideo(const AVFormatContext& rInputFormatCtx);
+      bool writePacket(AVPacket& rPacket);
+      friend class gul::MediaConverter;
 
     private:
-      bool readNextImage(VideoFrame& rFrame);
-      void setImageData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
-      bool decodeRemaining(VideoFrame& rFrame);
+      void copyVideoEncoderCtxSettings(const AVCodecContext& ctx);
+      void setDafaultVideoEncoderCtxSettings(void);
+      void fillFrameRGBA(const gul::VideoFrame& rFrame);
+      bool encodeAndSaveVideoFrame(AVFrame* pFrameToEncode);
+      void allocateStructures(void);
+      void prepareOutputFile(void);
 
     private:
       const gul::File m_path;
       AVFormatContext* m_pFormatCtx;
       AVCodecContext* m_pVideoCodecCtx;
       SwsContext* m_pSWSContext;
-      AVPacket* m_pPacket;
+      AVStream* m_pVideoStream;
+      AVCodec* m_pVideoCodec;
       AVFrame* m_pFrame;
       AVFrame* m_pFrameRGBA;
-      uint8_t* m_pDataBufferRGBA;
-      bool m_isFrameValid;
-      bool m_isVideoOpen;
-      bool m_isPacketDataFreed;
-      int m_videoStreamIndex;
-      int m_currentFrameIndex;
+      bool m_isClosed;
+      int m_videoWidth;
+      int m_videoHeight;
+      int m_videoFPS;
+      int m_videoBitrate;
+      const bool usePTSFromFrames;
+
       static bool codecsAreRegistered;
   };
 

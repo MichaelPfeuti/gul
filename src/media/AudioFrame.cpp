@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_VIDEO_VIDEO_FRAME_MANIPULATOR_H_
-#define _GUL_VIDEO_VIDEO_FRAME_MANIPULATOR_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,23 +26,55 @@
 **
 ***************************************************************************/
 
-namespace gul
+#include "AudioFrame.h"
+
+gul::AudioFrame::AudioFrame(void)
 {
-  template<typename T>
-  class ImageT;
-  typedef ImageT<unsigned char> Image;
 }
 
-namespace gul
+//gul::AudioFrame::AudioFrame(const gul::Image& img)
+//  : gul::Image(img),
+//    m_presentationTime(0),
+//    m_frameIndex(0)
+//{
+//}
+
+//gul::AudioFrame::AudioFrame(int w, int h, ImageFormat dataImageFormat)
+//  : gul::Image(w, h, dataImageFormat)
+//{
+
+//}
+
+gul::AudioFrame::~AudioFrame(void)
 {
-  class VideoFrameManipulator
-  {
-    public:
-      virtual ~VideoFrameManipulator(void) {}
-      virtual void Execute(const gul::Image& input, gul::Image& output) = 0;
-      virtual int GetResultWidth(int inputWidth) const = 0;
-      virtual int GetResultHeight(int inputHeight) const = 0;
-  };
 }
 
-#endif
+//gul::AudioFrame& gul::AudioFrame::operator=(const gul::AudioFrame& other)
+//{
+//  gul::Image::operator =(other);
+//  m_presentationTime = other.m_presentationTime;
+//  m_frameIndex = other.m_frameIndex;
+//  return *this;
+//}
+
+void gul::AudioFrame::SetPresentationTime(float pts)
+{
+  m_presentationTime = pts;
+}
+
+
+float gul::AudioFrame::GetPresentationTime(void) const
+{
+  return m_presentationTime;
+}
+
+void gul::AudioFrame::SetFrameIndex(uint64_t index)
+{
+  m_frameIndex = index;
+}
+
+uint64_t gul::AudioFrame::GetFrameIndex(void) const
+{
+  return m_frameIndex;
+}
+

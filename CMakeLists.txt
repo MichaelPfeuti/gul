@@ -51,8 +51,8 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/image")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/math")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/memory")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/persistance")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/video")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/video/manipulator")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/media")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/media/manipulator")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/src")
 
 # source files

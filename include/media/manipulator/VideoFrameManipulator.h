@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_VIDEO_VFM_2D_TO_SBS_DELAY_H_
-#define _GUL_VIDEO_VFM_2D_TO_SBS_DELAY_H_
+#ifndef _GUL_MEDIA_VIDEO_FRAME_MANIPULATOR_H_
+#define _GUL_MEDIA_VIDEO_FRAME_MANIPULATOR_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,26 +29,22 @@
 **
 ***************************************************************************/
 
-#include "VideoFrameManipulator.h"
-#include "Image.h"
-#include "ConverterImageToSBS.h"
+namespace gul
+{
+  template<typename T>
+  class ImageT;
+  typedef ImageT<unsigned char> Image;
+}
 
 namespace gul
 {
-  class GUL_EXPORT VFM2DToSBSDelay : public VideoFrameManipulator
+  class VideoFrameManipulator
   {
     public:
-      VFM2DToSBSDelay(void);
-      virtual ~VFM2DToSBSDelay(void);
-      void SetParameter(int delay);
-      virtual void Execute(const gul::Image& input, gul::Image& output);
-      virtual int GetResultWidth(int inputWidth) const;
-      virtual int GetResultHeight(int inputHeight) const;
-
-    private:
-      gul::Image m_lastFrame;
-      ConverterImageToSBS m_converter;
-      int m_delay;
+      virtual ~VideoFrameManipulator(void) {}
+      virtual void Execute(const gul::Image& input, gul::Image& output) = 0;
+      virtual int GetResultWidth(int inputWidth) const = 0;
+      virtual int GetResultHeight(int inputHeight) const = 0;
   };
 }
 

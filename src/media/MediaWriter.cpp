@@ -26,10 +26,10 @@
 **
 ***************************************************************************/
 
-#include "VideoSaver.h"
+#include "MediaWriter.h"
 #include "Assert.h"
 #include "VideoFrame.h"
-#include "VideoLoader.h"
+#include "MediaReader.h"
 
 extern "C"
 {
@@ -38,9 +38,9 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-bool gul::VideoSaver::codecsAreRegistered = false;
+bool gul::MediaWriter::codecsAreRegistered = false;
 
-gul::VideoSaver::VideoSaver(const gul::File& rVideoPath,
+gul::MediaWriter::MediaWriter(const gul::File& rVideoPath,
                             int width, int height,
                             int fps, int bitrate)
   : m_path(rVideoPath),
@@ -64,7 +64,7 @@ gul::VideoSaver::VideoSaver(const gul::File& rVideoPath,
   }
 }
 
-gul::VideoSaver::VideoSaver(const gul::File& rVideoPath)
+gul::MediaWriter::MediaWriter(const gul::File& rVideoPath)
   : m_path(rVideoPath),
     m_pFormatCtx(nullptr),
     m_pVideoCodecCtx(nullptr),
@@ -86,19 +86,19 @@ gul::VideoSaver::VideoSaver(const gul::File& rVideoPath)
   }
 }
 
-gul::VideoSaver::~VideoSaver(void)
+gul::MediaWriter::~MediaWriter(void)
 {
   if(!m_isClosed)
     CloseVideo();
 }
 
-void gul::VideoSaver::setSize(int width, int height)
+void gul::MediaWriter::setSize(int width, int height)
 {
   m_videoWidth = width;
   m_videoHeight = height;
 }
 
-bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
+bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
 {
   ASSERT(m_isClosed);
   ASSERT(m_path.IsPathValid());
@@ -189,7 +189,7 @@ bool gul::VideoSaver::openVideo(const AVFormatContext& rInputFormatCtx)
   return true;
 }
 
-bool gul::VideoSaver::OpenVideo(void)
+bool gul::MediaWriter::OpenVideo(void)
 {
   ASSERT(m_isClosed);
   ASSERT(m_path.IsPathValid());
@@ -228,7 +228,7 @@ bool gul::VideoSaver::OpenVideo(void)
   return true;
 }
 
-void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
+void gul::MediaWriter::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
 {
   // NOTE: most things are copied from the function transcode_init in ffmpeg.c
 
@@ -284,7 +284,7 @@ void gul::VideoSaver::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
     m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
 }
 
-void gul::VideoSaver::setDafaultVideoEncoderCtxSettings(void)
+void gul::MediaWriter::setDafaultVideoEncoderCtxSettings(void)
 {
   // Get a pointer to the codec context for the video stream
   m_pVideoCodecCtx = m_pVideoStream->codec;
@@ -310,7 +310,7 @@ void gul::VideoSaver::setDafaultVideoEncoderCtxSettings(void)
     m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
 }
 
-void gul::VideoSaver::allocateStructures(void)
+void gul::MediaWriter::allocateStructures(void)
 {
   // Allocate video frame
   m_pFrame = avcodec_alloc_frame();
@@ -330,7 +330,7 @@ void gul::VideoSaver::allocateStructures(void)
                                      SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
-void gul::VideoSaver::prepareOutputFile(void)
+void gul::MediaWriter::prepareOutputFile(void)
 {
   /* open the output file*/
   if(avio_open(&m_pFormatCtx->pb, m_path.GetPath().GetData(), AVIO_FLAG_WRITE) < 0)
@@ -346,7 +346,7 @@ void gul::VideoSaver::prepareOutputFile(void)
   }
 }
 
-void gul::VideoSaver::CloseVideo(void)
+void gul::MediaWriter::CloseVideo(void)
 {
   ASSERT(!m_isClosed);
 
@@ -395,7 +395,7 @@ void gul::VideoSaver::CloseVideo(void)
   m_isClosed = true;
 }
 
-void gul::VideoSaver::AddFrame(const gul::VideoFrame& rFrame)
+void gul::MediaWriter::AddFrame(const gul::VideoFrame& rFrame)
 {
   ASSERT_MSG(rFrame.GetHeight() == m_pVideoCodecCtx->height, "Image height does not match video height!");
   ASSERT_MSG(rFrame.GetWidth() == m_pVideoCodecCtx->width, "Image width does not match video width!");
@@ -422,7 +422,7 @@ void gul::VideoSaver::AddFrame(const gul::VideoFrame& rFrame)
   }
 }
 
-bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
+bool gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
 {
   /* encode the image */
   AVPacket pkt;
@@ -457,7 +457,7 @@ bool gul::VideoSaver::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
   return gotPacket;
 }
 
-bool gul::VideoSaver::writePacket(AVPacket& rPacket)
+bool gul::MediaWriter::writePacket(AVPacket& rPacket)
 {
   return av_interleaved_write_frame(m_pFormatCtx, &rPacket) >= 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_VIDEO_VIDEO_CONVERTER_H_
-#define _GUL_VIDEO_VIDEO_CONVERTER_H_
+#ifndef _GUL_MEDIA_VIDEO_CONVERTER_H_
+#define _GUL_MEDIA_VIDEO_CONVERTER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -35,24 +35,24 @@ namespace gul
 {
   class File;
   class VideoFrameManipulator;
-  class VideoLoader;
-  class VideoSaver;
+  class MediaReader;
+  class MediaWriter;
 }
 
 namespace gul
 {
 
-  class GUL_EXPORT VideoConverter
+  class GUL_EXPORT MediaConverter
   {
     public:
-      VideoConverter(const gul::File& rInputVideo);
+      MediaConverter(const gul::File& rInputVideo);
 
       void Init(const File& rOutputVideo, gul::VideoFrameManipulator& rManipulator);
       void Execute(void);
 
     private:
-      gul::VideoLoader* pVideoLoader;
-      gul::VideoSaver* pVideoSaver;
+      gul::MediaReader* pMediaReader;
+      gul::MediaWriter* pMediaWriter;
       gul::VideoFrameManipulator* pManipulator;
   };
 }

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_VIDEO_VIDEO_FRAME_H_
-#define _GUL_VIDEO_VIDEO_FRAME_H_
+#ifndef _GUL_MEDIA_VFM_2D_TO_SBS_DELAY_H_
+#define _GUL_MEDIA_VFM_2D_TO_SBS_DELAY_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,38 +29,27 @@
 **
 ***************************************************************************/
 
+#include "VideoFrameManipulator.h"
 #include "Image.h"
-#include <cstdint>
+#include "ConverterImageToSBS.h"
 
 namespace gul
 {
-
-  class GUL_EXPORT VideoFrame : public gul::Image
+  class GUL_EXPORT VFM2DToSBSDelay : public VideoFrameManipulator
   {
     public:
-      VideoFrame(void);
-      VideoFrame(const gul::Image& img);
-      VideoFrame(int w, int h, ImageFormat dataImageFormat);
-      VideoFrame(const VideoFrame& rImage);
-      virtual ~VideoFrame(void);
-
-      VideoFrame& operator=(const VideoFrame& other);
-
-      void SetPresentationTime(float pts);
-      float GetPresentationTime(void) const;
-
-      void SetFrameIndex(uint64_t index);
-      uint64_t GetFrameIndex(void) const;
-
-    protected:
-      using Image::operator =;
+      VFM2DToSBSDelay(void);
+      virtual ~VFM2DToSBSDelay(void);
+      void SetParameter(int delay);
+      virtual void Execute(const gul::Image& input, gul::Image& output);
+      virtual int GetResultWidth(int inputWidth) const;
+      virtual int GetResultHeight(int inputHeight) const;
 
     private:
-      float m_presentationTime; //!< PTS in seconds
-      uint64_t m_frameIndex;
+      gul::Image m_lastFrame;
+      ConverterImageToSBS m_converter;
+      int m_delay;
   };
-
 }
-
 
 #endif

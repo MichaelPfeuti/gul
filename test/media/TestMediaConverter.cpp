@@ -28,15 +28,15 @@
 
 #include "CTestAssert.h"
 #include "CTestData.h"
-#include "VideoLoader.h"
+#include "MediaReader.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"
-#include "VideoConverter.h"
+#include "MediaConverter.h"
 #include "VideoFrame.h"
 #include "VideoFrameManipulator.h"
 #include "VFM2DToSBSDelay.h"
 
-namespace TestVideoConverter
+namespace TestMediaConverter
 {
   class CopyManipulator : public gul::VideoFrameManipulator
   {
@@ -59,7 +59,7 @@ namespace TestVideoConverter
   {
     gul::File output = gul::CTestData::GetTempFilePath(file);
     CopyManipulator manipulator;
-    gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), file));
+    gul::MediaConverter converter(gul::CTestData::GetFilePath(gul::String("video"), file));
     converter.Init(output, manipulator);
     converter.Execute();
 
@@ -67,7 +67,7 @@ namespace TestVideoConverter
     gul::Image middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
     gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
 
-    gul::VideoLoader loader(output);
+    gul::MediaReader loader(output);
     loader.OpenVideo();
     gul::VideoFrame frame;
     gul::VideoFrame prevFrame;
@@ -125,7 +125,7 @@ namespace TestVideoConverter
     gul::File output = gul::CTestData::GetTempFilePath(gul::String("fireflySBSDelay.mkv"));
     gul::VFM2DToSBSDelay manipulator;
     manipulator.SetParameter(2);
-    gul::VideoConverter converter(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
+    gul::MediaConverter converter(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly.mkv")));
     converter.Init(output, manipulator);
     converter.Execute();
 
