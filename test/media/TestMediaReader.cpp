@@ -247,22 +247,20 @@ namespace TestMediaReader
     return EXIT_SUCCESS;
   }
 
-  int ReadMp3(void)
+  int ReadMp3Cover(void)
   {
+    gul::Image gt = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("audio"), gul::String("acdcCover.png")));
 
     gul::MediaReader loader(gul::CTestData::GetFilePath(gul::String("audio"), gul::String("acdc.mp3")));
-    loader.Open();
+    TEST_TRUE(loader.Open());
 
-    gul::AudioFrame frame;
-    int frameCount = 0;
+    gul::VideoFrame frame;
     loader.GetNext(frame);
-    while(loader.IsFrameValid())
-    {
-      TEST_TRUE(loader.IsFrameValid());
-      ++frameCount;
-      loader.GetNext(frame);
-    }
-    //gul::ImageFileHandler::Instance().Save(gul::File("test.png"), frame);
+    TEST_EQUAL_IMAGE(frame, gt, 0.f);
+    TEST_TRUE(loader.IsFrameValid());
+
+    loader.GetNext(frame);
+    TEST_FALSE(loader.IsFrameValid());
 
     loader.Close();
 
