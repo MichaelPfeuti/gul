@@ -47,14 +47,14 @@ namespace gul
   GUL_EXPORT extern AssertionMode AssertionModeInUse;
 }
 
-#define ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__);
-#define ASSERT_MSG(condition, msg) gul::Assert(condition, msg, __LINE__, __FILE__);
-#define FAIL(msg) gul::Assert(false, msg, __LINE__, __FILE__);
+#define GUL_ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__);
+#define GUL_ASSERT_MSG(condition, msg) gul::Assert(condition, msg, __LINE__, __FILE__);
+#define GUL_FAIL(msg) gul::Assert(false, msg, __LINE__, __FILE__);
 
 #else
-#define ASSERT(condition)
-#define ASSERT_MSG(condition, msg)
-#define FAIL(msg)
+#define GUL_ASSERT(condition)
+#define GUL_ASSERT_MSG(condition, msg)
+#define GUL_FAIL(msg)
 
 #endif
 

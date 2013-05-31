@@ -49,7 +49,7 @@ void gul::FilterImageToBW::SetParameter(unsigned char bwThreshold)
 
 void gul::FilterImageToBW::SetParameter(const gul::Image& grayImage)
 {
-  ASSERT_MSG(grayImage.GetImageFormat() == gul::Image::IF_GRAY, "Input must be a grayscale image");
+  GUL_ASSERT_MSG(grayImage.GetImageFormat() == gul::Image::IF_GRAY, "Input must be a grayscale image");
   inputImage = grayImage;
 }
 

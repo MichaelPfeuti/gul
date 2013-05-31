@@ -155,7 +155,7 @@ namespace gul
       template<typename T>
       static void performLoad(T& v, const gul::XMLNode& node)
       {
-        ASSERT_MSG(!node.GetAttribute(refTag).IsValid() &&
+        GUL_ASSERT_MSG(!node.GetAttribute(refTag).IsValid() &&
                    node.GetAttribute(refIndexTag).IsValid(),
                    "When loading a non-pointer we must not have a reference. Otherwise something went terribly wrong!!!!");
 
@@ -169,7 +169,7 @@ namespace gul
       template<typename T>
       static void performLoad(T*& v, const gul::XMLNode& node)
       {
-        ASSERT_MSG(node.GetAttribute(refTag).IsValid() ||
+        GUL_ASSERT_MSG(node.GetAttribute(refTag).IsValid() ||
                    node.GetAttribute(refIndexTag).IsValid(),
                    "Each XML node must and a __ref or __refIndex");
 
@@ -216,7 +216,7 @@ namespace gul
       static gul::String createTypeNameFromXML(const gul::String& typeName)
       {
         int count = typeName.Count(gul::String("-"));
-        ASSERT_MSG(count % 2 == 0, "TypeName must have an even number of -!");
+        GUL_ASSERT_MSG(count % 2 == 0, "TypeName must have an even number of -!");
 
         count >>= 1;
         if(count == 0) return typeName;

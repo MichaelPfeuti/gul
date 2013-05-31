@@ -45,7 +45,7 @@ const gul::String gul::SettingsManager::DELIMITER(":");
 gul::SettingsManager::SettingsManager(const gul::File& rPath)
   : path(rPath)
 {
-  ASSERT_MSG(rPath.IsPathValid(), "The path to the file cannot be empty");
+  GUL_ASSERT_MSG(rPath.IsPathValid(), "The path to the file cannot be empty");
   load();
 }
 
@@ -119,7 +119,7 @@ void gul::SettingsManager::Flush(void)
   if(!file.is_open())
   {
     //TODO: Log
-    FAIL("Config file couldn't be written!");
+    GUL_FAIL("Config file couldn't be written!");
     return;
   }
   gul::MapBasic<String, String>::Iterator it = map.GetIterator();

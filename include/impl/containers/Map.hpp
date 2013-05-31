@@ -80,7 +80,7 @@ void gul::Map<K, V>::load(const gul::XMLNode& node)
     gul::XMLNode valueNode = node.FindChildByAttribute(gul::String("value"), gul::String("idx"), child.GetAttribute(gul::String("idx")).GetString());
 
     // TODO: only log this event or throw exception
-    ASSERT_MSG(valueNode.IsValid(), "Invalid Map XML Data (no matching value found)!");
+    GUL_ASSERT_MSG(valueNode.IsValid(), "Invalid Map XML Data (no matching value found)!");
 
     if(valueNode.IsValid())
     {

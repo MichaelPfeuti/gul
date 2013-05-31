@@ -66,7 +66,7 @@ gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
 
   if((infile = fopen(rPath.GetPath().GetData(), "rb")) == NULL)
   {
-    FAIL("cannot open file!");
+    GUL_FAIL("cannot open file!");
     return gul::Image();
   }
 
@@ -76,7 +76,7 @@ gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
   {
     jpeg_destroy_decompress(&cinfo);
     fclose(infile);
-    FAIL("Invalid JPEG file!");
+    GUL_FAIL("Invalid JPEG file!");
     return gul::Image();
   }
 
@@ -111,7 +111,7 @@ gul::Image gul::ImageIO_JPEG::Load(const gul::File& rPath)
 
   if(jerr.pub.num_warnings != 0)
   {
-    FAIL("Corrupt JPEG file!");
+    GUL_FAIL("Corrupt JPEG file!");
   }
 
   return gulImage;

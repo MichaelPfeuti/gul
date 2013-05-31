@@ -89,20 +89,20 @@ void gul::ImageFileHandler::initializeAllLoaders(void)
 
 gul::Image gul::ImageFileHandler::Load(const gul::File& file) const
 {
-  ASSERT_MSG(file.Exists(), "File does not exist!");
+  GUL_ASSERT_MSG(file.Exists(), "File does not exist!");
 
   gul::ImageIO* io = endingsMap.Get(file.GetSuffix().LowerCase());
-  ASSERT_MSG(io != nullptr, "Unknown Image Input Format!");
+  GUL_ASSERT_MSG(io != nullptr, "Unknown Image Input Format!");
 
   return io->Load(file);
 }
 
 void gul::ImageFileHandler::Save(const gul::File& file, const gul::Image& image) const
 {
-  ASSERT_MSG(file.IsPathValid(), "Invalid Path!");
+  GUL_ASSERT_MSG(file.IsPathValid(), "Invalid Path!");
 
   gul::ImageIO* io = endingsMap.Get(file.GetSuffix().LowerCase());
-  ASSERT_MSG(io != nullptr, "Unknown Image Output Format!");
+  GUL_ASSERT_MSG(io != nullptr, "Unknown Image Output Format!");
 
   io->Save(file, image);
 }

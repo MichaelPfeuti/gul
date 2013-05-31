@@ -30,7 +30,7 @@
 #include "String.h"
 #include "Misc.h"
 
-#include "3rdParty/pugi/pugixml.hpp"
+#include <pugixml.hpp>
 
 gul::XMLNode::XMLNode(const pugi::xml_node& rNode)
   : pNode(new pugi::xml_node)

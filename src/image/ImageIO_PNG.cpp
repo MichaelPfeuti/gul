@@ -39,7 +39,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
   FILE* fp = fopen(rPath.GetPath().GetData(), "rb");
   if(!fp)
   {
-    FAIL("File could not be opened!");
+    GUL_FAIL("File could not be opened!");
     return gul::Image();
   }
 
@@ -47,7 +47,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
 
   if(png_sig_cmp(header, 0, HEADER_SIZE) != 0)
   {
-    FAIL("File is not a PNG file");
+    GUL_FAIL("File is not a PNG file");
     return gul::Image();
   }
 
@@ -55,7 +55,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
   if(png_ptr == NULL)
   {
     fclose(fp);
-    FAIL("Incompatible runtime libpng version!");
+    GUL_FAIL("Incompatible runtime libpng version!");
     return gul::Image();
   }
 
@@ -64,7 +64,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
   {
     fclose(fp);
     png_destroy_read_struct(&png_ptr, NULL, NULL);
-    FAIL("PNG read info could not be created!");
+    GUL_FAIL("PNG read info could not be created!");
     return gul::Image();
   }
 
@@ -72,7 +72,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(fp);
-    FAIL("PNG data could not be read!");
+    GUL_FAIL("PNG data could not be read!");
     return gul::Image();
   }
 
@@ -104,7 +104,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       break;
 
     case PNG_COLOR_TYPE_PALETTE:
-      FAIL("PNG_COLOR_TYPE_PALETTE cannot be read!");
+      GUL_FAIL("PNG_COLOR_TYPE_PALETTE cannot be read!");
       break;
 
     case PNG_COLOR_TYPE_RGB:
@@ -141,7 +141,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       break;
 
     default:
-      FAIL("Unknown PNG_COLOR_TYPE!");
+      GUL_FAIL("Unknown PNG_COLOR_TYPE!");
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
       fclose(fp);
       return gul::Image();
@@ -166,7 +166,7 @@ void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
   fp = fopen(rPath.GetPath().GetData(), "wb");
   if(fp == NULL)
   {
-    FAIL("File could not be opened!");
+    GUL_FAIL("File could not be opened!");
     return;
   }
 
@@ -175,7 +175,7 @@ void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
   if(png_ptr == nullptr)
   {
     fclose(fp);
-    FAIL("Incompatible runtime libpng version!");
+    GUL_FAIL("Incompatible runtime libpng version!");
     return;
   }
 
@@ -184,7 +184,7 @@ void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
   {
     fclose(fp);
     png_destroy_write_struct(&png_ptr,  NULL);
-    FAIL("PNG write info could not be created!");
+    GUL_FAIL("PNG write info could not be created!");
     return;
   }
 
@@ -192,7 +192,7 @@ void gul::ImageIO_PNG::Save(const File& rPath, const Image& rImage)
   {
     fclose(fp);
     png_destroy_write_struct(&png_ptr, &info_ptr);
-    FAIL("PNG data could not be written!");
+    GUL_FAIL("PNG data could not be written!");
     return;
   }
 

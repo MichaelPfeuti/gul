@@ -29,7 +29,7 @@
 #include "XMLDocument.h"
 
 #include "Misc.h"
-#include <3rdParty/pugi/pugixml.hpp>
+#include <pugixml.hpp>
 
 gul::XMLDocument::XMLDocument(void)
   : pDocument(new pugi::xml_document),

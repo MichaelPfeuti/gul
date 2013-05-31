@@ -100,15 +100,15 @@ void gul::MediaWriter::setSize(int width, int height)
 
 bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
 {
-  ASSERT(m_isClosed);
-  ASSERT(m_path.IsPathValid());
-  ASSERT(m_videoWidth % 2 == 0);
-  ASSERT(m_videoHeight % 2 == 0);
+  GUL_ASSERT(m_isClosed);
+  GUL_ASSERT(m_path.IsPathValid());
+  GUL_ASSERT(m_videoWidth % 2 == 0);
+  GUL_ASSERT(m_videoHeight % 2 == 0);
 
   /* allocate the output media context */
   avformat_alloc_output_context2(&m_pFormatCtx, nullptr, nullptr, m_path.GetPath().GetData());
   if(m_pFormatCtx == nullptr)
-    FAIL("Format Output Context cannot be allocated!");
+    GUL_FAIL("Format Output Context cannot be allocated!");
 
 
   /* create the streams */
@@ -118,10 +118,10 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
     if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
     {
       /* find the video encoder */
-      ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+      GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
       m_pVideoCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
       if(m_pVideoCodec == nullptr)
-        FAIL("Codec not found!");
+        GUL_FAIL("Codec not found!");
 
       /* Create new stream and copy settings from input */
       m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
@@ -170,7 +170,7 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
   }
 
   if(m_pVideoStream == nullptr)
-    FAIL("Video Stream could not be created!");
+    GUL_FAIL("Video Stream could not be created!");
 
   /* open the codec */
   int err = avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr);
@@ -178,7 +178,7 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
   {
     char a[255];
     av_strerror(err, a, 255);
-    FAIL(a);
+    GUL_FAIL(a);
   }
 
   allocateStructures();
@@ -191,34 +191,34 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
 
 bool gul::MediaWriter::OpenVideo(void)
 {
-  ASSERT(m_isClosed);
-  ASSERT(m_path.IsPathValid());
-  ASSERT(m_videoWidth % 2 == 0);
-  ASSERT(m_videoHeight % 2 == 0);
-  ASSERT(m_videoFPS > 0);
+  GUL_ASSERT(m_isClosed);
+  GUL_ASSERT(m_path.IsPathValid());
+  GUL_ASSERT(m_videoWidth % 2 == 0);
+  GUL_ASSERT(m_videoHeight % 2 == 0);
+  GUL_ASSERT(m_videoFPS > 0);
 
 
   /* allocate the output media context */
   avformat_alloc_output_context2(&m_pFormatCtx, nullptr, nullptr, m_path.GetPath().GetData());
   if(m_pFormatCtx == nullptr)
-    FAIL("Format Output Context cannot be allocated!");
+    GUL_FAIL("Format Output Context cannot be allocated!");
 
   /* find the video encoder */
-  ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+  GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
   m_pVideoCodec = avcodec_find_encoder(m_pFormatCtx->oformat->video_codec);
   if(m_pVideoCodec == nullptr)
-    FAIL("Codec not found!");
+    GUL_FAIL("Codec not found!");
 
   /* create the video stream */
   m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
   if(m_pVideoStream == nullptr)
-    FAIL("Video Stream could not be created!");
+    GUL_FAIL("Video Stream could not be created!");
 
   setDafaultVideoEncoderCtxSettings();
 
   /* open the codec */
   if(avcodec_open2(m_pVideoCodecCtx, m_pVideoCodec, nullptr) < 0)
-    FAIL("Could not open codec!");
+    GUL_FAIL("Could not open codec!");
 
   allocateStructures();
   prepareOutputFile();
@@ -334,7 +334,7 @@ void gul::MediaWriter::prepareOutputFile(void)
 {
   /* open the output file*/
   if(avio_open(&m_pFormatCtx->pb, m_path.GetPath().GetData(), AVIO_FLAG_WRITE) < 0)
-    FAIL("Video file could not be opened");
+    GUL_FAIL("Video file could not be opened");
 
   /* Write the stream header, if any. */
   int err = avformat_write_header(m_pFormatCtx, nullptr);
@@ -342,13 +342,13 @@ void gul::MediaWriter::prepareOutputFile(void)
   {
       char a[255];
       av_strerror(err, a, 255);
-      FAIL(a);
+      GUL_FAIL(a);
   }
 }
 
 void gul::MediaWriter::CloseVideo(void)
 {
-  ASSERT(!m_isClosed);
+  GUL_ASSERT(!m_isClosed);
 
   // flush encoder
   while(encodeAndSaveVideoFrame(nullptr));
@@ -397,8 +397,8 @@ void gul::MediaWriter::CloseVideo(void)
 
 void gul::MediaWriter::AddFrame(const gul::VideoFrame& rFrame)
 {
-  ASSERT_MSG(rFrame.GetHeight() == m_pVideoCodecCtx->height, "Image height does not match video height!");
-  ASSERT_MSG(rFrame.GetWidth() == m_pVideoCodecCtx->width, "Image width does not match video width!");
+  GUL_ASSERT_MSG(rFrame.GetHeight() == m_pVideoCodecCtx->height, "Image height does not match video height!");
+  GUL_ASSERT_MSG(rFrame.GetWidth() == m_pVideoCodecCtx->width, "Image width does not match video width!");
 
   const unsigned char* pData = rFrame.GetData();
   int pitch = rFrame.GetPitch();
@@ -408,7 +408,7 @@ void gul::MediaWriter::AddFrame(const gul::VideoFrame& rFrame)
                &pData, &pitch,
                0, m_pVideoCodecCtx->height,
                m_pFrame->data, m_pFrame->linesize) < m_pVideoCodecCtx->height)
-    FAIL("Image conversion failed!");
+    GUL_FAIL("Image conversion failed!");
 
   if(usePTSFromFrames)
   {
@@ -434,7 +434,7 @@ bool gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
 
   int gotPacket;
   if(avcodec_encode_video2(m_pVideoCodecCtx, &pkt, pFrameToEncode, &gotPacket) < 0)
-    FAIL("Frame could not be encoded!");
+    GUL_FAIL("Frame could not be encoded!");
 
   if(gotPacket)
   {
@@ -448,7 +448,7 @@ bool gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
 
     /* Write the compressed frame to the media file. */
     if(!writePacket(pkt))
-      FAIL("Encoded packet could not be written!");
+      GUL_FAIL("Encoded packet could not be written!");
 
     av_free_packet(&pkt);
   }

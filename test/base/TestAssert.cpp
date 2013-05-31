@@ -33,8 +33,8 @@ namespace TestAssert
 {
   int Assertion(void)
   {
-    ASSERT(true);
-    TEST_ASSERTION(ASSERT(false));
+    GUL_ASSERT(true);
+    TEST_ASSERTION(GUL_ASSERT(false));
     return EXIT_SUCCESS;
   }
 }

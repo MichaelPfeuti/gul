@@ -34,7 +34,7 @@
 void gul::UploadCDashImage(const gul::String& label,
                      const gul::File& path)
 {
-  ASSERT_MSG(path.GetSuffix().LowerCase().GetData() == gul::String("jpeg") ||
+  GUL_ASSERT_MSG(path.GetSuffix().LowerCase().GetData() == gul::String("jpeg") ||
              path.GetSuffix().LowerCase().GetData() == gul::String("png"),
              "Only PNG or JPEG can be uploaded to CDash!");
 

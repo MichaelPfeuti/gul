@@ -44,7 +44,7 @@ gul::MapBasic<K, V>::~MapBasic(void)
 template<typename K, typename V>
 int gul::MapBasic<K, V>::Size(void) const
 {
-  ASSERT(this->keys.Size() == this->values.Size());
+  GUL_ASSERT(this->keys.Size() == this->values.Size());
   return this->keys.Size();
 }
 
@@ -57,7 +57,7 @@ bool gul::MapBasic<K, V>::IsEmpty(void) const
 template<typename K, typename V>
 V& gul::MapBasic<K, V>::Get(const K& rKey)
 {
-  ASSERT(this->keys.Contains(rKey));
+  GUL_ASSERT(this->keys.Contains(rKey));
 
   int idx = this->keys.IndexOf(rKey);
   return this->values.Get(idx);
@@ -66,7 +66,7 @@ V& gul::MapBasic<K, V>::Get(const K& rKey)
 template<typename K, typename V>
 const V& gul::MapBasic<K, V>::Get(const K& rKey) const
 {
-  ASSERT(this->keys.Contains(rKey));
+  GUL_ASSERT(this->keys.Contains(rKey));
 
   // TODO: duplication
   int idx = this->keys.IndexOf(rKey);
@@ -92,7 +92,7 @@ void gul::MapBasic<K, V>::Add(const K& rKey, const V& rValue)
 template<typename K, typename V>
 void gul::MapBasic<K, V>::Remove(const K& rKey)
 {
-  ASSERT(this->keys.Contains(rKey));
+  GUL_ASSERT(this->keys.Contains(rKey));
 
   int idx = this->keys.IndexOf(rKey);
   this->keys.Remove(idx);

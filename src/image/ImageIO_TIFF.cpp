@@ -37,7 +37,7 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
   TIFF* tif = TIFFOpen(rPath.GetPath().GetData(), "r");
   if(tif == nullptr)
   {
-    FAIL("Could not open TIFF file!");
+    GUL_FAIL("Could not open TIFF file!");
     return gul::Image();
   }
 
@@ -70,7 +70,7 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
   else
   {
     image = gul::Image();
-    FAIL("TIFF file could no be read!");
+    GUL_FAIL("TIFF file could no be read!");
   }
 
   _TIFFfree(raster);
@@ -85,7 +85,7 @@ void gul::ImageIO_TIFF::Save(const gul::File& rPath, const gul::Image& rImage)
   TIFF* out = TIFFOpen(rPath.GetPath().GetData(), "w");
   if(out == nullptr)
   {
-    FAIL("Could not open TIFF file for writing!");
+    GUL_FAIL("Could not open TIFF file for writing!");
     return;
   }
 
@@ -110,7 +110,7 @@ void gul::ImageIO_TIFF::Save(const gul::File& rPath, const gul::Image& rImage)
     memcpy(buf, rImage.GetScanline(row), rImage.GetPitch());
     if(TIFFWriteScanline(out, buf, row, 0) < 0)
     {
-      FAIL("TIFF file could no be written!");
+      GUL_FAIL("TIFF file could no be written!");
     }
   }
   TIFFFlushData(out);

@@ -85,7 +85,7 @@ void gul::ListBasic<T>::Add(const T& rElement)
 template<typename T>
 void gul::ListBasic<T>::Add(const T& rElement, int index)
 {
-  ASSERT(index >= 0);
+  GUL_ASSERT(index >= 0);
 
   int insertIndex = gul::min(index, this->size);
   ListElement<T>* pNew = new ListElement<T>(rElement);
@@ -130,8 +130,8 @@ template<typename T>
 T& gul::ListBasic<T>::Get(int index)
 {
   // TODO: remove code duplication
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   ListElement<T>* pCur = this->pHead;
   while(index > 0)
@@ -145,8 +145,8 @@ T& gul::ListBasic<T>::Get(int index)
 template<typename T>
 const T& gul::ListBasic<T>::Get(int index) const
 {
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   ListElement<T>* pCur = this->pHead;
   while(index > 0)
@@ -183,8 +183,8 @@ int gul::ListBasic<T>::IndexOf(const T& rElement) const
 template<typename T>
 void gul::ListBasic<T>::Remove(int index)
 {
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   if(this->size == 1)
   {
@@ -222,7 +222,7 @@ template<typename T>
 void gul::ListBasic<T>::RemoveElement(const T& rElement)
 {
   int index = this->IndexOf(rElement);
-  ASSERT(index != gul::NOT_FOUND);
+  GUL_ASSERT(index != gul::NOT_FOUND);
   this->Remove(index);
 }
 

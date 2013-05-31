@@ -49,7 +49,7 @@ void gul::FilterImageToGrayscale::SetParameter(GreyscaleFilterType type)
 
 void gul::FilterImageToGrayscale::SetParameter(const gul::Image& colorImage)
 {
-  ASSERT(colorImage.GetImageFormat() == gul::Image::IF_RGBA);
+  GUL_ASSERT(colorImage.GetImageFormat() == gul::Image::IF_RGBA);
 
   inputImage = colorImage;
 }
@@ -87,7 +87,7 @@ void gul::FilterImageToGrayscale::Execute(void)
           break;
 
         default:
-          FAIL("Unknown Grey Conversion Type!");
+          GUL_FAIL("Unknown Grey Conversion Type!");
       }
       outputImage.GetColor(x,y,0) = gray;
       outputImage.GetColor(x,y,1) = gray;

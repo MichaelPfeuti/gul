@@ -154,16 +154,16 @@ void gul::MediaReader::allocateVideoStructures(void)
 
 bool gul::MediaReader::Open(void)
 {
-  ASSERT(!m_isOpen);
-  ASSERT(m_path.IsPathValid());
+  GUL_ASSERT(!m_isOpen);
+  GUL_ASSERT(m_path.IsPathValid());
 
   // Open video file
   if(avformat_open_input(&m_pFormatCtx, m_path.GetPath().GetData(), nullptr, nullptr) != 0)
-    FAIL("Couldn't open file");
+    GUL_FAIL("Couldn't open file");
 
   // Retrieve stream information
   if(avformat_find_stream_info(m_pFormatCtx, nullptr) < 0)
-    FAIL("Couldn't find stream information");
+    GUL_FAIL("Couldn't find stream information");
 
   //av_dump_format(pFormatCtx, 0, path.GetData(), 0);
 
@@ -231,13 +231,13 @@ AVPacket* gul::MediaReader::getNextPacket(void)
 
 bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
 {
-  ASSERT_MSG(rFrame.GetImageFormat() == gul::Image::IF_RGBA, "Video Frame is not RGBA!");
+  GUL_ASSERT_MSG(rFrame.GetImageFormat() == gul::Image::IF_RGBA, "Video Frame is not RGBA!");
 
   int frameFinished;
   // Decode video frame
   int len;
   if((len = avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
-    FAIL("Video decoding failed!");
+    GUL_FAIL("Video decoding failed!");
 
   fprintf(stderr, "%d %d\n", len, rPacket.size);
 
@@ -261,7 +261,7 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::AudioFrame& rFrame)
   // Decode audio frame
   int len;
   if((len = avcodec_decode_audio4(m_pAudioCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
-    FAIL("Audio decoding failed!");
+    GUL_FAIL("Audio decoding failed!");
 
   fprintf(stderr, "%d: %d %d\n", m_pAudioCodecCtx->frame_number, len, rPacket.size);
 
@@ -312,7 +312,7 @@ void gul::MediaReader::setData(gul::VideoFrame& rTargetFrame, const AVFrame* pSo
                  pSourceFrame->data, pSourceFrame->linesize,
                  0, m_pVideoCodecCtx->height,
                  &pData, &pitch) <  m_pVideoCodecCtx->height)
-      FAIL("Image conversion failed!");
+      GUL_FAIL("Image conversion failed!");
   }
   else
   {
@@ -357,7 +357,7 @@ bool gul::MediaReader::IsFrameValid(void) const
 
 void gul::MediaReader::GetNext(gul::VideoFrame& rFrame)
 {
-  ASSERT(HasVideo());
+  GUL_ASSERT(HasVideo());
 
   allocateFrame(rFrame);
 
@@ -383,7 +383,7 @@ void gul::MediaReader::GetNext(gul::VideoFrame& rFrame)
 
 void gul::MediaReader::GetNext(AudioFrame& rFrame)
 {
-  ASSERT(HasAudio());
+  GUL_ASSERT(HasAudio());
 
   allocateFrame(rFrame);
 
@@ -407,7 +407,7 @@ void gul::MediaReader::GetNext(AudioFrame& rFrame)
 
 void gul::MediaReader::GetNext(MediaFrame& rFrame)
 {
-  ASSERT(m_isOpen);
+  GUL_ASSERT(m_isOpen);
 //  AVPacket* packet = getNextPacket();
 //  if(packet != nullptr && isVideoPacket(*packet))
 //  {
@@ -430,36 +430,36 @@ void gul::MediaReader::GetNext(MediaFrame& rFrame)
 
 int gul::MediaReader::GetWidth(void) const
 {
-  ASSERT(HasVideo());
+  GUL_ASSERT(HasVideo());
   return m_pVideoCodecCtx->width;
 }
 
 int gul::MediaReader::GetHeight(void) const
 {
-  ASSERT(HasVideo());
+  GUL_ASSERT(HasVideo());
   return m_pVideoCodecCtx->height;
 }
 
 bool gul::MediaReader::HasAudio(void) const
 {
-  ASSERT(m_isOpen);
+  GUL_ASSERT(m_isOpen);
   return m_audioStreamIndex != AVERROR_STREAM_NOT_FOUND;
 }
 
 bool gul::MediaReader::HasVideo(void) const
 {
-  ASSERT(m_isOpen);
+  GUL_ASSERT(m_isOpen);
   return m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND;
 }
 
 int gul::MediaReader::GetChannels(void) const
 {
-  ASSERT(HasAudio());
+  GUL_ASSERT(HasAudio());
   return m_pAudioCodecCtx->channels;
 }
 
 int gul::MediaReader::GetSampleRate(void) const
 {
-  ASSERT(HasAudio());
+  GUL_ASSERT(HasAudio());
   return m_pAudioCodecCtx->sample_rate;
 }

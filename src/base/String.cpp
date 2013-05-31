@@ -86,7 +86,7 @@ char gul::String::CharAt(int index) const
 gul::String gul::String::Arg(double value, int precision) const
 {
   int idx = this->Find(String("%"));
-  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -97,7 +97,7 @@ gul::String gul::String::Arg(double value, int precision) const
 gul::String gul::String::Arg(int value) const
 {
   int idx = this->Find(String("%"));
-  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -108,7 +108,7 @@ gul::String gul::String::Arg(int value) const
 gul::String gul::String::Arg(long value) const
 {
   int idx = this->Find(String("%"));
-  ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -131,9 +131,9 @@ gul::String gul::String::Arg(const gul::String& rString) const
 
 gul::String gul::String::Replace(const gul::String& rNew, int start, int end) const
 {
-  ASSERT_MSG(0 <= start, "Start must be larger that 0!");
-  ASSERT_MSG(start <= end, "Start must be smaller than end!");
-  ASSERT_MSG(end < this->Size(), "End must be smaller than the size of the string!");
+  GUL_ASSERT_MSG(0 <= start, "Start must be larger that 0!");
+  GUL_ASSERT_MSG(start <= end, "Start must be smaller than end!");
+  GUL_ASSERT_MSG(end < this->Size(), "End must be smaller than the size of the string!");
 
   // this includes the null byte
   int newSize = start + rNew.Size() + this->Size() - end;
@@ -149,7 +149,7 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
 gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSearch) const
 {
   int idx = Find(rSearch);
-  ASSERT_MSG(idx != -1, "String to replace must occur!");
+  GUL_ASSERT_MSG(idx != -1, "String to replace must occur!");
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
@@ -158,7 +158,7 @@ gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSe
 gul::String gul::String::ReplaceBackward(const gul::String& rNew, const gul::String& rSearch) const
 {
   int idx = FindBackward(rSearch);
-  ASSERT_MSG(idx != -1, "String to replace must occur!");
+  GUL_ASSERT_MSG(idx != -1, "String to replace must occur!");
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
@@ -188,8 +188,8 @@ gul::String gul::String::ReplaceAll(const gul::String& rNew, const gul::String& 
 
 gul::String gul::String::Substring(int start, int end) const
 {
-  ASSERT_MSG(start >= 0 && start < this->m_size, "Start index must be positive and smaller than the strings length");
-  ASSERT_MSG(end >= 0 && end <= this->m_size, "End index must be positive and smaller than the strings length");
+  GUL_ASSERT_MSG(start >= 0 && start < this->m_size, "Start index must be positive and smaller than the strings length");
+  GUL_ASSERT_MSG(end >= 0 && end <= this->m_size, "End index must be positive and smaller than the strings length");
 
   char pSubstring[end - start + 1];
   strncpy(pSubstring, this->m_pString + start, end - start);

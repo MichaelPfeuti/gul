@@ -68,7 +68,7 @@ void gul::SetBasic<T>::Add(const T& rElement)
 template<typename T>
 void gul::SetBasic<T>::Remove(const T& rElement)
 {
-  ASSERT(this->list.Contains(rElement));
+  GUL_ASSERT(this->list.Contains(rElement));
   this->list.RemoveElement(rElement);
 }
 

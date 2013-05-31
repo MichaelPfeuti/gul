@@ -43,7 +43,7 @@ T* gul::XMLManager::Load(const gul::String& rFile)
   T* pLoadedInstance;
   gul::XMLSerializable::performLoad(pLoadedInstance, rootNode);
 
-  ASSERT(pLoadedInstance != nullptr);
+  GUL_ASSERT(pLoadedInstance != nullptr);
 
   return pLoadedInstance;
 }

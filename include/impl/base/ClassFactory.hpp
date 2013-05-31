@@ -52,7 +52,7 @@ gul::ClassFactory<T>::ClassFactory(void)
 template<typename T>
 T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
 {
-  ASSERT(ClassFactoryBase::pNameToFactoryMap != nullptr);
+  GUL_ASSERT(ClassFactoryBase::pNameToFactoryMap != nullptr);
 
   const gul::ClassFactoryBase::ClassCreatorFunctor* function = gul::ClassFactoryBase::pNameToFactoryMap->Get(rClassName.GetData());
   if(function != nullptr)
@@ -61,7 +61,7 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
   }
   else
   {
-    FAIL(gul::String("ClassFactory cannot create Instance of %").Arg(rClassName).GetData());
+    GUL_FAIL(gul::String("ClassFactory cannot create Instance of %").Arg(rClassName).GetData());
     return nullptr;
   }
   return nullptr;

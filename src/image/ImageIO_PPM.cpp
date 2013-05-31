@@ -41,7 +41,7 @@ void gul::ImageIO_PPM::SetMode(PPMMode m)
 
 gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
 {
-  ASSERT_MSG(rPath.Exists(), "File does not exists.");
+  GUL_ASSERT_MSG(rPath.Exists(), "File does not exists.");
 
   FILE* f = fopen(rPath.GetPath().GetData(), "r");
 
@@ -197,7 +197,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
   }
   else
   {
-    FAIL("Unknown PPM Mode!");
+    GUL_FAIL("Unknown PPM Mode!");
     return gul::Image();
   }
 
@@ -259,7 +259,7 @@ void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
         break;
       }
     default:
-      FAIL("Unknown Enum!");
+      GUL_FAIL("Unknown Enum!");
   }
 
   fclose(f);

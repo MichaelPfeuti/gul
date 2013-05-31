@@ -47,7 +47,7 @@ gul::SharedResource::SharedResource(void)
 gul::SharedResource::~SharedResource(void)
 {
   detachFromOwner();
-  ASSERT(this->m_pOwner == nullptr);
+  GUL_ASSERT(this->m_pOwner == nullptr);
   GUL_DELETE(this->m_pReferencees);
 }
 
@@ -58,10 +58,10 @@ gul::SharedResource::~SharedResource(void)
  */
 gul::SharedResource& gul::SharedResource::operator=(const SharedResource& other)
 {
-  ASSERT(other.m_pOwner != nullptr);
-  ASSERT(other.m_pReferencees == nullptr);
-  ASSERT(other.m_pOwner->m_pReferencees != nullptr);
-  ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
+  GUL_ASSERT(other.m_pOwner != nullptr);
+  GUL_ASSERT(other.m_pReferencees == nullptr);
+  GUL_ASSERT(other.m_pOwner->m_pReferencees != nullptr);
+  GUL_ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
 
   if(this != &other)
   {
@@ -101,10 +101,10 @@ void gul::SharedResource::initConstructor(void)
  */
 void gul::SharedResource::initCopyConstructor(const gul::SharedResource& other)
 {
-  ASSERT(other.m_pOwner != nullptr);
-  ASSERT(other.m_pReferencees == nullptr);
-  ASSERT(other.m_pOwner->m_pReferencees != nullptr);
-  ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
+  GUL_ASSERT(other.m_pOwner != nullptr);
+  GUL_ASSERT(other.m_pReferencees == nullptr);
+  GUL_ASSERT(other.m_pOwner->m_pReferencees != nullptr);
+  GUL_ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
 
   attachToResource(other);
 }

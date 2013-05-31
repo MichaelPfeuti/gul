@@ -99,7 +99,7 @@ void gul::ArrayBasic<T>::Add(const T& rElement)
 template<typename T>
 void gul::ArrayBasic<T>::Add(const T& rElement, int index)
 {
-  ASSERT(index >= 0);
+  GUL_ASSERT(index >= 0);
   int insertIndex = gul::min(index, this->size);
 
   // do we need to allocate more memory?
@@ -130,8 +130,8 @@ template<typename T>
 T& gul::ArrayBasic<T>::Get(int index)
 {
   // TODO: remove duplicated code (see const version)
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   return this->pData[index];
 }
@@ -139,8 +139,8 @@ T& gul::ArrayBasic<T>::Get(int index)
 template<typename T>
 const T& gul::ArrayBasic<T>::Get(int index) const
 {
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   return this->pData[index];
 }
@@ -167,8 +167,8 @@ int gul::ArrayBasic<T>::IndexOf(const T& rElement) const
 template<typename T>
 void gul::ArrayBasic<T>::Remove(int index)
 {
-  ASSERT(index >= 0);
-  ASSERT(index < this->size);
+  GUL_ASSERT(index >= 0);
+  GUL_ASSERT(index < this->size);
 
   // when the new item is not appended we need to move the memory content
   if(index < this->size - 1)

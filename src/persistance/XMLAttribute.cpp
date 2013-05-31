@@ -30,7 +30,7 @@
 #include "String.h"
 #include "Misc.h"
 
-#include "3rdParty/pugi/pugixml.hpp"
+#include <pugixml.hpp>
 
 gul::XMLAttribute::XMLAttribute(const pugi::xml_attribute& rAttribute)
   : pAttribute(new pugi::xml_attribute)

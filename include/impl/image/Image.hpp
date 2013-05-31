@@ -145,7 +145,7 @@ T* gul::ImageT<T>::GetData(void)
 template<typename T>
 const T* gul::ImageT<T>::GetScanlineConst(int scanline) const
 {
-  ASSERT(scanline >= 0 && scanline <= GetHeight());
+  GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   return m_pData + scanline*GetPitch();
 }
@@ -153,7 +153,7 @@ const T* gul::ImageT<T>::GetScanlineConst(int scanline) const
 template<typename T>
 const T* gul::ImageT<T>::GetScanline(int scanline) const
 {
-  ASSERT(scanline >= 0 && scanline <= GetHeight());
+  GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   return m_pData + scanline*GetPitch();
 }
@@ -161,7 +161,7 @@ const T* gul::ImageT<T>::GetScanline(int scanline) const
 template<typename T>
 T* gul::ImageT<T>::GetScanline(int scanline)
 {
-  ASSERT(scanline >= 0 && scanline <= GetHeight());
+  GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   detach();
   return m_pData + scanline*GetPitch();
@@ -170,9 +170,9 @@ T* gul::ImageT<T>::GetScanline(int scanline)
 template<typename T>
 const T& gul::ImageT<T>::GetColorConst(int x, int y, int channel) const
 {
-  ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
-  ASSERT(x >= 0 && x <= GetWidth());
-  ASSERT(y >= 0 && y <= GetHeight());
+  GUL_ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
+  GUL_ASSERT(x >= 0 && x <= GetWidth());
+  GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
@@ -180,9 +180,9 @@ const T& gul::ImageT<T>::GetColorConst(int x, int y, int channel) const
 template<typename T>
 const T& gul::ImageT<T>::GetColor(int x, int y, int channel) const
 {
-  ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
-  ASSERT(x >= 0 && x <= GetWidth());
-  ASSERT(y >= 0 && y <= GetHeight());
+  GUL_ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
+  GUL_ASSERT(x >= 0 && x <= GetWidth());
+  GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
@@ -191,9 +191,9 @@ const T& gul::ImageT<T>::GetColor(int x, int y, int channel) const
 template<typename T>
 T& gul::ImageT<T>::GetColor(int x, int y, int channel)
 {
-  ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
-  ASSERT(x >= 0 && x <= GetWidth());
-  ASSERT(y >= 0 && y <= GetHeight());
+  GUL_ASSERT(channel >= 0 && channel <= GetNumberOfChannels());
+  GUL_ASSERT(x >= 0 && x <= GetWidth());
+  GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   detach();
   return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
