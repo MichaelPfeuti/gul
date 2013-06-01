@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 {
   // We switch the assertion mode to exception to detect
   // assertion with an exception in the tests.
-  gul::AssertionModeInUse = gul::EXCEPTION;
+  gul::AssertionModeInUse = gul::ASSERT_EXCEPTION;
   // We clear the previous ouputs so the we do not clutter the memroy.
   gul::CTestData::Clear();
 

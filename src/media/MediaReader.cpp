@@ -31,6 +31,7 @@
 #include "AudioFrame.h"
 #include "VideoFrame.h"
 #include "MediaFrame.h"
+#include "Log.h"
 
 extern "C"
 {
@@ -257,7 +258,7 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
   if((len = avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
     GUL_FAIL("Video decoding failed!");
 
-  fprintf(stderr, "%d %d\n", len, rPacket.size);
+  GUL_LOG_DEBUG("%d %d", len, rPacket.size);
 
   // Did we get a frame?
   if(frameFinished)

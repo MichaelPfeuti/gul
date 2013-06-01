@@ -28,9 +28,15 @@
 
 set(_gul_project_path ${CMAKE_CURRENT_LIST_DIR})
 
+macro(gul_add_define VARIABLE)
+  if(${VARIABLE})
+    add_definitions(-D${VARIABLE})
+  endif()
+endmacro()
+
 macro(gul_setup_project)
 
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
                         ${_gul_project_path})
   include(gulVersion)
   include(gulDoxygen)
@@ -38,6 +44,7 @@ macro(gul_setup_project)
   include(gulTesting)
   include(gulCDash)
   include(GenerateExportHeader)
+  include(CMakeDependentOption)
   add_compiler_export_flags()
 
   # Default Build Type
@@ -62,5 +69,31 @@ macro(gul_setup_project)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
   set(CMAKE_C_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
   set(CMAKE_EXE_LINKER_FLAGS_DEBUG ${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+
+  # Assertion options
+  option(GUL_ASSERTION "Enable Assertion also in non Debug builds. When BUILD_TESTING assert is always enabled." OFF)
+  gul_add_define(GUL_ASSERTION)
+
+  set(GUL_ASSERTION_MODE "ABORT" CACHE STRING "Assertion mode (ABORT, EXCEPTION, GUI)")
+  set_property(CACHE GUL_ASSERTION_MODE PROPERTY STRINGS "ABORT" "EXCEPTION" "GUI")
+  add_definitions(-DGUL_ASSERTION_${GUL_ASSERTION_MODE})
+
+
+  # Logging options
+  option(GUL_LOGGING "Enable Logging." ON)
+  gul_add_define(GUL_LOGGING)
+
+  if(GUL_LOGGING)
+    set(GUL_LOGGING_LEVEL "WARNING" CACHE STRING "Logging level (DEBUG, INFO, WARNING, ERROR)")
+    set_property(CACHE GUL_LOGGING_LEVEL PROPERTY STRINGS "DEBUG" "INFO" "WARNING" "ERROR")
+    add_definitions(-DGUL_LOGGING_${GUL_LOGGING_LEVEL})
+
+    set(GUL_LOGGING_MODE "CLI" CACHE STRING "Assertion mode (FILE, CLI, GUI)")
+    set_property(CACHE GUL_LOGGING_MODE PROPERTY STRINGS "FILE" "CLI" "GUI")
+    add_definitions(-DGUL_LOGGING_${GUL_LOGGING_MODE})
+  else()
+    unset(GUL_LOGGING_LEVEL CACHE)
+    unset(GUL_LOGGING_MODE CACHE)
+  endif()
 
 endmacro()

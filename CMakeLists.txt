@@ -57,7 +57,6 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/src")
 
 # source files
 if(BUILD_TESTING)
-  add_definitions("-DBUILD_TESTING")
   add_subdirectory(test)
 endif(BUILD_TESTING)
 

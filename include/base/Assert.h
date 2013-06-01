@@ -30,28 +30,25 @@
 ***************************************************************************/
 
 
-#if !defined(NDEBUG) || defined(BUILD_TESTING)
+#if !defined(NDEBUG) || defined(GUL_ASSERTION)
 
 #include "gul_export.h"
 #include <cassert>
 
 namespace gul
 {
-  enum GUL_EXPORT AssertionMode { ABORT, EXCEPTION, GUI };
+  enum GUL_EXPORT AssertionMode { ASSERT_ABORT, ASSERT_EXCEPTION, ASSERT_GUI };
   class GUL_EXPORT  ExceptionAssertionViolated {};
   GUL_EXPORT void Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  GUL_EXPORT void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  GUL_EXPORT void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-  GUL_EXPORT void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName);
-
   GUL_EXPORT extern AssertionMode AssertionModeInUse;
 }
 
-#define GUL_ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__);
-#define GUL_ASSERT_MSG(condition, msg) gul::Assert(condition, msg, __LINE__, __FILE__);
-#define GUL_FAIL(msg) gul::Assert(false, msg, __LINE__, __FILE__);
+#define GUL_ASSERT(condition) gul::Assert(condition, "", __LINE__, __FILE__)
+#define GUL_ASSERT_MSG(condition, msg) gul::Assert(condition, msg, __LINE__, __FILE__)
+#define GUL_FAIL(msg) gul::Assert(false, msg, __LINE__, __FILE__)
 
 #else
+
 #define GUL_ASSERT(condition)
 #define GUL_ASSERT_MSG(condition, msg)
 #define GUL_FAIL(msg)

@@ -50,21 +50,21 @@ void gul::StackBasic<T>::Push(const T& rElement)
 template<typename T>
 const T& gul::StackBasic<T>::Top(void) const
 {
-  GUL_ASSERT(this->list.Size() > 0)
+  GUL_ASSERT(this->list.Size() > 0);
   return this->list.Get(this->list.Size() - 1);
 }
 
 template<typename T>
 T& gul::StackBasic<T>::Top(void)
 {
-  GUL_ASSERT(this->list.Size() > 0)
+  GUL_ASSERT(this->list.Size() > 0);
   return this->list.Get(this->list.Size() - 1);
 }
 
 template<typename T>
 T gul::StackBasic<T>::Pop(void)
 {
-  GUL_ASSERT(this->list.Size() > 0)
+  GUL_ASSERT(this->list.Size() > 0);
   T removed = this->list.Get(this->list.Size() - 1);
   this->list.Remove(this->list.Size() - 1);
   return removed;

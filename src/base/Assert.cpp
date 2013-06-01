@@ -31,39 +31,28 @@
 #include <cstdlib>
 #include "Misc.h"
 
-#if !defined(NDEBUG) || defined(BUILD_TESTING)
+#if !defined(NDEBUG) || defined(GUL_ASSERTION)
 
-gul::AssertionMode gul::AssertionModeInUse = gul::ABORT;
+#if defined(GUL_ASSERTION_ABORT)
+  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_ABORT;
+#elif defined(GUL_ASSERTION_EXCEPTION)
+  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_EXCEPTION;
+#elif defined(GUL_ASSERTION_GUI)
+  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_GUI;
+#endif
 
-void gul::Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
-{
-  switch(AssertionModeInUse)
-  {
-    case EXCEPTION:
-      AssertException(condition, pMessage, lineNumber, pFileName);
-      break;
-    case GUI:
-      AssertGui(condition, pMessage, lineNumber, pFileName);
-      break;
-    case ABORT:
-    default:
-      AssertExit(condition, pMessage, lineNumber, pFileName);
-      break;
-  }
-}
-
-void gul::AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+static void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 
   if(!condition)
   {
     fprintf(stderr, "%s:%d: Assertion failed: %s\n", pFileName, lineNumber, pMessage);
     fflush(stderr);
-    throw ExceptionAssertionViolated();
+    throw gul::ExceptionAssertionViolated();
   }
 }
 
-void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+static void AssertExit(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
 
   if(!condition)
@@ -74,13 +63,30 @@ void gul::AssertExit(bool condition, const char* pMessage, int lineNumber, const
   }
 }
 
-void gul::AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+static void AssertGui(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
 {
   GUL_UNUSED_VAR(condition);
   GUL_UNUSED_VAR(pMessage);
   GUL_UNUSED_VAR(lineNumber);
   GUL_UNUSED_VAR(pFileName);
   //@todo
+}
+
+void gul::Assert(bool condition, const char* pMessage, int lineNumber, const char* pFileName)
+{
+  switch(AssertionModeInUse)
+  {
+    case ASSERT_EXCEPTION:
+      AssertException(condition, pMessage, lineNumber, pFileName);
+      break;
+    case ASSERT_GUI:
+      AssertGui(condition, pMessage, lineNumber, pFileName);
+      break;
+    case ASSERT_ABORT:
+    default:
+      AssertExit(condition, pMessage, lineNumber, pFileName);
+      break;
+  }
 }
 
 #endif

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_MEDIA_VIDEO_CONVERTER_H_
-#define _GUL_MEDIA_VIDEO_CONVERTER_H_
+#ifndef _GUL_MEDIA_MEDIA_CONVERTER_H_
+#define _GUL_MEDIA_MEDIA_CONVERTER_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
