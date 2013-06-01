@@ -36,30 +36,40 @@ gul::MediaFrame::MediaFrame(void)
 
 const gul::VideoFrame& gul::MediaFrame::GetVideoFrame(void) const
 {
-
+  return m_videoFrame;
 }
 
 gul::VideoFrame& gul::MediaFrame::GetVideoFrame(void)
 {
-
+  return m_videoFrame;
 }
 
 bool gul::MediaFrame::HasVideoFrame(void) const
 {
+  return m_hasVideo;
+}
 
+void gul::MediaFrame::SetHasVideoFrame(bool status)
+{
+  m_hasVideo = status;
 }
 
 const gul::AudioFrame& gul::MediaFrame::GetAudioFrame(void) const
 {
-
+  return m_audioFrame;
 }
 
 gul::AudioFrame& gul::MediaFrame::GetAudioFrame(void)
 {
-
+  return m_audioFrame;
 }
 
 bool gul::MediaFrame::HasAudioFrame(void) const
 {
+  return m_hasAudio;
+}
 
+void gul::MediaFrame::SetHasAudioFrame(bool status)
+{
+  m_hasAudio = status;
 }

@@ -45,6 +45,7 @@ class AVCodecContext;
 class AVFrame;
 class AVPacket;
 class SwsContext;
+class SwrContext;
 
 namespace gul
 {
@@ -94,16 +95,19 @@ namespace gul
     private:
       //
       void allocateVideoStructures(void);
+      void allocateAudioStructures(void);
+
       void deleteVideoStructures(void);
+      void deleteAudioStructures(void);
+
       void setData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
-      void setData(AudioFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
+      void setData(AudioFrame& rTargetFrame, AVFrame* pSourceFrame) const;
       bool decodeRemaining(VideoFrame& rFrame);
       int openCodec(int type, AVCodecContext *&pContext);
 
     private:
       const gul::File m_path;
       AVFormatContext* m_pFormatCtx;
-      SwsContext* m_pSWSContext;
       AVPacket* m_pPacket;
       AVFrame* m_pFrame;
       AVFrame* m_pFrameRGBA;
@@ -115,9 +119,11 @@ namespace gul
 
       AVCodecContext* m_pVideoCodecCtx;
       int m_videoStreamIndex;
+      SwsContext* m_pSWSContext;
 
       AVCodecContext* m_pAudioCodecCtx;
       int m_audioStreamIndex;
+      SwrContext* m_pSWRContext;
 
       static bool codecsAreRegistered;
   };

@@ -40,6 +40,7 @@ namespace gul
   {
     public:
       MediaFrame(void);
+
       const VideoFrame& GetVideoFrame(void) const;
       VideoFrame& GetVideoFrame(void);
       bool HasVideoFrame(void) const;
