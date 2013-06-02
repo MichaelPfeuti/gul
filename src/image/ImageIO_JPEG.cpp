@@ -30,6 +30,7 @@
 #include "Assert.h"
 #include "Misc.h"
 #include "File.h"
+#include "Log.h"
 #include <cstdlib>
 #include <cstdio>
 #include <jpeglib.h>
@@ -142,7 +143,7 @@ void gul::ImageIO_JPEG::Save(const gul::File& rPath, const gul::Image& rImage)
 
   if((outfile = fopen(rPath.GetPath().GetData(), "wb")) == NULL)
   {
-    fprintf(stderr, "can't open %s\n", rPath.GetPath().GetData());
+    GUL_LOG_WARNING("Can't open %s", rPath.GetPath().GetData());
     return;
   }
   jpeg_stdio_dest(&cinfo, outfile);

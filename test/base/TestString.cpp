@@ -190,7 +190,6 @@ namespace TestString
     gul::String string("StartMiddleEnd");
 
     TEST_EQUAL(string.Substring(0, 5), gul::String("Start"));
-    fprintf(stderr, string.Substring(5, 11).GetData());
     TEST_EQUAL(string.Substring(5, 11), gul::String("Middle"));
     TEST_EQUAL(string.Substring(11, 14), gul::String("End"));
 
