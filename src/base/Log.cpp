@@ -52,6 +52,11 @@
   gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_ERROR;
 #endif
 
+static const char* LOG_FMT[] = { "%s:%d DEBUG: ",
+                                 "%s:%d INFO: ",
+                                 "%s:%d WARNING: ",
+                                 "%s:%d ERROR: "};
+
 static void LogGui(const int, const char *, ...)
 {
   // TODO: implement log gui
@@ -67,7 +72,7 @@ static void CloseLogFile(void)
   }
 }
 
-static void LogFile(const int level, const char * format, va_list& args)
+static void LogFile(const int level, const char* file, int line, const char * format, va_list& args)
 {
   if(logfile == nullptr)
   {
@@ -75,44 +80,45 @@ static void LogFile(const int level, const char * format, va_list& args)
     atexit(CloseLogFile);
   }
 
+  fprintf(logfile, LOG_FMT[level], file, line);
+  vfprintf(logfile, format, args);
+  fprintf(logfile, "\n");
   if(level >= gul::LoggingLevelInUse && level >= gul::LOG_WARNING)
-  {
-    vfprintf(logfile, format, args);
     fflush(logfile);
-  }
-  else if(level >= gul::LoggingLevelInUse)
-  {
-    vfprintf(logfile, format, args);
-  }
 }
 
-static void LogCli(const int level, const char * format, va_list& args)
+static void LogCli(const int level, const char* file, int line, const char * format, va_list& args)
 {
   if(level >= gul::LoggingLevelInUse && level >= gul::LOG_WARNING)
   {
+    fprintf(stderr, LOG_FMT[level], file, line);
     vfprintf(stderr, format, args);
+    fprintf(stderr, "\n");
   }
   else if(level >= gul::LoggingLevelInUse)
   {
+    fprintf(stdout, LOG_FMT[level], file, line);
     vfprintf(stdout, format, args);
+    fprintf(stdout, "\n");
   }
 }
 
-void gul::Log(const int level, const char * format, ...)
+void gul::Log(const int level, const char* file, int line, ...)
 {
   va_list args;
-  va_start(args, format);
+  va_start(args, line);
+  const char* format = va_arg(args, const char*);
   switch(LoggingModeInUse)
   {
     case LOG_FILE:
-      LogFile(level, format, args);
+      LogFile(level, file, line, format, args);
       break;
     case LOG_GUI:
-      LogGui(level, format, args);
+      LogGui(level, file, line, format, args);
       break;
     case LOG_CLI:
     default:
-      LogCli(level, format, args);
+      LogCli(level, file, line, format, args);
       break;
   }
   va_end(args);

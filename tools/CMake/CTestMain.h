@@ -37,6 +37,7 @@
 
 // see comments in main() to see why we include this
 #include "Assert.h"
+#include "Log.h"
 #include "CTestData.h"
 
 // Function pointer to a testing function
@@ -69,6 +70,13 @@ int main(int argc, char* argv[])
   // We switch the assertion mode to exception to detect
   // assertion with an exception in the tests.
   gul::AssertionModeInUse = gul::ASSERT_EXCEPTION;
+
+  // We use cli logging in debug mode to submit as much info to cdash as possible
+#ifdef GUL_LOGGING
+  gul::LoggingLevelInUse = gul::LOG_DEBUG;
+  gul::LoggingModeInUse = gul::LOG_CLI;
+#endif
+
   // We clear the previous ouputs so the we do not clutter the memroy.
   gul::CTestData::Clear();
 

@@ -29,6 +29,7 @@
 #include "RTTI.h"
 #include "Assert.h"
 #include "String.h"
+#include "Log.h"
 
 /**
   * The template argument must be a concrete class such that we can create
@@ -61,7 +62,7 @@ T* gul::ClassFactory<T>::CreateInstance(const gul::String& rClassName)
   }
   else
   {
-    GUL_FAIL(gul::String("ClassFactory cannot create Instance of %").Arg(rClassName).GetData());
+    GUL_LOG_ERROR("ClassFactory cannot create Instance of %s", rClassName.GetData());
     return nullptr;
   }
   return nullptr;

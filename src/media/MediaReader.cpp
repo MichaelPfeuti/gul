@@ -156,11 +156,17 @@ bool gul::MediaReader::Open(void)
 
   // Open video file
   if(avformat_open_input(&m_pFormatCtx, m_path.GetPath().GetData(), nullptr, nullptr) != 0)
-    GUL_FAIL("Couldn't open file");
+  {
+    GUL_LOG_WARNING("Couldn't open file");
+    return false;
+  }
 
   // Retrieve stream information
   if(avformat_find_stream_info(m_pFormatCtx, nullptr) < 0)
-    GUL_FAIL("Couldn't find stream information");
+  {
+    GUL_LOG_WARNING("Couldn't find stream information");
+    return false;
+  }
 
   //av_dump_format(pFormatCtx, 0, path.GetData(), 0);
 
@@ -187,6 +193,11 @@ bool gul::MediaReader::Open(void)
     m_pPacket = new AVPacket;
     av_init_packet(m_pPacket);
     m_isPacketDataFreed = true;
+    GUL_LOG_INFO("Opend media successfully.");
+  }
+  else
+  {
+    GUL_LOG_WARNING("Media contains no audio nor video data.");
   }
 
   return m_isOpen;
@@ -224,10 +235,16 @@ int gul::MediaReader::openCodec(int type, AVCodecContext*& pContext)
     pContext->thread_count = 4;
     AVCodec* pVideoCodec = avcodec_find_decoder(pContext->codec_id);
     if(pVideoCodec == nullptr)
+    {
+      GUL_LOG_WARNING("Reqired codec could not be found.");
       return AVERROR_STREAM_NOT_FOUND;
+    }
 
     if(avcodec_open2(pContext, pVideoCodec, nullptr) < 0)
+    {
+      GUL_LOG_WARNING("Reqired codec could not be opened.");
       return AVERROR_STREAM_NOT_FOUND;
+    }
   }
 
   return index;
@@ -256,9 +273,12 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
   // Decode video frame
   int len;
   if((len = avcodec_decode_video2(m_pVideoCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
-    GUL_FAIL("Video decoding failed!");
+  {
+    GUL_LOG_WARNING("Video decoding failed!");
+    return false;
+  }
 
-  GUL_LOG_DEBUG("%d %d", len, rPacket.size);
+  GUL_ASSERT(rPacket.size - len == 0) ;
 
   // Did we get a frame?
   if(frameFinished)
@@ -281,7 +301,7 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::AudioFrame& rFrame)
   int len;
   if((len = avcodec_decode_audio4(m_pAudioCodecCtx, m_pFrame, &frameFinished, &rPacket)) < 0)
   {
-    GUL_FAIL("Audio decoding failed!");
+    GUL_LOG_WARNING("Audio decoding failed!");
   }
 
   GUL_ASSERT(rPacket.size - len == 0) ;

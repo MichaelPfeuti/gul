@@ -45,23 +45,23 @@ namespace gul
                                  LOG_WARNING,
                                  LOG_ERROR };
 
-  GUL_EXPORT void Log(const int level, const char * format, ...);
+  GUL_EXPORT void Log(const int level, const char* file, int line, ...);
 
   GUL_EXPORT extern LoggingMode  LoggingModeInUse;
   GUL_EXPORT extern LoggingLevel LoggingLevelInUse;
 }
 
-#define GUL_LOG_DEBUG(msg, ...)   gul::Log(LOG_DEBUG,   "%s:%d DEBUG: " msg "\n", __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_INFO(msg, ...)    gul::Log(LOG_INFO,    "%s:%d INFO: " msg "\n", __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_WARNING(msg, ...) gul::Log(LOG_WARNING, "%s:%d WARNING: " msg "\n", __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_ERROR(msg, ...)   gul::Log(LOG_ERROR,   "%s:%d ERROR: " msg "\n", __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_DEBUG(...)   gul::Log(LOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_INFO(...)    gul::Log(LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_WARNING(...) gul::Log(LOG_WARNING, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_ERROR(...)   gul::Log(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
 
 #else
 
-#define GUL_LOG_DEBUG(msg, ...)
-#define GUL_LOG_INFO(msg, ...)
-#define GUL_LOG_WARNING(msg, ...)
-#define GUL_LOG_ERROR(msg, ...)
+#define GUL_LOG_DEBUG(...)
+#define GUL_LOG_INFO(...)
+#define GUL_LOG_WARNING(...)
+#define GUL_LOG_ERROR(...)
 
 #endif
 

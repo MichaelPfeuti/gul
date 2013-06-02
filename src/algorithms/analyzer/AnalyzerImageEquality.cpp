@@ -27,7 +27,7 @@
 ***************************************************************************/
 
 #include "AnalyzerImageEquality.h"
-
+#include "Log.h"
 
 gul::AnalyzerImageEquality::AnalyzerImageEquality(void)
   : image1(),
@@ -55,8 +55,6 @@ bool gul::AnalyzerImageEquality::GetResult(void) const
 {
   return threshold >= difference;
 }
-
-#include <cstdio>
 
 void gul::AnalyzerImageEquality::Execute(void)
 {
@@ -90,7 +88,7 @@ void gul::AnalyzerImageEquality::Execute(void)
   difference /= image1.GetNumberOfChannels();
   difference /= image1.GetWidth() * image1.GetHeight();
   difference /= 255;
-  fprintf(stderr, "error: %f, %f, %f, %f -> %f\n", diffPerChannel[0],diffPerChannel[1],diffPerChannel[2],diffPerChannel[3], difference);
+  GUL_LOG_INFO("AnalyzerImageEquality error: %f, %f, %f, %f -> %f", diffPerChannel[0],diffPerChannel[1],diffPerChannel[2],diffPerChannel[3], difference);
 }
 
 bool gul::AnalyzerImageEquality::Execute(const Image& image1, const Image& image2, float differenceThreshold)
