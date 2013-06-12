@@ -6,3 +6,5 @@ add_library(gulTestUtils SHARED
               UtilsCDash.cpp
               UtilsImage.cpp
             )
+
+target_link_libraries(gulTestUtils gul)

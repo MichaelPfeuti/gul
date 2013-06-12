@@ -1,22 +1,12 @@
-add_subdirectory(algorithms)
-add_subdirectory(base)
-add_subdirectory(containers)
-add_subdirectory(context)
-add_subdirectory(image)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(persistance)
-add_subdirectory(media)
-
-set_target_properties(algorithms  PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(base        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(containers  PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(context     PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(image       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(math        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(memory      PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(persistance PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-set_target_properties(media       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set(MODULES algorithms
+            base
+            containers
+            context
+            image
+            math
+            memory
+            persistance
+            media)
 
 add_library(gul SHARED $<TARGET_OBJECTS:algorithms>
                        $<TARGET_OBJECTS:base>
@@ -27,28 +17,73 @@ add_library(gul SHARED $<TARGET_OBJECTS:algorithms>
                        $<TARGET_OBJECTS:memory>
                        $<TARGET_OBJECTS:persistance>
                        $<TARGET_OBJECTS:media>)
+
+set(INCLUDE_DIRECTORIES "${INCLUDE}"
+                        "${INCLUDE}/algorithms"
+                        "${INCLUDE}/algorithms/analyzer"
+                        "${INCLUDE}/algorithms/converter"
+                        "${INCLUDE}/algorithms/filter"
+                        "${INCLUDE}/algorithms/generator"
+                        "${INCLUDE}/base"
+                        "${INCLUDE}/containers"
+                        "${INCLUDE}/context"
+                        "${INCLUDE}/image"
+                        "${INCLUDE}/math"
+                        "${INCLUDE}/media"
+                        "${INCLUDE}/media/manipulator"
+                        "${INCLUDE}/memory"
+                        "${INCLUDE}/persistance"
+                        "${CMAKE_CURRENT_BINARY_DIR}")
+
 generate_export_header(gul)
 
+# process found libraries
 if(FFMPEG_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBFFMPEG_FOUND)
+  include_directories(${FFMPEG_INCLUDE_DIR})
   target_link_libraries(gul ${FFMPEG_LIBRARIES})
 endif()
 
 if(PNG_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBPNG_FOUND)
+  include_directories(${PNG_INCLUDE_DIR})
   target_link_libraries(gul ${PNG_LIBRARIES})
 endif()
 
 if(JPEG_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBJPEG_FOUND)
+  include_directories(${JPEG_INCLUDE_DIR})
   target_link_libraries(gul ${JPEG_LIBRARIES})
 endif()
 
 if(TIFF_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBTIFF_FOUND)
+  include_directories(${TIFF_INCLUDE_DIR})
   target_link_libraries(gul ${TIFF_LIBRARIES})
 endif()
 
 if(OPENAL_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBOPENAL_FOUND)
+  include_directories(${OPENAL_INCLUDE_DIR})
   target_link_libraries(gul ${OPENAL_LIBRARY})
 endif()
 
-foreach(INCLUDE_DIR IN LISTS INCLUDE_DIRECTORIES)
-  target_include_directories(gul PUBLIC ${INCLUDE_DIR})
+# process modules (includes, definitions, ...)
+foreach(MODULE IN LISTS MODULES)
+  add_subdirectory(${MODULE})
+  set_target_properties(${MODULE} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+  foreach(INCLUDE_DIRECTORY IN LISTS INCLUDE_DIRECTORIES)
+    target_include_directories(${MODULE} PUBLIC ${INCLUDE_DIRECTORY})
+  endforeach()
+  foreach(DEFINITION IN LISTS DEFINITIONS)
+    target_compile_definitions(${MODULE} PUBLIC ${DEFINITION})
+  endforeach()
+endforeach()
+
+# cmake bugfix (object libs do not propagate their includes and defines)
+foreach(INCLUDE_DIRECTORY IN LISTS INCLUDE_DIRECTORIES)
+  target_include_directories(gul PUBLIC ${INCLUDE_DIRECTORY})
+endforeach()
+foreach(DEFINITION IN LISTS DEFINITIONS)
+  target_compile_definitions(gul PUBLIC ${DEFINITION})
 endforeach()
