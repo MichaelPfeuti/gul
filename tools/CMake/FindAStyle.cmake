@@ -31,15 +31,7 @@ find_program(ASTYLE_EXECUTABLE astyle
              DOC "AStyle A Free, Fast and Small Automatic Formatter (http://astyle.sourceforge.net/)"
              )
 
-INCLUDE (FindPackageHandleStandardArgs)
+INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(AStyle DEFAULT_MSG ASTYLE_EXECUTABLE)
 
-if(ASTYLE_EXECUTABLE)
-  set(ASTYLE_FOUND "YES")
-else(ASTYLE_EXECUTABLE)
-  set(ASTYLE_FOUND "NO")
-endif(ASTYLE_EXECUTABLE)
-
-MARK_AS_ADVANCED(
-  ASTYLE_EXECUTABLE
-  )
+MARK_AS_ADVANCED(ASTYLE_EXECUTABLE)
