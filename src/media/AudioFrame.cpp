@@ -139,7 +139,7 @@ const int16_t *gul::AudioFrame::GetData(void) const
 
 #ifdef LIBOPENAL_FOUND
 
-ALuint gul::AudioFrame::GetALBuffer(void)
+const ALuint& gul::AudioFrame::GetALBuffer(void)
 {
   ALenum alError;
 

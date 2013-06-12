@@ -76,7 +76,7 @@ namespace gul
 
 #ifdef LIBOPENAL_FOUND
     public:
-      ALuint GetALBuffer(void);
+      const ALuint& GetALBuffer(void);
 
     private:
       ALuint m_alBuffer;
