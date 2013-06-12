@@ -1,6 +1,7 @@
 add_subdirectory(algorithms)
 add_subdirectory(base)
 add_subdirectory(containers)
+add_subdirectory(context)
 add_subdirectory(image)
 add_subdirectory(math)
 add_subdirectory(memory)
@@ -10,6 +11,7 @@ add_subdirectory(media)
 set_target_properties(algorithms  PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(base        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(containers  PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(context     PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(image       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(math        PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 set_target_properties(memory      PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
@@ -19,6 +21,7 @@ set_target_properties(media       PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 add_library(gul SHARED $<TARGET_OBJECTS:algorithms>
                        $<TARGET_OBJECTS:base>
                        $<TARGET_OBJECTS:containers>
+                       $<TARGET_OBJECTS:context>
                        $<TARGET_OBJECTS:image>
                        $<TARGET_OBJECTS:math>
                        $<TARGET_OBJECTS:memory>
@@ -42,4 +45,10 @@ if(TIFF_FOUND)
   target_link_libraries(gul ${TIFF_LIBRARIES})
 endif()
 
+if(OPENAL_FOUND)
+  target_link_libraries(gul ${OPENAL_LIBRARIES})
+endif()
 
+foreach(INCLUDE_DIR IN LISTS INCLUDE_DIRECTORIES)
+  target_include_directories(gul PUBLIC ${INCLUDE_DIR})
+endforeach()

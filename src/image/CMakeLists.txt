@@ -1,5 +1,5 @@
 
-set(image_sources
+set(IMAGE_SOURCES
     ImageFileHandler.cpp
     ImageIO.cpp
     ImageIO_PPM.cpp
@@ -13,25 +13,25 @@ set(image_sources
     )
 
 if(PNG_FOUND)
-  set(image_sources ${image_sources}
+  set(IMAGE_SOURCES ${IMAGE_SOURCES}
                     ImageIO_PNG.cpp
                     ${INCLUDE}/image/ImageIO_PNG.h
   )
-endif(PNG_FOUND)
+endif()
 
 if(JPEG_FOUND)
-  set(image_sources ${image_sources}
+  set(IMAGE_SOURCES ${IMAGE_SOURCES}
                     ImageIO_JPEG.cpp
                     ${INCLUDE}/image/ImageIO_JPEG.h
   )
-endif(JPEG_FOUND)
+endif()
 
 if(TIFF_FOUND)
-  set(image_sources ${image_sources}
+  set(IMAGE_SOURCES ${IMAGE_SOURCES}
                     ImageIO_TIFF.cpp
                     ${INCLUDE}/image/ImageIO_TIFF.h
   )
-endif(TIFF_FOUND)
+endif()
 
 
-add_library(image OBJECT ${image_sources})
+add_library(image OBJECT ${IMAGE_SOURCES})

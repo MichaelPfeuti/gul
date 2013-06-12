@@ -3,8 +3,6 @@
 #######################
 set(XMLLIB_PATH "${LIBS_DIR}/pugixml/src")
 
-include_directories("${XMLLIB_PATH}")
-
 string(REPLACE "-Wshadow"         " " PUGIXML_FLAGS "${CMAKE_CXX_FLAGS}")
 string(REPLACE "-Wswitch-default" " " PUGIXML_FLAGS "${PUGIXML_FLAGS}")
 string(REPLACE "-Weffc++"         " " PUGIXML_FLAGS "${PUGIXML_FLAGS}")
@@ -35,3 +33,5 @@ add_library(persistance OBJECT
 
     ${XMLLIB_PATH}/pugixml.cpp
 )
+
+target_include_directories(persistance PRIVATE ${XMLLIB_PATH})

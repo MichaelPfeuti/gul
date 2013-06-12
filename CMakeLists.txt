@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 
 project(gul)
 include(tools/CMake/gulProject.cmake)
@@ -20,40 +20,50 @@ find_package(PNG)
 if(PNG_FOUND)
   add_definitions(-DLIBPNG_FOUND)
   include_directories(${PNG_INCLUDE_DIR})
-endif(PNG_FOUND)
+endif()
 
 find_package(JPEG)
 if(JPEG_FOUND)
   add_definitions(-DLIBJPEG_FOUND)
   include_directories(${JPEG_INCLUDE_DIR})
-endif(JPEG_FOUND)
+endif()
 
 find_package(TIFF)
 if(TIFF_FOUND)
   add_definitions(-DLIBTIFF_FOUND)
   include_directories(${TIFF_INCLUDE_DIR})
-endif(TIFF_FOUND)
+endif()
 
+find_package(OpenAL)
+if(OPENAL_FOUND)
+  add_definitions(-DLIBOPENAL_FOUND)
+  include_directories(${OPENAL_INCLUDE_DIR})
+endif()
 
-# include files
+# includes
 set(LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 set(INCLUDE_TPL "${CMAKE_CURRENT_SOURCE_DIR}/include/impl")
 set(INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-include_directories("${INCLUDE}")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms/analyzer")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms/converter")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms/filter")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms/generator")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/base")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/containers")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/image")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/math")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/memory")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/persistance")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/media")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/media/manipulator")
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/src")
+set(INCLUDE_DIRECTORIES "${INCLUDE}"
+                        "${INCLUDE}/algorithms"
+                        "${INCLUDE}/algorithms/analyzer"
+                        "${INCLUDE}/algorithms/converter"
+                        "${INCLUDE}/algorithms/filter"
+                        "${INCLUDE}/algorithms/generator"
+                        "${INCLUDE}/base"
+                        "${INCLUDE}/containers"
+                        "${INCLUDE}/context"
+                        "${INCLUDE}/image"
+                        "${INCLUDE}/math"
+                        "${INCLUDE}/media"
+                        "${INCLUDE}/media/manipulator"
+                        "${INCLUDE}/memory"
+                        "${INCLUDE}/persistance"
+                        "${CMAKE_CURRENT_BINARY_DIR}/src")
+
+foreach(INCLUDE_DIR IN LISTS INCLUDE_DIRECTORIES)
+  include_directories(${INCLUDE_DIR})
+endforeach()
 
 # source files
 if(BUILD_TESTING)
