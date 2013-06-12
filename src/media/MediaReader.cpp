@@ -193,6 +193,7 @@ bool gul::MediaReader::Open(void)
     m_pPacket = new AVPacket;
     av_init_packet(m_pPacket);
     m_isPacketDataFreed = true;
+    m_pFormatCtx->flags |= AVFMT_FLAG_GENPTS;
     GUL_LOG_INFO("Opend media successfully.");
   }
   else
@@ -286,7 +287,8 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
     setData(rFrame, m_pFrame);
 
     AVRational timeBase = m_pFormatCtx->streams[m_videoStreamIndex]->time_base;
-    double pts = AV_NOPTS_VALUE == m_pFrame->pkt_pts ? m_pVideoCodecCtx->frame_number : m_pFrame->pkt_pts;
+    //double pts = AV_NOPTS_VALUE == m_pFrame->pkt_pts ? m_pVideoCodecCtx->frame_number : m_pFrame->pkt_pts;
+    double pts =  m_pFrame->pkt_pts;
     rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
     rFrame.SetFrameIndex(m_pVideoCodecCtx->frame_number);
   }
