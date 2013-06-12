@@ -46,7 +46,7 @@ if(TIFF_FOUND)
 endif()
 
 if(OPENAL_FOUND)
-  target_link_libraries(gul ${OPENAL_LIBRARIES})
+  target_link_libraries(gul ${OPENAL_LIBRARY})
 endif()
 
 foreach(INCLUDE_DIR IN LISTS INCLUDE_DIRECTORIES)

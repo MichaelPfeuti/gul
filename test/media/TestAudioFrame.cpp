@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_CONTEXT_AL_H_
-#define _GUL_CONTEXT_AL_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,28 +26,23 @@
 **
 ***************************************************************************/
 
-#include "gul_export.h"
+#include "CTestAssert.h"
+#include "CTestData.h"
+#include "AudioFrame.h"
+#include "ContextAL.h"
 
-#include <AL/al.h>
-#include <AL/alc.h>
-
-namespace gul
+namespace TestAudioFrame
 {
-
-  class GUL_EXPORT ContextAL
+  int GetALBuffer(void)
   {
-    public:
-      ContextAL(void);
-      ~ContextAL(void);
+    gul::ContextAL context;
+    TEST_TRUE(context.Initialize());
 
-      bool Initialize(void);
-      void MakeCurrent(void);
+    gul::AudioFrame frame(2, 44100);
+    ALuint buffer = frame.GetALBuffer();
+    TEST_TRUE(alIsBuffer(buffer));
 
-    private:
-      ALCdevice* m_pDevice;
-      ALCcontext* m_pContext;
-  };
-
+    return EXIT_SUCCESS;
+  }
 }
 
-#endif

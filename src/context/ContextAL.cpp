@@ -27,13 +27,54 @@
 ***************************************************************************/
 
 #include "ContextAL.h"
-#include "Misc.h"
+#include "Log.h"
+#include "Assert.h"
 
 gul::ContextAL::ContextAL(void)
+  : m_pDevice(nullptr),
+    m_pContext(nullptr)
 {
 }
 
-
 gul::ContextAL::~ContextAL(void)
 {
+  alcMakeContextCurrent(nullptr);
+  if(m_pContext != nullptr)
+    alcDestroyContext(m_pContext);
+  if(m_pDevice != nullptr)
+    alcCloseDevice(m_pDevice);
+}
+
+bool gul::ContextAL::Initialize(void)
+{
+  GUL_ASSERT(m_pDevice == nullptr);
+  GUL_ASSERT(m_pContext == nullptr);
+
+  m_pDevice = alcOpenDevice(nullptr);
+  if(m_pDevice == nullptr)
+  {
+    GUL_LOG_WARNING("OpenAL could not open default audio device!");
+    return false;
+  }
+  m_pContext = alcCreateContext(m_pDevice,nullptr);
+  if(m_pContext == nullptr)
+  {
+    GUL_LOG_WARNING("OpenAL could not create context (code %d)!");
+    return false;
+  }
+  alcMakeContextCurrent(m_pContext);
+  ALenum alError;
+  if((alError = alGetError()) != AL_NO_ERROR)
+  {
+    GUL_LOG_WARNING("OpenAL could not make context current (code %d)!", alError);
+    return false;
+  }
+
+  return true;
+}
+
+void gul::ContextAL::MakeCurrent(void)
+{
+  GUL_ASSERT(m_pContext != nullptr);
+  alcMakeContextCurrent(m_pContext);
 }

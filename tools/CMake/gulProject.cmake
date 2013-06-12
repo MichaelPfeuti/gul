@@ -78,7 +78,6 @@ macro(gul_setup_project)
   set_property(CACHE GUL_ASSERTION_MODE PROPERTY STRINGS "ABORT" "EXCEPTION" "GUI")
   add_definitions(-DGUL_ASSERTION_${GUL_ASSERTION_MODE})
 
-
   # Logging options
   option(GUL_LOGGING "Enable Logging." ON)
   gul_add_define(GUL_LOGGING)

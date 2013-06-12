@@ -28,7 +28,7 @@
 
 #include "AudioFrame.h"
 #include "Misc.h"
-#include <cstring>
+#include "Log.h"
 
 gul::AudioFrame::AudioFrame(void)
   : m_channels(0),
@@ -37,7 +37,8 @@ gul::AudioFrame::AudioFrame(void)
     m_frameIndex(0),
     m_sampleCount(0),
     m_data(nullptr),
-    m_dataSize(0)
+    m_dataSize(0),
+    m_isDataSynched(false)
 {
 }
 
@@ -48,7 +49,8 @@ gul::AudioFrame::AudioFrame(int channels, int sampleRate)
     m_frameIndex(0),
     m_sampleCount(0),
     m_data(nullptr),
-    m_dataSize(0)
+    m_dataSize(0),
+    m_isDataSynched(false)
 {
 
 }
@@ -56,6 +58,18 @@ gul::AudioFrame::AudioFrame(int channels, int sampleRate)
 gul::AudioFrame::~AudioFrame(void)
 {
   GUL_DELETE_ARRAY(m_data);
+
+#ifdef LIBOPENAL_FOUND
+  if(alIsBuffer(m_alBuffer))
+  {
+    alDeleteBuffers(1, &m_alBuffer);
+    ALenum alError;
+    if((alError = alGetError()) != AL_NO_ERROR)
+    {
+      GUL_LOG_WARNING("OpenAL could delete buffer (code %d)!", alError);
+    }
+  }
+#endif
 }
 
 void gul::AudioFrame::SetPresentationTime(float pts)
@@ -98,6 +112,7 @@ void gul::AudioFrame::ResizeData(int sampleCount)
   }
   m_sampleCount = sampleCount;
   m_dataSize = dataSize;
+  m_isDataSynched = false;
 }
 
 int gul::AudioFrame::GetDataSize(void) const
@@ -112,6 +127,7 @@ int gul::AudioFrame::GetSampleCount(void) const
 
 int16_t* gul::AudioFrame::GetData(void)
 {
+  m_isDataSynched = false;
   return m_data;
 }
 
@@ -119,3 +135,39 @@ const int16_t *gul::AudioFrame::GetData(void) const
 {
   return m_data;
 }
+
+
+#ifdef LIBOPENAL_FOUND
+
+ALuint gul::AudioFrame::GetALBuffer(void)
+{
+  ALenum alError;
+
+  if(!alIsBuffer(m_alBuffer))
+  {
+    alGenBuffers(1, &m_alBuffer);
+    if((alError = alGetError()) != AL_NO_ERROR)
+    {
+      GUL_LOG_WARNING("OpenAL could generate buffer (code %d)!", alError);
+    }
+  }
+
+  if(!m_isDataSynched)
+  {
+    alBufferData(m_alBuffer,
+                 AL_FORMAT_STEREO16,
+                 m_data,
+                 m_dataSize,
+                 m_sampleRate);
+    m_isDataSynched = true;
+
+    if((alError = alGetError()) != AL_NO_ERROR)
+    {
+      GUL_LOG_WARNING("OpenAL could set buffer data (code %d)!", alError);
+    }
+  }
+
+  return m_alBuffer;
+}
+
+#endif

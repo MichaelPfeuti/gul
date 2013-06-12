@@ -32,6 +32,10 @@
 #include "gul_export.h"
 #include <cstdint>
 
+#ifdef LIBOPENAL_FOUND
+#  include <AL/al.h>
+#endif
+
 namespace gul
 {
 
@@ -68,6 +72,15 @@ namespace gul
       int m_sampleCount;
       int16_t* m_data;
       int m_dataSize;
+      bool m_isDataSynched;
+
+#ifdef LIBOPENAL_FOUND
+    public:
+      ALuint GetALBuffer(void);
+
+    private:
+      ALuint m_alBuffer;
+#endif
   };
 
 }

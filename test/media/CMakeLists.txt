@@ -62,6 +62,10 @@ gul_add_test(Media MediaConverter CopyOgv)
 
 gul_add_test(Media MediaConverter Inane2DToSBS)
 
+if(OPENAL_FOUND)
+  gul_add_test(Media AudioFrame GetALBuffer)
+endif()
+
 
 gul_create_test()
 
