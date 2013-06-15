@@ -18,7 +18,7 @@
 #
 
 #Search for the include file...
-FIND_PATH(GLFW_INCLUDE_DIR GL/glfw.h
+FIND_PATH(GLFW_INCLUDE_DIR GLFW/glfw3.h
   HINTS
   $ENV{GLFW_ROOT}
   PATH_SUFFIX include

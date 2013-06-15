@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTEXT_AL_CONTEXT_H_
-#define _GUL_CONTEXT_AL_CONTEXT_H_
+#ifndef _GUL_CONTEXT_AL_SOURCE_H_
+#define _GUL_CONTEXT_AL_SOURCE_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -33,33 +33,42 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <Set.h>
 
 namespace gul
 {
+
   /**
-   * @brief The ALSource class provides a wrapper to OpenAL context operations.
+   * @brief The ALSource class provides a wrapper to OpenAL source operations.
    *
-   * This class creates an OpenAL context and opens the default device.
-   * This class can be used to reduce the boiler plat code of OpenAL. In addition
-   * error checking is also done.
+   * This class is just a simple wrapper around the alSource* funcitons.
+   * The only additional functionality it offers is error checking.
    *
-   * \b Note: You must be careful with deleting a context. Make sure you delete th
-   *          context as the last object. Otherwise, delete sources and other OpenAL
-   *          object will fail. So you might want to create most gul::AL* classes
-   *          on the heap so that you can controll the deletion order.
+   * The only exception is Play().
+   * Internally the buffers you add with AddBuffer() are queued.
+   * To remove played buffers use RemoveBuffers() and to check if
+   * a buffer was played and was removed use IsBufferPlayed().
+   * This way you can reuse buffers (@see AddBuffer).
    */
-  class GUL_EXPORT ALContext
+  class GUL_EXPORT ALSource
   {
     public:
-      ALContext(void);
-      ~ALContext(void);
+      ALSource(void);
+      ~ALSource(void);
 
       bool Initialize(void);
-      void MakeCurrent(void);
+      bool Play(void);
+      bool Pause(void);
+      bool Stop(void);
+      bool Rewind(void);
+
+      bool AddBuffer(ALuint buffer);
+      bool RemoveBuffers(void);
+      bool IsBufferPlayed(ALuint buffer);
 
     private:
-      ALCdevice* m_pDevice;
-      ALCcontext* m_pContext;
+      ALuint m_source;
+      Set<ALuint> m_playedBuffers;
   };
 
 }
