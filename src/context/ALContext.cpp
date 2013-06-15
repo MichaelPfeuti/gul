@@ -26,17 +26,17 @@
 **
 ***************************************************************************/
 
-#include "ContextAL.h"
+#include "ALContext.h"
 #include "Log.h"
 #include "Assert.h"
 
-gul::ContextAL::ContextAL(void)
+gul::ALContext::ALContext(void)
   : m_pDevice(nullptr),
     m_pContext(nullptr)
 {
 }
 
-gul::ContextAL::~ContextAL(void)
+gul::ALContext::~ALContext(void)
 {
   alcMakeContextCurrent(nullptr);
   if(m_pContext != nullptr)
@@ -45,7 +45,7 @@ gul::ContextAL::~ContextAL(void)
     alcCloseDevice(m_pDevice);
 }
 
-bool gul::ContextAL::Initialize(void)
+bool gul::ALContext::Initialize(void)
 {
   GUL_ASSERT(m_pDevice == nullptr);
   GUL_ASSERT(m_pContext == nullptr);
@@ -73,7 +73,7 @@ bool gul::ContextAL::Initialize(void)
   return true;
 }
 
-void gul::ContextAL::MakeCurrent(void)
+void gul::ALContext::MakeCurrent(void)
 {
   GUL_ASSERT(m_pContext != nullptr);
   alcMakeContextCurrent(m_pContext);

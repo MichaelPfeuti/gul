@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_CONTEXT_CL_CONTEXT_H_
+#define _GUL_CONTEXT_CL_CONTEXT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,21 +29,28 @@
 **
 ***************************************************************************/
 
-#include "CTestAssert.h"
-#include "CTestData.h"
-#include "ContextAL.h"
+#include "gul_export.h"
 
-namespace TestContextAL
+#include <AL/al.h>
+#include <AL/alc.h>
+
+namespace gul
 {
 
-  int Init(void)
+  class GUL_EXPORT CLContext
   {
-    { // force delete
-        gul::ContextAL context;
-        TEST_TRUE(context.Initialize());
-    }
+    public:
+      CLContext(void);
+      ~CLContext(void);
 
-    return EXIT_SUCCESS;
-  }
+      bool Initialize(void);
+      void MakeCurrent(void);
+
+    private:
+      ALCdevice* m_pDevice;
+      ALCcontext* m_pContext;
+  };
+
 }
 
+#endif

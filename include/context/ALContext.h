@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_MEDIA_AUDIO_FRAME_H_
-#define _GUL_MEDIA_AUDIO_FRAME_H_
+#ifndef _GUL_CONTEXT_AL_CONTEXT_H_
+#define _GUL_CONTEXT_AL_CONTEXT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -30,47 +30,27 @@
 ***************************************************************************/
 
 #include "gul_export.h"
-#include <cstdint>
+
+#include <AL/al.h>
+#include <AL/alc.h>
 
 namespace gul
 {
 
-  class GUL_EXPORT AudioFrame
+  class GUL_EXPORT ALContext
   {
     public:
-      AudioFrame(void);
-      AudioFrame(int channels, int sampleRate);
-      ~AudioFrame(void);
+      ALContext(void);
+      ~ALContext(void);
 
-      void ResizeData(int sampleCount);
-      int16_t *GetData(void);
-      const int16_t *GetData(void) const;
-      int GetDataSize(void) const ;
-
-      int GetChannels(void) const;
-      int GetSampleRate(void) const;
-      int GetSampleCount(void) const;
-
-      void SetPresentationTime(float pts);
-      float GetPresentationTime(void) const;
-
-      void SetFrameIndex(uint64_t index);
-      uint64_t GetFrameIndex(void) const;
-
-    protected:
-      //using Image::operator =;
+      bool Initialize(void);
+      void MakeCurrent(void);
 
     private:
-      int m_channels;
-      int m_sampleRate;
-      float m_presentationTime; //!< PTS in seconds
-      uint64_t m_frameIndex;
-      int m_sampleCount;
-      int16_t* m_data;
-      int m_dataSize;
+      ALCdevice* m_pDevice;
+      ALCcontext* m_pContext;
   };
 
 }
-
 
 #endif

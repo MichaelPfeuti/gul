@@ -29,13 +29,13 @@
 #include "CTestAssert.h"
 #include "CTestData.h"
 #include "AudioFrame.h"
-#include "ContextAL.h"
+#include "ALContext.h"
 
 namespace TestAudioFrame
 {
   int GetALBuffer(void)
   {
-    gul::ContextAL context;
+    gul::ALContext context;
     TEST_TRUE(context.Initialize());
 
     gul::AudioFrame frame(2, 44100);

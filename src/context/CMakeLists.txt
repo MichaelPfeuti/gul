@@ -1,7 +1,11 @@
 if(OPENAL_FOUND)
   set(CONTEXT_SOURCES ${CONTEXT_SOURCES}
-                    ContextAL.cpp
-                    ${INCLUDE}/context/ContextAL.h
+                    ALContext.cpp
+                    CLContext.cpp
+                    GLContext.cpp
+                    ${INCLUDE}/context/ALContext.h
+                    ${INCLUDE}/context/CLContext.h
+                    ${INCLUDE}/context/GLContext.h
   )
 endif()
 
