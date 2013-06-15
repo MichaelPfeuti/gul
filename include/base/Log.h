@@ -51,10 +51,10 @@ namespace gul
   GUL_EXPORT extern LoggingLevel LoggingLevelInUse;
 }
 
-#define GUL_LOG_DEBUG(...)   gul::Log(LOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_INFO(...)    gul::Log(LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_WARNING(...) gul::Log(LOG_WARNING, __FILE__, __LINE__, __VA_ARGS__)
-#define GUL_LOG_ERROR(...)   gul::Log(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_DEBUG(...)   gul::Log(gul::LOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_INFO(...)    gul::Log(gul::LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_WARNING(...) gul::Log(gul::LOG_WARNING, __FILE__, __LINE__, __VA_ARGS__)
+#define GUL_LOG_ERROR(...)   gul::Log(gul::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
 
 #else
 

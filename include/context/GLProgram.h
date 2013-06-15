@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTEXT_GL_CONTEXT_H_
-#define _GUL_CONTEXT_GL_CONTEXT_H_
+#ifndef _GUL_CONTEXT_GL_PROGRAM_H_
+#define _GUL_CONTEXT_GL_PROGRAM_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -32,7 +32,6 @@
 #include "gul_export.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 namespace gul {
   class String;
@@ -40,28 +39,28 @@ namespace gul {
 
 namespace gul
 {
-  class GUL_EXPORT GLContext
+
+  class GUL_EXPORT GLProgram
   {
     public:
-      GLContext(void);
-      ~GLContext(void);
+      GLProgram(void);
+      ~GLProgram(void);
 
-      bool InitializeOffscreen(void);
-      bool Initialize(int width, int height, const gul::String& title);
-      bool InitializeFullscreen(const gul::String& title);
-      void MakeCurrent(void);
-      void SwapBuffers(void);
-      void SwapBuffersAndWaitForInput(void);
+      bool Initialize(void);
+      bool Link(void);
+      bool CompileShader(GLenum shaderType, const gul::String& sourceCode);
+      bool Use(void);
 
-    private:
-      bool initGLFW(void);
-      bool initGLEW(void);
-      void setDefaultWindowHints(void);
-      void createVertexArray(void);
+      GLuint GetGLId(void);
 
     private:
-      GLFWwindow* m_pWindow;
-      GLuint m_vertexArray;
+      bool compileShader(const GLuint& shader, const gul::String& sourceCode);
+
+    private:
+      GLuint m_program;
+      GLuint m_shaderVertex;
+      GLuint m_shaderFragment;
+      GLuint m_shaderGeometry;
   };
 
 }

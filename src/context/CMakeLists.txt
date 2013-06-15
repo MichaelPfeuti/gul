@@ -4,10 +4,12 @@ if(OPENAL_FOUND)
                     ALSource.cpp
                     CLContext.cpp
                     GLContext.cpp
+                    GLProgram.cpp
                     ${INCLUDE}/context/ALContext.h
                     ${INCLUDE}/context/ALSource.h
                     ${INCLUDE}/context/CLContext.h
                     ${INCLUDE}/context/GLContext.h
+                    ${INCLUDE}/context/GLProgram.h
   )
 endif()
 

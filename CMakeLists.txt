@@ -15,6 +15,8 @@ find_package(PNG)
 find_package(JPEG)
 find_package(TIFF)
 find_package(OpenAL)
+find_package(GLFW)
+find_package(GLEW)
 
 # includes
 set(LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs")

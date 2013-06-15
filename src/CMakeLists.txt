@@ -68,6 +68,18 @@ if(OPENAL_FOUND)
   target_link_libraries(gul ${OPENAL_LIBRARY})
 endif()
 
+if(GLFW_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBGLFW_FOUND)
+  include_directories(${GLFW_INCLUDE_DIR})
+  target_link_libraries(gul ${GLFW_LIBRARY})
+endif()
+
+if(GLEW_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBGLEW_FOUND)
+  include_directories(${GLEW_INCLUDE_DIR})
+  target_link_libraries(gul ${GLEW_LIBRARY})
+endif()
+
 # process modules (includes, definitions, ...)
 foreach(MODULE IN LISTS MODULES)
   add_subdirectory(${MODULE})
