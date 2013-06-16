@@ -68,6 +68,12 @@ if(OPENAL_FOUND)
   target_link_libraries(gul ${OPENAL_LIBRARY})
 endif()
 
+if(OPENGL_FOUND)
+  set(DEFINITIONS ${DEFINITIONS} LIBOPENGL_FOUND)
+  include_directories(${OPENGL_INCLUDE_DIR})
+  target_link_libraries(gul ${OPENGL_LIBRARY})
+endif()
+
 if(GLFW_FOUND)
   set(DEFINITIONS ${DEFINITIONS} LIBGLFW_FOUND)
   include_directories(${GLFW_INCLUDE_DIR})

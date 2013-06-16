@@ -15,6 +15,7 @@ find_package(PNG)
 find_package(JPEG)
 find_package(TIFF)
 find_package(OpenAL)
+find_package(OpenGL)
 find_package(GLFW)
 find_package(GLEW)
 
