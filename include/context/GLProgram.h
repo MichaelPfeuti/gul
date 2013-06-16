@@ -51,7 +51,7 @@ namespace gul
       bool CompileShader(GLenum shaderType, const gul::String& sourceCode);
       bool Use(void);
 
-      GLuint GetGLId(void);
+      GLuint GetId(void);
 
     private:
       bool compileShader(const GLuint& shader, const gul::String& sourceCode);

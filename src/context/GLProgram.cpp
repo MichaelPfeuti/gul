@@ -87,7 +87,7 @@ bool gul::GLProgram::Use(void)
   return true;
 }
 
-GLuint gul::GLProgram::GetGLId(void)
+GLuint gul::GLProgram::GetId(void)
 {
   return m_program;
 }

@@ -27,6 +27,7 @@
 ***************************************************************************/
 
 #include "SharedResource.h"
+#include "Log.h"
 
 /**
  * @brief Default constructor does not setup or do anything
@@ -125,6 +126,8 @@ void gul::SharedResource::detach(void)
 {
   if(!isOnlyReferencee())
   {
+    GUL_LOG_DEBUG("gul::SharedResource::detach %p causes copy", this);
+
     SharedResource* newOwner = m_pOwner->createSharedResourceOwner();
     detachFromOwner();
     m_pOwner = newOwner;

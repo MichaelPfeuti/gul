@@ -30,9 +30,13 @@
 #include "Log.h"
 #include "Assert.h"
 #include <cstdlib>
+#include "Misc.h"
 
 static void errorCallback(int error, const char* description)
 {
+  GUL_UNUSED_VAR(error);
+  GUL_UNUSED_VAR(description);
+
   GUL_LOG_ERROR("GLFW Error %d: %s!", error, description);
 }
 

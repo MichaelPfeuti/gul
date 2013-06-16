@@ -32,6 +32,10 @@
 #include "RTTI.h"
 #include "SharedResource.h"
 
+#ifdef LIBGLEW_FOUND
+#  include <GL/glew.h>
+#endif
+
 namespace gul
 {
 
@@ -94,6 +98,15 @@ namespace gul
       int m_width;
       int m_height;
       ImageFormat m_imageFormat;
+      bool m_isGLDataSynched;
+
+#ifdef LIBOPENGL_FOUND
+    public:
+      const GLuint& GetGLTexture(void);
+
+    private:
+      GLuint m_glTexture;
+#endif
   };
 
   typedef ImageT<unsigned char> Image;

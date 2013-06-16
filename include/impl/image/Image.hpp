@@ -29,6 +29,7 @@
 #include "Image.h"
 #include "Misc.h"
 #include "Assert.h"
+#include "Log.h"
 
 DEFINE_TPL_RTTI(gul::ImageT);
 
@@ -37,7 +38,8 @@ gul::ImageT<T>::ImageT(void)
   : m_pData(nullptr),
     m_width(0),
     m_height(0),
-    m_imageFormat(IF_UNDEFINED)
+    m_imageFormat(IF_UNDEFINED),
+    m_isGLDataSynched(false)
 {
 }
 
@@ -46,7 +48,8 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat)
   : m_pData(nullptr),
     m_width(w),
     m_height(h),
-    m_imageFormat(imageFormat)
+    m_imageFormat(imageFormat),
+    m_isGLDataSynched(false)
 {
   initConstructor();
 }
@@ -56,7 +59,8 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
   : m_pData(nullptr),
     m_width(w),
     m_height(h),
-    m_imageFormat(imageFormat)
+    m_imageFormat(imageFormat),
+    m_isGLDataSynched(false)
 {
   initConstructor();
   memcpy(m_pData, data, sizeof(T)*w*h*GetNumberOfChannels());
@@ -68,7 +72,8 @@ gul::ImageT<T>::ImageT(const ImageT& rImage)
     m_pData(nullptr),
     m_width(rImage.m_width),
     m_height(rImage.m_height),
-    m_imageFormat(rImage.m_imageFormat)
+    m_imageFormat(rImage.m_imageFormat),
+    m_isGLDataSynched(rImage.m_isGLDataSynched)
 {
   initCopyConstructor(rImage);
 }
@@ -82,6 +87,7 @@ gul::ImageT<T>& gul::ImageT<T>::operator =(const ImageT<T>& rImage)
     m_width = rImage.m_width;
     m_height = rImage.m_height;
     m_imageFormat = rImage.m_imageFormat;
+    m_isGLDataSynched = rImage.m_isGLDataSynched;
   }
   return *this;
 }
@@ -139,6 +145,7 @@ template<typename T>
 T* gul::ImageT<T>::GetData(void)
 {
   detach();
+  m_isGLDataSynched = false;
   return m_pData;
 }
 
@@ -164,6 +171,7 @@ T* gul::ImageT<T>::GetScanline(int scanline)
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   detach();
+  m_isGLDataSynched = false;
   return m_pData + scanline*GetPitch();
 }
 
@@ -196,6 +204,7 @@ T& gul::ImageT<T>::GetColor(int x, int y, int channel)
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   detach();
+  m_isGLDataSynched = false;
   return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
@@ -209,12 +218,24 @@ template<typename T>
 void gul::ImageT<T>::deleteSharedResource(void)
 {
   GUL_DELETE_ARRAY(m_pData);
+
+#ifdef LIBOPENGL_FOUND
+  if(glIsTexture(m_glTexture))
+  {
+    GUL_LOG_DEBUG("Image Opengl texture deleted!");
+    glDeleteTextures(1, &m_glTexture);
+  }
+#endif
 }
 
 template<typename T>
 void gul::ImageT<T>::transferSharedResourceFrom(const SharedResource& newOwner)
 {
   m_pData = static_cast<const ImageT<T>&>(newOwner).m_pData;
+
+#ifdef LIBOPENGL_FOUND
+  m_glTexture = static_cast<const ImageT<T>&>(newOwner).m_glTexture;
+#endif
 }
 
 template<typename T>
@@ -234,5 +255,51 @@ gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
   {
     memcpy(newImage->m_pData, m_pData, sizeof(T)*size);
   }
+
+  newImage->m_isGLDataSynched = false;
+
+#ifdef LIBOPENGL_FOUND
+  glGenTextures(1, &newImage->m_glTexture);
+  glBindTexture(GL_TEXTURE_2D, newImage->m_glTexture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  GLenum glError;
+  if((glError = glGetError()) != GL_NO_ERROR)
+  {
+    GUL_LOG_WARNING("OpenGL could create texture (code %d) :", glError, gluErrorString(glError));
+  }
+#endif
+
   return newImage;
 }
+
+#ifdef LIBOPENGL_FOUND
+
+template<typename T>
+const GLuint& gul::ImageT<T>::GetGLTexture(void)
+{
+  GLenum glError;
+
+  if(!m_isGLDataSynched)
+  {
+    glBindTexture(GL_TEXTURE_2D, m_glTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 GetWidth(), GetHeight(), 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE,
+                 GetDataConst());
+    m_isGLDataSynched = true;
+
+    if((glError = glGetError()) != GL_NO_ERROR)
+    {
+      GUL_LOG_WARNING("OpenGL could set buffer data (code %d) :", glError, gluErrorString(glError));
+    }
+  }
+
+  return m_glTexture;
+}
+
+#endif
