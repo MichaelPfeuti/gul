@@ -78,7 +78,7 @@ bool gul::CLContext::Initialize(void)
   cl_device_id devices[counter];
   GUL_CL_CHECK_ERROR(clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, counter, devices, nullptr));
 
-  for(int i = 0; i < counter; ++i)
+  for(cl_uint i = 0; i < counter; ++i)
   {
     m_devices.Add(devices[i]);
   }
@@ -95,11 +95,15 @@ bool gul::CLContext::Initialize(void)
                               &error);
   GUL_CL_CHECK_ERROR(error);
 
-  //m_queue = clCreateCommandQueue(m_context, devices[0],
-    //                             0, &error);
-  //GUL_CL_CHECK_ERROR(error);
+  m_currentQueue = clCreateCommandQueue(m_context, devices[0], 0, &error);
+  GUL_CL_CHECK_ERROR(error);
 
   return true;
+}
+
+cl_command_queue& gul::CLContext::GetCurrentQueue(void)
+{
+  return m_currentQueue;
 }
 
 cl_device_id& gul::CLContext::GetDevice(int index)

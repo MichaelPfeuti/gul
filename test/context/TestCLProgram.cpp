@@ -34,18 +34,39 @@
 namespace TestCLProgram
 {
 
-  gul::String dummySourceValid("__kernel void testKernel(__global float* input,"
-                               "                         __global float* output)"
-                               "{"
-                               "  int index = get_global_id(0);"
-                               "  output[index] = input[index];"
+  gul::String dummySourceValid("__kernel void testKernel(__global float* input,\n"
+                               "                         __global float* output)\n"
+                               "{\n"
+                               "  int index = get_global_id(0);\n"
+                               "  output[index] = input[index];\n"
                                "}");
-  gul::String dummySourceInvalid("__kernel void testKernel(__global float* input,"
-                                 "                         __global float* output)"
-                                 "{"
-                                 "  int index = get_global_id(0);"
-                                 "  output[index = input[index];"
+  gul::String dummySourceInvalid("__kernel void testKernel(__global float* input,\n"
+                                 "                         __global float* output)\n"
+                                 "{\n"
+                                 "  int index = get_global_id(0);\n"
+                                 "  output[index = input[index];\n"
                                  "}");
+  gul::String argumentTestKernel("__kernel void testNoArgs()\n"
+                                 "{\n"
+                                 "  __local float res;\n"
+                                 "  res = 5;\n"
+                                 "}\n"
+                                 "\n"
+                                 "__kernel void testOneArgs(int input)\n"
+                                 "{\n"
+                                 "  __local float res;\n"
+                                 "  res = input;\n"
+                                 "}\n"
+                                 "\n"
+                                 "__kernel void testTwoArgs(__global int* input,\n"
+                                 "                          float output)\n"
+                                 "{\n"
+                                 "  __local float res;\n"
+                                 "  res = input[1]*output;\n"
+                                 "}\n"
+                                 "\n"
+                                 );
+
 
   int BuildValid(void)
   {
@@ -86,6 +107,102 @@ namespace TestCLProgram
         gul::CLProgram program;
         program.AddSource(dummySourceInvalid);
         TEST_ASSERTION(program.Build());
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int RunUnknownKernel(void)
+  {
+    { // force delete
+        gul::CLContext context;
+        TEST_TRUE(context.Initialize());
+        context.MakeCurrent();
+
+        gul::CLProgram program;
+        program.AddSource(argumentTestKernel);
+        TEST_TRUE(program.Build());
+        size_t workGroup[] = { 1 };
+        TEST_ASSERTION(program.Run("wrongKernel", 1, workGroup));
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int RunNoArgs(void)
+  {
+    { // force delete
+        gul::CLContext context;
+        TEST_TRUE(context.Initialize());
+        context.MakeCurrent();
+
+        gul::CLProgram program;
+        program.AddSource(argumentTestKernel);
+        TEST_TRUE(program.Build());
+        size_t workGroup[] = { 1 , 3};
+        TEST_TRUE(program.Run("testNoArgs", 2, workGroup));
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int RunOneArg(void)
+  {
+    { // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
+
+      gul::CLProgram program;
+      program.AddSource(argumentTestKernel);
+      TEST_TRUE(program.Build());
+      size_t workGroup[] = { 1, 3, 123 };
+      TEST_TRUE(program.Run("testOneArgs", 3, workGroup, 12));
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int RunTwoArgsFirstWrong(void)
+  {
+    { // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
+
+      gul::CLProgram program;
+      program.AddSource(argumentTestKernel);
+      TEST_TRUE(program.Build());
+      size_t workGroup[] = { 1, 3, 123 };
+      TEST_FALSE(program.Run("testTwoArgs", 3, workGroup, 1, 4.f));
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  int RunTwoArgs(void)
+  {
+    { // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
+
+      gul::CLProgram program;
+      program.AddSource(argumentTestKernel);
+      TEST_TRUE(program.Build());
+
+      cl_int error;
+      cl_mem intBuffer = clCreateBuffer(context.GetCLContext(),
+                                        CL_MEM_READ_WRITE,
+                                        5*sizeof(int), nullptr,
+                                        &error);
+      if(error != CL_SUCCESS)
+      {
+        return EXIT_FAILURE;
+      }
+
+      size_t workGroup[] = { 1, 3, 123 };
+      TEST_TRUE(program.Run("testTwoArgs", 3, workGroup, intBuffer, 4.f));
     }
 
     return EXIT_SUCCESS;

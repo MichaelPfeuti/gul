@@ -28,11 +28,8 @@
 
 #include "CLProgram.h"
 #include "Log.h"
-#include "Assert.h"
 #include "Misc.h"
 #include "ContextErrorHandling.h"
-#include "CLContext.h"
-
 
 gul::CLProgram::CLProgram(void)
   : m_isProgramAllocated(false)
@@ -111,9 +108,3 @@ bool gul::CLProgram::Build(void)
 
   return true;
 }
-
-bool gul::CLProgram::Run(const gul::String& kernelName)
-{
-  return false;
-}
-

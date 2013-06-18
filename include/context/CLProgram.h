@@ -33,9 +33,11 @@
 
 #include <CL/cl.h>
 
+#include "ContextErrorHandling.h"
 #include "MapBasic.h"
 #include "String.h"
-
+#include "CLContext.h"
+#include "Assert.h"
 
 namespace gul
 {
@@ -48,8 +50,39 @@ namespace gul
 
       void AddSource(const gul::String& source);
       bool Build(void);
-      bool Run(const gul::String& kernelName);
 
+      template<typename... ArgTypes>
+      bool Run(const gul::String& kernelName, size_t dimension, size_t* workGroup, ArgTypes... params)
+      {
+        CLContext* pCurrentContext = CLContext::GetCurrentContext();
+        GUL_ASSERT_MSG(pCurrentContext != nullptr, "No current OpenCL context!");
+
+        cl_kernel& kernel = m_kernels.Get(kernelName);
+        if(!SetArgument(kernel, 0, params...))
+        {
+          return false;
+        }
+
+        GUL_CL_CHECK_ERROR(clEnqueueNDRangeKernel(pCurrentContext->GetCurrentQueue(),
+                                                  kernel, dimension, nullptr,
+                                                  workGroup, nullptr,
+                                                  0, nullptr, nullptr));
+        return true;
+      }
+
+    private:
+      template<typename T, typename... Tail>
+      bool SetArgument(cl_kernel& kernel, cl_uint index, const T& value, Tail... paramsTail)
+      {
+        GUL_CL_CHECK_ERROR(clSetKernelArg(kernel, index, sizeof(T), &value));
+        return SetArgument(kernel, ++index, paramsTail...);
+      }
+
+      template<typename T>
+      bool SetArgument(cl_kernel&, const T&)
+      {
+        return true;
+      }
 
     private:
       typedef gul::MapBasic<const gul::String, cl_kernel> KernelMap;

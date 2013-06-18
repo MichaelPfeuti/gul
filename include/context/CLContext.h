@@ -49,13 +49,14 @@ namespace gul
 
       cl_context& GetCLContext(void);
       cl_device_id& GetDevice(int index = 0);
+      cl_command_queue& GetCurrentQueue(void);
 
       static CLContext* GetCurrentContext(void);
 
     private:
       cl_context m_context;
       ListBasic<cl_device_id> m_devices;
-    //  cl_command_queue m_queue;
+      cl_command_queue m_currentQueue;
 
       static CLContext* s_pCurrentContext;
   };
