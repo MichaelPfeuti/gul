@@ -37,6 +37,7 @@
 #include "MapBasic.h"
 #include "String.h"
 #include "CLContext.h"
+#include "CLWorkgroup.h"
 #include "Assert.h"
 
 namespace gul
@@ -52,7 +53,7 @@ namespace gul
       bool Build(void);
 
       template<typename... ArgTypes>
-      bool Run(const gul::String& kernelName, size_t dimension, size_t* workGroup, ArgTypes... params)
+      bool Run(const gul::String& kernelName, const CLWorkgroup& workGroup, ArgTypes... params)
       {
         CLContext* pCurrentContext = CLContext::GetCurrentContext();
         GUL_ASSERT_MSG(pCurrentContext != nullptr, "No current OpenCL context!");
@@ -64,8 +65,8 @@ namespace gul
         }
 
         GUL_CL_CHECK_ERROR(clEnqueueNDRangeKernel(pCurrentContext->GetCurrentQueue(),
-                                                  kernel, dimension, nullptr,
-                                                  workGroup, nullptr,
+                                                  kernel, workGroup.GetDimension(), nullptr,
+                                                  workGroup.GetSize(), nullptr,
                                                   0, nullptr, nullptr));
         return true;
       }

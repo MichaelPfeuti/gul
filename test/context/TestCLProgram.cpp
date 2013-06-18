@@ -122,8 +122,8 @@ namespace TestCLProgram
         gul::CLProgram program;
         program.AddSource(argumentTestKernel);
         TEST_TRUE(program.Build());
-        size_t workGroup[] = { 1 };
-        TEST_ASSERTION(program.Run("wrongKernel", 1, workGroup));
+        gul::CLWorkgroup workGroup(1);
+        TEST_ASSERTION(program.Run("wrongKernel", workGroup));
     }
 
     return EXIT_SUCCESS;
@@ -139,8 +139,8 @@ namespace TestCLProgram
         gul::CLProgram program;
         program.AddSource(argumentTestKernel);
         TEST_TRUE(program.Build());
-        size_t workGroup[] = { 1 , 3};
-        TEST_TRUE(program.Run("testNoArgs", 2, workGroup));
+        gul::CLWorkgroup workGroup(1, 3);
+        TEST_TRUE(program.Run("testNoArgs", workGroup));
     }
 
     return EXIT_SUCCESS;
@@ -156,8 +156,8 @@ namespace TestCLProgram
       gul::CLProgram program;
       program.AddSource(argumentTestKernel);
       TEST_TRUE(program.Build());
-      size_t workGroup[] = { 1, 3, 123 };
-      TEST_TRUE(program.Run("testOneArgs", 3, workGroup, 12));
+      gul::CLWorkgroup workGroup(1, 3, 123);
+      TEST_TRUE(program.Run("testOneArgs", workGroup, 12));
     }
 
     return EXIT_SUCCESS;
@@ -173,8 +173,8 @@ namespace TestCLProgram
       gul::CLProgram program;
       program.AddSource(argumentTestKernel);
       TEST_TRUE(program.Build());
-      size_t workGroup[] = { 1, 3, 123 };
-      TEST_FALSE(program.Run("testTwoArgs", 3, workGroup, 1, 4.f));
+      gul::CLWorkgroup workGroup(1, 3, 123);
+      TEST_FALSE(program.Run("testTwoArgs", workGroup, 1, 4.f));
     }
 
     return EXIT_SUCCESS;
@@ -201,8 +201,8 @@ namespace TestCLProgram
         return EXIT_FAILURE;
       }
 
-      size_t workGroup[] = { 1, 3, 123 };
-      TEST_TRUE(program.Run("testTwoArgs", 3, workGroup, intBuffer, 4.f));
+      gul::CLWorkgroup workGroup(1, 3, 123);
+      TEST_TRUE(program.Run("testTwoArgs", workGroup, intBuffer, 4.f));
     }
 
     return EXIT_SUCCESS;

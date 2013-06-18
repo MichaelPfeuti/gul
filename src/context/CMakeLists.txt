@@ -11,6 +11,7 @@ if(OPENAL_FOUND)
                     ${INCLUDE}/context/ALSource.h
                     ${INCLUDE}/context/CLContext.h
                     ${INCLUDE}/context/CLProgram.h
+                    ${INCLUDE}/context/CLWorkgroup.h
                     ${INCLUDE}/context/ContextErrorHandling.h
                     ${INCLUDE}/context/GLContext.h
                     ${INCLUDE}/context/GLProgram.h
