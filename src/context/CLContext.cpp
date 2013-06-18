@@ -29,52 +29,95 @@
 #include "CLContext.h"
 #include "Log.h"
 #include "Assert.h"
+#include "Misc.h"
+#include "ContextErrorHandling.h"
+
+static void errorCallback(const char *description,
+                          const void*, size_t,
+                          void*)
+{
+  GUL_UNUSED_VAR(description);
+
+  GUL_LOG_ERROR("OpenCL Error Callback: %s!", description);
+}
+
+gul::CLContext* gul::CLContext::s_pCurrentContext = nullptr;
+
 
 gul::CLContext::CLContext(void)
-  : m_pDevice(nullptr),
-    m_pContext(nullptr)
 {
 }
 
 gul::CLContext::~CLContext(void)
 {
-  alcMakeContextCurrent(nullptr);
-  if(m_pContext != nullptr)
-    alcDestroyContext(m_pContext);
-  if(m_pDevice != nullptr)
-    alcCloseDevice(m_pDevice);
+  //clReleaseCommandQueue(m_queue);
+  clReleaseContext(m_context);
 }
 
 bool gul::CLContext::Initialize(void)
 {
-  GUL_ASSERT(m_pDevice == nullptr);
-  GUL_ASSERT(m_pContext == nullptr);
+  cl_uint counter = 0;
+  GUL_CL_CHECK_ERROR(clGetPlatformIDs(0, nullptr, &counter));
+  if(counter == 0)
+  {
+    GUL_LOG_WARNING("No OpenCL platform found!");
+    return false;
+  }
 
-  m_pDevice = alcOpenDevice(nullptr);
-  if(m_pDevice == nullptr)
+  cl_platform_id platform;
+  GUL_CL_CHECK_ERROR(clGetPlatformIDs(1, &platform, nullptr));
+
+  counter = 0;
+  GUL_CL_CHECK_ERROR(clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 0, nullptr, &counter));
+  if(counter == 0)
   {
-    GUL_LOG_WARNING("OpenAL could not open default audio device!");
+    GUL_LOG_WARNING("No OpenCL device found!");
     return false;
   }
-  m_pContext = alcCreateContext(m_pDevice,nullptr);
-  if(m_pContext == nullptr)
+
+  cl_device_id devices[counter];
+  GUL_CL_CHECK_ERROR(clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, counter, devices, nullptr));
+
+  for(int i = 0; i < counter; ++i)
   {
-    GUL_LOG_WARNING("OpenAL could not create context (code %d)!");
-    return false;
+    m_devices.Add(devices[i]);
   }
-  alcMakeContextCurrent(m_pContext);
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not make context current (code %d)!", alError);
-    return false;
-  }
+
+  const cl_context_properties contextProperties [] = {
+      CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
+      0, 0
+  };
+
+  cl_int error;
+  m_context = clCreateContext(contextProperties,
+                              counter, devices,
+                              errorCallback, nullptr,
+                              &error);
+  GUL_CL_CHECK_ERROR(error);
+
+  //m_queue = clCreateCommandQueue(m_context, devices[0],
+    //                             0, &error);
+  //GUL_CL_CHECK_ERROR(error);
 
   return true;
 }
 
+cl_device_id& gul::CLContext::GetDevice(int index)
+{
+  return m_devices.Get(index);
+}
+
+cl_context& gul::CLContext::GetCLContext(void)
+{
+  return m_context;
+}
+
 void gul::CLContext::MakeCurrent(void)
 {
-  GUL_ASSERT(m_pContext != nullptr);
-  alcMakeContextCurrent(m_pContext);
+  s_pCurrentContext = this;
+}
+
+gul::CLContext* gul::CLContext::GetCurrentContext(void)
+{
+  return s_pCurrentContext;
 }

@@ -37,7 +37,7 @@ FIND_LIBRARY(GLFW_LIBRARY
   /usr/lib
 )
 
-# handle the QUIETLY and REQUIRED arguments and set OPENAL_FOUND to TRUE if
+# handle the QUIETLY and REQUIRED arguments and set GLFW_FOUND to TRUE if
 # all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GLFW DEFAULT_MSG GLFW_LIBRARY GLFW_INCLUDE_DIR)

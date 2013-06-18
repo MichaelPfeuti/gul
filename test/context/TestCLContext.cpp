@@ -1,6 +1,3 @@
-#pragma once
-#ifndef _GUL_CONTEXT_CL_CONTEXT_H_
-#define _GUL_CONTEXT_CL_CONTEXT_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -29,37 +26,21 @@
 **
 ***************************************************************************/
 
-#include "gul_export.h"
+#include "CTestAssert.h"
+#include "CTestData.h"
+#include "CLContext.h"
 
-#include <CL/cl.h>
-
-#include "ListBasic.h"
-
-namespace gul
+namespace TestCLContext
 {
 
-  class GUL_EXPORT CLContext
+  int Init(void)
   {
-    public:
-      CLContext(void);
-      ~CLContext(void);
+    { // force delete
+        gul::CLContext context;
+        TEST_TRUE(context.Initialize());
+    }
 
-      bool Initialize(void);
-      void MakeCurrent(void);
-
-      cl_context& GetCLContext(void);
-      cl_device_id& GetDevice(int index = 0);
-
-      static CLContext* GetCurrentContext(void);
-
-    private:
-      cl_context m_context;
-      ListBasic<cl_device_id> m_devices;
-    //  cl_command_queue m_queue;
-
-      static CLContext* s_pCurrentContext;
-  };
-
+    return EXIT_SUCCESS;
+  }
 }
 
-#endif

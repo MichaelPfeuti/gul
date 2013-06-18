@@ -1,6 +1,15 @@
 if(OPENAL_FOUND)
   gul_add_test(Context ALContext Init)
 endif()
+if(OPENCL_FOUND)
+  gul_add_test(Context CLContext Init)
+  gul_add_test(Context CLProgram BuildValid)
+  gul_add_test(Context CLProgram BuildInvalid)
+  gul_add_test(Context CLProgram NoCurrentContext)
+endif()
+if(OPENGL_FOUND)
+#  gul_add_test(Context GLContext Init)
+endif()
 
 gul_create_test()
 

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTEXT_CL_CONTEXT_H_
-#define _GUL_CONTEXT_CL_CONTEXT_H_
+#ifndef _GUL_CONTEXT_CONTEXT_ERROR_HANDLING_H_
+#define _GUL_CONTEXT_CONTEXT_ERROR_HANDLING_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -33,33 +33,22 @@
 
 #include <CL/cl.h>
 
-#include "ListBasic.h"
-
-namespace gul
-{
-
-  class GUL_EXPORT CLContext
-  {
-    public:
-      CLContext(void);
-      ~CLContext(void);
-
-      bool Initialize(void);
-      void MakeCurrent(void);
-
-      cl_context& GetCLContext(void);
-      cl_device_id& GetDevice(int index = 0);
-
-      static CLContext* GetCurrentContext(void);
-
-    private:
-      cl_context m_context;
-      ListBasic<cl_device_id> m_devices;
-    //  cl_command_queue m_queue;
-
-      static CLContext* s_pCurrentContext;
-  };
-
+namespace gul {
+  bool GUL_EXPORT alCheckError(const char* message);
+  bool GUL_EXPORT clCheckError(cl_int err);
 }
+
+#define GUL_AL_CHECK_ERROR(message) \
+  if(!alCheckError(message)) \
+  {  \
+    return false; \
+  }
+
+#define GUL_CL_CHECK_ERROR(function) \
+  if(!clCheckError(function)) \
+  {  \
+    return false; \
+  }
+
 
 #endif

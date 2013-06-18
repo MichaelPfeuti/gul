@@ -29,6 +29,7 @@
 #include "ALSource.h"
 #include "Log.h"
 #include "Assert.h"
+#include "ContextErrorHandling.h"
 
 gul::ALSource::ALSource(void)
   : m_source(0)
@@ -54,13 +55,7 @@ gul::ALSource::~ALSource(void)
 bool gul::ALSource::Initialize(void)
 {
   alGenSources(1,&m_source);
-
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR || !alIsSource(m_source))
-  {
-    GUL_LOG_WARNING("OpenAL could not create source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not create source!");
   return true;
 }
 
@@ -83,12 +78,7 @@ bool gul::ALSource::Play(void)
     alSourcePlay(m_source);
   }
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not play source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not play source!");
   return true;
 }
 
@@ -100,12 +90,7 @@ bool gul::ALSource::Pause(void)
 {
   alSourcePause(m_source);
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not pause source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not pause source!");
   return true;
 }
 
@@ -117,12 +102,7 @@ bool gul::ALSource::Stop(void)
 {
   alSourceStop(m_source);
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not stop source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not stop source!");
   return true;
 }
 
@@ -137,12 +117,7 @@ bool gul::ALSource::Rewind(void)
 {
   alSourceRewind(m_source);
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not rewind source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not rewind source!");
   return true;
 }
 
@@ -166,12 +141,7 @@ bool gul::ALSource::AddBuffer(ALuint buffer)
 
   alSourceQueueBuffers(m_source, 1, &buffer );
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not rewind source (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not rewind source!");
   return true;
 }
 
@@ -196,12 +166,7 @@ bool gul::ALSource::RemoveBuffers(void)
       m_playedBuffers.Add(buffers[i]);
   }
 
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not remove played buffers from sources (code %d)!", alError);
-    return false;
-  }
+  GUL_AL_CHECK_ERROR("Could not remove played buffers from sources!");
   return true;
 }
 

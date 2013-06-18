@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GUL_CONTEXT_CL_CONTEXT_H_
-#define _GUL_CONTEXT_CL_CONTEXT_H_
+#ifndef _GUL_CONTEXT_CL_PROGRAM_H_
+#define _GUL_CONTEXT_CL_PROGRAM_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -33,31 +33,31 @@
 
 #include <CL/cl.h>
 
-#include "ListBasic.h"
+#include "MapBasic.h"
+#include "String.h"
+
 
 namespace gul
 {
 
-  class GUL_EXPORT CLContext
+  class GUL_EXPORT CLProgram
   {
     public:
-      CLContext(void);
-      ~CLContext(void);
+      CLProgram(void);
+      ~CLProgram(void);
 
-      bool Initialize(void);
-      void MakeCurrent(void);
+      void AddSource(const gul::String& source);
+      bool Build(void);
+      bool Run(const gul::String& kernelName);
 
-      cl_context& GetCLContext(void);
-      cl_device_id& GetDevice(int index = 0);
-
-      static CLContext* GetCurrentContext(void);
 
     private:
-      cl_context m_context;
-      ListBasic<cl_device_id> m_devices;
-    //  cl_command_queue m_queue;
+      typedef gul::MapBasic<const gul::String, cl_kernel> KernelMap;
 
-      static CLContext* s_pCurrentContext;
+      bool m_isProgramAllocated;
+      cl_program m_program;
+      KernelMap m_kernels;
+      gul::ListBasic<const gul::String> m_sources;
   };
 
 }

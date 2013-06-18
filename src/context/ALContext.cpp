@@ -29,6 +29,7 @@
 #include "ALContext.h"
 #include "Log.h"
 #include "Assert.h"
+#include "ContextErrorHandling.h"
 
 gul::ALContext::ALContext(void)
   : m_pDevice(nullptr),
@@ -63,12 +64,8 @@ bool gul::ALContext::Initialize(void)
     return false;
   }
   alcMakeContextCurrent(m_pContext);
-  ALenum alError;
-  if((alError = alGetError()) != AL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenAL could not make context current (code %d)!", alError);
-    return false;
-  }
+
+  GUL_AL_CHECK_ERROR("Could not make context current!");
 
   return true;
 }
