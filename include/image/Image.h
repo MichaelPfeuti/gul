@@ -92,6 +92,8 @@ namespace gul
       virtual void deleteSharedResource(void);
       virtual void transferSharedResourceFrom(const SharedResource& newOwner);
       virtual ImageT* createSharedResourceOwner(void) const;
+      virtual bool isResourceDataSizeEqual(const SharedResource& rOther);
+      virtual void copyDataFrom(const SharedResource& rOther);
 
     private:
       T* m_pData;

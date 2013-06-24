@@ -57,17 +57,24 @@ gul::SharedResource::~SharedResource(void)
  * @param other A referee that has an owner.
  * @return *this
  */
-gul::SharedResource& gul::SharedResource::operator=(const SharedResource& other)
+gul::SharedResource& gul::SharedResource::operator=(const SharedResource& rOther)
 {
-  GUL_ASSERT(other.m_pOwner != nullptr);
-  GUL_ASSERT(other.m_pReferencees == nullptr);
-  GUL_ASSERT(other.m_pOwner->m_pReferencees != nullptr);
-  GUL_ASSERT(other.m_pOwner->m_pReferencees->Size() > 0);
+  GUL_ASSERT(rOther.m_pOwner != nullptr);
+  GUL_ASSERT(rOther.m_pReferencees == nullptr);
+  GUL_ASSERT(rOther.m_pOwner->m_pReferencees != nullptr);
+  GUL_ASSERT(rOther.m_pOwner->m_pReferencees->Size() > 0);
 
-  if(this != &other)
+  if(this != &rOther)
   {
-    detachFromOwner();
-    attachToResource(other);
+    if(!isOwner() && isOnlyReferencee() && isResourceDataSizeEqual(rOther))
+    {
+      copyDataFrom(rOther);
+    }
+    else
+    {
+      detachFromOwner();
+      attachToResource(rOther);
+    }
   }
 
   return *this;

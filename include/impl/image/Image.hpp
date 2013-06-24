@@ -215,6 +215,20 @@ int gul::ImageT<T>::GetPitch(void) const
 }
 
 template<typename T>
+bool gul::ImageT<T>::isResourceDataSizeEqual(const SharedResource& rOther)
+{
+  return m_width == static_cast<const ImageT<T>&>(rOther).m_width &&
+         m_height == static_cast<const ImageT<T>&>(rOther).m_height &&
+         m_imageFormat == static_cast<const ImageT<T>&>(rOther).m_imageFormat;
+}
+
+template<typename T>
+void gul::ImageT<T>::copyDataFrom(const SharedResource& rOther)
+{
+  memcpy(m_pData, static_cast<const ImageT<T>&>(rOther).GetData(), GetPitch()*m_height);
+}
+
+template<typename T>
 void gul::ImageT<T>::deleteSharedResource(void)
 {
   GUL_DELETE_ARRAY(m_pData);

@@ -62,7 +62,8 @@ namespace gul
    * For a class the become a shared resource you must inherit from
    * the SharedResource class. All you need to do is implement
    * the three pure virtual methods createSharedResourceOwner()
-   * deleteSharedResource() and transferSharedResourceFrom()
+   * deleteSharedResource(), transferSharedResourceFrom(),
+   * isResourceDataSizeEqual() and copyDataFrom().
    *
    * createSharedResourceOwner():
    * Here the class usually creates a copy of itself with freshly
@@ -76,6 +77,16 @@ namespace gul
    * transferSharedResourceFrom():
    * This basically copies pointers around from the owner to itself
    * the referencee.
+   *
+   * isResourceDataSizeEqual():
+   * Check if the data that is shared has the same size. This is
+   * use to check if a data is just copied on assignment or if the
+   * data owner from the assinged instance is used. This way we do
+   * not free data that could be reused.
+   *
+   * copyDataFrom():
+   * copy the data is the case isResourceDataSizeEqual() is true
+   * and it the only referencee.
    *
    * example from gul::Image:
    *
@@ -111,6 +122,20 @@ namespace gul
    *   }
    *   return newImage;
    * }
+   *
+   * template<typename T>
+   * bool gul::ImageT<T>::isResourceDataSizeEqual(const SharedResource& rOther)
+   * {
+   *   return m_width == static_cast<const ImageT<T>&>(rOther).m_width &&
+   *          m_height == static_cast<const ImageT<T>&>(rOther).m_height &&
+   *          m_imageFormat == static_cast<const ImageT<T>&>(rOther).m_imageFormat;
+   * }
+   *
+   * template<typename T>
+   * void gul::ImageT<T>::copyDataFrom(const SharedResource& rOther)
+   * {
+   *   memcpy(m_pData, static_cast<const ImageT<T>&>(rOther).GetData(), GetPitch()*m_height);
+   * }
    * @endcode
    */
   class GUL_EXPORT SharedResource
@@ -137,6 +162,8 @@ namespace gul
       virtual SharedResource* createSharedResourceOwner(void) const = 0;
       virtual void deleteSharedResource(void) = 0;
       virtual void transferSharedResourceFrom(const SharedResource& newOwner) = 0;
+      virtual bool isResourceDataSizeEqual(const SharedResource& rOther) = 0;
+      virtual void copyDataFrom(const SharedResource& rOther) = 0;
 
     private:
       void attachToNewOwner(SharedResource& owner);

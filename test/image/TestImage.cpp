@@ -251,4 +251,23 @@ namespace TestImage
 
     return EXIT_SUCCESS;
   }
+
+  int ReuseDataRefereeWhenSameSize(void)
+  {
+    gul::Image img1(10, 10, gul::Image::IF_RGBA);
+    gul::Image img2 = img1;
+
+    const unsigned char* pOldData1 = img1.GetDataConst();
+    const unsigned char* pOldData2 = img2.GetDataConst();
+    TEST_EQUAL(pOldData1, pOldData2);
+
+    img1.GetData();
+    TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+
+    img2 = img1;
+    TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
+    TEST_EQUAL(pOldData2, img2.GetDataConst());
+
+    return EXIT_SUCCESS;
+  }
 }

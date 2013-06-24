@@ -41,6 +41,7 @@ gul_add_test(Image Image GetColorSharedResource)
 gul_add_test(Image Image GetData)
 gul_add_test(Image Image GetDataConst)
 gul_add_test(Image Image NoCopySingleReferee)
+gul_add_test(Image Image ReuseDataRefereeWhenSameSize)
 
 gul_create_test()
 target_link_libraries(TestImage gul gulTestUtils)
