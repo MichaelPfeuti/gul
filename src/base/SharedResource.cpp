@@ -127,7 +127,7 @@ void gul::SharedResource::initCopyConstructor(const gul::SharedResource& other)
  *
  * If the data is shared then a new owner for this instance is created
  * and assigned to it. The data is copied from the previous owner by calling
- * createSharedResourceOwner().
+ * copyDataFrom() after createSharedResourceOwner().
  */
 void gul::SharedResource::detach(void)
 {
@@ -136,6 +136,7 @@ void gul::SharedResource::detach(void)
     GUL_LOG_DEBUG("gul::SharedResource::detach %p causes copy", this);
 
     SharedResource* newOwner = m_pOwner->createSharedResourceOwner();
+    newOwner->copyDataFrom(*m_pOwner);
     detachFromOwner();
     m_pOwner = newOwner;
     attachToNewOwner(*newOwner);

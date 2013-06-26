@@ -31,9 +31,15 @@
 
 #include "RTTI.h"
 #include "SharedResource.h"
+#include "OnDemandMemory.h"
 
 #ifdef LIBGLEW_FOUND
 #  include <GL/glew.h>
+#endif
+
+#ifdef LIBOPENCL_FOUND
+#  include "CLContext.h"
+#  include <CL/cl_gl.h>
 #endif
 
 namespace gul
@@ -96,7 +102,7 @@ namespace gul
       virtual void copyDataFrom(const SharedResource& rOther);
 
     private:
-      T* m_pData;
+      OnDemandMemory<T>* m_pData;
       int m_width;
       int m_height;
       ImageFormat m_imageFormat;
@@ -108,6 +114,15 @@ namespace gul
 
     private:
       GLuint m_glTexture;
+#endif
+
+#ifdef LIBOPENCL_FOUND
+    public:
+      const cl_mem& GetCLImage(void) const;
+
+    private:
+      bool m_isGLAquiredByCL;
+      cl_mem m_clImage;
 #endif
   };
 

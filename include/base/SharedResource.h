@@ -67,8 +67,10 @@ namespace gul
    *
    * createSharedResourceOwner():
    * Here the class usually creates a copy of itself with freshly
-   * allocated memory. This memory is either filled with a default
-   * value of copied from the class that called this function.
+   * allocated memory. The new owner must be initialized such that
+   * a successive copyDataFrom() call succeeds. So
+   * createSharedResourceOwner just allocates the memory and
+   * copyDataFrom() performs the copy if necessary.
    *
    * deleteSharedResource():
    * This deletes the memory that was allocated in

@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_MEMORY_ON_DEMAND_MEMORY_H_
+#define _GUL_MEMORY_ON_DEMAND_MEMORY_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -25,3 +28,28 @@
 ** Michael Pfeuti at mpfeuti@ganymede.ch.
 **
 ***************************************************************************/
+
+#include <mutex>
+
+namespace gul {
+
+  template<typename T>
+  class OnDemandMemory
+  {
+    public:
+      OnDemandMemory(int size);
+      ~OnDemandMemory(void);
+
+      T* GetData(void);
+      const T* GetData(void) const;
+
+    private:
+      const int m_size;
+      mutable T* m_pData;
+      mutable std::mutex m_mutex;
+  };
+}
+
+#include "impl/memory/OnDemandMemory.hpp"
+
+#endif

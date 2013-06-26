@@ -1,11 +1,6 @@
 add_library(memory OBJECT
-		ScopedPtr.cpp
-		SharedPtr.cpp
-		UniquePtr.cpp
-		WeakPtr.cpp
 
-    ${INCLUDE}/memory/ScopedPtr.h
-    ${INCLUDE}/memory/SharedPtr.h
-    ${INCLUDE}/memory/UniquePtr.h
-    ${INCLUDE}/memory/WeakPtr.h
+    ${INCLUDE_TPL}/memory/OnDemandMemory.hpp
+
+    ${INCLUDE}/memory/OnDemandMemory.h
 )

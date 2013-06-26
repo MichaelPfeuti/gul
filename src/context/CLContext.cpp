@@ -50,7 +50,7 @@ gul::CLContext::CLContext(void)
 
 gul::CLContext::~CLContext(void)
 {
-  //clReleaseCommandQueue(m_queue);
+  clReleaseCommandQueue(m_currentQueue);
   clReleaseContext(m_context);
 }
 

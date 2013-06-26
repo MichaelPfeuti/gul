@@ -39,7 +39,8 @@ gul::ImageT<T>::ImageT(void)
     m_width(0),
     m_height(0),
     m_imageFormat(IF_UNDEFINED),
-    m_isGLDataSynched(false)
+    m_isGLDataSynched(false),
+    m_isGLAquiredByCL(false)
 {
 }
 
@@ -49,7 +50,8 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat)
     m_width(w),
     m_height(h),
     m_imageFormat(imageFormat),
-    m_isGLDataSynched(false)
+    m_isGLDataSynched(false),
+    m_isGLAquiredByCL(false)
 {
   initConstructor();
 }
@@ -60,10 +62,11 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
     m_width(w),
     m_height(h),
     m_imageFormat(imageFormat),
-    m_isGLDataSynched(false)
+    m_isGLDataSynched(false),
+    m_isGLAquiredByCL(false)
 {
   initConstructor();
-  memcpy(m_pData, data, sizeof(T)*w*h*GetNumberOfChannels());
+  memcpy(m_pData->GetData(), data, sizeof(T)*w*h*GetNumberOfChannels());
 }
 
 template<typename T>
@@ -73,7 +76,8 @@ gul::ImageT<T>::ImageT(const ImageT& rImage)
     m_width(rImage.m_width),
     m_height(rImage.m_height),
     m_imageFormat(rImage.m_imageFormat),
-    m_isGLDataSynched(rImage.m_isGLDataSynched)
+    m_isGLDataSynched(rImage.m_isGLDataSynched),
+    m_isGLAquiredByCL(rImage.m_isGLAquiredByCL)
 {
   initCopyConstructor(rImage);
 }
@@ -88,6 +92,7 @@ gul::ImageT<T>& gul::ImageT<T>::operator =(const ImageT<T>& rImage)
     m_height = rImage.m_height;
     m_imageFormat = rImage.m_imageFormat;
     m_isGLDataSynched = rImage.m_isGLDataSynched;
+    m_isGLAquiredByCL = rImage.m_isGLAquiredByCL;
   }
   return *this;
 }
@@ -132,13 +137,13 @@ bool gul::ImageT<T>::IsNull(void) const
 template<typename T>
 const T* gul::ImageT<T>::GetDataConst(void) const
 {
-  return m_pData;
+  return m_pData->GetData();
 }
 
 template<typename T>
 const T* gul::ImageT<T>::GetData(void) const
 {
-  return m_pData;
+  return m_pData->GetData();
 }
 
 template<typename T>
@@ -146,7 +151,7 @@ T* gul::ImageT<T>::GetData(void)
 {
   detach();
   m_isGLDataSynched = false;
-  return m_pData;
+  return m_pData->GetData();
 }
 
 template<typename T>
@@ -154,7 +159,7 @@ const T* gul::ImageT<T>::GetScanlineConst(int scanline) const
 {
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
-  return m_pData + scanline*GetPitch();
+  return m_pData->GetData() + scanline*GetPitch();
 }
 
 template<typename T>
@@ -162,7 +167,7 @@ const T* gul::ImageT<T>::GetScanline(int scanline) const
 {
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
-  return m_pData + scanline*GetPitch();
+  return m_pData->GetData() + scanline*GetPitch();
 }
 
 template<typename T>
@@ -172,7 +177,7 @@ T* gul::ImageT<T>::GetScanline(int scanline)
 
   detach();
   m_isGLDataSynched = false;
-  return m_pData + scanline*GetPitch();
+  return m_pData->GetData() + scanline*GetPitch();
 }
 
 template<typename T>
@@ -182,7 +187,7 @@ const T& gul::ImageT<T>::GetColorConst(int x, int y, int channel) const
   GUL_ASSERT(x >= 0 && x <= GetWidth());
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
-  return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
 template<typename T>
@@ -192,7 +197,7 @@ const T& gul::ImageT<T>::GetColor(int x, int y, int channel) const
   GUL_ASSERT(x >= 0 && x <= GetWidth());
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
-  return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
 
@@ -205,7 +210,7 @@ T& gul::ImageT<T>::GetColor(int x, int y, int channel)
 
   detach();
   m_isGLDataSynched = false;
-  return m_pData[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
 template<typename T>
@@ -225,21 +230,38 @@ bool gul::ImageT<T>::isResourceDataSizeEqual(const SharedResource& rOther)
 template<typename T>
 void gul::ImageT<T>::copyDataFrom(const SharedResource& rOther)
 {
-  memcpy(m_pData, static_cast<const ImageT<T>&>(rOther).GetData(), GetPitch()*m_height);
+  memcpy(m_pData->GetData(), 
+         static_cast<const ImageT<T>&>(rOther).m_pData->GetData(), 
+         GetPitch()*m_height);
 }
 
 template<typename T>
 void gul::ImageT<T>::deleteSharedResource(void)
 {
-  GUL_DELETE_ARRAY(m_pData);
+  GUL_DELETE(m_pData);
 
-#ifdef LIBOPENGL_FOUND
-  if(glIsTexture(m_glTexture))
-  {
-    GUL_LOG_DEBUG("Image Opengl texture deleted!");
-    glDeleteTextures(1, &m_glTexture);
-  }
-#endif
+//#ifdef LIBOPENGL_FOUND
+//#ifdef LIBOPENCL_FOUND
+//  if(m_isGLAquiredByCL)
+//  {
+//    CLContext* pCurrentContext = CLContext::GetCurrentContext();
+//    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
+//                              1, &m_clImage,
+//                              0, nullptr,
+//                              nullptr);
+//  }
+//#endif
+
+//  if(glIsTexture(m_glTexture))
+//  {
+//    GUL_LOG_DEBUG("Image Opengl texture deleted!");
+//    glDeleteTextures(1, &m_glTexture);
+//  }
+//#endif
+
+//#ifdef LIBOPENCL_FOUND
+//  clReleaseMemObject(m_clImage);
+//#endif
 }
 
 template<typename T>
@@ -249,6 +271,10 @@ void gul::ImageT<T>::transferSharedResourceFrom(const SharedResource& newOwner)
 
 #ifdef LIBOPENGL_FOUND
   m_glTexture = static_cast<const ImageT<T>&>(newOwner).m_glTexture;
+#endif
+
+#ifdef LIBOPENCL_FOUND
+  m_clImage = static_cast<const ImageT<T>&>(newOwner).m_clImage;
 #endif
 }
 
@@ -260,33 +286,63 @@ gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
   newImage->m_height = m_height;
   newImage->m_imageFormat = m_imageFormat;
   int size = GetWidth() * GetHeight() * GetNumberOfChannels();
-  newImage->m_pData = new T[size];
-  if(m_pData == NULL)
-  {
-    memset(newImage->m_pData, 0, sizeof(T)*size);
-  }
-  else
-  {
-    memcpy(newImage->m_pData, m_pData, sizeof(T)*size);
-  }
+  newImage->m_pData = new OnDemandMemory<T>(size);
 
-  newImage->m_isGLDataSynched = false;
+//#ifdef LIBOPENGL_FOUND
+//  glGenTextures(1, &newImage->m_glTexture);
+//  glBindTexture(GL_TEXTURE_2D, newImage->m_glTexture);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//  glBindTexture(GL_TEXTURE_2D, 0);
 
-#ifdef LIBOPENGL_FOUND
-  glGenTextures(1, &newImage->m_glTexture);
-  glBindTexture(GL_TEXTURE_2D, newImage->m_glTexture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glBindTexture(GL_TEXTURE_2D, 0);
+//  GLenum glError;
+//  if((glError = glGetError()) != GL_NO_ERROR)
+//  {
+//    GUL_LOG_WARNING("OpenGL could create texture (code %d) : %s", glError, gluErrorString(glError));
+//  }
 
-  GLenum glError;
-  if((glError = glGetError()) != GL_NO_ERROR)
-  {
-    GUL_LOG_WARNING("OpenGL could create texture (code %d) :", glError, gluErrorString(glError));
-  }
-#endif
+//# ifdef LIBOPENCL_FOUND
+//  CLContext* pCurrentContext = CLContext::GetCurrentContext();
+
+//  cl_int clError;
+//  newImage->m_clImage = clCreateFromGLTexture2D(pCurrentContext->GetCLContext(),
+//                                                CL_MEM_READ_WRITE,
+//                                                GL_TEXTURE_2D,
+//                                                0,
+//                                                newImage->m_glTexture,
+//                                                &clError);
+
+//  if(clError != CL_SUCCESS)
+//  {
+//    GUL_LOG_WARNING("OpenCL could not create Image from GL Texture (code %d)", clError);
+//  }
+//# endif
+
+//#else
+
+//# ifdef LIBOPENCL_FOUND
+//  CLContext* pCurrentContext = CLContext::GetCurrentContext();
+
+//  cl_int clError;
+//  struct _cl_image_format clFormat;
+//  clFormat.image_channel_data_type = CL_UNORM_INT8;
+//  clFormat.image_channel_order = CL_RGBA;
+//  newImage->m_clImage = clCreateImage2D(pCurrentContext->GetCLContext(),
+//                                        CL_MEM_READ_WRITE,
+//                                        clFormat,
+//                                        newImage->GetWidth(), newImage->GetHeight(),
+//                                        newImage->GetPitch(),
+//                                        nullptr,
+//                                        &clError);
+//  if(clError != CL_SUCCESS)
+//  {
+//    GUL_LOG_WARNING("OpenCL could not create Image (code %d)", clError);
+//  }
+//# endif
+//#endif
+
 
   return newImage;
 }
@@ -297,6 +353,17 @@ template<typename T>
 const GLuint& gul::ImageT<T>::GetGLTexture(void)
 {
   GLenum glError;
+
+#ifdef LIBOPENCL_FOUND
+  if(m_isGLAquiredByCL)
+  {
+    CLContext* pCurrentContext = CLContext::GetCurrentContext();
+    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
+                              1, &m_clImage,
+                              0, nullptr,
+                              nullptr);
+  }
+#endif
 
   if(!m_isGLDataSynched)
   {
@@ -317,3 +384,21 @@ const GLuint& gul::ImageT<T>::GetGLTexture(void)
 }
 
 #endif
+
+#ifdef LIBOPENCL_FOUND
+
+template<typename T>
+const cl_mem& gul::ImageT<T>::GetCLImage(void) const
+{
+  CLContext* pCurrentContext = CLContext::GetCurrentContext();
+  clEnqueueAcquireGLObjects(pCurrentContext->GetCurrentQueue(),
+                            1, &m_clImage,
+                            0, nullptr,
+                            nullptr);
+
+  m_isGLAquiredByCL = true;
+  return m_clImage;
+}
+
+#endif
+
