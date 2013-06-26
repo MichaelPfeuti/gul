@@ -30,6 +30,7 @@
 #include "Misc.h"
 #include "Assert.h"
 #include "Log.h"
+#include "Traits.h"
 
 DEFINE_TPL_RTTI(gul::ImageT);
 
@@ -39,8 +40,7 @@ gul::ImageT<T>::ImageT(void)
     m_width(0),
     m_height(0),
     m_imageFormat(IF_UNDEFINED),
-    m_isGLDataSynched(false),
-    m_isGLAquiredByCL(false)
+    m_pSynchStatus(nullptr)
 {
 }
 
@@ -50,8 +50,7 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat)
     m_width(w),
     m_height(h),
     m_imageFormat(imageFormat),
-    m_isGLDataSynched(false),
-    m_isGLAquiredByCL(false)
+    m_pSynchStatus(nullptr)
 {
   initConstructor();
 }
@@ -62,8 +61,7 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
     m_width(w),
     m_height(h),
     m_imageFormat(imageFormat),
-    m_isGLDataSynched(false),
-    m_isGLAquiredByCL(false)
+    m_pSynchStatus(nullptr)
 {
   initConstructor();
   memcpy(m_pData->GetData(), data, sizeof(T)*w*h*GetNumberOfChannels());
@@ -76,8 +74,7 @@ gul::ImageT<T>::ImageT(const ImageT& rImage)
     m_width(rImage.m_width),
     m_height(rImage.m_height),
     m_imageFormat(rImage.m_imageFormat),
-    m_isGLDataSynched(rImage.m_isGLDataSynched),
-    m_isGLAquiredByCL(rImage.m_isGLAquiredByCL)
+    m_pSynchStatus(nullptr)
 {
   initCopyConstructor(rImage);
 }
@@ -91,8 +88,6 @@ gul::ImageT<T>& gul::ImageT<T>::operator =(const ImageT<T>& rImage)
     m_width = rImage.m_width;
     m_height = rImage.m_height;
     m_imageFormat = rImage.m_imageFormat;
-    m_isGLDataSynched = rImage.m_isGLDataSynched;
-    m_isGLAquiredByCL = rImage.m_isGLAquiredByCL;
   }
   return *this;
 }
@@ -150,7 +145,8 @@ template<typename T>
 T* gul::ImageT<T>::GetData(void)
 {
   detach();
-  m_isGLDataSynched = false;
+  m_pSynchStatus->isCPUDataRecent = true;
+  m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData();
 }
 
@@ -176,7 +172,8 @@ T* gul::ImageT<T>::GetScanline(int scanline)
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   detach();
-  m_isGLDataSynched = false;
+  m_pSynchStatus->isCPUDataRecent = true;
+  m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData() + scanline*GetPitch();
 }
 
@@ -209,7 +206,8 @@ T& gul::ImageT<T>::GetColor(int x, int y, int channel)
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   detach();
-  m_isGLDataSynched = false;
+  m_pSynchStatus->isCPUDataRecent = true;
+  m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
@@ -230,8 +228,8 @@ bool gul::ImageT<T>::isResourceDataSizeEqual(const SharedResource& rOther)
 template<typename T>
 void gul::ImageT<T>::copyDataFrom(const SharedResource& rOther)
 {
-  memcpy(m_pData->GetData(), 
-         static_cast<const ImageT<T>&>(rOther).m_pData->GetData(), 
+  memcpy(m_pData->GetData(),
+         static_cast<const ImageT<T>&>(rOther).m_pData->GetData(),
          GetPitch()*m_height);
 }
 
@@ -239,42 +237,51 @@ template<typename T>
 void gul::ImageT<T>::deleteSharedResource(void)
 {
   GUL_DELETE(m_pData);
+  GUL_DELETE(m_pSynchStatus);
 
-//#ifdef LIBOPENGL_FOUND
-//#ifdef LIBOPENCL_FOUND
-//  if(m_isGLAquiredByCL)
-//  {
-//    CLContext* pCurrentContext = CLContext::GetCurrentContext();
-//    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
-//                              1, &m_clImage,
-//                              0, nullptr,
-//                              nullptr);
-//  }
-//#endif
+#ifdef LIBOPENGL_FOUND
 
-//  if(glIsTexture(m_glTexture))
-//  {
-//    GUL_LOG_DEBUG("Image Opengl texture deleted!");
-//    glDeleteTextures(1, &m_glTexture);
-//  }
-//#endif
+# ifdef LIBOPENCL_FOUND
+  if(m_pCLImage->isGLAquiredByCL)
+  {
+    CLContext* pCurrentContext = CLContext::GetCurrentContext();
+    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
+                              1, &m_pCLImage->clImage,
+                              0, nullptr,
+                              nullptr);
+    m_pCLImage->isGLAquiredByCL = false;
+  }
+# endif
 
-//#ifdef LIBOPENCL_FOUND
-//  clReleaseMemObject(m_clImage);
-//#endif
+  if(glIsTexture(m_glTexture))
+  {
+    GUL_LOG_DEBUG("Image Opengl texture deleted!");
+    glDeleteTextures(1, &m_glTexture);
+  }
+#endif
+
+#ifdef LIBOPENCL_FOUND
+  if(isCLImageInitialized())
+  {
+    clReleaseMemObject(m_pCLImage->clImage);
+  }
+  GUL_DELETE(m_pCLImage);
+#endif
+
 }
 
 template<typename T>
 void gul::ImageT<T>::transferSharedResourceFrom(const SharedResource& newOwner)
 {
   m_pData = static_cast<const ImageT<T>&>(newOwner).m_pData;
+  m_pSynchStatus = static_cast<const ImageT<T>&>(newOwner).m_pSynchStatus;
 
 #ifdef LIBOPENGL_FOUND
   m_glTexture = static_cast<const ImageT<T>&>(newOwner).m_glTexture;
 #endif
 
 #ifdef LIBOPENCL_FOUND
-  m_clImage = static_cast<const ImageT<T>&>(newOwner).m_clImage;
+  m_pCLImage = static_cast<const ImageT<T>&>(newOwner).m_pCLImage;
 #endif
 }
 
@@ -287,62 +294,30 @@ gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
   newImage->m_imageFormat = m_imageFormat;
   int size = GetWidth() * GetHeight() * GetNumberOfChannels();
   newImage->m_pData = new OnDemandMemory<T>(size);
+  newImage->m_pSynchStatus = new SynchStatus();
+  newImage->m_pSynchStatus->isCPUDataRecent = false;
+  newImage->m_pSynchStatus->isGPUDataRecent = false;
 
-//#ifdef LIBOPENGL_FOUND
-//  glGenTextures(1, &newImage->m_glTexture);
-//  glBindTexture(GL_TEXTURE_2D, newImage->m_glTexture);
-//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//  glBindTexture(GL_TEXTURE_2D, 0);
+#ifdef LIBOPENGL_FOUND
+  glGenTextures(1, &newImage->m_glTexture);
+  glBindTexture(GL_TEXTURE_2D, newImage->m_glTexture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
-//  GLenum glError;
-//  if((glError = glGetError()) != GL_NO_ERROR)
-//  {
-//    GUL_LOG_WARNING("OpenGL could create texture (code %d) : %s", glError, gluErrorString(glError));
-//  }
+  GLenum glError;
+  if((glError = glGetError()) != GL_NO_ERROR)
+  {
+    GUL_LOG_WARNING("OpenGL could create texture (code %d) : %s", glError, gluErrorString(glError));
+  }
+#endif
 
-//# ifdef LIBOPENCL_FOUND
-//  CLContext* pCurrentContext = CLContext::GetCurrentContext();
-
-//  cl_int clError;
-//  newImage->m_clImage = clCreateFromGLTexture2D(pCurrentContext->GetCLContext(),
-//                                                CL_MEM_READ_WRITE,
-//                                                GL_TEXTURE_2D,
-//                                                0,
-//                                                newImage->m_glTexture,
-//                                                &clError);
-
-//  if(clError != CL_SUCCESS)
-//  {
-//    GUL_LOG_WARNING("OpenCL could not create Image from GL Texture (code %d)", clError);
-//  }
-//# endif
-
-//#else
-
-//# ifdef LIBOPENCL_FOUND
-//  CLContext* pCurrentContext = CLContext::GetCurrentContext();
-
-//  cl_int clError;
-//  struct _cl_image_format clFormat;
-//  clFormat.image_channel_data_type = CL_UNORM_INT8;
-//  clFormat.image_channel_order = CL_RGBA;
-//  newImage->m_clImage = clCreateImage2D(pCurrentContext->GetCLContext(),
-//                                        CL_MEM_READ_WRITE,
-//                                        clFormat,
-//                                        newImage->GetWidth(), newImage->GetHeight(),
-//                                        newImage->GetPitch(),
-//                                        nullptr,
-//                                        &clError);
-//  if(clError != CL_SUCCESS)
-//  {
-//    GUL_LOG_WARNING("OpenCL could not create Image (code %d)", clError);
-//  }
-//# endif
-//#endif
-
+#ifdef LIBOPENCL_FOUND
+  newImage->m_pCLImage = new CLImageData();
+  newImage->m_pCLImage->isGLAquiredByCL = false;
+#endif
 
   return newImage;
 }
@@ -350,36 +325,53 @@ gul::ImageT<T>* gul::ImageT<T>::createSharedResourceOwner(void) const
 #ifdef LIBOPENGL_FOUND
 
 template<typename T>
-const GLuint& gul::ImageT<T>::GetGLTexture(void)
+const GLuint& gul::ImageT<T>::GetGLTextureConst(void) const
 {
   GLenum glError;
 
 #ifdef LIBOPENCL_FOUND
-  if(m_isGLAquiredByCL)
+  if(m_pCLImage->isGLAquiredByCL)
   {
     CLContext* pCurrentContext = CLContext::GetCurrentContext();
     clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
-                              1, &m_clImage,
+                              1, &m_pCLImage->clImage,
                               0, nullptr,
                               nullptr);
+    m_pCLImage->isGLAquiredByCL = false;
   }
 #endif
 
-  if(!m_isGLDataSynched)
+  if(!m_pSynchStatus->isGPUDataRecent)
   {
     glBindTexture(GL_TEXTURE_2D, m_glTexture);
+    const T* pData = nullptr;
+    if(m_pSynchStatus->isCPUDataRecent)
+    {
+      pData = m_pData->GetData();
+    }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                  GetWidth(), GetHeight(), 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 GetDataConst());
-    m_isGLDataSynched = true;
+                 GL_RGBA, gul::Traits<T>::GetGLType(),
+                 pData);
 
     if((glError = glGetError()) != GL_NO_ERROR)
     {
-      GUL_LOG_WARNING("OpenGL could set buffer data (code %d) :", glError, gluErrorString(glError));
+      GUL_LOG_WARNING("OpenGL could set buffer data (code %d) : %s", glError, gluErrorString(glError));
     }
   }
 
+  m_pSynchStatus->isCPUDataRecent = true;
+  m_pSynchStatus->isGPUDataRecent = true;
+
+  return m_glTexture;
+}
+
+template<typename T>
+const GLuint& gul::ImageT<T>::GetGLTexture(void)
+{
+  GetGLTextureConst();
+  m_pSynchStatus->isCPUDataRecent = false;
+  m_pSynchStatus->isGPUDataRecent = true;
   return m_glTexture;
 }
 
@@ -388,17 +380,126 @@ const GLuint& gul::ImageT<T>::GetGLTexture(void)
 #ifdef LIBOPENCL_FOUND
 
 template<typename T>
-const cl_mem& gul::ImageT<T>::GetCLImage(void) const
+bool gul::ImageT<T>::isCLImageInitialized(void) const
+{
+  return clGetImageInfo(m_pCLImage->clImage, CL_IMAGE_FORMAT,
+                        0, nullptr, nullptr) == CL_INVALID_MEM_OBJECT;
+
+}
+
+template<typename T>
+const cl_mem& gul::ImageT<T>::GetCLImageConst(void) const
 {
   CLContext* pCurrentContext = CLContext::GetCurrentContext();
-  clEnqueueAcquireGLObjects(pCurrentContext->GetCurrentQueue(),
-                            1, &m_clImage,
-                            0, nullptr,
-                            nullptr);
+  cl_int clError;
 
-  m_isGLAquiredByCL = true;
-  return m_clImage;
+  if(isCLImageInitialized())
+  {
+# ifdef LIBOPENGL_FOUND
+    m_pCLImage->clImage = clCreateFromGLTexture2D(pCurrentContext->GetCLContext(),
+                                        CL_MEM_READ_WRITE,
+                                        GL_TEXTURE_2D,
+                                        0,
+                                        GetGLTexture(),
+                                        &clError);
+
+
+# else
+    struct _cl_image_format clFormat;
+    clFormat.image_channel_data_type = gul::Traits<T>::GetCLType();
+    clFormat.image_channel_order = CL_RGBA;
+    m_pCLImage->m_clImage = clCreateImage2D(pCurrentContext->GetCLContext(),
+                                            CL_MEM_READ_WRITE,
+                                            clFormat,
+                                            GetWidth(), GetHeight(),
+                                            GetPitch(),
+                                            nullptr,
+                                            &clError);
+# endif
+    if(clError != CL_SUCCESS)
+    {
+      GUL_LOG_WARNING("OpenCL could not create Image (code %d)", clError);
+    }
+  }
+
+  if(!m_pCLImage->isGLAquiredByCL)
+  {
+    clError = clEnqueueAcquireGLObjects(pCurrentContext->GetCurrentQueue(),
+                                        1, &m_pCLImage->clImage,
+                                        0, nullptr,
+                                        nullptr);
+    m_pCLImage->isGLAquiredByCL = true;
+  }
+
+  if(!m_pSynchStatus->isGPUDataRecent &&
+      m_pSynchStatus->isCPUDataRecent)
+  {
+    clError= clEnqueueWriteImage(pCurrentContext->GetCurrentQueue(),
+                                 m_pCLImage->clImage,
+                                 true, {0,0,0},
+                                 {m_width, m_height, 1},
+                                 GetPitch(), 0,
+                                 m_pData->GetData(),
+                                 0, nullptr, nullptr);
+  }
+
+  return m_pCLImage->clImage;
+}
+
+template<typename T>
+const cl_mem& gul::ImageT<T>::GetCLImage(void)
+{
+  GetCLImageConst();
+  m_pSynchStatus->isCPUDataRecent = false;
+  m_pSynchStatus->isGPUDataRecent = true;
+  return m_pCLImage->clImage;
 }
 
 #endif
+
+template<typename T>
+void gul::ImageT<T>::synchDataToCPU(void) const
+{
+  if(!m_pSynchStatus->isCPUDataRecent &&
+      m_pSynchStatus->isGPUDataRecent)
+  {
+#ifdef LIBOPENGL_FOUND
+# ifdef LIBOPENCL_FOUND
+    if(!m_pCLImage->isGLAquiredByCL)
+# endif
+    {
+      glBindTexture(GL_TEXTURE_2D, m_glTexture);
+      glGetTexImage(GL_TEXTURE_2D,
+                    0, GL_RGBA,
+                    gul::Traits<T>::GetGLType(),
+                    m_pData->GetData());
+      GLenum glError;
+      if((glError = glGetError()) != GL_NO_ERROR)
+      {
+        GUL_LOG_WARNING("OpenGL could not read back texture data (code %d) : %s", glError, gluErrorString(glError));
+      }
+    }
+# ifdef LIBOPENCL_FOUND
+    else
+# endif
+#endif
+
+#ifdef LIBOPENCL_FOUND
+    {
+      CLContext* pCurrentContext = CLContext::GetCurrentContext();
+      cl_int clError = clEnqueueReadImage(pCurrentContext->GetCurrentQueue(),
+                                          m_pCLImage->clImage,
+                                          true, {0,0,0},
+                                          {m_width, m_height, 1},
+                                          GetPitch(), 0,
+                                          m_pData->GetData(),
+                                          0, nullptr, nullptr);
+      if(clError != CL_SUCCESS)
+      {
+        GUL_LOG_WARNING("OpenCL could not read Image (code %d)", clError);
+      }
+    }
+#endif
+  }
+}
 

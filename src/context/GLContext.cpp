@@ -31,6 +31,7 @@
 #include "Assert.h"
 #include <cstdlib>
 #include "Misc.h"
+#include "ContextErrorHandling.h"
 
 static void errorCallback(int error, const char* description)
 {
@@ -88,6 +89,7 @@ bool gul::GLContext::Initialize(int width, int height, const gul::String& title)
     return false;
   }
   createVertexArray();
+  GUL_GL_CHECK_ERROR("Could not initialize context");
   return true;
 }
 
@@ -115,6 +117,7 @@ bool gul::GLContext::InitializeFullscreen(const gul::String& title)
     return false;
   }
   createVertexArray();
+  GUL_GL_CHECK_ERROR("Could not initialize context");
   return true;
 }
 
@@ -172,7 +175,8 @@ bool gul::GLContext::initGLEW(void)
       return false;
     }
   }
-
+  // This error is a bug in GLEW. It can be ignored
+  glGetError();
   return true;
 }
 

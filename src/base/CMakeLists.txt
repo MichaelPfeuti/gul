@@ -11,6 +11,7 @@ add_library(base OBJECT
     Traits.cpp
 
     ${INCLUDE_TPL}/base/ClassFactory.hpp
+    ${INCLUDE_TPL}/base/Traits.hpp
 
     ${INCLUDE}/base/Assert.h
     ${INCLUDE}/base/ClassFactoryBase.h

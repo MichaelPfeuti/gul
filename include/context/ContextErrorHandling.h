@@ -36,6 +36,7 @@
 namespace gul {
   bool GUL_EXPORT alCheckError(const char* message);
   bool GUL_EXPORT clCheckError(cl_int err);
+  bool GUL_EXPORT glCheckError(const char* message);
 }
 
 #define GUL_AL_CHECK_ERROR(message) \
@@ -46,6 +47,12 @@ namespace gul {
 
 #define GUL_CL_CHECK_ERROR(function) \
   if(!clCheckError(function)) \
+  {  \
+    return false; \
+  }
+
+#define GUL_GL_CHECK_ERROR(message) \
+  if(!glCheckError(message)) \
   {  \
     return false; \
   }

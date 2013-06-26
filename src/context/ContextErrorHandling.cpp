@@ -28,6 +28,8 @@
 
 #include "ContextErrorHandling.h"
 
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <AL/al.h>
 #include "Log.h"
 
@@ -37,6 +39,17 @@ bool gul::alCheckError(const char* message)
   if(error != AL_NO_ERROR)
   { \
     GUL_LOG_WARNING("OpenAL Error (code %d): %s", error, message);
+    return false;
+  }
+  return true;
+}
+
+bool gul::glCheckError(const char *message)
+{
+  GLenum glError;
+  if((glError = glGetError()) != GL_NO_ERROR)
+  {
+    GUL_LOG_WARNING("OpenGL Error (code %d: %s): %s", glError, gluErrorString(glError), message);
     return false;
   }
   return true;

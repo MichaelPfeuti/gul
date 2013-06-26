@@ -55,11 +55,18 @@ namespace gul
       {
         IF_UNDEFINED,
         IF_GRAY,
-        IF_RGBA,
-        IF_CMYKA,
-        IF_HSLA,
-        IF_HSVA,
-        IF_HSIA
+        IF_RGBA
+//        IF_CMYKA,
+//        IF_HSLA,
+//        IF_HSVA,
+//        IF_HSIA
+      };
+
+    private:
+      struct SynchStatus
+      {
+          bool isGPUDataRecent;
+          bool isCPUDataRecent;
       };
 
     public:
@@ -102,14 +109,18 @@ namespace gul
       virtual void copyDataFrom(const SharedResource& rOther);
 
     private:
+      void synchDataToCPU(void) const;
+
+    private:
       OnDemandMemory<T>* m_pData;
       int m_width;
       int m_height;
       ImageFormat m_imageFormat;
-      bool m_isGLDataSynched;
+      SynchStatus* m_pSynchStatus;
 
 #ifdef LIBOPENGL_FOUND
     public:
+      const GLuint& GetGLTextureConst(void) const;
       const GLuint& GetGLTexture(void);
 
     private:
@@ -118,11 +129,19 @@ namespace gul
 
 #ifdef LIBOPENCL_FOUND
     public:
-      const cl_mem& GetCLImage(void) const;
+      const cl_mem& GetCLImageConst(void) const;
+      const cl_mem& GetCLImage(void);
 
     private:
-      bool m_isGLAquiredByCL;
-      cl_mem m_clImage;
+      bool isCLImageInitialized(void) const;
+
+    private:
+      struct CLImageData
+      {
+          bool isGLAquiredByCL;
+          cl_mem clImage;
+      } * m_pCLImage;
+
 #endif
   };
 
