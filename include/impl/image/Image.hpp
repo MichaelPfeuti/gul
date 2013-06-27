@@ -132,12 +132,14 @@ bool gul::ImageT<T>::IsNull(void) const
 template<typename T>
 const T* gul::ImageT<T>::GetDataConst(void) const
 {
+  synchDataToCPU();
   return m_pData->GetData();
 }
 
 template<typename T>
 const T* gul::ImageT<T>::GetData(void) const
 {
+  synchDataToCPU();
   return m_pData->GetData();
 }
 
@@ -145,7 +147,7 @@ template<typename T>
 T* gul::ImageT<T>::GetData(void)
 {
   detach();
-  m_pSynchStatus->isCPUDataRecent = true;
+  synchDataToCPU();
   m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData();
 }
@@ -155,6 +157,7 @@ const T* gul::ImageT<T>::GetScanlineConst(int scanline) const
 {
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
+  synchDataToCPU();
   return m_pData->GetData() + scanline*GetPitch();
 }
 
@@ -163,6 +166,7 @@ const T* gul::ImageT<T>::GetScanline(int scanline) const
 {
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
+  synchDataToCPU();
   return m_pData->GetData() + scanline*GetPitch();
 }
 
@@ -172,7 +176,7 @@ T* gul::ImageT<T>::GetScanline(int scanline)
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   detach();
-  m_pSynchStatus->isCPUDataRecent = true;
+  synchDataToCPU();
   m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData() + scanline*GetPitch();
 }
@@ -184,6 +188,7 @@ const T& gul::ImageT<T>::GetColorConst(int x, int y, int channel) const
   GUL_ASSERT(x >= 0 && x <= GetWidth());
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
+  synchDataToCPU();
   return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
@@ -194,6 +199,7 @@ const T& gul::ImageT<T>::GetColor(int x, int y, int channel) const
   GUL_ASSERT(x >= 0 && x <= GetWidth());
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
+  synchDataToCPU();
   return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
 
@@ -206,7 +212,7 @@ T& gul::ImageT<T>::GetColor(int x, int y, int channel)
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   detach();
-  m_pSynchStatus->isCPUDataRecent = true;
+  synchDataToCPU();
   m_pSynchStatus->isGPUDataRecent = false;
   return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
 }
@@ -242,15 +248,7 @@ void gul::ImageT<T>::deleteSharedResource(void)
 #ifdef LIBOPENGL_FOUND
 
 # ifdef LIBOPENCL_FOUND
-  if(m_pCLImage->isGLAquiredByCL)
-  {
-    CLContext* pCurrentContext = CLContext::GetCurrentContext();
-    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
-                              1, &m_pCLImage->clImage,
-                              0, nullptr,
-                              nullptr);
-    m_pCLImage->isGLAquiredByCL = false;
-  }
+  realeaseCLGLAquisition();
 # endif
 
   if(glIsTexture(m_glTexture))
@@ -329,17 +327,9 @@ const GLuint& gul::ImageT<T>::GetGLTextureConst(void) const
 {
   GLenum glError;
 
-#ifdef LIBOPENCL_FOUND
-  if(m_pCLImage->isGLAquiredByCL)
-  {
-    CLContext* pCurrentContext = CLContext::GetCurrentContext();
-    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
-                              1, &m_pCLImage->clImage,
-                              0, nullptr,
-                              nullptr);
-    m_pCLImage->isGLAquiredByCL = false;
-  }
-#endif
+# ifdef LIBOPENCL_FOUND
+  realeaseCLGLAquisition();
+# endif
 
   if(!m_pSynchStatus->isGPUDataRecent)
   {
@@ -378,6 +368,20 @@ const GLuint& gul::ImageT<T>::GetGLTexture(void)
 #endif
 
 #ifdef LIBOPENCL_FOUND
+
+template<typename T>
+void gul::ImageT<T>::realeaseCLGLAquisition(void) const
+{
+  if(m_pCLImage->isGLAquiredByCL)
+  {
+    CLContext* pCurrentContext = CLContext::GetCurrentContext();
+    clEnqueueReleaseGLObjects(pCurrentContext->GetCurrentQueue(),
+                              1, &m_pCLImage->clImage,
+                              0, nullptr,
+                              nullptr);
+    m_pCLImage->isGLAquiredByCL = false;
+  }
+}
 
 template<typename T>
 bool gul::ImageT<T>::isCLImageInitialized(void) const
@@ -434,10 +438,11 @@ const cl_mem& gul::ImageT<T>::GetCLImageConst(void) const
   if(!m_pSynchStatus->isGPUDataRecent &&
       m_pSynchStatus->isCPUDataRecent)
   {
+    size_t origin[] = {0, 0, 0};
+    size_t region[] = { (size_t) m_width, (size_t) m_height, 1};
     clError= clEnqueueWriteImage(pCurrentContext->GetCurrentQueue(),
                                  m_pCLImage->clImage,
-                                 true, {0,0,0},
-                                 {m_width, m_height, 1},
+                                 true, origin, region,
                                  GetPitch(), 0,
                                  m_pData->GetData(),
                                  0, nullptr, nullptr);
@@ -487,10 +492,11 @@ void gul::ImageT<T>::synchDataToCPU(void) const
 #ifdef LIBOPENCL_FOUND
     {
       CLContext* pCurrentContext = CLContext::GetCurrentContext();
+      size_t origin[] = {0, 0, 0};
+      size_t region[] = { (size_t) m_width, (size_t) m_height, 1};
       cl_int clError = clEnqueueReadImage(pCurrentContext->GetCurrentQueue(),
                                           m_pCLImage->clImage,
-                                          true, {0,0,0},
-                                          {m_width, m_height, 1},
+                                          true, origin, region,
                                           GetPitch(), 0,
                                           m_pData->GetData(),
                                           0, nullptr, nullptr);
@@ -500,6 +506,8 @@ void gul::ImageT<T>::synchDataToCPU(void) const
       }
     }
 #endif
+
   }
+  m_pSynchStatus->isCPUDataRecent = true;
 }
 

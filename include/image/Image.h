@@ -134,6 +134,7 @@ namespace gul
 
     private:
       bool isCLImageInitialized(void) const;
+      void realeaseCLGLAquisition(void) const;
 
     private:
       struct CLImageData
