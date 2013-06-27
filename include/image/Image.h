@@ -33,14 +33,9 @@
 #include "SharedResource.h"
 #include "OnDemandMemory.h"
 
-#ifdef LIBGLEW_FOUND
-#  include <GL/glew.h>
-#endif
-
-#ifdef LIBOPENCL_FOUND
-#  include "CLContext.h"
-#  include <CL/cl_gl.h>
-#endif
+#include <GL/glew.h>
+#include "CLContext.h"
+#include <CL/cl_gl.h>
 
 namespace gul
 {
@@ -118,23 +113,23 @@ namespace gul
       ImageFormat m_imageFormat;
       SynchStatus* m_pSynchStatus;
 
-#ifdef LIBOPENGL_FOUND
+    // OpenGL
     public:
       const GLuint& GetGLTextureConst(void) const;
       const GLuint& GetGLTexture(void);
 
     private:
       GLuint m_glTexture;
-#endif
 
-#ifdef LIBOPENCL_FOUND
+    // OpenCL
     public:
       const cl_mem& GetCLImageConst(void) const;
       const cl_mem& GetCLImage(void);
 
     private:
       bool isCLImageInitialized(void) const;
-      void realeaseCLGLAquisition(void) const;
+      void realeaseCLGLBinding(void) const;
+      void aquireCLGLBinding(void) const;
 
     private:
       struct CLImageData
@@ -143,7 +138,6 @@ namespace gul
           cl_mem clImage;
       } * m_pCLImage;
 
-#endif
   };
 
   typedef ImageT<unsigned char> Image;
