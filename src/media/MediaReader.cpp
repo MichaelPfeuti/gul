@@ -117,10 +117,10 @@ void gul::MediaReader::Close(void)
 
 void gul::MediaReader::allocateVideoStructures(void)
 {
-  m_pFrame = avcodec_alloc_frame();
+  m_pFrame = av_frame_alloc();
 
   // Allocate an AVFrame structure
-  m_pFrameRGBA = avcodec_alloc_frame();
+  m_pFrameRGBA = av_frame_alloc();
 
   // Determine required buffer size and allocate buffer
   int numBytes;

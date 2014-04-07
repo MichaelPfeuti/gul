@@ -313,13 +313,13 @@ void gul::MediaWriter::setDafaultVideoEncoderCtxSettings(void)
 void gul::MediaWriter::allocateStructures(void)
 {
   // Allocate video frame
-  m_pFrame = avcodec_alloc_frame();
+  m_pFrame = av_frame_alloc();
   m_pFrame->pts = 0;
   avpicture_alloc((AVPicture*)m_pFrame, m_pVideoCodecCtx->pix_fmt,
                   m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
 
   // Allocate an AVFrame structure
-  m_pFrameRGBA = avcodec_alloc_frame();
+  m_pFrameRGBA = av_frame_alloc();
   avpicture_alloc((AVPicture*)m_pFrameRGBA, PIX_FMT_RGBA,
                   m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
 
