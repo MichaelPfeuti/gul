@@ -39,7 +39,7 @@ namespace TestImageEquality
     return EXIT_SUCCESS;
   }
 
-  int Inequality(void)
+  int InequalityData(void)
   {
     gul::Image img = gul::GetLenaAlpha();
     img.GetData()[1] = 250;
@@ -47,6 +47,15 @@ namespace TestImageEquality
     img.GetData()[5] = 20;
     img.GetData()[6] = 250;
     TEST_FALSE(gul::AnalyzerImageEquality::Execute(gul::GetLenaAlpha(), img));
+
+    return EXIT_SUCCESS;
+  }
+
+  int InequalityFormat(void)
+  {
+    gul::Image img = gul::GetLenaAlpha();
+    gul::Image imgGray(img.GetWidth(), img.GetHeight(), gul::Image::IF_GRAY, img.GetDataConst());
+    TEST_FALSE(gul::AnalyzerImageEquality::Execute(imgGray, img));
 
     return EXIT_SUCCESS;
   }

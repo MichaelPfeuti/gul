@@ -38,10 +38,11 @@ namespace gul
   gul::Image GUL_EXPORT GetLena(void);
   gul::Image GUL_EXPORT GetLenaAlpha(void);
   gul::Image GUL_EXPORT GetLenaGrayscale(void);
-  gul::Image GUL_EXPORT GetLenaBW(void);
+  gul::Image GUL_EXPORT GetLenaBin(void);
   gul::Image GUL_EXPORT GetLenaGrayAverage(void);
   gul::Image GUL_EXPORT GetLenaGrayLuminosity(void);
   gul::Image GUL_EXPORT GetLenaGrayLightness(void);
+  gul::Image GUL_EXPORT GetLenaBW(void);
 }
 
 #endif

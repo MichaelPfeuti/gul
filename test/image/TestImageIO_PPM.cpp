@@ -109,7 +109,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_ascii.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBW()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBin()));
     return EXIT_SUCCESS;
   }
 
@@ -119,7 +119,7 @@ namespace TestImageIO_PPM
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_bin.pbm"));
     gul::Image lenaImage = ppmIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBW()));
+    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaBin()));
     return EXIT_SUCCESS;
   }
 }

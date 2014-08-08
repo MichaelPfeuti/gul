@@ -75,7 +75,7 @@ void gul::FilterImageToBW::Execute(void)
         outputImage.GetColor(x, y, 1) = 255;
         outputImage.GetColor(x, y, 2) = 255;
       }
-      outputImage.GetColor(x, y, 3) = inputImage.GetColor(x, y, 3);
+      outputImage.GetColor(x, y, 3) = inputImage.GetColorConst(x, y, 3);
     }
   }
 }

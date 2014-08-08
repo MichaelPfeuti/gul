@@ -30,11 +30,12 @@
 
 #include "image/lena.c"
 #include "image/lena_alpha.c"
-#include "image/lena_bw.c"
 #include "image/lena_gray.c"
+#include "image/lena_bin.c"
 #include "algorithms/lena_gray_average.c"
 #include "algorithms/lena_gray_luminosity.c"
 #include "algorithms/lena_gray_lightness.c"
+#include "algorithms/lena_bw.c"
 
 gul::Image gul::GetLena(void)
 {
@@ -51,13 +52,13 @@ gul::Image gul::GetLenaAlpha(void)
 gul::Image gul::GetLenaGrayscale(void)
 {
   return gul::Image(lena_gray.width, lena_gray.height,
-                    gul::Image::IF_RGBA, lena_gray.pixel_data);
+                    gul::Image::IF_GRAY, lena_gray.pixel_data);
 }
 
-gul::Image gul::GetLenaBW(void)
+gul::Image gul::GetLenaBin(void)
 {
-  return gul::Image(lena_bw.width, lena_bw.height,
-                    gul::Image::IF_RGBA, lena_bw.pixel_data);
+  return gul::Image(lena_bin.width, lena_bin.height,
+                    gul::Image::IF_GRAY, lena_bin.pixel_data);
 }
 
 gul::Image gul::GetLenaGrayAverage(void)
@@ -76,4 +77,10 @@ gul::Image gul::GetLenaGrayLightness(void)
 {
   return gul::Image(lena_gray_lightness.width, lena_gray_lightness.height,
                     gul::Image::IF_GRAY, lena_gray_lightness.pixel_data);
+}
+
+gul::Image gul::GetLenaBW(void)
+{
+  return gul::Image(lena_bw.width, lena_bw.height,
+                    gul::Image::IF_GRAY, lena_bw.pixel_data);
 }
