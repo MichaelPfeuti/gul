@@ -30,7 +30,6 @@
 #include "CTestData.h"
 #include "MediaReader.h"
 #include "ImageFileHandler.h"
-#include "AnalyzerImageEquality.h"
 #include "MediaConverter.h"
 #include "VideoFrame.h"
 #include "VideoFrameManipulator.h"
@@ -74,7 +73,7 @@ namespace TestMediaConverter
 
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, threshold));
+    TEST_EQUAL_IMAGE(frame, first, threshold);
 
     int count = 0;
     while(loader.IsFrameValid())
@@ -82,14 +81,14 @@ namespace TestMediaConverter
       if(++count == 32)
       {
         TEST_TRUE(loader.IsFrameValid());
-        TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, threshold));
+        TEST_EQUAL_IMAGE(frame, middle, threshold);
       }
       prevFrame = frame;
       loader.GetNext(frame);
     }
 
     TEST_EQUAL(count, gtCount);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, prevFrame, threshold));
+    TEST_EQUAL_IMAGE(prevFrame, last, threshold);
 
     return EXIT_SUCCESS;
   }

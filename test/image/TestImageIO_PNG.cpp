@@ -30,7 +30,6 @@
 #include "CTestData.h"
 #include "ImageIO_PNG.h"
 #include "UtilsImage.h"
-#include "AnalyzerImageEquality.h"
 
 namespace TestImageIO_PNG
 {
@@ -40,7 +39,7 @@ namespace TestImageIO_PNG
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaAlpha()));
+    TEST_EQUAL_IMAGE(lenaImage, gul::GetLenaAlpha(), 0.f);
 
     return EXIT_SUCCESS;
   }
@@ -53,7 +52,7 @@ namespace TestImageIO_PNG
     pngIO.Save(lenaPath, image);
 
     image = pngIO.Load(lenaPath);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(image, gul::GetLenaAlpha()));
+    TEST_EQUAL_IMAGE(image, gul::GetLenaAlpha(), 0.f);
 
     return EXIT_SUCCESS;
   }
@@ -64,7 +63,7 @@ namespace TestImageIO_PNG
     gul::File lenaPath = gul::CTestData::GetFilePath(gul::String("image"), gul::String("lena_interlaced.png"));
     gul::Image lenaImage = pngIO.Load(lenaPath);
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(lenaImage, gul::GetLenaAlpha()));
+    TEST_EQUAL_IMAGE(lenaImage, gul::GetLenaAlpha(), 0.f);
 
     return EXIT_SUCCESS;
   }

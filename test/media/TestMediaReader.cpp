@@ -30,7 +30,6 @@
 #include "CTestData.h"
 #include "MediaReader.h"
 #include "ImageFileHandler.h"
-#include "AnalyzerImageEquality.h"
 #include "AudioFrame.h"
 #include "VideoFrame.h"
 
@@ -48,7 +47,7 @@ namespace TestMediaReader
 
     gul::Image first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(first, frame, threshold));
+    TEST_EQUAL_IMAGE(frame, first, threshold);
 
     return EXIT_SUCCESS;
   }
@@ -72,7 +71,7 @@ namespace TestMediaReader
 
     gul::Image middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(middle, frame, threshold));
+    TEST_EQUAL_IMAGE(frame, middle, threshold);
 
     return EXIT_SUCCESS;
   }
@@ -93,7 +92,7 @@ namespace TestMediaReader
 
     gul::Image last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
 
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(last, framePrev, threshold));
+    TEST_EQUAL_IMAGE(framePrev, last, threshold);
 
     return EXIT_SUCCESS;
   }

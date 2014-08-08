@@ -28,8 +28,6 @@
 
 #include "FilterImageToBW.h"
 #include "CTestAssert.h"
-#include "AnalyzerImageEquality.h"
-
 
 namespace TestImageToBW
 {

@@ -27,7 +27,6 @@
 ***************************************************************************/
 
 #include "FilterImageToGrayscale.h"
-#include "AnalyzerImageEquality.h"
 #include "CTestAssert.h"
 #include "UtilsImage.h"
 

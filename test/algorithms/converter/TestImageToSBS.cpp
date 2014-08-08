@@ -30,7 +30,6 @@
 #include "CTestData.h"
 #include "ConverterImageToSBS.h"
 #include "ImageFileHandler.h"
-#include "AnalyzerImageEquality.h"
 
 namespace TestImageToSBS
 {
@@ -44,7 +43,7 @@ namespace TestImageToSBS
                     gul::String("avatar_sbs.png")));
 
     gul::Image sbs = gul::ConverterImageToSBS::Execute(left, right);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(sbs, gt));
+    TEST_EQUAL_IMAGE(sbs, gt, 0.0f);
 
     gul::ImageFileHandler::Instance().Save(gul::File("out.png"), sbs);
 
@@ -63,7 +62,7 @@ namespace TestImageToSBS
     gul::Image sbs = gul::ConverterImageToSBS::Execute(left, right);
     gul::Image sbsRight = gul::ConverterImageToSBS::Execute(sbs, right);
     gul::Image gtRight = gul::ConverterImageToSBS::Execute(gt, right);
-    TEST_TRUE(gul::AnalyzerImageEquality::Execute(sbsRight, gtRight));
+    TEST_EQUAL_IMAGE(sbsRight, gtRight, 0.0f);
 
     gul::ImageFileHandler::Instance().Save(gul::File("sbsRight.png"), sbsRight);
     gul::ImageFileHandler::Instance().Save(gul::File("gtRight.png"), gtRight);

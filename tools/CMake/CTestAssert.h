@@ -37,6 +37,7 @@
 #include "UtilsCDash.h"
 #include "CTestData.h"
 #include "ImageFileHandler.h"
+#include "AnalyzerImageEquality.h"
 
 #define TEST_ASSERTION(test) \
   try { \
