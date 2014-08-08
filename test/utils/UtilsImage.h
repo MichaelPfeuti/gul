@@ -33,7 +33,8 @@
 #include "Image.h"
 #include "gul_export.h"
 
-namespace gul {
+namespace gul
+{
   gul::Image GUL_EXPORT GetLena(void);
   gul::Image GUL_EXPORT GetLenaAlpha(void);
   gul::Image GUL_EXPORT GetLenaGrayscale(void);

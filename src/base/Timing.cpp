@@ -51,7 +51,7 @@ void gul::TimingStart(void)
 
 void gul::TimingStop(const gul::String& rText)
 {
-  float elapsed = 1000.0f*(float)(clock() - gTimingHandleStack.Pop())/CLOCKS_PER_SEC;
+  float elapsed = 1000.0f * (float)(clock() - gTimingHandleStack.Pop()) / CLOCKS_PER_SEC;
   TimineOutput output;
   output.text = gul::String("%: % ms").Arg(rText).Arg(elapsed);
   output.depth = gTimingHandleStack.Size();

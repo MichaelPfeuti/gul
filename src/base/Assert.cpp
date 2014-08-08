@@ -34,11 +34,11 @@
 #if !defined(NDEBUG) || defined(GUL_ASSERTION)
 
 #if defined(GUL_ASSERTION_ABORT)
-  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_ABORT;
+gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_ABORT;
 #elif defined(GUL_ASSERTION_EXCEPTION)
-  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_EXCEPTION;
+gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_EXCEPTION;
 #elif defined(GUL_ASSERTION_GUI)
-  gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_GUI;
+gul::AssertionMode gul::AssertionModeInUse = gul::ASSERT_GUI;
 #endif
 
 static void AssertException(bool condition, const char* pMessage, int lineNumber, const char* pFileName)

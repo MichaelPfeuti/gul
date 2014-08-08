@@ -35,29 +35,30 @@
 #if defined(GUL_LOGGING)
 
 #if defined(GUL_LOGGING_FILE)
-  gul::LoggingMode gul::LoggingModeInUse = gul::LOG_FILE;
+gul::LoggingMode gul::LoggingModeInUse = gul::LOG_FILE;
 #elif defined(GUL_LOGGING_CLI)
-  gul::LoggingMode gul::LoggingModeInUse = gul::LOG_CLI;
+gul::LoggingMode gul::LoggingModeInUse = gul::LOG_CLI;
 #elif defined(GUL_LOGGING_GUI)
-  gul::LoggingMode gul::LoggingModeInUse = gul::LOG_GUI;
+gul::LoggingMode gul::LoggingModeInUse = gul::LOG_GUI;
 #endif
 
 #if defined(GUL_LOGGING_DEBUG)
-  gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_DEBUG;
+gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_DEBUG;
 #elif defined(GUL_LOGGING_INFO)
-  gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_INFO;
+gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_INFO;
 #elif defined(GUL_LOGGING_WARNING)
-  gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_WARNING;
+gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_WARNING;
 #elif defined(GUL_LOGGING_ERROR)
-  gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_ERROR;
+gul::LoggingLevel gul::LoggingLevelInUse = gul::LOG_ERROR;
 #endif
 
 static const char* LOG_FMT[] = { "%s:%d DEBUG: ",
                                  "%s:%d INFO: ",
                                  "%s:%d WARNING: ",
-                                 "%s:%d ERROR: "};
+                                 "%s:%d ERROR: "
+                               };
 
-static void LogGui(const int, const char *, ...)
+static void LogGui(const int, const char*, ...)
 {
   // TODO: implement log gui
 }
@@ -72,7 +73,7 @@ static void CloseLogFile(void)
   }
 }
 
-static void LogFile(const int level, const char* file, int line, const char * format, va_list& args)
+static void LogFile(const int level, const char* file, int line, const char* format, va_list& args)
 {
   if(logfile == nullptr)
   {
@@ -87,7 +88,7 @@ static void LogFile(const int level, const char* file, int line, const char * fo
     fflush(logfile);
 }
 
-static void LogCli(const int level, const char* file, int line, const char * format, va_list& args)
+static void LogCli(const int level, const char* file, int line, const char* format, va_list& args)
 {
   if(level >= gul::LoggingLevelInUse && level >= gul::LOG_WARNING)
   {

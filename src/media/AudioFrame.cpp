@@ -104,11 +104,11 @@ int gul::AudioFrame::GetSampleRate(void) const
 
 void gul::AudioFrame::ResizeData(int sampleCount)
 {
-  int dataSize = sizeof(int16_t)*m_channels*sampleCount;
+  int dataSize = sizeof(int16_t) * m_channels * sampleCount;
   if(dataSize != m_dataSize)
   {
     GUL_DELETE_ARRAY(m_data);
-    m_data = new int16_t[m_channels*sampleCount];
+    m_data = new int16_t[m_channels * sampleCount];
   }
   m_sampleCount = sampleCount;
   m_dataSize = dataSize;
@@ -131,7 +131,7 @@ int16_t* gul::AudioFrame::GetData(void)
   return m_data;
 }
 
-const int16_t *gul::AudioFrame::GetData(void) const
+const int16_t* gul::AudioFrame::GetData(void) const
 {
   return m_data;
 }

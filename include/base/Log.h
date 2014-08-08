@@ -39,11 +39,13 @@ namespace gul
 {
   enum GUL_EXPORT LoggingMode { LOG_FILE,
                                 LOG_CLI,
-                                LOG_GUI };
+                                LOG_GUI
+                              };
   enum GUL_EXPORT LoggingLevel { LOG_DEBUG = 0,
                                  LOG_INFO,
                                  LOG_WARNING,
-                                 LOG_ERROR };
+                                 LOG_ERROR
+                               };
 
   GUL_EXPORT void Log(const int level, const char* file, int line, ...);
 

@@ -47,8 +47,8 @@ namespace gul
       ~AudioFrame(void);
 
       void ResizeData(int sampleCount);
-      int16_t *GetData(void);
-      const int16_t *GetData(void) const;
+      int16_t* GetData(void);
+      const int16_t* GetData(void) const;
       int GetDataSize(void) const ;
 
       int GetChannels(void) const;

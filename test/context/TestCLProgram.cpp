@@ -65,19 +65,20 @@ namespace TestCLProgram
                                  "  res = input[1]*output;\n"
                                  "}\n"
                                  "\n"
-                                 );
+                                );
 
 
   int BuildValid(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
-        context.MakeCurrent();
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
 
-        gul::CLProgram program;
-        program.AddSource(dummySourceValid);
-        TEST_TRUE(program.Build());
+      gul::CLProgram program;
+      program.AddSource(dummySourceValid);
+      TEST_TRUE(program.Build());
     }
 
     return EXIT_SUCCESS;
@@ -85,14 +86,15 @@ namespace TestCLProgram
 
   int BuildInvalid(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
-        context.MakeCurrent();
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
 
-        gul::CLProgram program;
-        program.AddSource(dummySourceInvalid);
-        TEST_FALSE(program.Build());
+      gul::CLProgram program;
+      program.AddSource(dummySourceInvalid);
+      TEST_FALSE(program.Build());
     }
 
     return EXIT_SUCCESS;
@@ -100,13 +102,14 @@ namespace TestCLProgram
 
   int NoCurrentContext(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
 
-        gul::CLProgram program;
-        program.AddSource(dummySourceInvalid);
-        TEST_ASSERTION(program.Build());
+      gul::CLProgram program;
+      program.AddSource(dummySourceInvalid);
+      TEST_ASSERTION(program.Build());
     }
 
     return EXIT_SUCCESS;
@@ -114,16 +117,17 @@ namespace TestCLProgram
 
   int RunUnknownKernel(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
-        context.MakeCurrent();
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
 
-        gul::CLProgram program;
-        program.AddSource(argumentTestKernel);
-        TEST_TRUE(program.Build());
-        gul::CLWorkgroup workGroup(1);
-        TEST_ASSERTION(program.Run("wrongKernel", workGroup));
+      gul::CLProgram program;
+      program.AddSource(argumentTestKernel);
+      TEST_TRUE(program.Build());
+      gul::CLWorkgroup workGroup(1);
+      TEST_ASSERTION(program.Run("wrongKernel", workGroup));
     }
 
     return EXIT_SUCCESS;
@@ -131,16 +135,17 @@ namespace TestCLProgram
 
   int RunNoArgs(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
-        context.MakeCurrent();
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
+      context.MakeCurrent();
 
-        gul::CLProgram program;
-        program.AddSource(argumentTestKernel);
-        TEST_TRUE(program.Build());
-        gul::CLWorkgroup workGroup(1, 3);
-        TEST_TRUE(program.Run("testNoArgs", workGroup));
+      gul::CLProgram program;
+      program.AddSource(argumentTestKernel);
+      TEST_TRUE(program.Build());
+      gul::CLWorkgroup workGroup(1, 3);
+      TEST_TRUE(program.Run("testNoArgs", workGroup));
     }
 
     return EXIT_SUCCESS;
@@ -148,7 +153,8 @@ namespace TestCLProgram
 
   int RunOneArg(void)
   {
-    { // force delete
+    {
+      // force delete
       gul::CLContext context;
       TEST_TRUE(context.Initialize());
       context.MakeCurrent();
@@ -165,7 +171,8 @@ namespace TestCLProgram
 
   int RunTwoArgsFirstWrong(void)
   {
-    { // force delete
+    {
+      // force delete
       gul::CLContext context;
       TEST_TRUE(context.Initialize());
       context.MakeCurrent();
@@ -182,7 +189,8 @@ namespace TestCLProgram
 
   int RunTwoArgs(void)
   {
-    { // force delete
+    {
+      // force delete
       gul::CLContext context;
       TEST_TRUE(context.Initialize());
       context.MakeCurrent();
@@ -194,7 +202,7 @@ namespace TestCLProgram
       cl_int error;
       cl_mem intBuffer = clCreateBuffer(context.GetCLContext(),
                                         CL_MEM_READ_WRITE,
-                                        5*sizeof(int), nullptr,
+                                        5 * sizeof(int), nullptr,
                                         &error);
       if(error != CL_SUCCESS)
       {

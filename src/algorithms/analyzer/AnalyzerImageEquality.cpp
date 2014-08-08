@@ -75,7 +75,7 @@ void gul::AnalyzerImageEquality::Execute(void)
     {
       for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
       {
-        diffPerChannel[c] += gul::absoluteDifference<float>(image1.GetColorConst(x,y,c), image2.GetColorConst(x,y,c));
+        diffPerChannel[c] += gul::absoluteDifference<float>(image1.GetColorConst(x, y, c), image2.GetColorConst(x, y, c));
       }
     }
   }
@@ -83,12 +83,12 @@ void gul::AnalyzerImageEquality::Execute(void)
   difference = 0;
   for(int c = 0; c < image1.GetNumberOfChannels(); ++c)
   {
-      difference += diffPerChannel[c];
+    difference += diffPerChannel[c];
   }
   difference /= image1.GetNumberOfChannels();
   difference /= image1.GetWidth() * image1.GetHeight();
   difference /= 255;
-  GUL_LOG_INFO("AnalyzerImageEquality error: %f, %f, %f, %f -> %f", diffPerChannel[0],diffPerChannel[1],diffPerChannel[2],diffPerChannel[3], difference);
+  GUL_LOG_INFO("AnalyzerImageEquality error: %f, %f, %f, %f -> %f", diffPerChannel[0], diffPerChannel[1], diffPerChannel[2], diffPerChannel[3], difference);
 }
 
 bool gul::AnalyzerImageEquality::Execute(const Image& image1, const Image& image2, float differenceThreshold)

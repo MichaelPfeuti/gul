@@ -33,7 +33,8 @@
 #include <String.h>
 #include <File.h>
 
-namespace gul {
+namespace gul
+{
 
   void GUL_EXPORT UploadCDashImage(const gul::String& label,
                                    const gul::File& path);

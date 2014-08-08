@@ -62,13 +62,17 @@ if(ASTYLE_EXECUTABLE)
                       INPUT_FILE ${CHECK_FILE}
                       OUTPUT_VARIABLE FORMATED_CODE
                       RESULT_VARIABLE RETVAL)
-                  
+
       if(${RETVAL})
         message(FATAL_ERROR "Format Checking FAILED!\n\t${ASTYLE_EXECUTABLE} --options=${ASTYLE_CONFIG} < ${CHECK_FILE}")
       endif(${RETVAL})
 
       file(READ ${CHECK_FILE} CHECK_FILE_CONTENT)
-    
+
+      # remove trailing spaces and newlines
+      string(STRIP "${FORMATED_CODE}" FORMATED_CODE)
+      string(STRIP "${CHECK_FILE_CONTENT}" CHECK_FILE_CONTENT)
+
       if(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))
         message("Warning: ${CHECK_FILE} does not meet the Coding Conventions")
       endif(NOT (FORMATED_CODE STREQUAL CHECK_FILE_CONTENT))

@@ -174,7 +174,7 @@ namespace TestImage
   int GetColorSharedResource(void)
   {
     gul::Image img1(10, 10, gul::Image::IF_RGBA);
-    img1.GetColor(5,5,2) = 50;
+    img1.GetColor(5, 5, 2) = 50;
     gul::Image img2 = img1;
 
     img1.GetColorConst(5, 5, 0);

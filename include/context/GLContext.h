@@ -34,7 +34,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace gul {
+namespace gul
+{
   class String;
 }
 

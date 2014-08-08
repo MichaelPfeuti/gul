@@ -57,7 +57,7 @@ bool gul::ALContext::Initialize(void)
     GUL_LOG_WARNING("OpenAL could not open default audio device!");
     return false;
   }
-  m_pContext = alcCreateContext(m_pDevice,nullptr);
+  m_pContext = alcCreateContext(m_pDevice, nullptr);
   if(m_pContext == nullptr)
   {
     GUL_LOG_WARNING("OpenAL could not create context (code %d)!");

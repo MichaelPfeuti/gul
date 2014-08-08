@@ -65,9 +65,9 @@ namespace gul
         }
 
         GUL_CL_CHECK_ERROR(clEnqueueNDRangeKernel(pCurrentContext->GetCurrentQueue(),
-                                                  kernel, workGroup.GetDimension(), nullptr,
-                                                  workGroup.GetSize(), nullptr,
-                                                  0, nullptr, nullptr));
+                           kernel, workGroup.GetDimension(), nullptr,
+                           workGroup.GetSize(), nullptr,
+                           0, nullptr, nullptr));
         return true;
       }
 

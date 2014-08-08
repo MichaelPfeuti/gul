@@ -33,7 +33,8 @@
 
 #include <GL/glew.h>
 
-namespace gul {
+namespace gul
+{
   class String;
 }
 

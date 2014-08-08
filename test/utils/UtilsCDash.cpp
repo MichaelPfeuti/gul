@@ -32,11 +32,11 @@
 #include <Assert.h>
 
 void gul::UploadCDashImage(const gul::String& label,
-                     const gul::File& path)
+                           const gul::File& path)
 {
   GUL_ASSERT_MSG(path.GetSuffix().LowerCase().GetData() == gul::String("jpeg") ||
-             path.GetSuffix().LowerCase().GetData() == gul::String("png"),
-             "Only PNG or JPEG can be uploaded to CDash!");
+                 path.GetSuffix().LowerCase().GetData() == gul::String("png"),
+                 "Only PNG or JPEG can be uploaded to CDash!");
 
   std::cerr << "<DartMeasurementFile name=\"";
   std::cerr << label.GetData();
@@ -48,7 +48,7 @@ void gul::UploadCDashImage(const gul::String& label,
   std::cerr << std::endl;
 }
 
-void gul::UploadCDashMeasurement(const gul::String &label, int value)
+void gul::UploadCDashMeasurement(const gul::String& label, int value)
 {
   std::cerr << "<DartMeasurement name=\"";
   std::cerr << label.GetData();
@@ -58,7 +58,7 @@ void gul::UploadCDashMeasurement(const gul::String &label, int value)
   std::cerr << std::endl;
 }
 
-void gul::UploadCDashMeasurement(const gul::String &label, double value)
+void gul::UploadCDashMeasurement(const gul::String& label, double value)
 {
   std::cerr << "<DartMeasurement name=\"";
   std::cerr << label.GetData();
@@ -67,7 +67,7 @@ void gul::UploadCDashMeasurement(const gul::String &label, double value)
   std::cerr << "</DartMeasrement>";
 }
 
-void gul::UploadCDashMeasurement(const gul::String &label, bool value)
+void gul::UploadCDashMeasurement(const gul::String& label, bool value)
 {
   std::cerr << "<DartMeasurement name=\"";
   std::cerr << label.GetData();

@@ -137,9 +137,9 @@ void gul::MediaReader::allocateVideoStructures(void)
 
   // swscaler context
   m_pSWSContext = sws_getCachedContext(m_pSWSContext,
-                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
-                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
-                                     SWS_BILINEAR, nullptr, nullptr, nullptr);
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
+                                       SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
 void gul::MediaReader::allocateAudioStructures(void)
@@ -173,14 +173,14 @@ bool gul::MediaReader::Open(void)
   m_videoStreamIndex = openCodec(AVMEDIA_TYPE_VIDEO, m_pVideoCodecCtx);
   m_audioStreamIndex = openCodec(AVMEDIA_TYPE_AUDIO, m_pAudioCodecCtx);
 
-  if(m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND )
+  if(m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND)
   {
     allocateVideoStructures();
   }
 
   if(m_audioStreamIndex != AVERROR_STREAM_NOT_FOUND)
   {
-      allocateAudioStructures();
+    allocateAudioStructures();
   }
 
   m_isOpen = m_videoStreamIndex != AVERROR_STREAM_NOT_FOUND ||
@@ -289,7 +289,7 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::VideoFrame& rFrame)
     AVRational timeBase = m_pFormatCtx->streams[m_videoStreamIndex]->time_base;
     //double pts = AV_NOPTS_VALUE == m_pFrame->pkt_pts ? m_pVideoCodecCtx->frame_number : m_pFrame->pkt_pts;
     double pts =  m_pFrame->pkt_pts;
-    rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
+    rFrame.SetPresentationTime(pts * timeBase.num / timeBase.den);
     rFrame.SetFrameIndex(m_pVideoCodecCtx->frame_number);
   }
 
@@ -315,7 +315,7 @@ bool gul::MediaReader::decodePacket(AVPacket& rPacket, gul::AudioFrame& rFrame)
 
     AVRational timeBase = m_pFormatCtx->streams[m_audioStreamIndex]->time_base;
     double pts = AV_NOPTS_VALUE == m_pFrame->pkt_pts ? m_pAudioCodecCtx->frame_number : m_pFrame->pkt_pts;
-    rFrame.SetPresentationTime(pts*timeBase.num/timeBase.den);
+    rFrame.SetPresentationTime(pts * timeBase.num / timeBase.den);
     rFrame.SetFrameIndex(m_pAudioCodecCtx->frame_number);
   }
 
@@ -359,7 +359,7 @@ void gul::MediaReader::setData(gul::VideoFrame& rTargetFrame, const AVFrame* pSo
   }
   else
   {
-    memset(pData, 0, pitch*rTargetFrame.GetHeight());
+    memset(pData, 0, pitch * rTargetFrame.GetHeight());
   }
 }
 
@@ -427,7 +427,7 @@ void gul::MediaReader::GetNext(VideoFrame& rFrame)
     {
       if(decodePacket(*pNextPacket, rFrame))
       {
-        m_isFrameValid= true;
+        m_isFrameValid = true;
         return;
       }
     }
@@ -453,7 +453,7 @@ void gul::MediaReader::GetNext(AudioFrame& rFrame)
     {
       if(decodePacket(*pNextPacket, rFrame))
       {
-        m_isFrameValid= true;
+        m_isFrameValid = true;
         return;
       }
     }

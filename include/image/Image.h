@@ -60,8 +60,8 @@ namespace gul
     private:
       struct SynchStatus
       {
-          bool isGPUDataRecent;
-          bool isCPUDataRecent;
+        bool isGPUDataRecent;
+        bool isCPUDataRecent;
       };
 
     public:
@@ -113,7 +113,7 @@ namespace gul
       ImageFormat m_imageFormat;
       SynchStatus* m_pSynchStatus;
 
-    // OpenGL
+      // OpenGL
     public:
       const GLuint& GetGLTextureConst(void) const;
       const GLuint& GetGLTexture(void);
@@ -121,7 +121,7 @@ namespace gul
     private:
       GLuint m_glTexture;
 
-    // OpenCL
+      // OpenCL
     public:
       const cl_mem& GetCLImageConst(void) const;
       const cl_mem& GetCLImage(void);
@@ -134,9 +134,9 @@ namespace gul
     private:
       struct CLImageData
       {
-          bool isGLAquiredByCL;
-          cl_mem clImage;
-      } * m_pCLImage;
+        bool isGLAquiredByCL;
+        cl_mem clImage;
+      }* m_pCLImage;
 
   };
 

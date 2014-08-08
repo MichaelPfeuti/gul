@@ -46,7 +46,7 @@ gul::CLProgram::~CLProgram(void)
 
   if(m_isProgramAllocated)
   {
-   clReleaseProgram(m_program);
+    clReleaseProgram(m_program);
   }
 }
 
@@ -76,7 +76,7 @@ bool gul::CLProgram::Build(void)
   {
     size_t bufferSize;
     GUL_CL_CHECK_ERROR(clGetProgramBuildInfo(m_program, pCurrentContext->GetDevice(), CL_PROGRAM_BUILD_LOG, 0, nullptr, &bufferSize));
-    char log[bufferSize+1];
+    char log[bufferSize + 1];
     GUL_CL_CHECK_ERROR(clGetProgramBuildInfo(m_program, pCurrentContext->GetDevice(), CL_PROGRAM_BUILD_LOG, bufferSize, log, nullptr));
     log[bufferSize] = '\0';
 

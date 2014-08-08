@@ -45,8 +45,14 @@ namespace gul
         setNextSize(sizeZ);
       }
 
-      size_t GetDimension(void) const { return m_dim; }
-      const size_t* GetSize(void) const { return m_size; }
+      size_t GetDimension(void) const
+      {
+        return m_dim;
+      }
+      const size_t* GetSize(void) const
+      {
+        return m_size;
+      }
 
     private:
       void setNextSize(size_t size)
@@ -54,7 +60,7 @@ namespace gul
         if(size > 0)
         {
           ++m_dim;
-          m_size[m_dim-1] = size;
+          m_size[m_dim - 1] = size;
         }
       }
 

@@ -64,7 +64,7 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
     m_pSynchStatus(nullptr)
 {
   initConstructor();
-  memcpy(m_pData->GetData(), data, sizeof(T)*w*h*GetNumberOfChannels());
+  memcpy(m_pData->GetData(), data, sizeof(T)*w * h * GetNumberOfChannels());
 }
 
 template<typename T>
@@ -157,7 +157,7 @@ const T* gul::ImageT<T>::GetScanlineConst(int scanline) const
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   synchDataToCPU();
-  return m_pData->GetData() + scanline*GetPitch();
+  return m_pData->GetData() + scanline * GetPitch();
 }
 
 template<typename T>
@@ -166,7 +166,7 @@ const T* gul::ImageT<T>::GetScanline(int scanline) const
   GUL_ASSERT(scanline >= 0 && scanline <= GetHeight());
 
   synchDataToCPU();
-  return m_pData->GetData() + scanline*GetPitch();
+  return m_pData->GetData() + scanline * GetPitch();
 }
 
 template<typename T>
@@ -177,7 +177,7 @@ T* gul::ImageT<T>::GetScanline(int scanline)
   detach();
   synchDataToCPU();
   m_pSynchStatus->isGPUDataRecent = false;
-  return m_pData->GetData() + scanline*GetPitch();
+  return m_pData->GetData() + scanline * GetPitch();
 }
 
 template<typename T>
@@ -188,7 +188,7 @@ const T& gul::ImageT<T>::GetColorConst(int x, int y, int channel) const
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   synchDataToCPU();
-  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y * GetPitch() + x * GetNumberOfChannels() + channel];
 }
 
 template<typename T>
@@ -199,7 +199,7 @@ const T& gul::ImageT<T>::GetColor(int x, int y, int channel) const
   GUL_ASSERT(y >= 0 && y <= GetHeight());
 
   synchDataToCPU();
-  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y * GetPitch() + x * GetNumberOfChannels() + channel];
 }
 
 template<typename T>
@@ -212,7 +212,7 @@ T& gul::ImageT<T>::GetColor(int x, int y, int channel)
   detach();
   synchDataToCPU();
   m_pSynchStatus->isGPUDataRecent = false;
-  return m_pData->GetData()[y*GetPitch() + x*GetNumberOfChannels() + channel];
+  return m_pData->GetData()[y * GetPitch() + x * GetNumberOfChannels() + channel];
 }
 
 template<typename T>
@@ -415,11 +415,11 @@ const cl_mem& gul::ImageT<T>::GetCLImageConst(void) const
   if(isCLImageInitialized())
   {
     m_pCLImage->clImage = clCreateFromGLTexture2D(pCurrentContext->GetCLContext(),
-                                        CL_MEM_READ_WRITE,
-                                        GL_TEXTURE_2D,
-                                        0,
-                                        GetGLTexture(),
-                                        &clError);
+                          CL_MEM_READ_WRITE,
+                          GL_TEXTURE_2D,
+                          0,
+                          GetGLTexture(),
+                          &clError);
 
 
     if(clError != CL_SUCCESS)
@@ -431,16 +431,16 @@ const cl_mem& gul::ImageT<T>::GetCLImageConst(void) const
   aquireCLGLBinding();
 
   if(!m_pSynchStatus->isGPUDataRecent &&
-      m_pSynchStatus->isCPUDataRecent)
+     m_pSynchStatus->isCPUDataRecent)
   {
     size_t origin[] = {0, 0, 0};
     size_t region[] = { (size_t) m_width, (size_t) m_height, 1};
-    clError= clEnqueueWriteImage(pCurrentContext->GetCurrentQueue(),
-                                 m_pCLImage->clImage,
-                                 true, origin, region,
-                                 GetPitch(), 0,
-                                 m_pData->GetData(),
-                                 0, nullptr, nullptr);
+    clError = clEnqueueWriteImage(pCurrentContext->GetCurrentQueue(),
+                                  m_pCLImage->clImage,
+                                  true, origin, region,
+                                  GetPitch(), 0,
+                                  m_pData->GetData(),
+                                  0, nullptr, nullptr);
   }
 
   return m_pCLImage->clImage;
@@ -459,7 +459,7 @@ template<typename T>
 void gul::ImageT<T>::synchDataToCPU(void) const
 {
   if(!m_pSynchStatus->isCPUDataRecent &&
-      m_pSynchStatus->isGPUDataRecent)
+     m_pSynchStatus->isGPUDataRecent)
   {
     if(!m_pCLImage->isGLAquiredByCL)
     {

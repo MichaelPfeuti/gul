@@ -50,7 +50,7 @@ void gul::MediaConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameMan
   GUL_DELETE(pMediaWriter);
   pMediaWriter = new gul::MediaWriter(rOutputVideo);
   pMediaWriter->setSize(rManipulator.GetResultWidth(pMediaReader->GetWidth()),
-                       rManipulator.GetResultHeight(pMediaReader->GetHeight()));
+                        rManipulator.GetResultHeight(pMediaReader->GetHeight()));
   pMediaWriter->openVideo(*pMediaReader->m_pFormatCtx);
 }
 

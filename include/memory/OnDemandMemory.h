@@ -31,7 +31,8 @@
 
 #include <mutex>
 
-namespace gul {
+namespace gul
+{
 
   template<typename T>
   class OnDemandMemory

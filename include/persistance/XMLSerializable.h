@@ -156,8 +156,8 @@ namespace gul
       static void performLoad(T& v, const gul::XMLNode& node)
       {
         GUL_ASSERT_MSG(!node.GetAttribute(refTag).IsValid() &&
-                   node.GetAttribute(refIndexTag).IsValid(),
-                   "When loading a non-pointer we must not have a reference. Otherwise something went terribly wrong!!!!");
+                       node.GetAttribute(refIndexTag).IsValid(),
+                       "When loading a non-pointer we must not have a reference. Otherwise something went terribly wrong!!!!");
 
         T* loader = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.GetName())));
         loader->load(node);
@@ -170,8 +170,8 @@ namespace gul
       static void performLoad(T*& v, const gul::XMLNode& node)
       {
         GUL_ASSERT_MSG(node.GetAttribute(refTag).IsValid() ||
-                   node.GetAttribute(refIndexTag).IsValid(),
-                   "Each XML node must and a __ref or __refIndex");
+                       node.GetAttribute(refIndexTag).IsValid(),
+                       "Each XML node must and a __ref or __refIndex");
 
         if(!node.GetAttribute(refIndexTag).IsValid())
         {

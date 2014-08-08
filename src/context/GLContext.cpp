@@ -43,7 +43,7 @@ static void errorCallback(int error, const char* description)
 
 static void framebufferResizeCallback(GLFWwindow*, int width, int height)
 {
-    glViewport(0, 0, width, height);
+  glViewport(0, 0, width, height);
 }
 
 gul::GLContext::GLContext(void)
@@ -63,7 +63,7 @@ gul::GLContext::~GLContext(void)
 bool gul::GLContext::InitializeOffscreen(void)
 {
   glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-  return Initialize(1,1,"");
+  return Initialize(1, 1, "");
 }
 
 bool gul::GLContext::Initialize(int width, int height, const gul::String& title)

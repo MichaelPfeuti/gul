@@ -50,32 +50,52 @@ SPECIALIZE_TRAITS(void)
 SPECIALIZE_TRAITS(gul::String)
 
 
-namespace gul {
+namespace gul
+{
   template<>
   class Traits<unsigned char>
   {
     public:
-      static String GetName() { return gul::String("unsigned char"); }
+      static String GetName()
+      {
+        return gul::String("unsigned char");
+      }
 #ifdef LIBOPENGL_FOUND
-      static GLenum GetGLType() { return GL_UNSIGNED_BYTE; }
+      static GLenum GetGLType()
+      {
+        return GL_UNSIGNED_BYTE;
+      }
 #endif
 #ifdef LIBOPENCL_FOUND
-      static cl_channel_type GetCLType() { return CL_UNORM_INT8; }
+      static cl_channel_type GetCLType()
+      {
+        return CL_UNORM_INT8;
+      }
 #endif
   };
 }
 
-namespace gul {
+namespace gul
+{
   template<>
   class Traits<float>
   {
     public:
-      static String GetName() { return gul::String("float"); }
+      static String GetName()
+      {
+        return gul::String("float");
+      }
 #ifdef LIBOPENGL_FOUND
-      static GLenum GetGLType() { return GL_FLOAT; }
+      static GLenum GetGLType()
+      {
+        return GL_FLOAT;
+      }
 #endif
 #ifdef LIBOPENCL_FOUND
-      static cl_channel_type GetCLType() { return CL_FLOAT; }
+      static cl_channel_type GetCLType()
+      {
+        return CL_FLOAT;
+      }
 #endif
   };
 }

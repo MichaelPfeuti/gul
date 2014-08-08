@@ -42,18 +42,18 @@ namespace TestSet
     public:
       TestSaveClass(int i = 0) : _i(i) {}
       virtual ~TestSaveClass(void) {}
-      bool operator==(const TestSaveClass& c) const
+      bool operator==(const TestSaveClass & c) const
       {
         return c._i == _i;
       }
 
 
-      void save(gul::XMLNode& node) const
+      void save(gul::XMLNode & node) const
       {
         node.AppendAttribute(gul::String("i")).SetValue(_i);
       }
 
-      void load(const gul::XMLNode& node)
+      void load(const gul::XMLNode & node)
       {
         _i = node.GetAttribute(gul::String("i")).GetInt();
       }

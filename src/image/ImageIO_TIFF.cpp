@@ -60,9 +60,9 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
         //TODO: this is premuptiplied by the ReadRGBA function. use ReadEncodedStrip
         //      to prevent the small rounding error due to the premultiplication!
         alpha = TIFFGetA(raster[x + y * width]);
-        pData[image.GetNumberOfChannels()*x + 0] = TIFFGetR(raster[x + y * width])*255/alpha;
-        pData[image.GetNumberOfChannels()*x + 1] = TIFFGetG(raster[x + y * width])*255/alpha;
-        pData[image.GetNumberOfChannels()*x + 2] = TIFFGetB(raster[x + y * width])*255/alpha;
+        pData[image.GetNumberOfChannels()*x + 0] = TIFFGetR(raster[x + y * width]) * 255 / alpha;
+        pData[image.GetNumberOfChannels()*x + 1] = TIFFGetG(raster[x + y * width]) * 255 / alpha;
+        pData[image.GetNumberOfChannels()*x + 2] = TIFFGetB(raster[x + y * width]) * 255 / alpha;
         pData[image.GetNumberOfChannels()*x + 3] = alpha;
       }
     }

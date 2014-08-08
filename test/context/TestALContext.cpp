@@ -35,9 +35,10 @@ namespace TestALContext
 
   int Init(void)
   {
-    { // force delete
-        gul::ALContext context;
-        TEST_TRUE(context.Initialize());
+    {
+      // force delete
+      gul::ALContext context;
+      TEST_TRUE(context.Initialize());
     }
 
     return EXIT_SUCCESS;

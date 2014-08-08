@@ -89,7 +89,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
         {
           bw = fgetc(f);
         }
-        bw = 255*(1-atoi(&bw)) ;
+        bw = 255 * (1 - atoi(&bw)) ;
         pData[image.GetNumberOfChannels()*x + 0] = bw;
         pData[image.GetNumberOfChannels()*x + 1] = bw;
         pData[image.GetNumberOfChannels()*x + 2] = bw;
@@ -147,7 +147,7 @@ gul::Image gul::ImageIO_PPM::Load(const gul::File& rPath)
       unsigned char* pData = image.GetScanline(y);
       for(int x = 0; x < image.GetWidth(); ++x)
       {
-        unsigned char bw = 255*(1 - (ucData[x / 8 + y * byteWidth] >> bitShift & 1));
+        unsigned char bw = 255 * (1 - (ucData[x / 8 + y * byteWidth] >> bitShift & 1));
         pData[image.GetNumberOfChannels()*x + 0] = bw;
         pData[image.GetNumberOfChannels()*x + 1] = bw;
         pData[image.GetNumberOfChannels()*x + 2] = bw;
@@ -228,9 +228,9 @@ void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
           const unsigned char* pData = rImage.GetScanline(y);
           for(int x = 0; x < rImage.GetWidth(); ++x)
           {
-            ucData[(x + y * rImage.GetWidth()) * 3 + 0] = pData[rImage.GetNumberOfChannels()*x + 0];
-            ucData[(x + y * rImage.GetWidth()) * 3 + 1] = pData[rImage.GetNumberOfChannels()*x + 1];
-            ucData[(x + y * rImage.GetWidth()) * 3 + 2] = pData[rImage.GetNumberOfChannels()*x + 2];
+            ucData[(x + y * rImage.GetWidth()) * 3 + 0] = pData[rImage.GetNumberOfChannels() * x + 0];
+            ucData[(x + y * rImage.GetWidth()) * 3 + 1] = pData[rImage.GetNumberOfChannels() * x + 1];
+            ucData[(x + y * rImage.GetWidth()) * 3 + 2] = pData[rImage.GetNumberOfChannels() * x + 2];
           }
         }
         fwrite(ucData, sizeof(unsigned char), rImage.GetWidth()*rImage.GetHeight() * 3, f);
@@ -250,8 +250,8 @@ void gul::ImageIO_PPM::Save(const gul::File& rPath, const gul::Image& rImage)
           for(int x = 0; x < rImage.GetWidth(); ++x)
           {
             fprintf(f, "%u\n%u\n%u\n", pData[rImage.GetNumberOfChannels()*x + 0],
-                                       pData[rImage.GetNumberOfChannels()*x + 1],
-                                       pData[rImage.GetNumberOfChannels()*x + 2]);
+                    pData[rImage.GetNumberOfChannels()*x + 1],
+                    pData[rImage.GetNumberOfChannels()*x + 2]);
           }
           fprintf(f, "\n");
         }

@@ -95,10 +95,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = 255;
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 0] = row_pointers[y][x];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 1] = row_pointers[y][x];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 2] = row_pointers[y][x];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 3] = 255;
         }
       }
       break;
@@ -112,10 +112,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x * 3 + 0];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x * 3 + 1];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x * 3 + 2];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = 255;
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 0] = row_pointers[y][x * 3 + 0];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 1] = row_pointers[y][x * 3 + 1];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 2] = row_pointers[y][x * 3 + 2];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 3] = 255;
         }
       }
       break;
@@ -123,7 +123,7 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
     case PNG_COLOR_TYPE_RGB_ALPHA:
       for(png_uint_32 y = 0; y < height; ++y)
       {
-        memcpy(image.GetScanline(y), row_pointers[y], width*4*sizeof(png_byte));
+        memcpy(image.GetScanline(y), row_pointers[y], width * 4 * sizeof(png_byte));
       }
       break;
 
@@ -132,10 +132,10 @@ gul::Image gul::ImageIO_PNG::Load(const gul::File& rPath)
       {
         for(png_uint_32 x = 0; x < width; ++x)
         {
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 0] = row_pointers[y][x * 2 + 0];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 1] = row_pointers[y][x * 2 + 0];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 2] = row_pointers[y][x * 2 + 0];
-          imageData[y*image.GetPitch() + x*image.GetNumberOfChannels() + 3] = row_pointers[y][x * 2 + 1];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 0] = row_pointers[y][x * 2 + 0];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 1] = row_pointers[y][x * 2 + 0];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 2] = row_pointers[y][x * 2 + 0];
+          imageData[y * image.GetPitch() + x * image.GetNumberOfChannels() + 3] = row_pointers[y][x * 2 + 1];
         }
       }
       break;

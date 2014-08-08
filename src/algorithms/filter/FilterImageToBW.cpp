@@ -55,7 +55,7 @@ void gul::FilterImageToBW::SetParameter(const gul::Image& grayImage)
 
 void gul::FilterImageToBW::Execute(void)
 {
-  outputImage = gul::Image(inputImage.GetWidth(), 
+  outputImage = gul::Image(inputImage.GetWidth(),
                            inputImage.GetHeight(),
                            gul::Image::IF_GRAY);
 
@@ -63,7 +63,7 @@ void gul::FilterImageToBW::Execute(void)
   {
     for(int x = 0; x < inputImage.GetWidth(); ++x)
     {
-      if(inputImage.GetColorConst(x,y,0) < threshold)
+      if(inputImage.GetColorConst(x, y, 0) < threshold)
       {
         outputImage.GetColor(x, y, 0) = 0;
         outputImage.GetColor(x, y, 1) = 0;
@@ -75,7 +75,7 @@ void gul::FilterImageToBW::Execute(void)
         outputImage.GetColor(x, y, 1) = 255;
         outputImage.GetColor(x, y, 2) = 255;
       }
-      outputImage.GetColor(x, y, 3) = inputImage.GetColor(x, y,3);
+      outputImage.GetColor(x, y, 3) = inputImage.GetColor(x, y, 3);
     }
   }
 }

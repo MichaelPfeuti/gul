@@ -76,7 +76,7 @@ namespace gul
       // Media
       void GetNext(MediaFrame& rFrame);
 
-  private:
+    private:
       // Shared API with MediaConverter
       AVPacket* getNextPacket(void);
       void freePacket(void);
@@ -103,7 +103,7 @@ namespace gul
       void setData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
       void setData(AudioFrame& rTargetFrame, AVFrame* pSourceFrame) const;
       bool decodeRemaining(VideoFrame& rFrame);
-      int openCodec(int type, AVCodecContext *&pContext);
+      int openCodec(int type, AVCodecContext*& pContext);
 
     private:
       const gul::File m_path;

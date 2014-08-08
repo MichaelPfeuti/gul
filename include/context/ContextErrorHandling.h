@@ -33,7 +33,8 @@
 
 #include <CL/cl.h>
 
-namespace gul {
+namespace gul
+{
   bool GUL_EXPORT alCheckError(const char* message);
   bool GUL_EXPORT clCheckError(cl_int err);
   bool GUL_EXPORT glCheckError(const char* message);

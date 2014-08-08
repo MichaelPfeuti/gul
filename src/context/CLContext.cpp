@@ -32,7 +32,7 @@
 #include "Misc.h"
 #include "ContextErrorHandling.h"
 
-static void errorCallback(const char *description,
+static void errorCallback(const char* description,
                           const void*, size_t,
                           void*)
 {
@@ -83,9 +83,10 @@ bool gul::CLContext::Initialize(void)
     m_devices.Add(devices[i]);
   }
 
-  const cl_context_properties contextProperties [] = {
-      CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
-      0, 0
+  const cl_context_properties contextProperties [] =
+  {
+    CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
+    0, 0
   };
 
   cl_int error;

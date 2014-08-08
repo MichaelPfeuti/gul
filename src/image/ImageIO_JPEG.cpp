@@ -126,9 +126,9 @@ void gul::ImageIO_JPEG::Save(const gul::File& rPath, const gul::Image& rImage)
     const unsigned char* pImageData = rImage.GetScanline(y);
     for(int x = 0; x < rImage.GetWidth(); ++x)
     {
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 0] = pImageData[x*rImage.GetNumberOfChannels() + 0];
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 1] = pImageData[x*rImage.GetNumberOfChannels() + 1];
-      image_buffer[(x + y * rImage.GetWidth()) * 3 + 2] = pImageData[x*rImage.GetNumberOfChannels() + 2];
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 0] = pImageData[x * rImage.GetNumberOfChannels() + 0];
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 1] = pImageData[x * rImage.GetNumberOfChannels() + 1];
+      image_buffer[(x + y * rImage.GetWidth()) * 3 + 2] = pImageData[x * rImage.GetNumberOfChannels() + 2];
     }
   }
 

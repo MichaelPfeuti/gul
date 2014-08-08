@@ -35,9 +35,10 @@ namespace TestCLContext
 
   int Init(void)
   {
-    { // force delete
-        gul::CLContext context;
-        TEST_TRUE(context.Initialize());
+    {
+      // force delete
+      gul::CLContext context;
+      TEST_TRUE(context.Initialize());
     }
 
     return EXIT_SUCCESS;

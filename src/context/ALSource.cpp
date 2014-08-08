@@ -54,7 +54,7 @@ gul::ALSource::~ALSource(void)
  */
 bool gul::ALSource::Initialize(void)
 {
-  alGenSources(1,&m_source);
+  alGenSources(1, &m_source);
   GUL_AL_CHECK_ERROR("Could not create source!");
   return true;
 }
@@ -139,7 +139,7 @@ bool gul::ALSource::AddBuffer(ALuint buffer)
   if(m_playedBuffers.Contains(buffer))
     m_playedBuffers.Remove(buffer);
 
-  alSourceQueueBuffers(m_source, 1, &buffer );
+  alSourceQueueBuffers(m_source, 1, &buffer);
 
   GUL_AL_CHECK_ERROR("Could not rewind source!");
   return true;

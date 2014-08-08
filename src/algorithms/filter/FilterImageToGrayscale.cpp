@@ -56,7 +56,7 @@ void gul::FilterImageToGrayscale::SetParameter(const gul::Image& colorImage)
 
 void gul::FilterImageToGrayscale::Execute(void)
 {
-  outputImage = gul::Image(inputImage.GetWidth(), 
+  outputImage = gul::Image(inputImage.GetWidth(),
                            inputImage.GetHeight(),
                            gul::Image::IF_GRAY);
 
@@ -68,31 +68,31 @@ void gul::FilterImageToGrayscale::Execute(void)
       switch(conversionType)
       {
         case GCT_AVERAGE:
-          gray = inputImage.GetColor(x,y,0) + inputImage.GetColor(x,y,1) + inputImage.GetColor(x,y,2);
+          gray = inputImage.GetColor(x, y, 0) + inputImage.GetColor(x, y, 1) + inputImage.GetColor(x, y, 2);
           gray /= 3.f;
           gray += 0.5f;
           break;
 
         case GCT_LIGHTNESS:
-          gray  = gul::min(gul::min(inputImage.GetColor(x,y,0), inputImage.GetColor(x,y,1)), inputImage.GetColor(x,y,2));
-          gray += gul::max(gul::max(inputImage.GetColor(x,y,0), inputImage.GetColor(x,y,1)), inputImage.GetColor(x,y,2));
+          gray  = gul::min(gul::min(inputImage.GetColor(x, y, 0), inputImage.GetColor(x, y, 1)), inputImage.GetColor(x, y, 2));
+          gray += gul::max(gul::max(inputImage.GetColor(x, y, 0), inputImage.GetColor(x, y, 1)), inputImage.GetColor(x, y, 2));
           gray /= 2.f;
           break;
 
         case GCT_LUMINOSITY:
-          gray  = 0.21f * inputImage.GetColor(x,y,0);
-          gray += 0.72f * inputImage.GetColor(x,y,1);
-          gray += 0.07f * inputImage.GetColor(x,y,2);
+          gray  = 0.21f * inputImage.GetColor(x, y, 0);
+          gray += 0.72f * inputImage.GetColor(x, y, 1);
+          gray += 0.07f * inputImage.GetColor(x, y, 2);
           gray += 0.5f;
           break;
 
         default:
           GUL_FAIL("Unknown Grey Conversion Type!");
       }
-      outputImage.GetColor(x,y,0) = gray;
-      outputImage.GetColor(x,y,1) = gray;
-      outputImage.GetColor(x,y,2) = gray;
-      outputImage.GetColor(x,y,3) = inputImage.GetColor(x,y,3);
+      outputImage.GetColor(x, y, 0) = gray;
+      outputImage.GetColor(x, y, 1) = gray;
+      outputImage.GetColor(x, y, 2) = gray;
+      outputImage.GetColor(x, y, 3) = inputImage.GetColor(x, y, 3);
     }
   }
 }

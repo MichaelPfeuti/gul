@@ -71,7 +71,7 @@ bool gul::GLProgram::Link(void)
 
   if(linkStatus != GL_TRUE && infoLogLength > 0)
   {
-    GLchar errorMsg[infoLogLength+1];
+    GLchar errorMsg[infoLogLength + 1];
     glGetProgramInfoLog(m_program, infoLogLength, nullptr, errorMsg);
     GUL_LOG_ERROR("OpenGL program could no be linked:");
     GUL_LOG_ERROR("------------------------------------\n%s", errorMsg);
@@ -94,7 +94,8 @@ GLuint gul::GLProgram::GetId(void)
 
 bool gul::GLProgram::CompileShader(GLenum shaderType, const gul::String& sourceCode)
 {
-  switch(shaderType) {
+  switch(shaderType)
+  {
     case GL_VERTEX_SHADER:
       m_shaderVertex = glCreateShader(GL_VERTEX_SHADER);
       return compileShader(m_shaderVertex, sourceCode);
@@ -122,7 +123,7 @@ bool gul::GLProgram::compileShader(const GLuint& shader, const gul::String& sour
   glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
   if(compileStatus != GL_TRUE && infoLogLength > 0)
   {
-    GLchar errorMsg[infoLogLength+1];
+    GLchar errorMsg[infoLogLength + 1];
     glGetShaderInfoLog(shader, infoLogLength, nullptr, errorMsg);
     GUL_LOG_ERROR("OpenGL shader could no be compiled:");
     GUL_LOG_ERROR("------------------------------------\n%s", errorMsg);

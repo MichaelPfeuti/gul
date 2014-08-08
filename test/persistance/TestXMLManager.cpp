@@ -51,12 +51,12 @@ namespace TestXMLManager
         string = gul::String("TEST String");
       }
 
-      bool operator==(const TestClassString& o) const
+      bool operator==(const TestClassString & o) const
       {
         return string == o.string;
       }
 
-      bool operator!=(const TestClassString& o) const
+      bool operator!=(const TestClassString & o) const
       {
         return !operator ==(o);
       }
@@ -101,7 +101,7 @@ namespace TestXMLManager
         boolean = true;
       }
 
-      bool operator==(const TestClassPrimitives& o) const
+      bool operator==(const TestClassPrimitives & o) const
       {
         return  integer == o.integer &&
                 character == o.character &&
@@ -110,7 +110,7 @@ namespace TestXMLManager
                 boolean == o.boolean;
       }
 
-      bool operator!=(const TestClassPrimitives& o) const
+      bool operator!=(const TestClassPrimitives & o) const
       {
         return !operator ==(o);
       }
@@ -165,14 +165,14 @@ namespace TestXMLManager
         primClass.fillData();
       }
 
-      bool operator==(const TestNestedClass& o) const
+      bool operator==(const TestNestedClass & o) const
       {
         return  integer == o.integer &&
                 stringClass == o.stringClass &&
                 primClass == o.primClass;
       }
 
-      bool operator!=(const TestNestedClass& o) const
+      bool operator!=(const TestNestedClass & o) const
       {
         return !operator ==(o);
       }
@@ -218,13 +218,13 @@ namespace TestXMLManager
         pointer->fillData();
       }
 
-      bool operator==(const TestPointerClass& o) const
+      bool operator==(const TestPointerClass & o) const
       {
         return (pointer == nullptr && o.pointer == nullptr) ||
                (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer);
       }
 
-      bool operator!=(const TestPointerClass& o) const
+      bool operator!=(const TestPointerClass & o) const
       {
         return !operator ==(o);
       }
@@ -271,7 +271,7 @@ namespace TestXMLManager
         nestedPointer = pointer->GetPointer();
       }
 
-      bool operator==(const TestSamePointersClass& o) const
+      bool operator==(const TestSamePointersClass & o) const
       {
         return ((pointer == nullptr && o.pointer == nullptr) ||
                 (pointer != nullptr && o.pointer != nullptr && *pointer == *o.pointer))
@@ -282,7 +282,7 @@ namespace TestXMLManager
                nestedPointer == pointer->GetPointer();
       }
 
-      bool operator!=(const TestSamePointersClass& o) const
+      bool operator!=(const TestSamePointersClass & o) const
       {
         return !operator ==(o);
       }

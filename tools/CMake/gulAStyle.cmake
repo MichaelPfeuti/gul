@@ -34,8 +34,12 @@ function(gul_create_astyle_target)
      if(ARGV1)
        set(ASTYLE_CONFIG ${ARGV1})
      else()
-       set(ASTYLE_CONFIG "${_gul_astyle_path}/../astyle.conf")
+       set(ASTYLE_CONFIG "${_gul_astyle_path}/../.astylerc")
      endif()
+       # This is a hack to include the astylerc config in the project files.
+       # This way, the config can be directly used from within QTCreator
+       set_source_files_properties(${ASTYLE_CONFIG} PROPERTIES HEADER_FILE_ONLY TRUE)
+       add_library(astyle_dummy OBJECT ${ASTYLE_CONFIG})
        add_custom_target(CodingConventions 
                    COMMAND cmake -DASTYLE_EXECUTABLE=${ASTYLE_EXECUTABLE}
                    -DASTYLE_CONFIG=${ASTYLE_CONFIG}

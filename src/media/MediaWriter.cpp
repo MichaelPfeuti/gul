@@ -41,8 +41,8 @@ extern "C"
 bool gul::MediaWriter::codecsAreRegistered = false;
 
 gul::MediaWriter::MediaWriter(const gul::File& rVideoPath,
-                            int width, int height,
-                            int fps, int bitrate)
+                              int width, int height,
+                              int fps, int bitrate)
   : m_path(rVideoPath),
     m_pFormatCtx(nullptr),
     m_pVideoCodecCtx(nullptr),
@@ -158,9 +158,9 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
       if((pCodecCtx->block_align == 1 ||
           pCodecCtx->block_align == 1152 ||
           pCodecCtx->block_align == 576) && pCodecCtx->codec_id == AV_CODEC_ID_MP3)
-         pCodecCtx->block_align= 0;
+        pCodecCtx->block_align = 0;
       if(pCodecCtx->codec_id == AV_CODEC_ID_AC3)
-         pCodecCtx->block_align= 0;
+        pCodecCtx->block_align = 0;
 
       if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
         pCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
@@ -325,9 +325,9 @@ void gul::MediaWriter::allocateStructures(void)
 
   // swscaler context
   m_pSWSContext = sws_getCachedContext(m_pSWSContext,
-                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
-                                     m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
-                                     SWS_BILINEAR, nullptr, nullptr, nullptr);
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
+                                       SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
 void gul::MediaWriter::prepareOutputFile(void)
@@ -340,9 +340,9 @@ void gul::MediaWriter::prepareOutputFile(void)
   int err = avformat_write_header(m_pFormatCtx, nullptr);
   if(err < 0)
   {
-      char a[255];
-      av_strerror(err, a, 255);
-      GUL_FAIL(a);
+    char a[255];
+    av_strerror(err, a, 255);
+    GUL_FAIL(a);
   }
 }
 

@@ -62,7 +62,7 @@ gul::String gul::File::GetBasename(void) const
   if(end < 0)
     end = m_path.Size();
 
-  return m_path.Substring(start+1, end);
+  return m_path.Substring(start + 1, end);
 }
 
 gul::String gul::File::GetSuffix(void) const
