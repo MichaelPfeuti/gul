@@ -33,11 +33,11 @@
 
 namespace TestImageToBW
 {
-  int ColorToBW(void)
+  int GrayToBW(void)
   {
     gul::Image bw = gul::FilterImageToBW::Execute(gul::GetLenaGrayLightness());
 
-    TEST_EQUAL_IMAGE(gul::GetLenaBW(), bw, 0.f);
+    TEST_EQUAL_IMAGE(bw, gul::GetLenaBW(), 0.f);
 
     return EXIT_SUCCESS;
   }

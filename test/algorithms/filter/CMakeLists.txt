@@ -1,4 +1,4 @@
-gul_add_test(Filter ImageToBW ColorToBW)
+gul_add_test(Filter ImageToBW GrayToBW)
 
 gul_add_test(Filter ImageToGrayscale Luminosity)
 gul_add_test(Filter ImageToGrayscale Average)

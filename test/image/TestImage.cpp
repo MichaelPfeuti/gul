@@ -200,7 +200,7 @@ namespace TestImage
     gul::Image img2 = img1;
     const gul::Image img3 = img1;
 
-    unsigned char* pData2 = img2.GetData();
+    const unsigned char* pData2 = img2.GetData();
     const unsigned char* pData3 = img3.GetData();
 
     TEST_NOT_NULL(pData2);
@@ -267,6 +267,26 @@ namespace TestImage
     img2 = img1;
     TEST_NOT_EQUAL(img1.GetDataConst(), img2.GetDataConst());
     TEST_EQUAL(pOldData2, img2.GetDataConst());
+
+    return EXIT_SUCCESS;
+  }
+
+  int DataCopyAfterDetach(void)
+  {
+    unsigned char data[100*4];
+    for(int i = 0; i < 100*4; ++i)
+    {
+      data[i] = i;
+    }
+    gul::Image img1(10, 10, gul::Image::IF_RGBA, data);
+    gul::Image img2 = img1;
+    gul::Image img3 = img1;
+
+    for(int i = 0; i < 100; ++i)
+    {
+      TEST_EQUAL(img2.GetColor(i/10, i%10, 2), img1.GetColor(i/10, i%10, 2));
+      TEST_EQUAL(img1.GetColor(i/10, i%10, 2), img3.GetColorConst(i/10, i%10, 2));
+    }
 
     return EXIT_SUCCESS;
   }

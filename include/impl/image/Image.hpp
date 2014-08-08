@@ -65,6 +65,7 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
 {
   initConstructor();
   memcpy(m_pData->GetData(), data, sizeof(T)*w * h * GetNumberOfChannels());
+  m_pSynchStatus->isCPUDataRecent = true;
 }
 
 template<typename T>
