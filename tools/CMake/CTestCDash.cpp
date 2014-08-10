@@ -26,7 +26,7 @@
 **
 ***************************************************************************/
 
-#include "UtilsCDash.h"
+#include "CTestCDash.h"
 
 #include <iostream>
 #include <Assert.h>

@@ -28,10 +28,26 @@
 
 set(_gul_testing_path ${CMAKE_CURRENT_LIST_DIR})
 
-macro(gul_setup_testing)
+macro(gul_setup_testing TEST_DATA_FODLER)
   include(CTest)
   include_directories(${_gul_testing_path})
   include(CTestMacros)
+
+  # Header to access the temporary data folder (required by the testing framework)
+  set(GUL_TEST_DATA_SET_FOLDER ${TEST_DATA_FODLER})
+  set(GUL_TEST_TEMP_FOLDER "${CMAKE_BINARY_DIR}/TestOutput")
+  file(MAKE_DIRECTORY ${GUL_TEST_TEMP_FOLDER})
+  configure_file(${_gul_testing_path}/CTestData.h.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/CTestData.h
+                 @ONLY])
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+  # CDash upload code (this is automatically used in the testing framework)
+  if(NOT TARGET gulTestingUtils)
+    add_library(gulTestingUtils SHARED ${_gul_resource_path}/CTestCDash.cpp)
+    target_link_libraries(gulTestingUtils gul)
+  endif()
+
   if(BUILD_TESTING)
     add_definitions("-DGUL_ASSERTION")
   endif()

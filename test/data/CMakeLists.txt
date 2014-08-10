@@ -1,5 +1,8 @@
+add_library(gulTestingImageUtils SHARED
 
-set(GUL_TEST_DATA_SET_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
-set(GUL_TEST_TEMP_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/output")
-file(MAKE_DIRECTORY ${GUL_TEST_TEMP_FOLDER})
-configure_file(CTestData.h.in CTestData.h @ONLY])
+              UtilsImage.h
+
+              UtilsImage.cpp
+            )
+
+target_link_libraries(gulTestingImageUtils gul)

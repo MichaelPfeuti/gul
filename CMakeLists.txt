@@ -4,7 +4,7 @@ project(gul)
 include(tools/CMake/gulProject.cmake)
 
 gul_setup_project()
-gul_setup_testing()
+gul_setup_testing("${CMAKE_CURRENT_SOURCE_DIR}/test/data")
 gul_create_version()
 gul_create_astyle_target()
 gul_create_doxygen_target()

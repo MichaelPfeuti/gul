@@ -45,4 +45,4 @@ gul_add_test(Image Image ReuseDataRefereeWhenSameSize)
 gul_add_test(Image Image DataCopyAfterDetach)
 
 gul_create_test()
-target_link_libraries(TestImage gul gulTestUtils)
+target_link_libraries(TestImage gulTestingImageUtils)

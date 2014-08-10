@@ -68,5 +68,3 @@ endif()
 
 
 gul_create_test()
-
-target_link_libraries(TestMedia gul gulTestUtils)

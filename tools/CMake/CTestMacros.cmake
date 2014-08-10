@@ -100,11 +100,11 @@ macro(gul_split_test string)
   math(EXPR suiteLength '${idxSuite}-${idxColl}-2')
   math(EXPR testStart '${idxSuite}+2')
   math(EXPR testLength '${idxTest}-${idxSuite}-2')
-    
+
   string(SUBSTRING ${string} 0 ${idxColl} collection)
   string(SUBSTRING ${string} ${suiteStart} ${suiteLength} suite)
   string(SUBSTRING ${string} ${testStart} ${testLength} test)
-  
+
   unset(idxColl)
   unset(idxSuite)
   unset(idxTest)
@@ -117,7 +117,7 @@ endmacro(gul_split_test)
 #####################################################
 #### add additional sources to a test collection ####
 #####################################################
-macro(gul_add_util_sources) 
+macro(gul_add_util_sources)
   set(utils_sources ${utils_sources} ${ARGV})
 endmacro(gul_add_util_sources)
 
@@ -135,32 +135,32 @@ macro(gul_create_test)
   list(REMOVE_DUPLICATES GUL_TESTS)
   list(SORT GUL_TESTS)
   list(LENGTH GUL_TESTS length)
- 
+
   ### process collections
   while(length GREATER 0)
     list(GET GUL_TESTS 0 gul_test)
     gul_split_test(${gul_test})
     set(collectionCurrent ${collection})
     gul_init_test_src()
-    
+
     ### process suites
     while(collectionCurrent STREQUAL collection)
-      set(suiteCurrent ${suite}) 
-      
+      set(suiteCurrent ${suite})
+
       ### process tests
       while(collectionCurrent STREQUAL collection AND suiteCurrent STREQUAL suite)
-        add_test("Test${suite}::${test}" "Test${collection}" "Test${suite}::${test}")        
+        add_test("Test${suite}::${test}" "Test${collection}" "Test${suite}::${test}")
         gul_add_test_to_src()
-       
-        # process next entry        
+
+        # process next entry
         list(REMOVE_AT GUL_TESTS 0)
         list(LENGTH GUL_TESTS length)
         if(length EQUAL 0)
           break()
         endif(length EQUAL 0)
         list(GET GUL_TESTS 0 gul_test)
-        gul_split_test(${gul_test})        
-        
+        gul_split_test(${gul_test})
+
       endwhile(collectionCurrent STREQUAL collection AND suiteCurrent STREQUAL suite)
       ### end process tests
 
@@ -170,22 +170,23 @@ macro(gul_create_test)
       if(length EQUAL 0)
           break()
       endif(length EQUAL 0)
-        
+
     endwhile(collectionCurrent STREQUAL collection)
     ### end process suites
-    
+
     # For each collection build the source file with the test-function registration
     # and the main funtion
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/TestMain${collectionCurrent}.cpp" ${collection_main_source})
-    
+
     # there is an executable for each collection named Test[COLLECTION_NAME]
     include_directories("${CMAKE_CURRENT_BINARY_DIR}")
     add_executable(Test${collectionCurrent} ${collection_cpp};TestMain${collectionCurrent}.cpp;${utils_sources})
+    target_link_libraries(Test${collectionCurrent} gulTestingUtils)
 
   endwhile(length GREATER 0)
   ### end process collections
-  
-  
+
+
   unset(length)
   unset(collection_main_source)
   unset(collection_cpp)
@@ -196,6 +197,6 @@ macro(gul_create_test)
   unset(gul_test)
   unset(GUL_TESTS)
   unset(utils_sources)
-  
+
 endmacro(gul_create_test)
 

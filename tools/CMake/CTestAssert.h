@@ -34,7 +34,7 @@
 #include <cstdio>
 #include <string>
 #include "UtilsImage.h"
-#include "UtilsCDash.h"
+#include "CTestCDash.h"
 #include "CTestData.h"
 #include "ImageFileHandler.h"
 #include "AnalyzerImageEquality.h"

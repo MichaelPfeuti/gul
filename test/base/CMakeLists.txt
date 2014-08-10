@@ -47,7 +47,3 @@ gul_add_test(Base Dir Delete)
 gul_add_test(Base Dir DeleteContent)
 
 gul_create_test()
-target_link_libraries(TestBase gul)
-
-
-
