@@ -33,7 +33,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
-#include "UtilsImage.h"
 #include "CTestCDash.h"
 #include "CTestData.h"
 #include "ImageFileHandler.h"

@@ -28,6 +28,7 @@
 
 #include "FilterImageToBW.h"
 #include "CTestAssert.h"
+#include "UtilsImage.h"
 
 namespace TestImageToBW
 {
