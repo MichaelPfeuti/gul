@@ -273,8 +273,8 @@ namespace TestImage
 
   int DataCopyAfterDetach(void)
   {
-    unsigned char data[100*4];
-    for(int i = 0; i < 100*4; ++i)
+    unsigned char data[100 * 4];
+    for(int i = 0; i < 100 * 4; ++i)
     {
       data[i] = i;
     }
@@ -284,8 +284,8 @@ namespace TestImage
 
     for(int i = 0; i < 100; ++i)
     {
-      TEST_EQUAL(img2.GetColor(i/10, i%10, 2), img1.GetColor(i/10, i%10, 2));
-      TEST_EQUAL(img1.GetColor(i/10, i%10, 2), img3.GetColorConst(i/10, i%10, 2));
+      TEST_EQUAL(img2.GetColor(i / 10, i % 10, 2), img1.GetColor(i / 10, i % 10, 2));
+      TEST_EQUAL(img1.GetColor(i / 10, i % 10, 2), img3.GetColorConst(i / 10, i % 10, 2));
     }
 
     return EXIT_SUCCESS;
