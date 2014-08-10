@@ -308,6 +308,9 @@ void gul::MediaWriter::setDafaultVideoEncoderCtxSettings(void)
     m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
   if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
     m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
+
+  // set desired time_base for the muxer
+  m_pVideoStream->time_base = m_pVideoCodecCtx->time_base;
 }
 
 void gul::MediaWriter::allocateStructures(void)

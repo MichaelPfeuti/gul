@@ -37,22 +37,15 @@ namespace TestMediaWriter
 {
   bool WriteVideoData(const gul::File& video)
   {
-    gul::VideoFrame first = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-first.png")));
-    gul::MediaWriter saver(video, first.GetWidth(), first.GetHeight());
+    gul::String path = gul::CTestData::GetFilePath(gul::String("video"), gul::String("frame1.png"));
+    gul::Image frame = gul::ImageFileHandler::Instance().Load(path);
+    gul::MediaWriter saver(video, frame.GetWidth(), frame.GetHeight());
     saver.OpenVideo();
-    for(int i = 0; i < 15; ++i)
+    for(int i = 1; i <= 52; ++i)
     {
-      saver.AddFrame(first);
-    }
-    gul::VideoFrame middle = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-middle.png")));
-    for(int i = 0; i < 15; ++i)
-    {
-      saver.AddFrame(middle);
-    }
-    gul::VideoFrame last = gul::ImageFileHandler::Instance().Load(gul::CTestData::GetFilePath(gul::String("video"), gul::String("firefly-last.png")));
-    for(int i = 0; i < 15; ++i)
-    {
-      saver.AddFrame(last);
+      path = gul::CTestData::GetFilePath(gul::String("video"), gul::String("frame%.png").Arg(i));
+      frame = gul::ImageFileHandler::Instance().Load(path);
+      saver.AddFrame(frame);
     }
     saver.CloseVideo();
 
@@ -91,7 +84,7 @@ namespace TestMediaWriter
 
     loader.GetNext(frame);
     TEST_TRUE(loader.IsFrameValid());
-    while(loader.IsFrameValid() && frameCount < 30)
+    while(loader.IsFrameValid() && frameCount < 32)
     {
       loader.GetNext(frame);
       ++frameCount;
@@ -154,102 +147,102 @@ namespace TestMediaWriter
 
   int FirstFrameMkv(void)
   {
-    return FirstFrame("firstFrame.mkv", 0.004f);
+    return FirstFrame("firstFrame.mkv", 0.0037f);
   }
 
   int MiddleFrameMkv(void)
   {
-    return MiddleFrame("middleFrame.mkv", 0.003f);
+    return MiddleFrame("middleFrame.mkv", 0.0043f);
   }
 
   int LastFrameMkv(void)
   {
-    return LastFrame("lastFrame.mkv", 0.004f);
+    return LastFrame("lastFrame.mkv", 0.005f);
   }
 
   int FrameCountMkv(void)
   {
-    return FrameCount("frameCount.mkv", 45);
+    return FrameCount("frameCount.mkv", 52);
   }
 
   int FirstFrameMp4(void)
   {
-    return FirstFrame("firstFrame.mp4", 0.004f);
+    return FirstFrame("firstFrame.mp4", 0.0037f);
   }
 
   int MiddleFrameMp4(void)
   {
-    return MiddleFrame("middleFrame.mp4", 0.003f);
+    return MiddleFrame("middleFrame.mp4", 0.0043f);
   }
 
   int LastFrameMp4(void)
   {
-    return LastFrame("lastFrame.mp4", 0.004f);
+    return LastFrame("lastFrame.mp4", 0.005f);
   }
 
   int FrameCountMp4(void)
   {
-    return FrameCount("frameCount.mp4", 45);
+    return FrameCount("frameCount.mp4", 52);
   }
 
   int FirstFrameAvi(void)
   {
-    return FirstFrame("firstFrame.avi", 0.0041f);
+    return FirstFrame("firstFrame.avi", 0.0042f);
   }
 
   int MiddleFrameAvi(void)
   {
-    return MiddleFrame("middleFrame.avi", 0.0041f);
+    return MiddleFrame("middleFrame.avi", 0.0046f);
   }
 
   int LastFrameAvi(void)
   {
-    return LastFrame("lastFrame.avi", 0.0046f);
+    return LastFrame("lastFrame.avi", 0.0055f);
   }
 
   int FrameCountAvi(void)
   {
-    return FrameCount("frameCount.avi", 45);
+    return FrameCount("frameCount.avi", 52);
   }
 
   int FirstFrameMov(void)
   {
-    return FirstFrame("firstFrame.mov", 0.004f);
+    return FirstFrame("firstFrame.mov", 0.0037f);
   }
 
   int MiddleFrameMov(void)
   {
-    return MiddleFrame("middleFrame.mov", 0.003f);
+    return MiddleFrame("middleFrame.mov", 0.0043f);
   }
 
   int LastFrameMov(void)
   {
-    return LastFrame("lastFrame.mov", 0.004f);
+    return LastFrame("lastFrame.mov", 0.005f);
   }
 
   int FrameCountMov(void)
   {
-    return FrameCount("frameCount.mov", 45);
+    return FrameCount("frameCount.mov", 52);
   }
 
   int FirstFrameOgv(void)
   {
-    return FirstFrame("firstFrame.ogv", 0.0045f);
+    return FirstFrame("firstFrame.ogv", 0.0044f);
   }
 
   int MiddleFrameOgv(void)
   {
-    return MiddleFrame("middleFrame.ogv", 0.f);
+    return MiddleFrame("middleFrame.ogv", 0.0055f);
   }
 
   int LastFrameOgv(void)
   {
-    return LastFrame("lastFrame.ogv", 0.0045f);
+    return LastFrame("lastFrame.ogv", 0.0066f);
   }
 
   int FrameCountOgv(void)
   {
-    return FrameCount("frameCount.ogv", 45);
+    return FrameCount("frameCount.ogv", 52);
   }
 }
 
