@@ -3,7 +3,7 @@ Header Guards:
 		
 		_GUL_MODULE_FILENAME_H_
 		
-	and FILENAME is split accoring to camelcase. 
+	and FILENAME is split according to camelcase. 
 	
 	Example:
 		impl:   memory/SharedPtr.cpp

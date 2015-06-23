@@ -34,6 +34,9 @@
 
 DEFINE_TPL_RTTI(gul::ImageT);
 
+/**
+ * @brief Contstuctor to create a null image.
+ */
 template<typename T>
 gul::ImageT<T>::ImageT(void)
   : m_pData(nullptr),
@@ -44,6 +47,15 @@ gul::ImageT<T>::ImageT(void)
 {
 }
 
+/**
+ * @brief Constructor to create a black image.
+ * @param w Image width
+ * @param h Image height
+ * @param imageFormat ImageFormat
+ *
+ * The memory for the image is allocated the first time it is
+ * requested not during the construction of the image.
+ */
 template<typename T>
 gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat)
   : m_pData(nullptr),
@@ -55,8 +67,18 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat)
   initConstructor();
 }
 
+/**
+ * @brief Constructor to create and image from existing data.
+ * @param w Image width
+ * @param h Image height
+ * @param imageFormat ImageFormat
+ * @param pData pointer to unpadded image data.
+ *
+ * The image does not take ownership of pData. The data is simply copied.
+ * It is the callers responsibility to free the data.
+ */
 template<typename T>
-gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
+gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* pData)
   : m_pData(nullptr),
     m_width(w),
     m_height(h),
@@ -64,10 +86,17 @@ gul::ImageT<T>::ImageT(int w, int h, ImageFormat imageFormat, const T* data)
     m_pSynchStatus(nullptr)
 {
   initConstructor();
-  memcpy(m_pData->GetData(), data, sizeof(T)*w * h * GetNumberOfChannels());
+  memcpy(m_pData->GetData(), pData, sizeof(T)*w * h * GetNumberOfChannels());
   m_pSynchStatus->isCPUDataRecent = true;
 }
 
+/**
+ * @brief Copy-Constructor
+ * @param rImage Image to copy from
+ *
+ * Here we exploit the SharedResource mechanism. So no data is copied
+ * until this new image is modified.
+ */
 template<typename T>
 gul::ImageT<T>::ImageT(const ImageT& rImage)
   : SharedResource(),
@@ -415,7 +444,7 @@ const cl_mem& gul::ImageT<T>::GetCLImageConst(void) const
 
   if(isCLImageInitialized())
   {
-    m_pCLImage->clImage = clCreateFromGLTexture2D(pCurrentContext->GetCLContext(),
+    m_pCLImage->clImage = clCreateFromGLTexture(pCurrentContext->GetCLContext(),
                           CL_MEM_READ_WRITE,
                           GL_TEXTURE_2D,
                           0,

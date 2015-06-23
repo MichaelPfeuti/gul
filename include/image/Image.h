@@ -67,7 +67,7 @@ namespace gul
     public:
       ImageT(void);
       ImageT(int w, int h, ImageFormat ImageFormat = IF_RGBA);
-      ImageT(int w, int h, ImageFormat imageFormat, const T* data);
+      ImageT(int w, int h, ImageFormat imageFormat, const T* pData);
       ImageT(const ImageT& rImage);
       virtual ~ImageT(void);
 

@@ -39,7 +39,7 @@ macro(gul_setup_testing TEST_DATA_FODLER)
   file(MAKE_DIRECTORY ${GUL_TEST_TEMP_FOLDER})
   configure_file(${_gul_testing_path}/CTestData.h.in
                  ${CMAKE_CURRENT_BINARY_DIR}/CTestData.h
-                 @ONLY])
+                 @ONLY)
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
   # CDash upload code (this is automatically used in the testing framework)
