@@ -2,7 +2,7 @@
 ##
 ## This file is part of gul (Graphic Utility Library).
 ##
-## Copyright (c) 2011-2013 Michael Pfeuti.
+## Copyright (c) 2011-2015 Michael Pfeuti.
 ##
 ## Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 ##
@@ -53,7 +53,7 @@ macro(gul_init_test_src)
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2013 Michael Pfeuti.
+** Copyright (c) 2011-2015 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
