@@ -43,7 +43,7 @@ namespace gul
    * This class can be used to reduce the boiler plat code of OpenAL. In addition
    * error checking is also done.
    *
-   * \b Note: You must be careful with deleting a context. Make sure you delete th
+   * \b Note: You must be careful with deleting a context. Make sure you delete the
    *          context as the last object. Otherwise, delete sources and other OpenAL
    *          object will fail. So you might want to create most gul::AL* classes
    *          on the heap so that you can controll the deletion order.
