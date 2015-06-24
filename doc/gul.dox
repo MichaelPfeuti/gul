@@ -1,0 +1,84 @@
+/** \mainpage gul - Graphic Utility Library
+ *
+ * \section sec_intoduction Introduction
+ * \subsection ssec_overview Overview
+ *
+ * The Graphic Utility Library (gul) is a versatile toolbox for general programming tasks. It includes:
+ *  - Peristence (pugixml)
+ *  - Image handling (JPEG, PNG, PPM, TIFF)
+ *  - Video handling (ffmpeg)
+ *  - OpenCL
+ *  - OpenGL
+ *  - OpenAL
+ *  - Numerical Methods
+ *  - Generic Data Structures
+ *  - Build Environment (CMake)
+ *  - Testing Framework (CTest)
+ *  - Continuous Integration (CDash)
+ *  - Verioning Aid (git)
+ * 
+ * gul is intended to be used in conjunction with CMake. The goal is that gul provides a custom 
+ * build environment based on CMake macros. 
+ * 
+ * \subsection ssec_quick_start Quick Start
+ * You need to have a copy of gul in your project tree. For instance a folder named "lib" on the root level of 
+ * your project. Your project must use CMake in order to benefit from the gul build environment. Therefore, 
+ * at the root of your project tree you have you CMakeLists.txt file. To setup gul put the following CMake code 
+ * at the begining of the CMakeLists.txt file.
+ * 
+ * @verbatim
+ * cmake_minimum_required(VERSION 2.8)
+ *
+ * project(YOUR_PROJECT_NAME)
+ * include(libs/gul/tools/CMake/gulProject.cmake)
+ * 
+ * gul_setup_project()
+ * gul_setup_testing("${CMAKE_CURRENT_SOURCE_DIR}/test/data")
+ * gul_create_version()
+ * gul_create_astyle_target()
+ * gul_create_doxygen_target()
+ * 
+ * add_subdirectory(libs/gul)
+ * add_subdirectory(YOUR_SOURCE_FOLDER)
+ * @endverbatim
+ *
+ * This example already shows additional macro calls to some gul build environment functionality.
+ * 
+ * \subsubsection sssec_version Version Aid
+ * The gul_create_version() macro enables the version aid for git. The functionality is very simple but handy. 
+ * Before every build gul searches for git tags that describe the versions of the current build. The tag must be 
+ * of the following format "v1.3". You can specify a major and minor version. The number of commits between the 
+ * tag and the head are recorded in the parch number. Furthermore, the SHA1 code is also appended to the version if
+ * the patch number is not zero. Lastly, if you have local changed then a flag "-dirty" is also appended. All this 
+ * information is provided by constants in the header "gulVersion.h" located in the build folder.
+ *
+ * @code{cpp}
+ * namespace gul 
+ * {
+ *   const int VERSION_MAJOR  = 0;
+ *   const int VERSION_MINOR  = 1;
+ *   const int VERSION_PATCH  = 70;
+ *   const char* VERSION_SHA1   = "g0fd57ff-dirty";
+ *   const char* VERSION_STRING = "v0.1-70-g0fd57ff-dirty";
+ * }
+ * @endcode
+ * 
+ * This example shows that the last version tag was "v0.1". In the meantime, there were 70 new commits and there 
+ * are some uncommited changes.
+ *
+ * \subsubsection sssec_astyle Astyle
+ * The gul_create_astyle_target() creates a make target called "CodingConventions". When executing this target, 
+ * all *.h, *.hpp, *.cpp files (searched recursively from the root) are checked for coding convention 
+ * violations. To prevent the check for certain folders you can exclude folders with set(ASTYLE_EXCLUE folder1 
+ * folder2 ...) in the file AStyleCustom.cmake which must also be at the root of your project.
+ * 
+ * "make CodingConventions" only performs a check, no changes are applied to any files. 
+ *
+ * There is an astylerc shipped with gul (tools/.astylerc). However you can also use your own by calling 
+ * gul_create_astyle_target(YOUR_ASTYLERC_FILE). 
+ *
+ * \subsubsection sssec_doxy Doxygen
+ * \subsubsection sssec_testing Testing
+ * \subsubsection sssec_continuous_integration Continuous Integration
+ * gul_create_cdash_target()
+ */
