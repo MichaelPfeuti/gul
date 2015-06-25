@@ -7,9 +7,9 @@
  *  - Peristence (pugixml)
  *  - Image handling (JPEG, PNG, PPM, TIFF)
  *  - Video handling (ffmpeg)
- *  - OpenCL
- *  - OpenGL
- *  - OpenAL
+ *  - GPGPU (OpenCL)
+ *  - GPU Graphics (OpenGL)
+ *  - Sound (OpenAL)
  *  - Numerical Methods
  *  - Generic Data Structures
  *  - Build Environment (CMake)
@@ -26,7 +26,7 @@
  * at the root of your project tree you have you CMakeLists.txt file. To setup gul put the following CMake code 
  * at the begining of the CMakeLists.txt file.
  * 
- * @verbatim
+ * @code{none}
  * cmake_minimum_required(VERSION 2.8)
  *
  * project(YOUR_PROJECT_NAME)
@@ -40,17 +40,18 @@
  * 
  * add_subdirectory(libs/gul)
  * add_subdirectory(YOUR_SOURCE_FOLDER)
- * @endverbatim
+ * @endcode
  *
  * This example already shows additional macro calls to some gul build environment functionality.
  * 
  * \subsubsection sssec_version Version Aid
  * The gul_create_version() macro enables the version aid for git. The functionality is very simple but handy. 
- * Before every build gul searches for git tags that describe the versions of the current build. The tag must be 
- * of the following format "v1.3". You can specify a major and minor version. The number of commits between the 
- * tag and the head are recorded in the parch number. Furthermore, the SHA1 code is also appended to the version if
- * the patch number is not zero. Lastly, if you have local changed then a flag "-dirty" is also appended. All this 
- * information is provided by constants in the header "gulVersion.h" located in the build folder.
+ * Before every build gul searches for git tags that describe the versions of the current build. The tag must  
+ * be of the following format "v1.3". You can specify a major and minor version. The number of commits between 
+ * the tag and the head are recorded in the parch number. Furthermore, the SHA1 code is also appended to the 
+ * version if the patch number is not zero. Lastly, if you have local changed then a flag "-dirty" is also 
+ * appended. All this information is provided by constants in the header "gulVersion.h" located in the build 
+ * folder.
  *
  * @code{cpp}
  * namespace gul 
@@ -78,7 +79,69 @@
  * gul_create_astyle_target(YOUR_ASTYLERC_FILE). 
  *
  * \subsubsection sssec_doxy Doxygen
+ * The gul_create_doxygen_target() creates a make target called "Doxygen". It executed doxygen in the "doc" 
+ * folder of your root. Any further configuration must be done in the "Doxyfile" located in the doc folder.
+ *
  * \subsubsection sssec_testing Testing
+ * The macro gul_setup_testing(TEST_DATA_FOLDER) sets up the testing facility. You need to pass it the location 
+ * of you test data required for you tests. The reason being that you are provided with helper function to 
+ * access the data. The files containing the functions is generated in you build directory and is called 
+ * "CTestData.h". All functions return the path to a file oder folder in your test data folder. For more detail 
+ * have a look at the file, it is self explanatory.
+ *
+ * In addition several macros for specifying your tests are provided. The general idea is that tests are 
+ * grouped in collection then suites and then individual test. The collection name will be the name of the 
+ * executable containing the tests. This allows you to select which tests to execute more easily. The suite 
+ * name is mapped to the namespace in which the test function lives. Here is an example: We add a test with the 
+ * macro gul_add_test() and create the actual code with gul_create_test().
+ * A typical CMakeLists.txt files for testing looks as follows
+ * 
+ * @code{none}
+ * gul_add_test(Base String Size)
+ * gul_add_test(Base String Construction)
+ * gul_add_test(Base String Assignment)
+ *
+ * gul_create_test()
+ * @endcode
+ *
+ * So here we have three tests in the collection "Base" in the suite "String". This means an executable with 
+ * the name TestBase will be complied from a file called TestString.cpp (must be located in the same folder as 
+ * the CMakeLists.txt file). In the file there must be a namespace called TestString.cpp which contains the 
+ * three test function int Size(void), int Construction(void), int Assignment(void).
+ *
+ * The test functions should return EXIT_SUCCESS on success or EXIT_FAILURE otherwise. The header 
+ * "CTestAssert.h" provides common testing macros like TEST_TRUE(..), TEST_EQUAL(..,..) and so on.
+ * 
+ * @code{cpp}
+ * #include "CTestAssert.h"
+ *
+ * namespace TestString
+ * {
+ * 
+ *   int Size(void)
+ *   {
+ *     TEST_EQUAL(gul::String("Test").Size(), 4)
+ *     return EXIT_SUCCESS;
+ *   }
+ * }
+ * @endcode
+ *
+ * This would be an easy example for a (well rather stupid) test of the size function. The macros always return 
+ * EXIT_FAILURE if the codition they are testing is false.
+ * 
+ * To link libraries to a test you can use the standard CMake target_link_libraries where the name of the test 
+ * executable is TestCOLLECTION.
+ * 
+ * To run the tests you can call make test or use ctest, which is the intended way. Example: "ctest" or "ctest 
+ * -R String"
+ * 
+ * You might need to utility functions the avoid code duplication in you tests. You can add utility source 
+ * files with the macro gul_add_util_sources(..)
+ *
+ * An essential restriction at the moment is that parallel test execution is not supported if you write files 
+ * to the TestOutput folder. This is because after each test the folder gets cleared and might delete essential 
+ * files from another test.
+ *
  * \subsubsection sssec_continuous_integration Continuous Integration
  * gul_create_cdash_target()
  */
