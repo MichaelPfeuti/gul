@@ -143,5 +143,18 @@
  * files from another test.
  *
  * \subsubsection sssec_continuous_integration Continuous Integration
- * gul_create_cdash_target()
+ * The macro gul_create_cdash_target() creates CTest script files in you build folder which can be used to 
+ * config/make/test/submit to a cdash website.
+ * 
+ * Where the continuous integration results should be submitted to is specified in the "CTestConfig.cmake" file 
+ * in the root of you project. This is a standard file used by CTest for CDash submission. 
+ * 
+ * CDash for your project must have a Debug, Release and CodingConventions Subproject. There are different 
+ * scripts for different situations. Continuous for continuous integrations build, Nightly for a clean nighly 
+ * build and Experimental for all other situations.
+ *
+ * Continuous: When running the script with "ctest -S buildFolder/CDash/Continuous/Continuous.ctest" the 
+ * project will be configured first for a Release build, the it gets built, tested and the results are 
+ * submitted. Then the same for Debug and then also the coding conventions make target is executed (make 
+ * CodingConventions).
  */

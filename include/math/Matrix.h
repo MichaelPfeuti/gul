@@ -69,6 +69,7 @@ namespace gul
   };
 
   typedef MatrixT<float> Matrix;
+  typedef MatrixT<double> MatrixD;
 
 }
 
