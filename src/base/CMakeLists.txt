@@ -23,6 +23,7 @@ add_library(base OBJECT
     ${INCLUDE}/base/Misc.h
     ${INCLUDE}/base/NonCopyable.h
     ${INCLUDE}/base/NonCreatable.h
+    ${INCLUDE}/base/NullObject.h
     ${INCLUDE}/base/RTTI.h
     ${INCLUDE}/base/SharedResource.h
     ${INCLUDE}/base/String.h
