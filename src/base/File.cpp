@@ -31,6 +31,16 @@
 #include "String.h"
 #include <unistd.h>
 
+DEFINE_RTTI(gul::File)
+
+BEGIN_SAVE(gul::File)
+SAVE_VARIABLE(m_path)
+END_SAVE(gul::File)
+
+BEGIN_LOAD(gul::File)
+LOAD_VARIABLE(m_path)
+END_LOAD(gul::File)
+
 
 gul::File::File(void)
   : m_path()
@@ -88,4 +98,14 @@ bool gul::File::Exists(void) const
 {
   return IsPathValid() &&
          access(m_path.GetData(), F_OK) == 0;
+}
+
+bool gul::operator!=(const gul::File& rLeft, const gul::File& rRight)
+{
+  return !operator==(rLeft, rRight);
+}
+
+bool gul::operator==(const gul::File& rLeft, const gul::File& rRight)
+{
+  return rLeft.m_path == rRight.m_path;
 }
