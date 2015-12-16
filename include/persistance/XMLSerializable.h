@@ -180,8 +180,8 @@ namespace gul
         else
         {
           v = gul::ClassFactory<T>::CreateInstance(createTypeNameFromXML(gul::String(node.GetName())));
-          v->load(node);
           loadingReferences.Add(node.GetAttribute(refIndexTag).GetInt(), v);
+          v->load(node);
         }
       }
 
