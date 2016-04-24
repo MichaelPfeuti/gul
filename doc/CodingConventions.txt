@@ -37,4 +37,20 @@ Includes:
 
 Testing:
 
+Variable Names:
+	Use prefix r for references p for pointer.
+	For class members use m_ prefix in addition.
+	
+	For example:	
+		void foo(Data& rData)
+		void bar(Data* pData)
+
+		Data& m_rData;
+		Data* m_pData;
+
+Method/Function Names:
+	Use camel case for all methods and function.
+	For public methods start with a capital letter.
+	For protected/private methods start with a lower case letter.	
 		
+	

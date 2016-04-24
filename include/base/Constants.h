@@ -1,3 +1,6 @@
+#pragma once
+#ifndef _GUL_BASE_CONSTANTS_H_
+#define _GUL_BASE_CONSTANTS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
@@ -26,5 +29,9 @@
 **
 ***************************************************************************/
 
-#include "ContainerConstants.h"
+namespace gul
+{
+  const int NOT_FOUND = -1;
+}
 
+#endif

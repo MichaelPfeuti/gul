@@ -28,6 +28,7 @@
 
 #include "String.h"
 #include "Assert.h"
+#include "Constants.h"
 #include "Misc.h"
 #include "RTTI.h"
 #include <cstring>
@@ -86,7 +87,7 @@ char gul::String::CharAt(int index) const
 gul::String gul::String::Arg(double value, int precision) const
 {
   int idx = this->Find(String("%"));
-  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != NOT_FOUND, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -97,7 +98,7 @@ gul::String gul::String::Arg(double value, int precision) const
 gul::String gul::String::Arg(int value) const
 {
   int idx = this->Find(String("%"));
-  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != NOT_FOUND, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -108,7 +109,7 @@ gul::String gul::String::Arg(int value) const
 gul::String gul::String::Arg(long value) const
 {
   int idx = this->Find(String("%"));
-  GUL_ASSERT_MSG(idx != -1, "% marker could not be found in this string!");
+  GUL_ASSERT_MSG(idx != NOT_FOUND, "% marker could not be found in this string!");
 
   char pNewString[this->Size() + MAX_REPLACE_VALUE_LENGTH];
 
@@ -149,7 +150,7 @@ gul::String gul::String::Replace(const gul::String& rNew, int start, int end) co
 gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSearch) const
 {
   int idx = Find(rSearch);
-  GUL_ASSERT_MSG(idx != -1, "String to replace must occur!");
+  GUL_ASSERT_MSG(idx != NOT_FOUND, "String to replace must occur!");
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
@@ -158,7 +159,7 @@ gul::String gul::String::Replace(const gul::String& rNew, const gul::String& rSe
 gul::String gul::String::ReplaceBackward(const gul::String& rNew, const gul::String& rSearch) const
 {
   int idx = FindBackward(rSearch);
-  GUL_ASSERT_MSG(idx != -1, "String to replace must occur!");
+  GUL_ASSERT_MSG(idx != NOT_FOUND, "String to replace must occur!");
 
   //@todo: this generates an unnecessary copy
   return this->Replace(rNew, idx, idx + rSearch.Size() - 1);
@@ -206,8 +207,8 @@ int gul::String::Find(const gul::String& rString) const
     if(this->m_pString + i == pSearchPos)
       return i;
   }
-  // TODO: use constant here;
-  return -1;
+
+  return NOT_FOUND;
 }
 
 int gul::String::FindBackward(const gul::String& rString) const
@@ -225,8 +226,8 @@ int gul::String::FindBackward(const gul::String& rString) const
     if(this->m_pString + i == pLastValidPos)
       return i;
   }
-  // TODO: use constant here;
-  return -1;
+
+  return NOT_FOUND;
 }
 
 int gul::String::Count(const String& rString) const

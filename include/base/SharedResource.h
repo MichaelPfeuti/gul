@@ -47,7 +47,7 @@ namespace gul
    * The owners are hidden from the outside (outside the SharedResource).
    * Their goal is to be the actual data owner. They hold a list of
    * referencees. Each referencee has one and only one owner. \n
-   * NOTE: A referencee has ALWAYS an owner. \n
+   * Note that a referencee has ALWAYS an owner. \n
    * The situation for a one instance situation would be that we have
    * the referencee which is the class that the developer passes
    * around and uses in the code. Its owner is hidden inside the

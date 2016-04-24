@@ -17,6 +17,7 @@ add_library(base OBJECT
     ${INCLUDE}/base/ClassFactoryBase.h
     ${INCLUDE}/base/ClassFactory.h
     ${INCLUDE}/base/Cloneable.h
+    ${INCLUDE}/base/Constants.h
     ${INCLUDE}/base/Dir.h
     ${INCLUDE}/base/File.h
     ${INCLUDE}/base/Log.h

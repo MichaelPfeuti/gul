@@ -118,7 +118,7 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
     if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
     {
       /* find the video encoder */
-      GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+      GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != AV_CODEC_ID_NONE, "Not a video format!");
       m_pVideoCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
       if(m_pVideoCodec == nullptr)
         GUL_FAIL("Codec not found!");
@@ -204,7 +204,7 @@ bool gul::MediaWriter::OpenVideo(void)
     GUL_FAIL("Format Output Context cannot be allocated!");
 
   /* find the video encoder */
-  GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != CODEC_ID_NONE, "Not a video format!");
+  GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != AV_CODEC_ID_NONE, "Not a video format!");
   m_pVideoCodec = avcodec_find_encoder(m_pFormatCtx->oformat->video_codec);
   if(m_pVideoCodec == nullptr)
     GUL_FAIL("Codec not found!");
@@ -276,9 +276,9 @@ void gul::MediaWriter::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
   m_pVideoCodecCtx->profile = ctx.profile;
   m_pVideoCodecCtx->level = FF_LEVEL_UNKNOWN; //ctx.level;
   m_pVideoCodecCtx->has_b_frames = ctx.has_b_frames;
-  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
+  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG2VIDEO)
     m_pVideoCodecCtx->max_b_frames = 2;
-  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
+  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG1VIDEO)
     m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
   if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
     m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
@@ -301,10 +301,10 @@ void gul::MediaWriter::setDafaultVideoEncoderCtxSettings(void)
   m_pVideoCodecCtx->time_base.num = 1;
   m_pVideoCodecCtx->time_base.den = m_videoFPS;
   m_pVideoCodecCtx->gop_size      = 12;
-  m_pVideoCodecCtx->pix_fmt       = PIX_FMT_YUV420P;
-  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG2VIDEO)
+  m_pVideoCodecCtx->pix_fmt       = AV_PIX_FMT_YUV420P;
+  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG2VIDEO)
     m_pVideoCodecCtx->max_b_frames = 2;
-  if(m_pVideoCodecCtx->codec_id == CODEC_ID_MPEG1VIDEO)
+  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG1VIDEO)
     m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
   if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
     m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
@@ -318,17 +318,23 @@ void gul::MediaWriter::allocateStructures(void)
   // Allocate video frame
   m_pFrame = av_frame_alloc();
   m_pFrame->pts = 0;
-  avpicture_alloc((AVPicture*)m_pFrame, m_pVideoCodecCtx->pix_fmt,
-                  m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
+  m_pFrame->width = m_pVideoCodecCtx->width;
+  m_pFrame->height = m_pVideoCodecCtx->height;
+  m_pFrame->format = m_pVideoCodecCtx->pix_fmt;
+  if(av_frame_get_buffer(m_pFrame, 1) < 0)
+    GUL_FAIL("AVFrame buffer could not be allocated!");
 
   // Allocate an AVFrame structure
   m_pFrameRGBA = av_frame_alloc();
-  avpicture_alloc((AVPicture*)m_pFrameRGBA, PIX_FMT_RGBA,
-                  m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
+  m_pFrameRGBA->width = m_pVideoCodecCtx->width;
+  m_pFrameRGBA->height = m_pVideoCodecCtx->height;
+  m_pFrameRGBA->format = m_pVideoCodecCtx->pix_fmt;
+  if(av_frame_get_buffer(m_pFrameRGBA, 1) < 0)
+    GUL_FAIL("AVFrame buffer could not be allocated!");
 
   // swscaler context
   m_pSWSContext = sws_getCachedContext(m_pSWSContext,
-                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, AV_PIX_FMT_RGBA,
                                        m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
                                        SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
@@ -364,14 +370,10 @@ void gul::MediaWriter::CloseVideo(void)
   av_write_trailer(m_pFormatCtx);
 
   // Free RGBA memory
-  avpicture_free((AVPicture*)m_pFrameRGBA);
-  av_free(m_pFrameRGBA);
-  m_pFrameRGBA = nullptr;
+  av_frame_free(&m_pFrameRGBA);
 
   // Free the frame buffer
-  avpicture_free((AVPicture*)m_pFrame);
-  av_free(m_pFrame);
-  m_pFrame = nullptr;
+  av_frame_free(&m_pFrame);
 
   // free swscale context
   sws_freeContext(m_pSWSContext);
@@ -453,7 +455,7 @@ bool gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
     if(!writePacket(pkt))
       GUL_FAIL("Encoded packet could not be written!");
 
-    av_free_packet(&pkt);
+    av_packet_unref(&pkt);
   }
 
   // was something written

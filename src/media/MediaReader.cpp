@@ -40,6 +40,7 @@ extern "C"
 #include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
 #include <libavutil/opt.h>
+#include <libavutil/imgutils.h>
 }
 
 bool gul::MediaReader::codecsAreRegistered = false;
@@ -83,7 +84,7 @@ void gul::MediaReader::Close(void)
   if(m_isOpen)
   {
     if(!m_isPacketDataFreed)
-      av_free_packet(m_pPacket);
+      av_packet_unref(m_pPacket);
     GUL_DELETE(m_pPacket);
   }
 
@@ -117,6 +118,7 @@ void gul::MediaReader::Close(void)
 
 void gul::MediaReader::allocateVideoStructures(void)
 {
+  // TODO: check if av_frame_get_buffer works
   m_pFrame = av_frame_alloc();
 
   // Allocate an AVFrame structure
@@ -124,21 +126,22 @@ void gul::MediaReader::allocateVideoStructures(void)
 
   // Determine required buffer size and allocate buffer
   int numBytes;
-  numBytes = avpicture_get_size(PIX_FMT_RGBA, m_pVideoCodecCtx->width,
-                                m_pVideoCodecCtx->height);
+
+  numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGBA, m_pVideoCodecCtx->width,
+                                m_pVideoCodecCtx->height, 1);
   m_pDataBufferRGBA = (uint8_t*)av_malloc(numBytes * sizeof(uint8_t));
 
   // Assign appropriate parts of buffer to image planes in pFrameRGB
   // Note that pFrameRGBA is an AVFrame, but AVFrame is a superset
   // of AVPicture
-  avpicture_fill((AVPicture*)m_pFrameRGBA, m_pDataBufferRGBA, PIX_FMT_RGBA,
-                 m_pVideoCodecCtx->width, m_pVideoCodecCtx->height);
+  av_image_fill_arrays(m_pFrameRGBA->data, m_pFrameRGBA->linesize, m_pDataBufferRGBA, AV_PIX_FMT_RGBA,
+                 m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, 1);
 
 
   // swscaler context
   m_pSWSContext = sws_getCachedContext(m_pSWSContext,
                                        m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, m_pVideoCodecCtx->pix_fmt,
-                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, PIX_FMT_RGBA,
+                                       m_pVideoCodecCtx->width, m_pVideoCodecCtx->height, AV_PIX_FMT_RGBA,
                                        SWS_BILINEAR, nullptr, nullptr, nullptr);
 }
 
@@ -255,7 +258,7 @@ AVPacket* gul::MediaReader::getNextPacket(void)
 {
   if(!m_isPacketDataFreed)
   {
-    av_free_packet(m_pPacket);
+    av_packet_unref(m_pPacket);
     av_init_packet(m_pPacket);
   }
 
@@ -350,7 +353,7 @@ void gul::MediaReader::setData(gul::VideoFrame& rTargetFrame, const AVFrame* pSo
   if(pSourceFrame != nullptr)
   {
     // Convert the image from its native format to RGBA
-    //Scale the raw data/convert it to our video buffer...
+    // Scale the raw data/convert it to our video buffer...
     if(sws_scale(m_pSWSContext,
                  pSourceFrame->data, pSourceFrame->linesize,
                  0, m_pVideoCodecCtx->height,

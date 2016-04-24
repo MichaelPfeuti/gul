@@ -68,7 +68,6 @@ const V& gul::MapBasic<K, V>::Get(const K& rKey) const
 {
   GUL_ASSERT(this->keys.Contains(rKey));
 
-  // TODO: duplication
   int idx = this->keys.IndexOf(rKey);
   return this->values.Get(idx);
 }

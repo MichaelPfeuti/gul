@@ -27,7 +27,7 @@
 ***************************************************************************/
 
 #include "Assert.h"
-#include "ContainerConstants.h"
+#include "Constants.h"
 #include "Misc.h"
 #include "Math.h"
 #include "String.h"
@@ -129,7 +129,6 @@ void gul::ArrayBasic<T>::Add(const T& rElement, int index)
 template<typename T>
 T& gul::ArrayBasic<T>::Get(int index)
 {
-  // TODO: remove duplicated code (see const version)
   GUL_ASSERT(index >= 0);
   GUL_ASSERT(index < this->size);
 

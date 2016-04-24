@@ -27,7 +27,7 @@
 ***************************************************************************/
 
 #include "Assert.h"
-#include "ContainerConstants.h"
+#include "Constants.h"
 #include "Misc.h"
 #include "Math.h"
 
@@ -129,17 +129,7 @@ void gul::ListBasic<T>::Add(const T& rElement, int index)
 template<typename T>
 T& gul::ListBasic<T>::Get(int index)
 {
-  // TODO: remove code duplication
-  GUL_ASSERT(index >= 0);
-  GUL_ASSERT(index < this->size);
-
-  ListElement<T>* pCur = this->pHead;
-  while(index > 0)
-  {
-    pCur = pCur->pNext;
-    --index;
-  }
-  return pCur->data;
+  return const_cast<T&>(static_cast<const gul::ListBasic<T>&>(*this).Get(index));
 }
 
 template<typename T>

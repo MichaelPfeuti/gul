@@ -1,11 +1,8 @@
-#pragma once
-#ifndef _GUL_CONTAINERS_CONTAINER_CONSTANTS_H_
-#define _GUL_CONTAINERS_CONTAINER_CONSTANTS_H_
 /***************************************************************************
 **
 ** This file is part of gul (Graphic Utility Library).
 **
-** Copyright (c) 2011-2015 Michael Pfeuti.
+** Copyright (c) 2011 Michael Pfeuti.
 **
 ** Contact: Michael Pfeuti (mpfeuti@ganymede.ch)
 **
@@ -17,7 +14,7 @@
 **
 ** gul is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-** FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
+** FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
 ** more details.
 **
 ** You should have received a copy of the GNU Lesser General Public License
@@ -29,9 +26,13 @@
 **
 ***************************************************************************/
 
-namespace gul
-{
-  const int NOT_FOUND = -1;
-}
+#include "CTestAssert.h"
+#include "Math.h"
 
-#endif
+namespace TestMatrix
+{
+  int Multiplication(void)
+  {
+    return EXIT_FAILURE;
+  }
+}

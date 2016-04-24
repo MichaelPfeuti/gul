@@ -1,7 +1,6 @@
 add_library(containers OBJECT
     Array.cpp
     ArrayBasic.cpp
-    ContainerConstants.cpp
     List.cpp
     ListBasic.cpp
     Map.cpp
@@ -24,7 +23,6 @@ add_library(containers OBJECT
 
     ${INCLUDE}/containers/Array.h
     ${INCLUDE}/containers/ArrayBasic.h
-    ${INCLUDE}/containers/ContainerConstants.h
     ${INCLUDE}/containers/List.h
     ${INCLUDE}/containers/ListBasic.h
     ${INCLUDE}/containers/Map.h
@@ -33,4 +31,4 @@ add_library(containers OBJECT
     ${INCLUDE}/containers/SetBasic.h
     ${INCLUDE}/containers/Stack.h
     ${INCLUDE}/containers/StackBasic.h
-		)
+    )
