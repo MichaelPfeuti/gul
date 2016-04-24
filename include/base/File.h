@@ -30,11 +30,14 @@
 ***************************************************************************/
 
 #include "String.h"
+#include "XMLMacros.h"
 
 namespace gul
 {
-  class GUL_EXPORT File
+  class GUL_EXPORT File : INHERIT_SERIALIZABLE(File)
   {
+    DECLARE_RTTI(File)
+
     public:
       File(void);
       File(const String& rPath);
@@ -72,7 +75,16 @@ namespace gul
 
     private:
       String m_path;
+
+    DECLARE_SERIALIZABLE()
+
+      friend bool operator==(const File& rLeft, const File& rRight);
   };
+
+  GUL_EXPORT bool operator!=(const File& rLeft, const File& rRight);
+  GUL_EXPORT bool operator==(const File& rLeft, const File& rRight);
 }
+
+SPECIALIZE_TRAITS(gul::File)
 
 #endif

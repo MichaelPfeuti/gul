@@ -53,9 +53,8 @@ namespace gul
 
       bool IsNull(void) const;
 
-      const T& operator[](int row, int col) const;
-      const T& operator[](int row, int col) const;
-      T& operator[](int row, int col);
+      const T& operator()(int row, int col) const;
+      T& operator()(int row, int col);
 
       const T* GetDataConst(void) const;
       const T* GetData(void) const;

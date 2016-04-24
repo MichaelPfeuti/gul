@@ -28,6 +28,7 @@
 
 #include "File.h"
 #include "CTestAssert.h"
+#include "XMLManager.h"
 
 namespace TestFile
 {
@@ -74,4 +75,16 @@ namespace TestFile
     return EXIT_SUCCESS;
   }
 
+  int SaveAndLoad(void)
+  {
+    gul::File file("test.file");
+    gul::XMLManager::Save<gul::File>(gul::String("test.xml"), file);
+    gul::File* pFile = gul::XMLManager::Load<gul::File>(gul::String("test.xml"));
+
+    TEST_EQUAL(*pFile, file);
+
+    GUL_DELETE(pFile);
+
+    return EXIT_SUCCESS;
+  }
 }

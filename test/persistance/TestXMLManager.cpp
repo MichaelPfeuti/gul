@@ -394,5 +394,19 @@ namespace TestXMLManager
 
     return EXIT_SUCCESS;
   }
+
+  int SaveAndLoadNullPointer(void)
+  {
+    TestPointerClass pointerTruth;
+    gul::XMLManager::Save(gul::String("nullpointerTest.xml"), pointerTruth);
+    TestPointerClass* pPointerLoaded = gul::XMLManager::Load<TestPointerClass>(gul::String("nullpointerTest.xml"));
+
+    TEST_EQUAL(*pPointerLoaded, pointerTruth);
+    TEST_FALSE(*pPointerLoaded != pointerTruth);
+
+    GUL_DELETE(pPointerLoaded);
+
+    return EXIT_SUCCESS;
+  }
 }
 
