@@ -44,9 +44,12 @@ macro(gul_setup_project)
   include(gulTesting)
   include(gulCDash)
   include(gulResource)
-  include(GenerateExportHeader)
   include(CMakeDependentOption)
-  add_compiler_export_flags()
+  include(GenerateExportHeader)
+
+  # export header settings
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
   # Default Build Type
   if(NOT CMAKE_BUILD_TYPE)
@@ -58,7 +61,6 @@ macro(gul_setup_project)
   # Common Build Settings
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED True)
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -W ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-default ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow ")
@@ -67,7 +69,6 @@ macro(gul_setup_project)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-system-headers ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-strict-overflow ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual ")
-
 
   # Debug Build Settings
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
