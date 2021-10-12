@@ -38,8 +38,6 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-bool gul::MediaWriter::codecsAreRegistered = false;
-
 gul::MediaWriter::MediaWriter(const gul::File& rVideoPath,
                               int width, int height,
                               int fps, int bitrate)
@@ -49,7 +47,6 @@ gul::MediaWriter::MediaWriter(const gul::File& rVideoPath,
     m_pSWSContext(nullptr),
     m_pVideoStream(nullptr),
     m_pFrame(nullptr),
-    m_pFrameRGBA(nullptr),
     m_isClosed(true),
     m_videoWidth(width),
     m_videoHeight(height),
@@ -57,11 +54,6 @@ gul::MediaWriter::MediaWriter(const gul::File& rVideoPath,
     m_videoBitrate(bitrate),
     usePTSFromFrames(false)
 {
-  if(!codecsAreRegistered)
-  {
-    av_register_all();
-    codecsAreRegistered = true;
-  }
 }
 
 gul::MediaWriter::MediaWriter(const gul::File& rVideoPath)
@@ -71,7 +63,6 @@ gul::MediaWriter::MediaWriter(const gul::File& rVideoPath)
     m_pSWSContext(nullptr),
     m_pVideoStream(nullptr),
     m_pFrame(nullptr),
-    m_pFrameRGBA(nullptr),
     m_isClosed(true),
     m_videoWidth(0),
     m_videoHeight(0),
@@ -79,11 +70,6 @@ gul::MediaWriter::MediaWriter(const gul::File& rVideoPath)
     m_videoBitrate(0),
     usePTSFromFrames(true)
 {
-  if(!codecsAreRegistered)
-  {
-    av_register_all();
-    codecsAreRegistered = true;
-  }
 }
 
 gul::MediaWriter::~MediaWriter(void)
@@ -115,17 +101,28 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
   for(unsigned int i = 0; i < rInputFormatCtx.nb_streams; ++i)
   {
     AVStream* pInputStream = rInputFormatCtx.streams[i];
-    if(pInputStream->codec->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
+    if(pInputStream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO && m_pVideoStream == nullptr)
     {
       /* find the video encoder */
       GUL_ASSERT_MSG(m_pFormatCtx->oformat->video_codec != AV_CODEC_ID_NONE, "Not a video format!");
-      m_pVideoCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
+      m_pVideoCodec = avcodec_find_encoder(pInputStream->codecpar->codec_id);
       if(m_pVideoCodec == nullptr)
+      {
         GUL_FAIL("Codec not found!");
+      }
 
       /* Create new stream and copy settings from input */
       m_pVideoStream = avformat_new_stream(m_pFormatCtx, m_pVideoCodec);
-      copyVideoEncoderCtxSettings(*pInputStream->codec);
+      m_videoBitrate = rInputFormatCtx.bit_rate;
+
+      m_pVideoCodecCtx = avcodec_alloc_context3(m_pVideoCodec);
+      if(avcodec_parameters_to_context(m_pVideoCodecCtx, pInputStream->codecpar) < 0)
+      {
+        GUL_FAIL("Codec Parameters could not be set");
+      }
+      setDafaultVideoEncoderCtxSettings();
+      m_pVideoCodecCtx->time_base = av_inv_q(pInputStream->avg_frame_rate);
+
 
       /*
        * NOTE: This if statement is from ffmpeg.c
@@ -134,38 +131,42 @@ bool gul::MediaWriter::openVideo(const AVFormatContext& rInputFormatCtx)
        * having the fps and timebase differe significantly adds quite some
        * overhead
        */
-      if(!strcmp(m_pFormatCtx->oformat->name, "avi"))
-      {
-        m_pVideoCodecCtx->time_base.num = pInputStream->r_frame_rate.den;
-        m_pVideoCodecCtx->time_base.den = pInputStream->r_frame_rate.num;
-        m_pVideoCodecCtx->ticks_per_frame = pInputStream->codec->ticks_per_frame;
-      }
-
-      m_pVideoStream->avg_frame_rate = pInputStream->avg_frame_rate;
-      m_pVideoStream->disposition = pInputStream->disposition;
-      m_pVideoStream->time_base = pInputStream->time_base;
+//      if(!strcmp(m_pFormatCtx->oformat->name, "avi"))
+//      {
+//        m_pVideoCodecCtx->time_base.num = pInputStream->r_frame_rate.den;
+//        m_pVideoCodecCtx->time_base.den = pInputStream->r_frame_rate.num;
+//        m_pVideoCodecCtx->ticks_per_frame = pInputStream->codec->ticks_per_frame;
+//      }
+//      avcodec_parameters_copy(m_pVideoStream->codecpar, pInputStream->codecpar);
+//      m_pVideoStream->avg_frame_rate = pInputStream->avg_frame_rate;
+//      m_pVideoStream->disposition = pInputStream->disposition;
+//      m_pVideoStream->time_base = pInputStream->time_base;
+//      m_pVideoStream->r_frame_rate = pInputStream->r_frame_rate;
     }
     else
     {
-      AVCodec* pCodec = avcodec_find_encoder(pInputStream->codec->codec_id);
+      AVCodec* pCodec = avcodec_find_encoder(pInputStream->codecpar->codec_id);
       AVStream* pStream = avformat_new_stream(m_pFormatCtx, pCodec);
-      AVCodecContext* pCodecCtx = pStream->codec;
-      avcodec_copy_context(pCodecCtx, pInputStream->codec);
+      avcodec_parameters_copy(pStream->codecpar, pInputStream->codecpar);
+//      AVCodecContext* pCodecCtx = avcodec_alloc_context3(pCodec);
+//      avcodec_get_context_defaults3(pCodecCtx, pCodec);
+//      if(avcodec_parameters_to_context(pCodecCtx, pInputStream->codecpar) < 0)
+//      {
+//        GUL_FAIL("Codec Parameters could not be set");
+//      }
 
-      /*
-       * NOTE: This if statement is from ffmpeg.c
-       */
-      if((pCodecCtx->block_align == 1 ||
-          pCodecCtx->block_align == 1152 ||
-          pCodecCtx->block_align == 576) && pCodecCtx->codec_id == AV_CODEC_ID_MP3)
-        pCodecCtx->block_align = 0;
-      if(pCodecCtx->codec_id == AV_CODEC_ID_AC3)
-        pCodecCtx->block_align = 0;
+//      /*
+//       * NOTE: This if statement is from ffmpeg.c
+//       */
+//      if((pCodecCtx->block_align == 1 ||
+//          pCodecCtx->block_align == 1152 ||
+//          pCodecCtx->block_align == 576) && pCodecCtx->codec_id == AV_CODEC_ID_MP3)
+//        pCodecCtx->block_align = 0;
+//      if(pCodecCtx->codec_id == AV_CODEC_ID_AC3)
+//        pCodecCtx->block_align = 0;
 
-      if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-        pCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
-      if(!strcmp(m_pFormatCtx->oformat->name, "mp4"))
-        pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
+//      if(!strcmp(m_pFormatCtx->oformat->name, "mp4"))
+//        pCodecCtx->codec_tag = 0; // this is neccessary for mp4 copying.
     }
   }
 
@@ -197,7 +198,6 @@ bool gul::MediaWriter::OpenVideo(void)
   GUL_ASSERT(m_videoHeight % 2 == 0);
   GUL_ASSERT(m_videoFPS > 0);
 
-
   /* allocate the output media context */
   avformat_alloc_output_context2(&m_pFormatCtx, nullptr, nullptr, m_path.GetPath().GetData());
   if(m_pFormatCtx == nullptr)
@@ -214,6 +214,8 @@ bool gul::MediaWriter::OpenVideo(void)
   if(m_pVideoStream == nullptr)
     GUL_FAIL("Video Stream could not be created!");
 
+  // Get a pointer to the codec context for the video stream
+  m_pVideoCodecCtx = avcodec_alloc_context3(m_pVideoCodec);
   setDafaultVideoEncoderCtxSettings();
 
   /* open the codec */
@@ -228,109 +230,47 @@ bool gul::MediaWriter::OpenVideo(void)
   return true;
 }
 
-void gul::MediaWriter::copyVideoEncoderCtxSettings(const AVCodecContext& ctx)
-{
-  // NOTE: most things are copied from the function transcode_init in ffmpeg.c
-
-  // Get a pointer to the codec context for the video stream
-  m_pVideoCodecCtx = m_pVideoStream->codec;
-
-  // enable multithreading
-  m_pVideoCodecCtx->thread_count = 2;
-
-  // bitrate modifier
-  float bitrateModifier = (m_videoWidth * m_videoHeight) / static_cast<float>(ctx.width * ctx.height);
-
-  /* initialize codec settings */
-  avcodec_get_context_defaults3(m_pVideoCodecCtx, m_pVideoCodec);
-  m_pVideoCodecCtx->codec_id = ctx.codec_id;
-  m_pVideoCodecCtx->codec_type = ctx.codec_type;
-  if(!m_pVideoCodecCtx->codec_tag)
-  {
-    if(!m_pFormatCtx->oformat->codec_tag ||
-       av_codec_get_id(m_pFormatCtx->oformat->codec_tag, ctx.codec_tag) == m_pVideoCodecCtx->codec_id ||
-       av_codec_get_tag(m_pFormatCtx->oformat->codec_tag, ctx.codec_id) <= 0)
-      m_pVideoCodecCtx->codec_tag = ctx.codec_tag;
-  }
-  m_pVideoCodecCtx->rc_max_rate    = ctx.rc_max_rate;
-  m_pVideoCodecCtx->rc_buffer_size = ctx.rc_buffer_size;
-  m_pVideoCodecCtx->field_order    = ctx.field_order;
-  m_pVideoCodecCtx->extradata = static_cast<uint8_t*>(av_mallocz((uint64_t)ctx.extradata_size + FF_INPUT_BUFFER_PADDING_SIZE));
-  m_pVideoCodecCtx->extradata_size = ctx.extradata_size;
-  memcpy(m_pVideoCodecCtx->extradata, ctx.extradata, ctx.extradata_size);
-  m_pVideoCodecCtx->bits_per_coded_sample  = ctx.bits_per_coded_sample;
-  m_pVideoCodecCtx->bits_per_raw_sample    = ctx.bits_per_raw_sample;
-  m_pVideoCodecCtx->chroma_sample_location = ctx.chroma_sample_location;
-  m_pVideoCodecCtx->width    = m_videoWidth;
-  m_pVideoCodecCtx->height   = m_videoHeight;
-  m_pVideoCodecCtx->bit_rate = ctx.bit_rate * bitrateModifier;
-  if(m_pVideoCodecCtx->bit_rate == 0)
-  {
-    // empirical bit rate guess
-    m_pVideoCodecCtx->bit_rate = m_pVideoCodecCtx->width * m_pVideoCodecCtx->height * 8;
-  }
-  m_pVideoCodecCtx->time_base = ctx.time_base;
-  m_pVideoCodecCtx->time_base.num *= ctx.ticks_per_frame;
-  m_pVideoCodecCtx->gop_size      = 12;
-  m_pVideoCodecCtx->pix_fmt       = ctx.pix_fmt;
-  m_pVideoCodecCtx->profile = ctx.profile;
-  m_pVideoCodecCtx->level = FF_LEVEL_UNKNOWN; //ctx.level;
-  m_pVideoCodecCtx->has_b_frames = ctx.has_b_frames;
-  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG2VIDEO)
-    m_pVideoCodecCtx->max_b_frames = 2;
-  if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG1VIDEO)
-    m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
-  if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-    m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
-}
-
 void gul::MediaWriter::setDafaultVideoEncoderCtxSettings(void)
 {
-  // Get a pointer to the codec context for the video stream
-  m_pVideoCodecCtx = m_pVideoStream->codec;
-
   // enable multithreading
-  m_pVideoCodecCtx->thread_count = 2;
+  m_pVideoCodecCtx->thread_count = 4;
 
-  /* initialize codec settings */
-  avcodec_get_context_defaults3(m_pVideoCodecCtx, m_pVideoCodec);
-  m_pVideoCodecCtx->codec_id = m_pFormatCtx->oformat->video_codec;
+  // set the settings for the encoder
   m_pVideoCodecCtx->bit_rate = m_videoBitrate;
   m_pVideoCodecCtx->width    = m_videoWidth;
   m_pVideoCodecCtx->height   = m_videoHeight;
-  m_pVideoCodecCtx->time_base.num = 1;
-  m_pVideoCodecCtx->time_base.den = m_videoFPS;
+  m_pVideoCodecCtx->time_base = (AVRational){ 1, m_videoFPS };
   m_pVideoCodecCtx->gop_size      = 12;
   m_pVideoCodecCtx->pix_fmt       = AV_PIX_FMT_YUV420P;
   if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG2VIDEO)
+  {
     m_pVideoCodecCtx->max_b_frames = 2;
+  }
   if(m_pVideoCodecCtx->codec_id == AV_CODEC_ID_MPEG1VIDEO)
+  {
     m_pVideoCodecCtx->mb_decision = FF_MB_DECISION_RD;
-  if(m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-    m_pVideoCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
-
-  // set desired time_base for the muxer
-  m_pVideoStream->time_base = m_pVideoCodecCtx->time_base;
+  }
+  if (m_pFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
+  {
+      m_pVideoCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+  }
 }
 
 void gul::MediaWriter::allocateStructures(void)
 {
+  // Allocate packet
+  m_pPacket = av_packet_alloc();
+
   // Allocate video frame
   m_pFrame = av_frame_alloc();
   m_pFrame->pts = 0;
   m_pFrame->width = m_pVideoCodecCtx->width;
   m_pFrame->height = m_pVideoCodecCtx->height;
   m_pFrame->format = m_pVideoCodecCtx->pix_fmt;
-  if(av_frame_get_buffer(m_pFrame, 1) < 0)
+  if(av_frame_get_buffer(m_pFrame, 0) < 0)
+  {
     GUL_FAIL("AVFrame buffer could not be allocated!");
-
-  // Allocate an AVFrame structure
-  m_pFrameRGBA = av_frame_alloc();
-  m_pFrameRGBA->width = m_pVideoCodecCtx->width;
-  m_pFrameRGBA->height = m_pVideoCodecCtx->height;
-  m_pFrameRGBA->format = m_pVideoCodecCtx->pix_fmt;
-  if(av_frame_get_buffer(m_pFrameRGBA, 1) < 0)
-    GUL_FAIL("AVFrame buffer could not be allocated!");
+  }
 
   // swscaler context
   m_pSWSContext = sws_getCachedContext(m_pSWSContext,
@@ -345,12 +285,19 @@ void gul::MediaWriter::prepareOutputFile(void)
   if(avio_open(&m_pFormatCtx->pb, m_path.GetPath().GetData(), AVIO_FLAG_WRITE) < 0)
     GUL_FAIL("Video file could not be opened");
 
+  /* copy all context setting to the stream */
+  m_pVideoStream->time_base = m_pVideoCodecCtx->time_base;
+  if(avcodec_parameters_from_context(m_pVideoStream->codecpar, m_pVideoCodecCtx) < 0)
+  {
+    GUL_FAIL("FFMPEG: Parameters could not be copied into stream");
+  }
+
   /* Write the stream header, if any. */
   int err = avformat_write_header(m_pFormatCtx, nullptr);
   if(err < 0)
   {
-    char a[255];
-    av_strerror(err, a, 255);
+    char a[AV_ERROR_MAX_STRING_SIZE];
+    av_strerror(err, a, AV_ERROR_MAX_STRING_SIZE);
     GUL_FAIL(a);
   }
 }
@@ -360,8 +307,7 @@ void gul::MediaWriter::CloseVideo(void)
   GUL_ASSERT(!m_isClosed);
 
   // flush encoder
-  while(encodeAndSaveVideoFrame(nullptr));
-
+  encodeAndSaveVideoFrame(nullptr);
 
   /* Write the trailer, if any. The trailer must be written before you
    * close the CodecContexts open when you wrote the header; otherwise
@@ -369,29 +315,16 @@ void gul::MediaWriter::CloseVideo(void)
    * av_codec_close(). */
   av_write_trailer(m_pFormatCtx);
 
-  // Free RGBA memory
-  av_frame_free(&m_pFrameRGBA);
-
-  // Free the frame buffer
+  avcodec_free_context(&m_pVideoCodecCtx);
   av_frame_free(&m_pFrame);
+  av_packet_free(&m_pPacket);
 
-  // free swscale context
   sws_freeContext(m_pSWSContext);
   m_pSWSContext = nullptr;
 
-  // Close the codec
-  avcodec_close(m_pVideoCodecCtx);
-  m_pVideoCodecCtx = nullptr;
-
-  /* Free the streams. */
-//  for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
-//     av_freep(&pFormatCtx->streams[i]->codec);
-//      av_freep(&pFormatCtx->streams[i]);
-//  }
-
   /* Close the output file. */
-  avio_flush(m_pFormatCtx->pb);
-  avio_close(m_pFormatCtx->pb);
+  //avio_flush(m_pFormatCtx->pb);
+  avio_closep(&m_pFormatCtx->pb);
 
   /* free the stream */
   avformat_free_context(m_pFormatCtx);
@@ -407,8 +340,10 @@ void gul::MediaWriter::AddFrame(const gul::VideoFrame& rFrame)
 
   const unsigned char* pData = rFrame.GetData();
   int pitch = rFrame.GetPitch();
+
   // Convert the image from RGBA to its native format
   //Scale the raw data/convert it to our video buffer...
+  av_frame_make_writable(m_pFrame);
   if(sws_scale(m_pSWSContext,
                &pData, &pitch,
                0, m_pVideoCodecCtx->height,
@@ -427,42 +362,39 @@ void gul::MediaWriter::AddFrame(const gul::VideoFrame& rFrame)
   }
 }
 
-bool gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
+void gul::MediaWriter::encodeAndSaveVideoFrame(AVFrame* pFrameToEncode)
 {
-  /* encode the image */
-  AVPacket pkt;
-
-  av_init_packet(&pkt);
-  pkt.data = nullptr;    // packet data will be allocated by the encoder
-  pkt.size = 0;
-//  pkt.flags |= AV_PKT_FLAG_KEY;
-
-  int gotPacket;
-  if(avcodec_encode_video2(m_pVideoCodecCtx, &pkt, pFrameToEncode, &gotPacket) < 0)
-    GUL_FAIL("Frame could not be encoded!");
-
-  if(gotPacket)
+  if(avcodec_send_frame(m_pVideoCodecCtx, pFrameToEncode) < 0)
   {
-    // compute pts in stream time_base
-    if(pkt.pts != AV_NOPTS_VALUE)
-      pkt.pts = av_rescale_q(pkt.pts , m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
-    if(pkt.dts != AV_NOPTS_VALUE)
-      pkt.dts = av_rescale_q(pkt.dts, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
-
-    pkt.stream_index = m_pVideoStream->index;
-
-    /* Write the compressed frame to the media file. */
-    if(!writePacket(pkt))
-      GUL_FAIL("Encoded packet could not be written!");
-
-    av_packet_unref(&pkt);
+    GUL_FAIL("Frame could not be encoded!");
   }
 
-  // was something written
-  return gotPacket;
+  while(avcodec_receive_packet(m_pVideoCodecCtx, m_pPacket) == 0)
+  {
+    // compute pts in stream time_base
+    //if(m_pPacket->pts != AV_NOPTS_VALUE)
+    //  m_pPacket->pts = av_rescale_q(m_pPacket->pts, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
+//    if(m_pPacket->dts != AV_NOPTS_VALUE)
+//      m_pPacket->dts = av_rescale_q(m_pPacket->dts, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
+
+    av_packet_rescale_ts(m_pPacket, m_pVideoCodecCtx->time_base, m_pVideoStream->time_base);
+    m_pPacket->stream_index = m_pVideoStream->index;
+
+    writePacket(*m_pPacket);
+  }
 }
 
-bool gul::MediaWriter::writePacket(AVPacket& rPacket)
+void gul::MediaWriter::writePacket(AVPacket& pPacket)
 {
-  return av_interleaved_write_frame(m_pFormatCtx, &rPacket) >= 0;
+  /* Write the compressed frame to the media file. */
+  int ret = av_interleaved_write_frame(m_pFormatCtx, &pPacket);
+  if(ret < 0)
+  {
+    char error[AV_ERROR_MAX_STRING_SIZE];
+    av_make_error_string(error, AV_ERROR_MAX_STRING_SIZE, ret);
+    GUL_LOG_ERROR(error);
+    GUL_FAIL("Encoded packet could not be written!");
+  }
+
+  av_packet_unref(m_pPacket);
 }

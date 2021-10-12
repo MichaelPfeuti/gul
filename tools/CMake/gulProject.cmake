@@ -56,7 +56,9 @@ macro(gul_setup_project)
   endif()
 
   # Common Build Settings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ")
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED True)
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -W ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-default ")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow ")

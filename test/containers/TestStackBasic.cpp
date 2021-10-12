@@ -73,7 +73,7 @@ namespace TestStackBasic
 
     stack.Push(0);
     TEST_EQUAL(stack.Size(), 1);
-    TEST_EQUAL(stack.Top(), 0)
+    TEST_EQUAL(stack.Top(), 0);
     stack.Push(1);
     TEST_EQUAL(stack.Size(), 2);
     TEST_EQUAL(stack.Top(), 1);

@@ -41,21 +41,21 @@ gul::Image gul::ImageIO_TIFF::Load(const gul::File& rPath)
     return gul::Image();
   }
 
-  uint32 width, height;
+  uint32_t width, height;
   TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
   TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
 
   gul::Image image(width, height, gul::Image::IF_RGBA);
 
-  uint32 npixels = width * height;
-  uint32* raster = static_cast<uint32*>(_TIFFmalloc(npixels * sizeof(uint32)));
+  uint32_t npixels = width * height;
+  uint32_t* raster = static_cast<uint32_t*>(_TIFFmalloc(npixels * sizeof(uint32_t)));
   if(TIFFReadRGBAImageOriented(tif, width, height, raster, ORIENTATION_TOPLEFT, 0))
   {
     unsigned char alpha;
-    for(uint32 y = 0; y < height; ++y)
+    for(uint32_t y = 0; y < height; ++y)
     {
       unsigned char* pData = image.GetScanline(y);
-      for(uint32 x = 0; x < width; ++x)
+      for(uint32_t x = 0; x < width; ++x)
       {
         //TODO: this is premuptiplied by the ReadRGBA function. use ReadEncodedStrip
         //      to prevent the small rounding error due to the premultiplication!
@@ -98,7 +98,7 @@ void gul::ImageIO_TIFF::Save(const gul::File& rPath, const gul::Image& rImage)
   TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
   TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
   //TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
-  uint16 extra_samples[] = {EXTRASAMPLE_UNASSALPHA};
+  uint16_t extra_samples[] = {EXTRASAMPLE_UNASSALPHA};
   TIFFSetField(out, TIFFTAG_EXTRASAMPLES, 1, extra_samples);
   TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, 4 * rImage.GetWidth()));
 

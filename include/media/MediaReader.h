@@ -78,22 +78,25 @@ namespace gul
 
     private:
       // Shared API with MediaConverter
-      AVPacket* getNextPacket(void);
-      void freePacket(void);
+      bool readNextPacket(void);
+      AVPacket* getPacket(void);
+      bool decodePacket(AVCodecContext* pContext) const;
 
-      bool decodePacket(AVPacket& rPacket, VideoFrame& rFrame);
-      bool decodePacket(AVPacket& rPacket, AudioFrame& rFrame);
-
-      bool isVideoPacket(const AVPacket& rPacket) const;
-      bool isAudioPacket(const AVPacket& rPacket) const;
-
-      void allocateFrame(VideoFrame& rFrame) const;
-      void allocateFrame(AudioFrame& rFrame) const;
+      bool getNextFrame(VideoFrame& rFrame);
+      bool videoDecodingNeeded() const;
 
       friend class gul::MediaConverter;
 
     private:
-      //
+      bool getNextFrame(AudioFrame& rFrame);
+      bool getNextFrame(MediaFrame& rFrame);
+
+      void allocateFrame(VideoFrame& rFrame) const;
+      void allocateFrame(AudioFrame& rFrame) const;
+
+      bool audioDecodingNeeded() const;
+
+
       void allocateVideoStructures(void);
       void allocateAudioStructures(void);
 
@@ -102,8 +105,7 @@ namespace gul
 
       void setData(VideoFrame& rTargetFrame, const AVFrame* pSourceFrame) const;
       void setData(AudioFrame& rTargetFrame, AVFrame* pSourceFrame) const;
-      bool decodeRemaining(VideoFrame& rFrame);
-      int openCodec(int type, AVCodecContext*& pContext);
+      int openCodec(int type, AVCodecContext*& pContext) const;
 
     private:
       const gul::File m_path;
@@ -115,7 +117,6 @@ namespace gul
 
       bool m_isFrameValid;
       bool m_isOpen;
-      bool m_isPacketDataFreed;
 
       AVCodecContext* m_pVideoCodecCtx;
       int m_videoStreamIndex;
@@ -124,8 +125,6 @@ namespace gul
       AVCodecContext* m_pAudioCodecCtx;
       int m_audioStreamIndex;
       SwrContext* m_pSWRContext;
-
-      static bool codecsAreRegistered;
   };
 
 }

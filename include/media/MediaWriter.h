@@ -46,6 +46,7 @@ class AVPacket;
 class AVCodec;
 class SwsContext;
 class AVStream;
+class AVCodecParameters;
 
 
 namespace gul
@@ -65,14 +66,13 @@ namespace gul
       MediaWriter(const gul::File& rVideoPath);
       void setSize(int width, int height);
       bool openVideo(const AVFormatContext& rInputFormatCtx);
-      bool writePacket(AVPacket& rPacket);
+      void writePacket(AVPacket& rPacket);
       friend class gul::MediaConverter;
 
     private:
-      void copyVideoEncoderCtxSettings(const AVCodecContext& ctx);
       void setDafaultVideoEncoderCtxSettings(void);
       void fillFrameRGBA(const gul::VideoFrame& rFrame);
-      bool encodeAndSaveVideoFrame(AVFrame* pFrameToEncode);
+      void encodeAndSaveVideoFrame(AVFrame* pFrameToEncode);
       void allocateStructures(void);
       void prepareOutputFile(void);
 
@@ -84,15 +84,13 @@ namespace gul
       AVStream* m_pVideoStream;
       AVCodec* m_pVideoCodec;
       AVFrame* m_pFrame;
-      AVFrame* m_pFrameRGBA;
+      AVPacket* m_pPacket;
       bool m_isClosed;
       int m_videoWidth;
       int m_videoHeight;
       int m_videoFPS;
       int m_videoBitrate;
       const bool usePTSFromFrames;
-
-      static bool codecsAreRegistered;
   };
 
 }

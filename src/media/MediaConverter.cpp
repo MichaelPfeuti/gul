@@ -38,7 +38,6 @@ gul::MediaConverter::MediaConverter(const gul::File& rInputVideo)
     pMediaWriter(nullptr),
     pManipulator(nullptr)
 {
-
 }
 
 void gul::MediaConverter::Init(const gul::File& rOutputVideo, gul::VideoFrameManipulator& rManipulator)
@@ -62,12 +61,12 @@ void gul::MediaConverter::Execute(void)
   pMediaReader->allocateFrame(input);
 
   // copy video
-  AVPacket* pPacket = pMediaReader->getNextPacket();
-  while(pPacket != nullptr)
+  while(pMediaReader->readNextPacket())
   {
-    if(pMediaReader->isVideoPacket(*pPacket))
+    if(pMediaReader->videoDecodingNeeded())
     {
-      if(pMediaReader->decodePacket(*pPacket, input))
+      if(pMediaReader->decodePacket(pMediaReader->m_pVideoCodecCtx) &&
+         pMediaReader->getNextFrame(input))
       {
         pManipulator->Execute(input, output);
         output.SetPresentationTime(input.GetPresentationTime());
@@ -75,14 +74,13 @@ void gul::MediaConverter::Execute(void)
         pMediaWriter->AddFrame(output);
       }
     }
-    else
+    else if(pMediaReader->getPacket() != nullptr)
     {
-      pMediaWriter->writePacket(*pPacket);
+      pMediaWriter->writePacket(*pMediaReader->getPacket());
     }
-    pPacket = pMediaReader->getNextPacket();
   }
 
-  while(pMediaReader->decodeRemaining(input))
+  while(pMediaReader->getNextFrame(input))
   {
     pManipulator->Execute(input, output);
     output.SetPresentationTime(input.GetPresentationTime());

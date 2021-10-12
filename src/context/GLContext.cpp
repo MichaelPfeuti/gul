@@ -166,8 +166,6 @@ bool gul::GLContext::initGLEW(void)
 
   if(!s_isGLEWInit)
   {
-    // Needed for core profile
-    glewExperimental = true;
     GLenum glewError = glewInit();
     if(glewError != GLEW_OK)
     {

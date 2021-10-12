@@ -44,49 +44,56 @@
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
   } \
-  catch(gul::ExceptionAssertionViolated& ex) {}
+  catch(gul::ExceptionAssertionViolated&) {} \
+  GUL_NOOP()
 
 #define TEST_EQUAL(test, groundTruth) \
   if(test != groundTruth) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_NOT_EQUAL(test, groundTruth) \
   if(test == groundTruth) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_TRUE(test) \
   if(!test) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_FALSE(test) \
   if(test) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_NULL(test) \
   if(test != nullptr) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_NOT_NULL(test) \
   if(test == nullptr) \
   { \
     fprintf(stderr, "Test in file %s on line %d failed!\n", __FILE__, __LINE__); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #define TEST_EQUAL_IMAGE(test, groundTruth, epsilon) \
   if(!gul::AnalyzerImageEquality::Execute(test, groundTruth, epsilon)) \
@@ -100,6 +107,7 @@
     UploadCDashImage("Output", testPath); \
     UploadCDashImage("Ground Truth", gtPath); \
     return EXIT_FAILURE; \
-  }
+  } \
+  GUL_NOOP()
 
 #endif

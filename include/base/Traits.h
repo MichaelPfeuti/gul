@@ -77,7 +77,7 @@ namespace gul
 
 #define SPECIALIZE_TPL_TRAITS(classname) \
   namespace gul { \
-    template<> template<typename T> \
+    template<typename T> \
     class Traits<classname<T>> \
     { \
       public: \
@@ -87,7 +87,7 @@ namespace gul
 
 #define SPECIALIZE_2TPL_TRAITS(classname) \
   namespace gul { \
-    template<> template<typename T1, typename T2> \
+    template<typename T1, typename T2> \
     class Traits<classname<T1, T2>> \
     { \
       public: \

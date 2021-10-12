@@ -41,4 +41,7 @@
 #define GUL_UNUSED_VAR(var) \
   (void) var
 
+#define GUL_NOOP() \
+  ((void) 0)
+
 #endif
